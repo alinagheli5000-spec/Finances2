@@ -9,16 +9,19 @@
   --bg:#f2f5f3; --card:#ffffff; --ink:#16302b; --muted:#6a7f79; --line:#dbe4e0;
   --head:#16302b; --brass:#b8892b; --debt:#b83a3a; --credit:#2f7d5b; --inc:#2f7d5b; --exp:#c9773a;
   --soft:#eaf0ed; --radius:10px;
+  --sel:#fdf6e8; --selborder:#b8892b;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0f1a17; --card:#172522; --ink:#e6efeb; --muted:#93a8a1; --line:#28403a; --head:#0b1311; --soft:#1e302c;
     --debt:#e26a6a; --credit:#4fc08d; --inc:#4fc08d; --exp:#e59a5e; --brass:#d9a94a;
+    --sel:#2a2415; --selborder:#d9a94a;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0f1a17; --card:#172522; --ink:#e6efeb; --muted:#93a8a1; --line:#28403a; --head:#0b1311; --soft:#1e302c;
   --debt:#e26a6a; --credit:#4fc08d; --inc:#4fc08d; --exp:#e59a5e; --brass:#d9a94a;
+  --sel:#2a2415; --selborder:#d9a94a;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -57,6 +60,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .btn.warn{background:var(--debt);color:#fff}
 .btn.ok{background:var(--credit);color:#fff}
 .btn.sm{padding:3px 10px;font-size:13px}
+.btn.lg{padding:12px 22px;font-size:16px;font-weight:700}
 .actions{display:flex;flex-wrap:wrap;gap:6px}
 .wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:640px}
@@ -92,22 +96,105 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 #syncBadge.offline{background:rgba(226,106,106,.25);border-color:rgba(226,106,106,.5)}
 #syncBadge.syncing{background:rgba(217,169,74,.25);border-color:rgba(217,169,74,.5)}
 
-/* انتخابگر زبان‌آموزان در ثبت جلسه */
-.pickerBox{border:1px solid var(--line);border-radius:10px;max-height:280px;overflow-y:auto;background:var(--soft)}
-.pickerRow{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px}
-.pickerRow:last-child{border-bottom:0}
-.pickerRow input[type=checkbox]{width:auto;accent-color:var(--brass);width:16px;height:16px}
-.pickerRow .fee{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.pickerHead{display:flex;justify-content:space-between;gap:8px;padding:8px 4px;font-size:13px;color:var(--muted);flex-wrap:wrap}
-.pickerHead button{background:none;border:0;color:var(--brass);cursor:pointer;font-weight:700;padding:2px 6px}
-.badgeSessions{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+/* ===== ثبت جلسه — طراحی جدید ===== */
+.sessionTop{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  background:linear-gradient(135deg,var(--card),var(--soft));
+  border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;
+}
+@media (max-width:720px){.sessionTop{grid-template-columns:1fr}}
+.sessionTop .field label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block}
+.sessionTop .quickDates{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.sessionTop .quickDates button{
+  background:var(--soft);border:1px solid var(--line);border-radius:20px;
+  padding:3px 12px;cursor:pointer;font-size:12px;color:var(--muted)
+}
+.sessionTop .quickDates button:hover{background:var(--sel);border-color:var(--selborder);color:var(--ink)}
+
+.searchWrap{position:relative;margin-bottom:10px}
+.searchWrap input{padding-inline-start:36px;font-size:15px;height:42px}
+.searchWrap::before{
+  content:"🔍";position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);
+  font-size:15px;pointer-events:none;opacity:.6
+}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{
+  background:var(--soft);border:1px solid var(--line);border-radius:20px;
+  padding:4px 14px;cursor:pointer;font-size:13px;color:var(--muted);user-select:none
+}
+.chip.on{background:var(--brass);color:#fff;border-color:var(--brass);font-weight:700}
+.chip:hover{border-color:var(--brass)}
+
+.studentsGrid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:10px;max-height:480px;overflow-y:auto;padding:4px;
+}
+.stCard{
+  background:var(--card);border:2px solid var(--line);border-radius:12px;
+  padding:12px 14px;cursor:pointer;position:relative;
+  transition:border-color .15s, background .15s, transform .1s;
+  display:flex;flex-direction:column;gap:6px;
+}
+.stCard:hover{border-color:var(--brass);transform:translateY(-1px)}
+.stCard.on{background:var(--sel);border-color:var(--selborder);box-shadow:0 0 0 3px rgba(184,137,43,.15)}
+.stCard .name{font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.stCard .name .check{
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;
+  flex:0 0 auto;transition:background .15s, color .15s
+}
+.stCard.on .name .check{background:var(--brass);border-color:var(--brass);color:#fff}
+.stCard .meta{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.stCard .meta .row{display:flex;justify-content:space-between;gap:8px}
+.stCard .meta .row b{color:var(--ink);font-variant-numeric:tabular-nums}
+.stCard .feeInp{margin-top:4px}
+.stCard .feeInp input{
+  padding:6px 8px;font-size:14px;text-align:center;font-variant-numeric:tabular-nums;
+  background:var(--card);border:1px solid var(--line)
+}
+.stCard.on .feeInp input{background:var(--card);border-color:var(--selborder)}
+
+.selectionBar{
+  background:linear-gradient(135deg,var(--head),#0b1311);color:#fff;
+  border-radius:14px;padding:14px 18px;margin-top:12px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  box-shadow:0 4px 14px rgba(0,0,0,.12)
+}
+.selectionBar .info{display:flex;gap:22px;align-items:center;flex-wrap:wrap;font-size:14px}
+.selectionBar .info b{font-size:18px;color:var(--brass);font-variant-numeric:tabular-nums}
+.selectionBar .info span{opacity:.85;font-size:12px;display:block}
+.selectionBar button{background:var(--brass);color:#fff;border:0;border-radius:10px;padding:12px 24px;font-weight:700;font-size:15px;cursor:pointer}
+.selectionBar button:disabled{opacity:.4;cursor:not-allowed}
+.selectionBar button.clear{background:transparent;border:1px solid rgba(255,255,255,.3);font-weight:400;font-size:13px;padding:8px 14px}
+
+/* ===== گزارش دوره‌ای ===== */
+.rangeBox{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px
+}
+.rangeGrid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end
+}
+@media (max-width:720px){.rangeGrid{grid-template-columns:1fr}}
+.rangeGrid .field label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+
+.reportCards{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px
+}
+.repCard{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+  border-inline-start:5px solid var(--line)
+}
+.repCard small{display:block;color:var(--muted);font-size:12px}
+.repCard b{font-size:22px;display:block;margin-top:4px}
+.repCard i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px}
 
 @media print{
-  header,nav,.noprint,.toast{display:none!important}
+  header,nav,.noprint,.toast,.selectionBar .clear{display:none!important}
   body{background:#fff;color:#000}
   body.pm main{display:none}
   body.pm #modal{position:static;display:block;background:none;padding:0}
-  .card,.stat{break-inside:avoid}
+  .card,.stat,.repCard,.stCard{break-inside:avoid}
   section.tab{display:block!important}
   body:not(.pm) section.tab:not(.on){display:none!important}
 }
@@ -128,10 +215,11 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   </div>
   <nav id="nav">
     <button data-t="dash" class="on">داشبورد</button>
-    <button data-t="students">زبان‌آموزان</button>
     <button data-t="session">ثبت جلسه</button>
+    <button data-t="students">زبان‌آموزان</button>
     <button data-t="tx">تراکنش‌ها</button>
-    <button data-t="tools">گزارش و پشتیبان‌گیری</button>
+    <button data-t="report">گزارش دوره‌ای</button>
+    <button data-t="tools">پشتیبان‌گیری</button>
   </nav>
 </header>
 
@@ -158,6 +246,63 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   <div class="card" style="margin-top:14px">
     <h2>آخرین تراکنش‌ها</h2>
     <div class="wrap" id="recent"></div>
+  </div>
+</section>
+
+<!-- ===== ثبت جلسه (طراحی جدید) ===== -->
+<section class="tab" id="tab-session">
+
+  <!-- بخش بالا: تاریخ + شرح + انتخاب سریع -->
+  <div class="sessionTop">
+    <div class="field">
+      <label>📅 تاریخ برگزاری جلسه (شمسی) *</label>
+      <div class="dateRow" id="seDate"></div>
+      <div class="quickDates">
+        <button type="button" data-off="0">امروز</button>
+        <button type="button" data-off="-1">دیروز</button>
+        <button type="button" data-off="-2">۲ روز پیش</button>
+        <button type="button" data-off="-7">هفته‌ی پیش</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>📝 شرح پیش‌فرض (اختیاری)</label>
+      <input id="seDesc" placeholder="مثلاً: جلسه‌ی گروه Elementary — فصل ۴">
+      <label style="margin-top:8px">💳 روش پرداخت (فقط یادداشت)</label>
+      <select id="seMethod"><option>—</option><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
+    </div>
+  </div>
+
+  <!-- جستجو -->
+  <div class="searchWrap">
+    <input id="seSearch" placeholder="جستجوی نام زبان‌آموز، دوره یا تلفن…">
+  </div>
+
+  <!-- چیپ دوره‌ها -->
+  <div class="chips" id="seCourseChips"></div>
+
+  <!-- کارت‌های زبان‌آموز -->
+  <div class="studentsGrid" id="seGrid"></div>
+
+  <!-- نوار انتخاب -->
+  <div class="selectionBar">
+    <div class="info">
+      <div><span>تعداد انتخاب‌شده</span><b id="seCount">۰</b></div>
+      <div><span>جمع کل مبلغ</span><b id="seTotal">۰</b> <span style="display:inline;opacity:.7;font-size:11px">تومان</span></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button type="button" class="clear" id="seClear">پاک کردن انتخاب‌ها</button>
+      <button type="button" id="seSave" disabled>✔ ثبت جلسه و افزودن بدهی</button>
+    </div>
+  </div>
+
+  <!-- جلسات اخیر -->
+  <div class="card" style="margin-top:16px">
+    <h2>جلسات اخیر</h2>
+    <div class="filters">
+      <select id="seFilterStudent"><option value="">همه زبان‌آموزان</option></select>
+      <select id="seFilterMonth"></select>
+    </div>
+    <div class="wrap" id="seTable"></div>
   </div>
 </section>
 
@@ -191,45 +336,6 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
       </select>
     </div>
     <div class="wrap" id="stTable"></div>
-  </div>
-</section>
-
-<!-- ===== ثبت جلسه ===== -->
-<section class="tab" id="tab-session">
-  <div class="card">
-    <h2>ثبت جلسه‌ی برگزارشده</h2>
-    <p class="hint">تاریخ برگزاری جلسه و زبان‌آموزان را انتخاب کنید. مبلغ شهریه‌ی هر نفر خودکار پر می‌شود و می‌توانید برای هر زبان‌آموز مبلغ جدا وارد کنید (مثلاً اگر آن جلسه تخفیف داشت).</p>
-
-    <div class="f" style="margin-bottom:10px">
-      <div><label>تاریخ برگزاری جلسه (شمسی) *</label><div class="dateRow" id="seDate"></div></div>
-      <div><label>شرح پیش‌فرض (اختیاری)</label><input id="seDesc" placeholder="مثلاً جلسه‌ی گروه Elementary"></div>
-      <div><label>روش پرداخت (فقط جهت یادداشت)</label>
-        <select id="seMethod"><option>—</option><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
-      </div>
-    </div>
-
-    <div class="pickerHead">
-      <span>انتخاب زبان‌آموزان <b id="seCount">(۰ نفر)</b></span>
-      <span>
-        <button type="button" id="seAll">انتخاب همه</button> ·
-        <button type="button" id="seNone">حذف انتخاب‌ها</button>
-      </span>
-    </div>
-    <div class="pickerBox" id="sePicker"></div>
-
-    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn ok" id="seSave">ثبت جلسه و افزودن بدهی</button>
-      <span class="hint" id="seTotal" style="align-self:center"></span>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:14px">
-    <h2>جلسات ثبت‌شده‌ی اخیر</h2>
-    <div class="filters">
-      <select id="seFilterStudent"><option value="">همه زبان‌آموزان</option></select>
-      <select id="seFilterMonth"></select>
-    </div>
-    <div class="wrap" id="seTable"></div>
   </div>
 </section>
 
@@ -273,6 +379,50 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
     </div>
     <p class="hint" id="txSum"></p>
     <div class="wrap" id="txTable"></div>
+  </div>
+</section>
+
+<!-- ===== گزارش دوره‌ای ===== -->
+<section class="tab" id="tab-report">
+  <div class="rangeBox">
+    <h2 style="margin:0 0 10px">گزارش بر اساس بازه‌ی تاریخ</h2>
+    <div class="rangeGrid">
+      <div class="field">
+        <label>از تاریخ (شمسی)</label>
+        <div class="dateRow" id="repFrom"></div>
+      </div>
+      <div class="field">
+        <label>تا تاریخ (شمسی)</label>
+        <div class="dateRow" id="repTo"></div>
+      </div>
+      <div class="field">
+        <label>میان‌بر</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn sm alt" data-range="month">ماه جاری</button>
+          <button class="btn sm alt" data-range="lastMonth">ماه قبل</button>
+          <button class="btn sm alt" data-range="30">۳۰ روز اخیر</button>
+          <button class="btn sm alt" data-range="7">۷ روز اخیر</button>
+          <button class="btn sm alt" data-range="year">سال جاری</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="repRun">نمایش گزارش</button>
+      <button class="btn alt" id="repPrint">چاپ گزارش</button>
+      <span class="hint" style="align-self:center" id="repSummaryTxt"></span>
+    </div>
+  </div>
+
+  <div class="reportCards" id="repCards"></div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>تفکیک بر اساس زبان‌آموز</h2>
+    <div class="wrap" id="repStudents"></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>جزئیات تراکنش‌ها در بازه</h2>
+    <div class="wrap" id="repTx"></div>
   </div>
 </section>
 
@@ -320,7 +470,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 const CONFIG = {
   SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',
   SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
-  LOCAL_KEY:    'ali_naghli_finance_v2'
+  LOCAL_KEY:    'ali_naghli_finance_v3'
 };
 
 /* ---------- ابزارها ---------- */
@@ -335,7 +485,7 @@ const toEn = s => String(s||'')
   .replace(/[^\d.-]/g, '');
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2,7));
-const debounce = (fn, ms=220) => { let h; return (...a)=>{ clearTimeout(h); h=setTimeout(()=>fn(...a), ms); }; };
+const debounce = (fn, ms=200) => { let h; return (...a)=>{ clearTimeout(h); h=setTimeout(()=>fn(...a), ms); }; };
 
 let _toastH;
 function toast(msg){
@@ -365,9 +515,37 @@ const dateStr = a => a[0]+'/'+pad(a[1])+'/'+pad(a[2]);
 const showDate = s => faDigits(s);
 const longDate = s => { const [y,m,d]=s.split('/').map(Number); return faDigits(d)+' '+MONTHS[m-1]+' '+faDigits(y); };
 
-function buildDate(boxId){
-  const box=$(boxId), t=todayJ();
-  let yOpts=''; for(let y=t[0]-6;y<=t[0]+2;y++) yOpts+=`<option value="${y}">${faDigits(y)}</option>`;
+/* ---------- جابجایی در تاریخ شمسی ---------- */
+function jAddDays(jy, jm, jd, delta){
+  // تبدیل به میلادی → جمع → تبدیل به شمسی
+  // از کتابخانه‌ی Intl استفاده می‌کنیم
+  // تخمین میلادی
+  const g = jToG(jy, jm, jd);
+  const d = new Date(g[0], g[1]-1, g[2]);
+  d.setDate(d.getDate() + delta);
+  return gToJ(d.getFullYear(), d.getMonth()+1, d.getDate());
+}
+function gToJ(gy, gm, gd){
+  const parts = _persianFmt.formatToParts(new Date(gy, gm-1, gd));
+  const g = t => +parts.find(p=>p.type===t).value;
+  return [g('year'), g('month'), g('day')];
+}
+function jToG(jy, jm, jd){
+  // جستجوی دودویی/تخمینی
+  const guess = new Date(jy + 621, jm - 1, jd);
+  // تصحیح با مقایسه
+  for(let i = -5; i <= 5; i++){
+    const cand = new Date(guess); cand.setDate(cand.getDate() + i);
+    const [y,m,d] = gToJ(cand.getFullYear(), cand.getMonth()+1, cand.getDate());
+    if(y === jy && m === jm && d === jd)
+      return [cand.getFullYear(), cand.getMonth()+1, cand.getDate()];
+  }
+  return [guess.getFullYear(), guess.getMonth()+1, guess.getDate()];
+}
+
+function buildDate(boxId, date){
+  const box=$(boxId), t=date || todayJ();
+  let yOpts=''; for(let y=t[0]-8;y<=t[0]+2;y++) yOpts+=`<option value="${y}">${faDigits(y)}</option>`;
   box.innerHTML=`<select data-r="y">${yOpts}</select><select data-r="m">${MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('')}</select><select data-r="d"></select>`;
   const [sy,sm,sd]=['y','m','d'].map(r=>box.querySelector(`[data-r=${r}]`));
   const fillDays=()=>{const n=jMonthDays(+sy.value,+sm.value),cur=+sd.value||1;let h='';for(let i=1;i<=n;i++)h+=`<option value="${i}">${faDigits(i)}</option>`;sd.innerHTML=h;sd.value=Math.min(cur,n)};
@@ -395,7 +573,6 @@ const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY)
   : null;
 
 let db = { students: [], tx: [] };
-let online = !!sb;
 
 function loadLocal(){
   try{
@@ -409,7 +586,6 @@ function saveLocal(){
   try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }
   catch(e){ toast('ذخیره‌سازی محلی انجام نشد!'); }
 }
-
 function setSync(state, label){
   const b = $('syncBadge');
   b.className = state;
@@ -685,66 +861,106 @@ $('stSearch').addEventListener('input', debounce(renderStudents));
 $('stFilter').addEventListener('change', renderStudents);
 
 /* =====================================================================
-   ثبت جلسه
+   ثبت جلسه — طراحی جدید
    ===================================================================== */
-let seSelected = {}; // { studentId: amount }
-function renderSessionPicker(){
-  const q = ($('sePicker')._q || '').trim().toLowerCase();
-  const list = db.students.filter(s => !q || s.name.toLowerCase().includes(q) || (s.course||'').toLowerCase().includes(q));
+let seSelected = {};          // { studentId: amount }
+let seCourseFilter = '';      // فیلتر دوره (چیپ)
+let seSearchQuery = '';       // جستجو
+
+function renderCourseChips(){
+  const courses = [...new Set(db.students.map(s => (s.course||'').trim()).filter(Boolean))].sort();
+  const box = $('seCourseChips');
+  if(!courses.length){ box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="chip ${seCourseFilter===''?'on':''}" data-c="">همه دوره‌ها</div>` +
+    courses.map(c => `<div class="chip ${seCourseFilter===c?'on':''}" data-c="${esc(c)}">${esc(c)}</div>`).join('');
+}
+$('seCourseChips').onclick = e => {
+  const c = e.target.closest('.chip'); if(!c) return;
+  seCourseFilter = c.dataset.c || '';
+  renderCourseChips();
+  renderSessionGrid();
+};
+
+function renderSessionGrid(){
+  const q = seSearchQuery.trim().toLowerCase();
+  const list = db.students.filter(s => {
+    if(seCourseFilter && (s.course||'').trim() !== seCourseFilter) return false;
+    if(q){
+      const hay = (s.name + ' ' + (s.course||'') + ' ' + (s.phone||'')).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  const grid = $('seGrid');
   if(!list.length){
-    $('sePicker').innerHTML = '<div class="empty">زبان‌آموزی یافت نشد.</div>';
-    updateSessionCount(); return;
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">زبان‌آموزی یافت نشد. از تب «زبان‌آموزان» اضافه کنید.</div>';
+    updateSelectionBar(); return;
   }
-  $('sePicker').innerHTML = list.map(s => {
-    const checked = s.id in seSelected;
-    const val = checked ? seSelected[s.id] : (s.fee||0);
-    return `<div class="pickerRow">
-      <input type="checkbox" data-id="${s.id}" ${checked?'checked':''}>
-      <span><b>${esc(s.name)}</b> <span class="fee">${esc(s.course||'')}</span></span>
-      <span class="fee">شهریه: ${fa(s.fee||0)}</span>
-      <input class="money" data-amount="${s.id}" inputmode="numeric" value="${val?Number(val).toLocaleString('en-US'):''}" placeholder="مبلغ" ${checked?'':'disabled'}>
+  grid.innerHTML = list.map(s => {
+    const on = s.id in seSelected;
+    const val = on ? seSelected[s.id] : (s.fee||0);
+    const b = balances()[s.id] || { bal:0, sessions:0 };
+    return `<div class="stCard ${on?'on':''}" data-id="${s.id}">
+      <div class="name">
+        <span>${esc(s.name)}</span>
+        <span class="check">✓</span>
+      </div>
+      <div class="meta">
+        <div class="row"><span>دوره</span><span>${esc(s.course||'—')}</span></div>
+        <div class="row"><span>شهریه‌ی هر جلسه</span><b>${fa(s.fee||0)}</b></div>
+        <div class="row"><span>مانده فعلی</span><b class="${b.bal>0?'neg':b.bal<0?'pos':''}">${fa(Math.abs(b.bal))} ${b.bal>0?'بدهکار':b.bal<0?'بستانکار':''}</b></div>
+      </div>
+      <div class="feeInp" onclick="event.stopPropagation()">
+        <input class="money" data-amount="${s.id}" inputmode="numeric" value="${val?Number(val).toLocaleString('en-US'):''}" placeholder="مبلغ این جلسه" ${on?'':'disabled'}>
+      </div>
     </div>`;
   }).join('');
-  updateSessionCount();
+  updateSelectionBar();
 }
-function updateSessionCount(){
-  const ids = Object.keys(seSelected);
-  $('seCount').textContent = `(${faDigits(ids.length)} نفر)`;
-  const total = ids.reduce((a,id)=>a + (+seSelected[id]||0), 0);
-  $('seTotal').textContent = ids.length ? `جمع کل: ${fa(total)} تومان` : '';
-}
-$('sePicker').addEventListener('change', e => {
-  const cb = e.target.closest('input[type=checkbox]');
-  if(cb){
-    const id = cb.dataset.id;
-    if(cb.checked){
-      const s = db.students.find(x=>x.id===id);
-      seSelected[id] = s.fee || 0;
-    } else {
-      delete seSelected[id];
-    }
-    renderSessionPicker();
+
+$('seGrid').onclick = e => {
+  // کلیک روی input نباید کارت را toggle کند
+  if(e.target.closest('.feeInp')) return;
+  const card = e.target.closest('.stCard'); if(!card) return;
+  const id = card.dataset.id;
+  if(id in seSelected) delete seSelected[id];
+  else {
+    const s = db.students.find(x=>x.id===id);
+    seSelected[id] = s ? (s.fee||0) : 0;
   }
-});
-$('sePicker').addEventListener('input', e => {
+  renderSessionGrid();
+};
+$('seGrid').addEventListener('input', e => {
   const inp = e.target.closest('input[data-amount]');
-  if(inp){
-    const id = inp.dataset.amount;
-    const v = Number(toEn(inp.value)) || 0;
-    seSelected[id] = v;
-    // فقط فرمت نمایش
-    inp.value = v ? v.toLocaleString('en-US') : '';
-    updateSessionCount();
-  }
+  if(!inp) return;
+  const id = inp.dataset.amount;
+  const v = Number(toEn(inp.value)) || 0;
+  seSelected[id] = v;
+  inp.value = v ? v.toLocaleString('en-US') : '';
+  updateSelectionBar();
 });
-$('seAll').onclick = () => {
-  db.students.forEach(s => { seSelected[s.id] = s.fee || 0; });
-  renderSessionPicker();
-};
-$('seNone').onclick = () => {
-  seSelected = {};
-  renderSessionPicker();
-};
+
+function updateSelectionBar(){
+  const ids = Object.keys(seSelected);
+  const total = ids.reduce((a,id)=> a + (+seSelected[id]||0), 0);
+  $('seCount').textContent = faDigits(ids.length);
+  $('seTotal').textContent = fa(total);
+  $('seSave').disabled = ids.length === 0;
+}
+$('seClear').onclick = () => { seSelected = {}; renderSessionGrid(); };
+$('seSearch').addEventListener('input', debounce(e => { seSearchQuery = e.target.value; renderSessionGrid(); }));
+
+/* میان‌بر تاریخ */
+document.querySelectorAll('.quickDates button').forEach(b => {
+  b.onclick = () => {
+    const off = +b.dataset.off;
+    const t = todayJ();
+    const target = off === 0 ? t : jAddDays(t[0], t[1], t[2], off);
+    setDate('seDate', target);
+  };
+});
+
+/* ثبت */
 $('seSave').onclick = async () => {
   const ids = Object.keys(seSelected);
   if(!ids.length){ toast('حداقل یک زبان‌آموز انتخاب کنید'); return; }
@@ -767,26 +983,26 @@ $('seSave').onclick = async () => {
     created.push(t);
   }
   saveLocal(); renderAll();
-  // ابر
   for(const t of created) await cloudInsertTx(t);
   saveLocal(); renderAll();
 
   seSelected = {};
   $('seDesc').value = '';
-  renderSessionPicker();
+  renderSessionGrid();
   toast(`${faDigits(created.length)} جلسه ثبت شد`);
 };
+
+/* جلسات اخیر */
 $('seFilterStudent').addEventListener('change', renderSessions);
 $('seFilterMonth').addEventListener('change', renderSessions);
 
 function renderSessions(){
-  // پر کردن فیلترها
   const stOpts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
   const v1 = $('seFilterStudent').value;
   $('seFilterStudent').innerHTML = '<option value="">همه زبان‌آموزان</option>' + stOpts;
   if(db.students.some(s=>s.id===v1)) $('seFilterStudent').value = v1;
 
-  const ms = [...new Set(db.tx.filter(t=>t.is_session).map(t=>t.session_date.slice(0,7)))].sort().reverse();
+  const ms = [...new Set(db.tx.filter(t=>t.is_session && t.session_date).map(t=>t.session_date.slice(0,7)))].sort().reverse();
   const v2 = $('seFilterMonth').value;
   $('seFilterMonth').innerHTML = '<option value="">همه ماه‌ها</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
   $('seFilterMonth').value = ms.includes(v2) ? v2 : '';
@@ -795,11 +1011,11 @@ function renderSessions(){
   const mFilter = $('seFilterMonth').value;
   const rows = db.tx.filter(t => t.is_session
       && (!sFilter || t.sid === sFilter)
-      && (!mFilter || t.session_date.startsWith(mFilter)))
+      && (!mFilter || (t.session_date||'').startsWith(mFilter)))
     .sort((a,b)=> (b.session_date||b.date).localeCompare(a.session_date||a.date) || b.ts-a.ts);
 
   $('seTable').innerHTML = rows.length
-    ? `<table><thead><tr><th>تاریخ جلسه</th><th>زبان‌آموز</th><th>مبلغ (تومان)</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.map(t=>`<tr>
+    ? `<table><thead><tr><th>تاریخ جلسه</th><th>زبان‌آموز</th><th>مبلغ (تومان)</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.slice(0,50).map(t=>`<tr>
         <td>${showDate(t.session_date||t.date)}</td>
         <td>${esc(stName(t.sid))}</td>
         <td class="n"><b>${fa(t.amount)}</b></td>
@@ -899,7 +1115,7 @@ function quickSession(sid){
   showTab('session');
   seSelected = {};
   seSelected[sid] = (db.students.find(x=>x.id===sid)||{}).fee || 0;
-  renderSessionPicker();
+  renderSessionGrid();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function filteredTx(){
@@ -923,18 +1139,156 @@ $('fSearch').addEventListener('input', debounce(renderTx));
 ['fStudent','fType','fMonth'].forEach(id => $(id).addEventListener('change', renderTx));
 
 /* =====================================================================
+   گزارش دوره‌ای
+   ===================================================================== */
+function rangeInRange(dateStr_, from, to){
+  return dateStr_ >= from && dateStr_ <= to;
+}
+
+function runReport(){
+  const from = getDate('repFrom');
+  const to   = getDate('repTo');
+  if(from > to){ toast('تاریخ شروع بعد از پایان است'); return; }
+
+  const rows = db.tx.filter(t => {
+    const d = t.is_session && t.session_date ? t.session_date : t.date;
+    return rangeInRange(d, from, to);
+  });
+
+  // کارت‌های خلاصه
+  const income  = rows.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
+  const charge  = rows.filter(t=>t.type==='charge').reduce((a,t)=>a+t.amount,0);
+  const expense = rows.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
+  const sessions = rows.filter(t=>t.is_session).length;
+  const net = income - expense;
+
+  // بدهی معوق (کل) — از اول تا «to»
+  let overdue = 0;
+  db.tx.forEach(t => {
+    const d = t.is_session && t.session_date ? t.session_date : t.date;
+    if(d > to) return;
+    if(t.type==='charge') overdue += t.amount;
+    if(t.type==='payment') overdue -= t.amount;
+  });
+
+  $('repCards').innerHTML = `
+    <div class="repCard" style="border-inline-start-color:var(--inc)">
+      <small>درآمد (دریافتی) در بازه</small><b>${fa(income)}</b><i>تومان</i>
+    </div>
+    <div class="repCard" style="border-inline-start-color:var(--debt)">
+      <small>بدهی ثبت‌شده در بازه</small><b>${fa(charge)}</b><i>تومان</i>
+    </div>
+    <div class="repCard" style="border-inline-start-color:var(--brass)">
+      <small>تعداد جلسات در بازه</small><b>${fa(sessions)}</b><i>جلسه</i>
+    </div>
+    <div class="repCard" style="border-inline-start-color:var(--exp)">
+      <small>هزینه در بازه</small><b>${fa(expense)}</b><i>تومان</i>
+    </div>
+    <div class="repCard" style="border-inline-start-color:var(--credit)">
+      <small>سود خالص بازه</small><b>${fa(net)}</b><i>تومان</i>
+    </div>
+    <div class="repCard" style="border-inline-start-color:var(--debt)">
+      <small>مجموع بدهی معوق (تا پایان بازه)</small><b>${fa(Math.max(0,overdue))}</b><i>تومان</i>
+    </div>
+  `;
+
+  $('repSummaryTxt').textContent = `از ${showDate(from)} تا ${showDate(to)} — ${faDigits(rows.length)} تراکنش`;
+
+  // تفکیک بر اساس زبان‌آموز
+  const byStudent = {};
+  db.students.forEach(s => byStudent[s.id] = { name:s.name, sessions:0, charge:0, payment:0 });
+  rows.forEach(t => {
+    if(!byStudent[t.sid]) return;
+    const o = byStudent[t.sid];
+    if(t.type==='charge'){ o.charge += t.amount; if(t.is_session) o.sessions += 1; }
+    if(t.type==='payment'){ o.payment += t.amount; }
+  });
+  const list = Object.values(byStudent).filter(x => x.charge || x.payment || x.sessions)
+    .sort((a,b)=> (b.charge + b.payment) - (a.charge + a.payment));
+  $('repStudents').innerHTML = list.length
+    ? `<table><thead><tr><th>زبان‌آموز</th><th>تعداد جلسات</th><th>بدهی ثبت‌شده</th><th>دریافتی</th><th>خالص بازه</th></tr></thead><tbody>${list.map(x=>`
+        <tr>
+          <td><b>${esc(x.name)}</b></td>
+          <td class="n">${fa(x.sessions)}</td>
+          <td class="n neg">${fa(x.charge)}</td>
+          <td class="n pos">${fa(x.payment)}</td>
+          <td class="n ${x.charge-x.payment>0?'neg':'pos'}">${fa(Math.abs(x.charge-x.payment))} ${x.charge-x.payment>0?'بدهکار':x.charge-x.payment<0?'بستانکار':''}</td>
+        </tr>`).join('')}</tbody></table>`
+    : '<div class="empty">در این بازه تراکنشی ثبت نشده است.</div>';
+
+  // جزئیات
+  const sortedRows = [...rows].sort((a,b)=>{
+    const da = a.is_session&&a.session_date ? a.session_date : a.date;
+    const db_ = b.is_session&&b.session_date ? b.session_date : b.date;
+    return db_.localeCompare(da) || b.ts - a.ts;
+  });
+  $('repTx').innerHTML = sortedRows.length
+    ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${sortedRows.slice(0,200).map(t=>{
+        const d = t.is_session && t.session_date ? t.session_date : t.date;
+        return `<tr>
+          <td>${showDate(d)}</td>
+          <td>${typeTag(t.type,t.is_session)}</td>
+          <td>${t.type==='expense'?'—':esc(stName(t.sid))}</td>
+          <td class="n"><b>${fa(t.amount)}</b></td>
+          <td style="white-space:normal;min-width:160px">${esc(t.desc)}</td>
+        </tr>`;
+      }).join('')}</tbody></table>`
+    : '<div class="empty">تراکنشی برای نمایش نیست.</div>';
+}
+
+$('repRun').onclick = runReport;
+$('repPrint').onclick = () => {
+  document.body.classList.add('pm');
+  // برای چاپ کل صفحه‌ی گزارش، همه‌ی تب‌ها رو مخفی می‌کنیم به جز report
+  document.querySelectorAll('section.tab').forEach(s => s.classList.add('on'));
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{
+      document.body.classList.remove('pm');
+      showTab('report');
+    }, 400);
+  }, 100);
+};
+
+/* میان‌برهای بازه */
+document.querySelectorAll('.rangeBox [data-range]').forEach(b => {
+  b.onclick = () => {
+    const t = todayJ();
+    const r = b.dataset.range;
+    let from, to = t;
+    if(r === 'month'){ from = [t[0], t[1], 1]; }
+    else if(r === 'lastMonth'){
+      let y = t[0], m = t[1] - 1;
+      if(m < 1){ m = 12; y--; }
+      from = [y, m, 1]; to = [y, m, jMonthDays(y, m)];
+    }
+    else if(r === '30'){ from = jAddDays(t[0], t[1], t[2], -29); }
+    else if(r === '7'){ from = jAddDays(t[0], t[1], t[2], -6); }
+    else if(r === 'year'){ from = [t[0], 1, 1]; to = [t[0], 12, jMonthDays(t[0], 12)]; }
+    setDate('repFrom', from);
+    setDate('repTo', to);
+    runReport();
+  };
+});
+
+/* =====================================================================
    صورت‌حساب
    ===================================================================== */
 function openStatement(id){
   const s = db.students.find(x=>x.id===id);
-  const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=> (a.session_date||a.date).localeCompare(b.session_date||b.date) || a.ts-b.ts);
+  const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=>{
+    const da = a.is_session && a.session_date ? a.session_date : a.date;
+    const db_ = b.is_session && b.session_date ? b.session_date : b.date;
+    return da.localeCompare(db_) || a.ts-b.ts;
+  });
   let run = 0;
   const body = rows.map(t=>{
     const d = t.type==='charge' ? t.amount : 0;
     const c = t.type==='payment' ? t.amount : 0;
     run += d - c;
     const label = (t.is_session ? '📅 ' : '') + (esc(t.desc)||TYPE_NAME[t.type]);
-    return `<tr><td>${showDate(t.session_date||t.date)}</td><td>${label}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`;
+    const dShow = t.is_session && t.session_date ? t.session_date : t.date;
+    return `<tr><td>${showDate(dShow)}</td><td>${label}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`;
   }).join('');
   const sessionCount = rows.filter(t=>t.is_session).length;
   $('modalBox').innerHTML = `<h2 style="margin-top:0">صورت‌حساب: ${esc(s.name)}</h2>
@@ -957,7 +1311,7 @@ async function download(name, text, type){
       const d = await window.claude.use('downloads');
       if(d){ await d.save({ filename:name, data:text }); toast('فایل ذخیره شد'); return; }
     }
-  }catch(e){ /* ادامه به fallback */ }
+  }catch(e){ /* ادامه */ }
   try{
     const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -1043,7 +1397,14 @@ $('themeBtn').onclick = () => {
 /* =====================================================================
    شروع
    ===================================================================== */
-function renderAll(){ renderDash(); renderStudents(); renderSessions(); renderTx(); }
+function renderAll(){
+  renderCourseChips();
+  renderSessionGrid();
+  renderDash();
+  renderStudents();
+  renderSessions();
+  renderTx();
+}
 
 (async function init(){
   try{ const th = localStorage.getItem(CONFIG.LOCAL_KEY + '_theme'); if(th) document.documentElement.dataset.theme = th; }catch(e){}
@@ -1052,6 +1413,8 @@ function renderAll(){ renderDash(); renderStudents(); renderSessions(); renderTx
   $('todayTxt').textContent = longDate(dateStr(t));
   buildDate('txDate'); txTypeUI();
   buildDate('seDate');
+  buildDate('repFrom', [t[0], t[1], 1]);
+  buildDate('repTo', t);
   renderAll();
 
   if(sb){
