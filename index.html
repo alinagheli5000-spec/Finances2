@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>امور مالی علی ناقلی</title>
+<style>
+:root{
+  --bg:#f2f5f3; --card:#ffffff; --ink:#16302b; --muted:#6a7f79; --line:#dbe4e0;
+  --head:#16302b; --brass:#b8892b; --debt:#b83a3a; --credit:#2f7d5b; --inc:#2f7d5b; --exp:#c9773a;
+  --soft:#eaf0ed; --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1a17; --card:#172522; --ink:#e6efeb; --muted:#93a8a1; --line:#28403a; --head:#0b1311; --soft:#1e302c;
+    --debt:#e26a6a; --credit:#4fc08d; --inc:#4fc08d; --exp:#e59a5e; --brass:#d9a94a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1a17; --card:#172522; --ink:#e6efeb; --muted:#93a8a1; --line:#28403a; --head:#0b1311; --soft:#1e302c;
+  --debt:#e26a6a; --credit:#4fc08d; --inc:#4fc08d; --exp:#e59a5e; --brass:#d9a94a;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Tahoma,"Vazirmatn","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-size:15px}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+header{background:var(--head);color:#fff;padding:18px 20px 0}
+.top{max-width:1200px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.top h1{margin:0;font-size:22px;font-weight:700}
+.top h1 span{color:var(--brass)}
+.today{font-size:13px;opacity:.85;display:flex;align-items:center;gap:10px}
+.icon-btn{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:2px 10px;cursor:pointer}
+nav{max-width:1200px;margin:14px auto 0;display:flex;gap:4px;overflow-x:auto}
+nav button{background:transparent;color:#cfe0da;border:0;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav button.on{color:#fff;border-bottom-color:var(--brass);font-weight:700}
+main{max-width:1200px;margin:20px auto;padding:0 14px 60px}
+section.tab{display:none}
+section.tab.on{display:block}
+.grid{display:grid;gap:14px}
+.stats{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;border-inline-start:5px solid var(--line)}
+.stat small{color:var(--muted);display:block}
+.stat b{font-size:20px}
+.stat i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px}
+.s-inc{border-inline-start-color:var(--inc)} .s-debt{border-inline-start-color:var(--debt)}
+.s-credit{border-inline-start-color:var(--credit)} .s-exp{border-inline-start-color:var(--exp)} .s-net{border-inline-start-color:var(--brass)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.card h2{margin:0 0 12px;font-size:16px}
+.two{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:3px}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+.dateRow{display:grid;grid-template-columns:1.2fr 1.6fr 1fr;gap:6px}
+.btn{background:var(--head);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+.btn.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.btn.warn{background:var(--debt);color:#fff}
+.btn.sm{padding:3px 10px;font-size:13px}
+.actions{display:flex;flex-wrap:wrap;gap:6px}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--soft);font-size:13px;color:var(--muted);font-weight:700}
+td.n{font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:1px 10px;border-radius:20px;font-size:12px}
+.t-debt{background:rgba(184,58,58,.13);color:var(--debt)}
+.t-credit{background:rgba(47,125,91,.15);color:var(--credit)}
+.t-zero{background:var(--soft);color:var(--muted)}
+.t-exp{background:rgba(201,119,58,.15);color:var(--exp)}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.empty{padding:26px;text-align:center;color:var(--muted)}
+.bars .row{display:grid;grid-template-columns:110px 1fr 110px;gap:8px;align-items:center;margin:7px 0;font-size:13px}
+.bars .track{background:var(--soft);height:14px;border-radius:7px;overflow:hidden}
+.bars .fill{height:100%;border-radius:7px}
+.bars .val{text-align:left;direction:ltr;font-variant-numeric:tabular-nums}
+.bars .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;background:var(--c)}
+.donutBox{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
+svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow:auto;z-index:50}
+#modal.on{display:flex}
+#modal .box{background:var(--card);border-radius:12px;max-width:820px;width:100%;padding:20px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--head);color:#fff;padding:10px 20px;border-radius:30px;display:none;z-index:99}
+.toast.on{display:block}
+.pos{color:var(--credit)} .neg{color:var(--debt)}
+.hint{font-size:12px;color:var(--muted)}
+#syncBadge{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)}
+#syncBadge.online{background:rgba(79,192,141,.25);border-color:rgba(79,192,141,.5)}
+#syncBadge.offline{background:rgba(226,106,106,.25);border-color:rgba(226,106,106,.5)}
+#syncBadge.syncing{background:rgba(217,169,74,.25);border-color:rgba(217,169,74,.5)}
+@media print{
+  header,nav,.noprint,.toast{display:none!important}
+  body{background:#fff;color:#000}
+  body.pm main{display:none}
+  body.pm #modal{position:static;display:block;background:none;padding:0}
+  .card,.stat{break-inside:avoid}
+  section.tab{display:block!important}
+  body:not(.pm) section.tab:not(.on){display:none!important}
+}
+@media (max-width:560px){.bars .row{grid-template-columns:80px 1fr 90px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <h1>امور مالی <span>علی ناقلی</span></h1>
+    <div class="today">
+      امروز: <b id="todayTxt"></b>
+      <span id="syncBadge" title="وضعیت اتصال به Supabase">…</span>
+      <button class="icon-btn" id="syncBtn" title="همگام‌سازی دستی">↻</button>
+      <button class="icon-btn" id="themeBtn" title="تغییر تم">🌓</button>
+    </div>
+  </div>
+  <nav id="nav">
+    <button data-t="dash" class="on">داشبورد</button>
+    <button data-t="students">زبان‌آموزان</button>
+    <button data-t="tx">تراکنش‌ها</button>
+    <button data-t="tools">گزارش و پشتیبان‌گیری</button>
+  </nav>
+</header>
+
+<main>
+<section class="tab on" id="tab-dash">
+  <div class="grid stats" id="stats"></div>
+  <div class="grid two" style="margin-top:14px">
+    <div class="card"><h2>وضعیت زبان‌آموزان</h2><div class="donutBox" id="donut"></div></div>
+    <div class="card"><h2>مانده حساب هر زبان‌آموز</h2><div class="bars" id="bars"></div>
+      <div class="legend"><span style="--c:var(--debt)">بدهکار</span><span style="--c:var(--credit)">بستانکار</span></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center">
+      <h2 style="margin:0">درآمد و هزینه ماهانه</h2>
+      <div style="width:130px"><select id="chartYear"></select></div>
+    </div>
+    <div class="wrap"><div id="monthly" style="min-width:560px"></div></div>
+    <div class="legend"><span style="--c:var(--inc)">دریافتی (درآمد)</span><span style="--c:var(--exp)">هزینه</span></div>
+    <p class="hint" id="yearSum"></p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h2>آخرین تراکنش‌ها</h2>
+    <div class="wrap" id="recent"></div>
+  </div>
+</section>
+
+<section class="tab" id="tab-students">
+  <div class="card">
+    <h2 id="stTitle">افزودن زبان‌آموز</h2>
+    <form class="f" id="stForm">
+      <div><label>نام و نام خانوادگی *</label><input id="stName" required></div>
+      <div><label>سطح / دوره زبان</label>
+        <input id="stCourse" list="courses" placeholder="مثلاً Elementary">
+        <datalist id="courses"><option>Starter</option><option>Elementary</option><option>Pre-Intermediate</option><option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option><option>IELTS</option><option>TOEFL</option><option>مکالمه</option><option>کودکان</option></datalist>
+      </div>
+      <div><label>شهریه هر جلسه / ماه (تومان)</label><input id="stFee" inputmode="numeric" class="money"></div>
+      <div><label>شماره تماس</label><input id="stPhone" inputmode="tel"></div>
+      <div><label>توضیحات</label><input id="stNote"></div>
+      <div class="actions">
+        <button class="btn" type="submit" id="stSave">افزودن</button>
+        <button class="btn alt" type="button" id="stCancel" style="display:none">انصراف</button>
+      </div>
+    </form>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="filters" style="margin-bottom:8px">
+      <input id="stSearch" placeholder="جستجوی نام، دوره یا تلفن…">
+      <select id="stFilter">
+        <option value="">همه وضعیت‌ها</option>
+        <option value="debt">بدهکار</option>
+        <option value="credit">بستانکار</option>
+        <option value="zero">تسویه</option>
+      </select>
+    </div>
+    <div class="wrap" id="stTable"></div>
+  </div>
+</section>
+
+<section class="tab" id="tab-tx">
+  <div class="card">
+    <h2 id="txTitle">ثبت تراکنش</h2>
+    <form class="f" id="txForm">
+      <div><label>نوع تراکنش</label>
+        <select id="txType">
+          <option value="charge">ثبت بدهی (شهریه / هزینه کلاس)</option>
+          <option value="payment">دریافت وجه از زبان‌آموز</option>
+          <option value="expense">هزینه‌ی من (کتاب، اجاره، …)</option>
+        </select>
+      </div>
+      <div id="txStWrap"><label>زبان‌آموز</label><select id="txStudent"></select></div>
+      <div><label>مبلغ (تومان) *</label><input id="txAmount" inputmode="numeric" class="money" required></div>
+      <div><label id="txDateLbl">تاریخ (شمسی)</label><div class="dateRow" id="txDate"></div></div>
+      <div><label>روش پرداخت</label>
+        <select id="txMethod"><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
+      </div>
+      <div><label>شرح</label><input id="txDesc" placeholder="مثلاً شهریه مهر ماه"></div>
+      <div class="actions">
+        <button class="btn" type="submit" id="txSave">ثبت</button>
+        <button class="btn alt" type="button" id="txCancel" style="display:none">انصراف</button>
+      </div>
+    </form>
+    <p class="hint">«ثبت بدهی» مبلغی را به بدهی زبان‌آموز اضافه می‌کند و «دریافت وجه» از بدهی او کم می‌کند.</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="filters">
+      <input id="fSearch" placeholder="جستجو در شرح…">
+      <select id="fStudent"></select>
+      <select id="fType">
+        <option value="">همه انواع</option>
+        <option value="charge">بدهی</option>
+        <option value="payment">دریافتی</option>
+        <option value="expense">هزینه</option>
+      </select>
+      <select id="fMonth"></select>
+    </div>
+    <p class="hint" id="txSum"></p>
+    <div class="wrap" id="txTable"></div>
+  </div>
+</section>
+
+<section class="tab" id="tab-tools">
+  <div class="grid two">
+    <div class="card">
+      <h2>خروجی و چاپ</h2>
+      <div class="actions">
+        <button class="btn" id="btnCsvTx">خروجی اکسل تراکنش‌ها</button>
+        <button class="btn" id="btnCsvSt">خروجی اکسل زبان‌آموزان</button>
+        <button class="btn alt" id="btnPrint">چاپ گزارش کلی</button>
+      </div>
+      <p class="hint">فایل‌های CSV را می‌توانید مستقیم در Excel باز کنید.</p>
+    </div>
+    <div class="card">
+      <h2>پشتیبان‌گیری</h2>
+      <div class="actions">
+        <button class="btn" id="btnBackup">دانلود فایل پشتیبان</button>
+        <button class="btn alt" id="btnRestore">بازیابی از فایل</button>
+        <input type="file" id="fileRestore" accept=".json" style="display:none">
+      </div>
+      <p class="hint">پشتیبان شامل داده‌های محلی است. داده‌های Supabase به‌صورت زنده همگام می‌شوند.</p>
+    </div>
+    <div class="card">
+      <h2>حذف همه‌ی اطلاعات</h2>
+      <button class="btn warn" id="btnReset">پاک‌کردن کامل داده‌ها (فقط محلی)</button>
+      <button class="btn warn" id="btnResetCloud" style="margin-top:8px">حذف داده‌های Supabase</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="modal"><div class="box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* =====================================================================
+   تنظیمات
+   ===================================================================== */
+const CONFIG = {
+  SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',   // ⚠️ اگر .com هست اصلاح کن
+  SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
+  LOCAL_KEY:    'ali_naghli_finance_v1'
+};
+
+/* ---------- ابزارهای عمومی ---------- */
+const $  = id => document.getElementById(id);
+const MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const FA = '۰۱۲۳۴۵۶۷۸۹';
+const faDigits = s => String(s).replace(/\d/g, d => FA[d]);
+const fa = n => Math.round(n).toLocaleString('fa-IR');
+const toEn = s => String(s||'')
+  .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+  .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+  .replace(/[^\d.-]/g, '');
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2,7));
+const debounce = (fn, ms=220) => { let h; return (...a)=>{ clearTimeout(h); h=setTimeout(()=>fn(...a), ms); }; };
+
+let _toastH;
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(_toastH); _toastH = setTimeout(()=>t.classList.remove('on'), 2400);
+}
+
+/* ---------- تاریخ شمسی (با Intl) ---------- */
+const _persianFmt = new Intl.DateTimeFormat('en-u-ca-persian-nu-latn', {
+  year:'numeric', month:'numeric', day:'numeric'
+});
+function todayJ(){
+  const parts = _persianFmt.formatToParts(new Date());
+  const g = t => +parts.find(p=>p.type===t).value;
+  return [g('year'), g('month'), g('day')];
+}
+function jMonthDays(y, m){
+  if(m <= 6) return 31;
+  if(m <= 11) return 30;
+  // اسفند: با تست یک تاریخ واقعی چک می‌کنیم
+  const probe = new Date(y + 621, 2, 20); // حدود ۱ فروردین
+  const parts = _persianFmt.formatToParts(probe);
+  const py = +parts.find(p=>p.type==='year').value;
+  return py === y + 1 ? 29 : 30; // اگر probe به سال بعد رفته یعنی اسفند ۲۹ داشته
+}
+const pad = n => String(n).padStart(2,'0');
+const dateStr = a => a[0]+'/'+pad(a[1])+'/'+pad(a[2]);
+const showDate = s => faDigits(s);
+const longDate = s => { const [y,m,d]=s.split('/').map(Number); return faDigits(d)+' '+MONTHS[m-1]+' '+faDigits(y); };
+
+function buildDate(boxId){
+  const box=$(boxId), t=todayJ();
+  let yOpts=''; for(let y=t[0]-6;y<=t[0]+2;y++) yOpts+=`<option value="${y}">${faDigits(y)}</option>`;
+  box.innerHTML=`<select data-r="y">${yOpts}</select><select data-r="m">${MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('')}</select><select data-r="d"></select>`;
+  const [sy,sm,sd]=['y','m','d'].map(r=>box.querySelector(`[data-r=${r}]`));
+  const fillDays=()=>{const n=jMonthDays(+sy.value,+sm.value),cur=+sd.value||1;let h='';for(let i=1;i<=n;i++)h+=`<option value="${i}">${faDigits(i)}</option>`;sd.innerHTML=h;sd.value=Math.min(cur,n)};
+  sy.onchange=sm.onchange=fillDays;
+  setDate(boxId,t);
+}
+function setDate(boxId,arr){
+  const box=$(boxId);
+  const [sy,sm,sd]=['y','m','d'].map(r=>box.querySelector(`[data-r=${r}]`));
+  sy.value=arr[0]; sm.value=arr[1];
+  const n=jMonthDays(arr[0],arr[1]); let h='';
+  for(let i=1;i<=n;i++) h+=`<option value="${i}">${faDigits(i)}</option>`;
+  sd.innerHTML=h; sd.value=arr[2];
+}
+function getDate(boxId){
+  const box=$(boxId);
+  return dateStr(['y','m','d'].map(r=>+box.querySelector(`[data-r=${r}]`).value));
+}
+
+/* =====================================================================
+   لایه‌ی داده — Supabase + fallback محلی
+   ===================================================================== */
+const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY)
+  ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY)
+  : null;
+
+let db = { students: [], tx: [] };
+let online = !!sb;
+
+function loadLocal(){
+  try{
+    const r = localStorage.getItem(CONFIG.LOCAL_KEY);
+    if(r) db = JSON.parse(r);
+  }catch(e){}
+  db.students = db.students || [];
+  db.tx = db.tx || [];
+}
+function saveLocal(){
+  try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }
+  catch(e){ toast('ذخیره‌سازی محلی انجام نشد!'); }
+}
+
+function setSync(state, label){
+  const b = $('syncBadge');
+  b.className = state;
+  b.textContent = label;
+}
+
+/* --- خواندن از Supabase --- */
+async function pullFromCloud(){
+  if(!sb) return false;
+  setSync('syncing','در حال همگام‌سازی…');
+  try{
+    const [stRes, txRes] = await Promise.all([
+      sb.from('students').select('*').order('created_at',{ascending:true}),
+      sb.from('tx').select('*').order('date',{ascending:true})
+    ]);
+    if(stRes.error) throw stRes.error;
+    if(txRes.error) throw txRes.error;
+    db.students = (stRes.data||[]).map(s => ({
+      id: s.id, name: s.name, course: s.course || '',
+      fee: s.fee || 0, phone: s.phone || '', note: s.note || ''
+    }));
+    db.tx = (txRes.data||[]).map(t => ({
+      id: t.id, type: t.type, sid: t.sid, amount: t.amount,
+      date: t.date, method: t.method || '', desc: t.descr || '',
+      ts: t.created_at ? new Date(t.created_at).getTime() : Date.now()
+    }));
+    saveLocal();
+    setSync('online','متصل');
+    return true;
+  }catch(e){
+    console.warn('pull error', e);
+    setSync('offline','آفلاین');
+    return false;
+  }
+}
+
+/* --- نوشتن: هر عملیات هم محلی و هم ابری --- */
+async function cloudInsertStudent(s){
+  if(!sb) return;
+  const { data, error } = await sb.from('students').insert([{
+    name:s.name, course:s.course, fee:s.fee, phone:s.phone, note:s.note
+  }]).select().single();
+  if(error){ console.warn(error); toast('خطای ذخیره در Supabase'); return; }
+  s.id = data.id;
+}
+async function cloudUpdateStudent(s){
+  if(!sb) return;
+  const { error } = await sb.from('students').update({
+    name:s.name, course:s.course, fee:s.fee, phone:s.phone, note:s.note
+  }).eq('id', s.id);
+  if(error){ console.warn(error); toast('خطای ویرایش در Supabase'); }
+}
+async function cloudDeleteStudent(id){
+  if(!sb) return;
+  const { error } = await sb.from('students').delete().eq('id', id);
+  if(error){ console.warn(error); toast('خطای حذف در Supabase'); }
+}
+async function cloudInsertTx(t){
+  if(!sb) return;
+  const { data, error } = await sb.from('tx').insert([{
+    type:t.type, sid:t.sid, amount:t.amount, date:t.date,
+    method:t.method, descr:t.desc
+  }]).select().single();
+  if(error){ console.warn(error); toast('خطای ذخیره در Supabase'); return; }
+  t.id = data.id;
+}
+async function cloudUpdateTx(t){
+  if(!sb) return;
+  const { error } = await sb.from('tx').update({
+    type:t.type, sid:t.sid, amount:t.amount, date:t.date,
+    method:t.method, descr:t.desc
+  }).eq('id', t.id);
+  if(error){ console.warn(error); toast('خطای ویرایش در Supabase'); }
+}
+async function cloudDeleteTx(id){
+  if(!sb) return;
+  const { error } = await sb.from('tx').delete().eq('id', id);
+  if(error){ console.warn(error); toast('خطای حذف در Supabase'); }
+}
+
+/* =====================================================================
+   محاسبات
+   ===================================================================== */
+function balances(){
+  const b = {};
+  db.students.forEach(s => b[s.id] = { charge:0, pay:0, bal:0 });
+  db.tx.forEach(t => {
+    if(!b[t.sid]) return;
+    if(t.type==='charge') b[t.sid].charge += t.amount;
+    if(t.type==='payment') b[t.sid].pay += t.amount;
+  });
+  Object.values(b).forEach(x => x.bal = x.charge - x.pay);
+  return b;
+}
+const statusOf   = bal => bal>0 ? 'debt' : bal<0 ? 'credit' : 'zero';
+const statusTag  = bal => bal>0 ? '<span class="tag t-debt">بدهکار</span>' : bal<0 ? '<span class="tag t-credit">بستانکار</span>' : '<span class="tag t-zero">تسویه</span>';
+const TYPE_NAME  = { charge:'بدهی', payment:'دریافتی', expense:'هزینه' };
+const typeTag    = t => ({charge:'<span class="tag t-debt">بدهی</span>',payment:'<span class="tag t-credit">دریافتی</span>',expense:'<span class="tag t-exp">هزینه</span>'})[t];
+const stName     = id => (db.students.find(s=>s.id===id)||{}).name || '—';
+
+/* ---------- ورودی مبلغ با جداکننده ---------- */
+document.addEventListener('input', e => {
+  if(e.target.classList.contains('money')){
+    const v = toEn(e.target.value).replace(/[^\d]/g,'');
+    e.target.value = v ? Number(v).toLocaleString('en-US') : '';
+  }
+});
+const moneyVal = id => Number(toEn($(id).value)) || 0;
+
+/* =====================================================================
+   تب‌ها
+   ===================================================================== */
+$('nav').onclick = e => {
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on', x===b));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('on', s.id==='tab-'+b.dataset.t));
+  renderAll();
+};
+function showTab(t){ document.querySelector(`nav button[data-t=${t}]`).click(); }
+
+/* =====================================================================
+   داشبورد
+   ===================================================================== */
+function renderDash(){
+  const b = balances();
+  let debt=0, credit=0, nd=0, nc=0, nz=0;
+  db.students.forEach(s => {
+    const v = b[s.id].bal;
+    if(v>0){ debt += v; nd++; } else if(v<0){ credit += -v; nc++; } else nz++;
+  });
+  const income = db.tx.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
+  const exp    = db.tx.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
+  const card = (cls,l,v) => `<div class="stat ${cls}"><small>${l}</small><b>${fa(v)}</b><i>تومان</i></div>`;
+  $('stats').innerHTML =
+    `<div class="stat"><small>تعداد زبان‌آموزان</small><b>${fa(db.students.length)}</b><i>نفر</i></div>` +
+    card('s-inc','کل درآمد دریافتی',income) +
+    card('s-debt','مجموع بدهی زبان‌آموزان',debt) +
+    card('s-credit','مجموع بستانکاری',credit) +
+    card('s-exp','مجموع هزینه‌ها',exp) +
+    card('s-net','سود خالص (درآمد − هزینه)',income-exp);
+
+  // دونات
+  const tot = nd+nc+nz, R=42, C=2*Math.PI*R;
+  const parts = [[nd,'var(--debt)','بدهکار'],[nc,'var(--credit)','بستانکار'],[nz,'var(--muted)','تسویه‌شده']];
+  let off=0, circ='';
+  if(tot){
+    parts.forEach(p => { if(!p[0]) return; const len=p[0]/tot*C;
+      circ += `<circle r="${R}" cx="60" cy="60" fill="none" stroke="${p[1]}" stroke-width="18" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;
+      off += len;
+    });
+  } else circ = `<circle r="${R}" cx="60" cy="60" fill="none" stroke="var(--soft)" stroke-width="18"/>`;
+  $('donut').innerHTML = `<svg viewBox="0 0 120 120" width="170" height="170">${circ}<text x="60" y="58" text-anchor="middle" font-size="18" style="fill:var(--ink);font-weight:700">${fa(tot)}</text><text x="60" y="74" text-anchor="middle" font-size="9">زبان‌آموز</text></svg>
+   <div class="legend" style="flex-direction:column;gap:8px">${parts.map(p=>`<span style="--c:${p[1]}">${p[2]}: <b>${fa(p[0])}</b> نفر</span>`).join('')}</div>`;
+
+  // میلگردی مانده
+  const list = db.students.map(s=>({n:s.name, v:b[s.id].bal}))
+    .filter(x=>x.v!==0).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,10);
+  const mx = Math.max(1, ...list.map(x=>Math.abs(x.v)));
+  $('bars').innerHTML = list.length
+    ? list.map(x=>`<div class="row"><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><div class="track"><div class="fill" style="width:${Math.abs(x.v)/mx*100}%;background:${x.v>0?'var(--debt)':'var(--credit)'}"></div></div><span class="val ${x.v>0?'neg':'pos'}">${fa(Math.abs(x.v))}</span></div>`).join('')
+    : '<div class="empty">همه‌ی حساب‌ها تسویه است.</div>';
+
+  // نمودار سالانه
+  const years = new Set([todayJ()[0]]);
+  db.tx.forEach(t => years.add(+t.date.slice(0,4)));
+  const sel = $('chartYear'), cur = sel.value || todayJ()[0];
+  sel.innerHTML = [...years].sort((a,b)=>b-a).map(y=>`<option value="${y}">سال ${faDigits(y)}</option>`).join('');
+  sel.value = years.has(+cur) ? cur : todayJ()[0];
+  const Y = sel.value, inc = Array(12).fill(0), ex = Array(12).fill(0);
+  db.tx.forEach(t => {
+    if(t.date.slice(0,4) !== String(Y)) return;
+    const m = +t.date.slice(5,7)-1;
+    if(t.type==='payment') inc[m] += t.amount;
+    if(t.type==='expense') ex[m] += t.amount;
+  });
+  const W=600, H=250, pl=10, pt=14, pb=34, cw=(W-pl*2)/12;
+  const max = Math.max(1, ...inc, ...ex);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%">`;
+  for(let i=0;i<=4;i++){ const y = pt+(H-pt-pb)*i/4; svg += `<line x1="${pl}" x2="${W-pl}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-dasharray="3 3"/>`; }
+  for(let m=0;m<12;m++){
+    const cx = W-pl-cw*(m+.5), bw = cw*.32, ch = H-pt-pb;
+    const h1 = inc[m]/max*ch, h2 = ex[m]/max*ch;
+    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="2" fill="var(--inc)"><title>${MONTHS[m]} - دریافتی: ${fa(inc[m])}</title></rect>`;
+    svg += `<rect x="${cx+1}"   y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="2" fill="var(--exp)"><title>${MONTHS[m]} - هزینه: ${fa(ex[m])}</title></rect>`;
+    svg += `<text x="${cx}" y="${H-14}" text-anchor="middle" font-size="10">${MONTHS[m]}</text>`;
+    if(inc[m]) svg += `<text x="${cx-bw/2-1}" y="${pt+ch-h1-3}" text-anchor="middle" font-size="8">${fa(inc[m]/1000)}</text>`;
+  }
+  svg += '</svg>';
+  $('monthly').innerHTML = svg;
+  const ti = inc.reduce((a,b)=>a+b,0), te = ex.reduce((a,b)=>a+b,0);
+  const best = ti ? inc.indexOf(Math.max(...inc)) : -1;
+  $('yearSum').textContent = `سال ${faDigits(Y)}: درآمد ${fa(ti)} تومان، هزینه ${fa(te)} تومان، سود ${fa(ti-te)} تومان` +
+    (ti ? `. پردرآمدترین ماه: ${MONTHS[best]} (اعداد بالای ستون‌ها به هزار تومان)` : '');
+
+  // آخرین تراکنش‌ها
+  const rec = [...db.tx].sort((a,b)=>b.date.localeCompare(a.date) || b.ts-a.ts).slice(0,6);
+  $('recent').innerHTML = rec.length
+    ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>`
+    : '<div class="empty">هنوز تراکنشی ثبت نشده است.</div>';
+}
+
+/* =====================================================================
+   زبان‌آموزان
+   ===================================================================== */
+let editSt = null;
+function renderStudents(){
+  const b = balances(), q = $('stSearch').value.trim(), f = $('stFilter').value;
+  const rows = db.students.filter(s => {
+    if(q && !(s.name+' '+s.course+' '+s.phone).includes(q)) return false;
+    if(f && statusOf(b[s.id].bal) !== f) return false;
+    return true;
+  });
+  $('stTable').innerHTML = rows.length
+    ? `<table><thead><tr><th>نام</th><th>دوره</th><th>شهریه</th><th>تلفن</th><th>کل بدهی</th><th>پرداختی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s=>{const x=b[s.id];return `<tr>
+      <td><b>${esc(s.name)}</b></td><td>${esc(s.course)}</td><td class="n">${s.fee?fa(s.fee):'—'}</td><td>${faDigits(esc(s.phone))}</td>
+      <td class="n">${fa(x.charge)}</td><td class="n">${fa(x.pay)}</td>
+      <td class="n ${x.bal>0?'neg':x.bal<0?'pos':''}"><b>${fa(Math.abs(x.bal))}</b></td><td>${statusTag(x.bal)}</td>
+      <td><div class="actions">
+        <button class="btn sm" onclick="openStatement('${s.id}')">صورت‌حساب</button>
+        <button class="btn sm alt" onclick="quickTx('${s.id}','payment')">دریافت</button>
+        <button class="btn sm alt" onclick="quickTx('${s.id}','charge')">بدهی</button>
+        <button class="btn sm alt" onclick="editStudent('${s.id}')">ویرایش</button>
+        <button class="btn sm warn" onclick="delStudent('${s.id}')">حذف</button></div></td></tr>`}).join('')}</tbody></table>`
+    : '<div class="empty">زبان‌آموزی یافت نشد.</div>';
+}
+$('stForm').onsubmit = async e => {
+  e.preventDefault();
+  const o = { name:$('stName').value.trim(), course:$('stCourse').value.trim(), fee:moneyVal('stFee'), phone:toEn($('stPhone').value), note:$('stNote').value.trim() };
+  if(!o.name) return;
+  if(editSt){
+    const s = db.students.find(x=>x.id===editSt);
+    Object.assign(s, o);
+    await cloudUpdateStudent(s);
+    toast('تغییرات ذخیره شد');
+  } else {
+    const s = { id: uid(), ...o };
+    db.students.push(s);
+    await cloudInsertStudent(s);
+    toast('زبان‌آموز اضافه شد');
+  }
+  cancelStudent(); saveLocal(); renderAll();
+};
+function editStudent(id){
+  const s = db.students.find(x=>x.id===id); editSt = id;
+  $('stName').value = s.name; $('stCourse').value = s.course||'';
+  $('stFee').value = s.fee ? s.fee.toLocaleString('en-US') : '';
+  $('stPhone').value = s.phone||''; $('stNote').value = s.note||'';
+  $('stTitle').textContent = 'ویرایش زبان‌آموز';
+  $('stSave').textContent = 'ذخیره تغییرات';
+  $('stCancel').style.display = '';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function cancelStudent(){
+  editSt = null; $('stForm').reset();
+  $('stTitle').textContent = 'افزودن زبان‌آموز';
+  $('stSave').textContent = 'افزودن';
+  $('stCancel').style.display = 'none';
+}
+$('stCancel').onclick = cancelStudent;
+async function delStudent(id){
+  const n = db.tx.filter(t=>t.sid===id).length;
+  if(!confirm(`«${stName(id)}» و ${faDigits(n)} تراکنش او حذف شود؟`)) return;
+  await cloudDeleteStudent(id);
+  db.students = db.students.filter(s=>s.id!==id);
+  db.tx = db.tx.filter(t=>t.sid!==id);
+  saveLocal(); renderAll(); toast('حذف شد');
+}
+$('stSearch').addEventListener('input', debounce(renderStudents));
+$('stFilter').addEventListener('change', renderStudents);
+
+/* =====================================================================
+   تراکنش‌ها
+   ===================================================================== */
+let editTx = null;
+function fillStudentSelects(){
+  const opts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+  const v1 = $('txStudent').value, v2 = $('fStudent').value;
+  $('txStudent').innerHTML = opts || '<option value="">— ابتدا زبان‌آموز اضافه کنید —</option>';
+  $('fStudent').innerHTML = '<option value="">همه زبان‌آموزان</option>' + opts;
+  if(db.students.some(s=>s.id===v1)) $('txStudent').value = v1;
+  if(db.students.some(s=>s.id===v2)) $('fStudent').value = v2;
+  const ms = [...new Set(db.tx.map(t=>t.date.slice(0,7)))].sort().reverse();
+  const v3 = $('fMonth').value;
+  $('fMonth').innerHTML = '<option value="">همه ماه‌ها</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
+  $('fMonth').value = ms.includes(v3) ? v3 : '';
+}
+function txTypeUI(){
+  const ex = $('txType').value === 'expense';
+  $('txStWrap').style.display = ex ? 'none' : '';
+  $('txDateLbl').textContent = $('txType').value==='payment' ? 'تاریخ دریافت (شمسی)' : 'تاریخ (شمسی)';
+}
+$('txType').onchange = txTypeUI;
+
+$('txForm').onsubmit = async e => {
+  e.preventDefault();
+  const type = $('txType').value, amount = moneyVal('txAmount');
+  if(amount <= 0){ toast('مبلغ را وارد کنید'); return; }
+  if(type !== 'expense' && !$('txStudent').value){ toast('ابتدا یک زبان‌آموز انتخاب کنید'); return; }
+  const o = {
+    type,
+    sid: type==='expense' ? null : $('txStudent').value,
+    amount, date: getDate('txDate'),
+    method: $('txMethod').value, desc: $('txDesc').value.trim()
+  };
+  if(editTx){
+    const t = db.tx.find(x=>x.id===editTx);
+    Object.assign(t, o);
+    await cloudUpdateTx(t);
+    toast('تراکنش ویرایش شد');
+  } else {
+    const t = { id: uid(), ts: Date.now(), ...o };
+    db.tx.push(t);
+    await cloudInsertTx(t);
+    toast('تراکنش ثبت شد');
+  }
+  const keepType = $('txType').value;
+  const keepSt   = keepType === 'expense' ? '' : $('txStudent').value;
+  cancelTx();
+  $('txType').value = keepType; txTypeUI();
+  $('txStudent').value = keepSt;
+  saveLocal(); renderAll();
+};
+function cancelTx(){
+  editTx = null; $('txForm').reset(); setDate('txDate', todayJ()); txTypeUI();
+  $('txTitle').textContent = 'ثبت تراکنش';
+  $('txSave').textContent = 'ثبت';
+  $('txCancel').style.display = 'none';
+}
+$('txCancel').onclick = cancelTx;
+function editTransaction(id){
+  const t = db.tx.find(x=>x.id===id); editTx = id; showTab('tx');
+  $('txType').value = t.type; txTypeUI();
+  if(t.sid) $('txStudent').value = t.sid;
+  $('txAmount').value = t.amount.toLocaleString('en-US');
+  setDate('txDate', t.date.split('/').map(Number));
+  $('txMethod').value = t.method; $('txDesc').value = t.desc||'';
+  $('txTitle').textContent = 'ویرایش تراکنش';
+  $('txSave').textContent = 'ذخیره تغییرات';
+  $('txCancel').style.display = '';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+async function delTx(id){
+  if(!confirm('این تراکنش حذف شود؟')) return;
+  await cloudDeleteTx(id);
+  db.tx = db.tx.filter(t=>t.id!==id);
+  saveLocal(); renderAll(); toast('حذف شد');
+}
+function quickTx(sid, type){
+  showTab('tx'); cancelTx();
+  $('txType').value = type; txTypeUI(); $('txStudent').value = sid;
+  const s = db.students.find(x=>x.id===sid);
+  if(type==='charge' && s.fee) $('txAmount').value = s.fee.toLocaleString('en-US');
+  if(type==='payment'){ const bl = balances()[sid].bal; if(bl>0) $('txAmount').value = bl.toLocaleString('en-US'); }
+  $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'});
+}
+function filteredTx(){
+  const q = $('fSearch').value.trim(), s = $('fStudent').value, t = $('fType').value, m = $('fMonth').value;
+  return db.tx.filter(x => (!s||x.sid===s) && (!t||x.type===t) && (!m||x.date.startsWith(m)) && (!q||(x.desc||'').includes(q)||stName(x.sid).includes(q)))
+    .sort((a,b)=> b.date.localeCompare(a.date) || b.ts-a.ts);
+}
+function renderTx(){
+  fillStudentSelects();
+  const rows = filteredTx();
+  const sum = t => rows.filter(x=>x.type===t).reduce((a,x)=>a+x.amount,0);
+  $('txSum').innerHTML = `نمایش ${faDigits(rows.length)} تراکنش — بدهی ثبت‌شده: <b>${fa(sum('charge'))}</b> | دریافتی: <b>${fa(sum('payment'))}</b> | هزینه: <b>${fa(sum('expense'))}</b> تومان`;
+  $('txTable').innerHTML = rows.length
+    ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ (تومان)</th><th>روش</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.map(t=>`<tr>
+      <td>${showDate(t.date)}</td><td>${typeTag(t.type)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td>
+      <td class="n"><b>${fa(t.amount)}</b></td><td>${esc(t.method)}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td>
+      <td><div class="actions"><button class="btn sm alt" onclick="editTransaction('${t.id}')">ویرایش</button><button class="btn sm warn" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>`
+    : '<div class="empty">تراکنشی برای نمایش وجود ندارد.</div>';
+}
+$('fSearch').addEventListener('input', debounce(renderTx));
+['fStudent','fType','fMonth'].forEach(id => $(id).addEventListener('change', renderTx));
+
+/* =====================================================================
+   صورت‌حساب
+   ===================================================================== */
+function openStatement(id){
+  const s = db.students.find(x=>x.id===id);
+  const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=> a.date.localeCompare(b.date) || a.ts-b.ts);
+  let run = 0;
+  const body = rows.map(t=>{
+    const d = t.type==='charge' ? t.amount : 0;
+    const c = t.type==='payment' ? t.amount : 0;
+    run += d - c;
+    return `<tr><td>${showDate(t.date)}</td><td>${esc(t.desc)||TYPE_NAME[t.type]}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`;
+  }).join('');
+  $('modalBox').innerHTML = `<h2 style="margin-top:0">صورت‌حساب: ${esc(s.name)}</h2>
+   <p class="hint">${esc(s.course)} ${s.phone?'— تلفن: '+faDigits(esc(s.phone)):''} — تاریخ صدور: ${longDate(dateStr(todayJ()))}</p>
+   <div class="wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار (پرداخت)</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:'<div class="empty">تراکنشی ثبت نشده.</div>'}</div>
+   <h3>${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'حساب تسویه است'}</h3>
+   <div class="actions noprint"><button class="btn" onclick="printModal()">چاپ</button><button class="btn alt" onclick="closeModal()">بستن</button></div>`;
+  $('modal').classList.add('on');
+}
+function closeModal(){ $('modal').classList.remove('on'); }
+function printModal(){ document.body.classList.add('pm'); window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }
+$('modal').onclick = e => { if(e.target.id==='modal') closeModal(); };
+
+/* =====================================================================
+   خروجی / پشتیبان (با fallback مرورگر)
+   ===================================================================== */
+async function download(name, text, type){
+  try{
+    if(window.claude && window.claude.use){
+      const d = await window.claude.use('downloads');
+      if(d){ await d.save({ filename:name, data:text }); toast('فایل ذخیره شد'); return; }
+    }
+  }catch(e){ if(!e || e.code!=='declined'){ /* ادامه به fallback */ } }
+  try{
+    const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100);
+    toast('فایل دانلود شد');
+  }catch(e){ toast('ذخیره فایل انجام نشد'); }
+}
+const csvCell = v => '"' + String(v??'').replace(/"/g,'""') + '"';
+
+$('btnCsvTx').onclick = () => {
+  const r = [['تاریخ','نوع','زبان‌آموز','مبلغ','روش','شرح']];
+  [...db.tx].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t =>
+    r.push([t.date, TYPE_NAME[t.type], t.type==='expense'?'':stName(t.sid), t.amount, t.method, t.desc]));
+  download('transactions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
+};
+$('btnCsvSt').onclick = () => {
+  const b = balances();
+  const r = [['نام','دوره','شهریه','تلفن','کل بدهی','پرداختی','مانده','وضعیت']];
+  db.students.forEach(s => { const x = b[s.id];
+    r.push([s.name, s.course, s.fee, s.phone, x.charge, x.pay, Math.abs(x.bal),
+            x.bal>0?'بدهکار':x.bal<0?'بستانکار':'تسویه']); });
+  download('students.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
+};
+$('btnBackup').onclick = () => download('backup-'+dateStr(todayJ()).replace(/\//g,'-')+'.json', JSON.stringify(db), 'application/json');
+$('btnRestore').onclick = () => $('fileRestore').click();
+$('fileRestore').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const d = JSON.parse(r.result);
+      if(!Array.isArray(d.students) || !Array.isArray(d.tx)) throw 0;
+      if(!confirm('اطلاعات فعلی محلی با فایل پشتیبان جایگزین شود؟ (روی Supabase اعمال نمی‌شود)')) return;
+      db = d; saveLocal(); renderAll(); toast('بازیابی محلی انجام شد');
+    }catch(_){ toast('فایل معتبر نیست'); }
+  };
+  r.readAsText(f); e.target.value = '';
+};
+$('btnPrint').onclick = () => { showTab('dash'); setTimeout(()=>window.print(), 100); };
+$('btnReset').onclick = () => {
+  if(confirm('همه‌ی اطلاعات محلی پاک می‌شود. مطمئنید؟') && confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')){
+    db = { students:[], tx:[] }; saveLocal(); renderAll(); toast('پاک شد (محلی)');
+  }
+};
+$('btnResetCloud').onclick = async () => {
+  if(!sb){ toast('Supabase در دسترس نیست'); return; }
+  if(!confirm('همه‌ی داده‌ها از Supabase حذف می‌شوند! مطمئنید؟')) return;
+  if(!confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')) return;
+  setSync('syncing','در حال حذف…');
+  try{
+    await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await sb.from('students').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    db = { students:[], tx:[] }; saveLocal(); renderAll();
+    setSync('online','متصل'); toast('داده‌های Supabase حذف شد');
+  }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا در حذف ابری'); }
+};
+$('chartYear').onchange = renderDash;
+
+/* ---------- همگام‌سازی دستی ---------- */
+$('syncBtn').onclick = async () => {
+  if(!sb){ toast('Supabase پیکربندی نشده'); return; }
+  const ok = await pullFromCloud();
+  if(ok){ renderAll(); toast('همگام‌سازی انجام شد'); }
+  else toast('اتصال برقرار نشد');
+};
+
+/* ---------- تم ---------- */
+$('themeBtn').onclick = () => {
+  const r = document.documentElement;
+  const dark = getComputedStyle(r).getPropertyValue('--bg').trim() === '#0f1a17';
+  r.dataset.theme = dark ? 'light' : 'dark';
+  try{ localStorage.setItem(CONFIG.LOCAL_KEY + '_theme', r.dataset.theme); }catch(e){}
+};
+
+/* =====================================================================
+   شروع
+   ===================================================================== */
+function renderAll(){ renderDash(); renderStudents(); renderTx(); }
+
+(async function init(){
+  try{ const th = localStorage.getItem(CONFIG.LOCAL_KEY + '_theme'); if(th) document.documentElement.dataset.theme = th; }catch(e){}
+  loadLocal();
+  const t = todayJ();
+  $('todayTxt').textContent = longDate(dateStr(t));
+  buildDate('txDate'); txTypeUI();
+  renderAll();  // اول محلی
+
+  if(sb){
+    setSync('syncing','اتصال…');
+    const ok = await pullFromCloud();
+    if(ok) renderAll();
+  } else {
+    setSync('offline','آفلاین (بدون Supabase)');
+  }
+})();
+</script>
+</body>
+</html>
