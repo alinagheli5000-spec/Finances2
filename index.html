@@ -28,7 +28,7 @@ header{background:var(--head);color:#fff;padding:18px 20px 0}
 .top{max-width:1200px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
 .top h1{margin:0;font-size:22px;font-weight:700}
 .top h1 span{color:var(--brass)}
-.today{font-size:13px;opacity:.85;display:flex;align-items:center;gap:10px}
+.today{font-size:13px;opacity:.85;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .icon-btn{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:2px 10px;cursor:pointer}
 nav{max-width:1200px;margin:14px auto 0;display:flex;gap:4px;overflow-x:auto}
 nav button{background:transparent;color:#cfe0da;border:0;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
@@ -55,6 +55,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .btn{background:var(--head);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
 .btn.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
 .btn.warn{background:var(--debt);color:#fff}
+.btn.ok{background:var(--credit);color:#fff}
 .btn.sm{padding:3px 10px;font-size:13px}
 .actions{display:flex;flex-wrap:wrap;gap:6px}
 .wrap{overflow-x:auto}
@@ -67,6 +68,7 @@ td.n{font-variant-numeric:tabular-nums}
 .t-credit{background:rgba(47,125,91,.15);color:var(--credit)}
 .t-zero{background:var(--soft);color:var(--muted)}
 .t-exp{background:rgba(201,119,58,.15);color:var(--exp)}
+.t-session{background:rgba(184,137,43,.18);color:var(--brass)}
 .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
 .empty{padding:26px;text-align:center;color:var(--muted)}
 .bars .row{display:grid;grid-template-columns:110px 1fr 110px;gap:8px;align-items:center;margin:7px 0;font-size:13px}
@@ -89,6 +91,17 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 #syncBadge.online{background:rgba(79,192,141,.25);border-color:rgba(79,192,141,.5)}
 #syncBadge.offline{background:rgba(226,106,106,.25);border-color:rgba(226,106,106,.5)}
 #syncBadge.syncing{background:rgba(217,169,74,.25);border-color:rgba(217,169,74,.5)}
+
+/* انتخابگر زبان‌آموزان در ثبت جلسه */
+.pickerBox{border:1px solid var(--line);border-radius:10px;max-height:280px;overflow-y:auto;background:var(--soft)}
+.pickerRow{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px}
+.pickerRow:last-child{border-bottom:0}
+.pickerRow input[type=checkbox]{width:auto;accent-color:var(--brass);width:16px;height:16px}
+.pickerRow .fee{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pickerHead{display:flex;justify-content:space-between;gap:8px;padding:8px 4px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.pickerHead button{background:none;border:0;color:var(--brass);cursor:pointer;font-weight:700;padding:2px 6px}
+.badgeSessions{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+
 @media print{
   header,nav,.noprint,.toast{display:none!important}
   body{background:#fff;color:#000}
@@ -108,7 +121,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
     <h1>امور مالی <span>علی ناقلی</span></h1>
     <div class="today">
       امروز: <b id="todayTxt"></b>
-      <span id="syncBadge" title="وضعیت اتصال به Supabase">…</span>
+      <span id="syncBadge" title="وضعیت اتصال">…</span>
       <button class="icon-btn" id="syncBtn" title="همگام‌سازی دستی">↻</button>
       <button class="icon-btn" id="themeBtn" title="تغییر تم">🌓</button>
     </div>
@@ -116,12 +129,15 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   <nav id="nav">
     <button data-t="dash" class="on">داشبورد</button>
     <button data-t="students">زبان‌آموزان</button>
+    <button data-t="session">ثبت جلسه</button>
     <button data-t="tx">تراکنش‌ها</button>
     <button data-t="tools">گزارش و پشتیبان‌گیری</button>
   </nav>
 </header>
 
 <main>
+
+<!-- ===== داشبورد ===== -->
 <section class="tab on" id="tab-dash">
   <div class="grid stats" id="stats"></div>
   <div class="grid two" style="margin-top:14px">
@@ -145,6 +161,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   </div>
 </section>
 
+<!-- ===== زبان‌آموزان ===== -->
 <section class="tab" id="tab-students">
   <div class="card">
     <h2 id="stTitle">افزودن زبان‌آموز</h2>
@@ -154,7 +171,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
         <input id="stCourse" list="courses" placeholder="مثلاً Elementary">
         <datalist id="courses"><option>Starter</option><option>Elementary</option><option>Pre-Intermediate</option><option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option><option>IELTS</option><option>TOEFL</option><option>مکالمه</option><option>کودکان</option></datalist>
       </div>
-      <div><label>شهریه هر جلسه / ماه (تومان)</label><input id="stFee" inputmode="numeric" class="money"></div>
+      <div><label>شهریه هر جلسه (تومان)</label><input id="stFee" inputmode="numeric" class="money"></div>
       <div><label>شماره تماس</label><input id="stPhone" inputmode="tel"></div>
       <div><label>توضیحات</label><input id="stNote"></div>
       <div class="actions">
@@ -177,6 +194,46 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   </div>
 </section>
 
+<!-- ===== ثبت جلسه ===== -->
+<section class="tab" id="tab-session">
+  <div class="card">
+    <h2>ثبت جلسه‌ی برگزارشده</h2>
+    <p class="hint">تاریخ برگزاری جلسه و زبان‌آموزان را انتخاب کنید. مبلغ شهریه‌ی هر نفر خودکار پر می‌شود و می‌توانید برای هر زبان‌آموز مبلغ جدا وارد کنید (مثلاً اگر آن جلسه تخفیف داشت).</p>
+
+    <div class="f" style="margin-bottom:10px">
+      <div><label>تاریخ برگزاری جلسه (شمسی) *</label><div class="dateRow" id="seDate"></div></div>
+      <div><label>شرح پیش‌فرض (اختیاری)</label><input id="seDesc" placeholder="مثلاً جلسه‌ی گروه Elementary"></div>
+      <div><label>روش پرداخت (فقط جهت یادداشت)</label>
+        <select id="seMethod"><option>—</option><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
+      </div>
+    </div>
+
+    <div class="pickerHead">
+      <span>انتخاب زبان‌آموزان <b id="seCount">(۰ نفر)</b></span>
+      <span>
+        <button type="button" id="seAll">انتخاب همه</button> ·
+        <button type="button" id="seNone">حذف انتخاب‌ها</button>
+      </span>
+    </div>
+    <div class="pickerBox" id="sePicker"></div>
+
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ok" id="seSave">ثبت جلسه و افزودن بدهی</button>
+      <span class="hint" id="seTotal" style="align-self:center"></span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>جلسات ثبت‌شده‌ی اخیر</h2>
+    <div class="filters">
+      <select id="seFilterStudent"><option value="">همه زبان‌آموزان</option></select>
+      <select id="seFilterMonth"></select>
+    </div>
+    <div class="wrap" id="seTable"></div>
+  </div>
+</section>
+
+<!-- ===== تراکنش‌ها ===== -->
 <section class="tab" id="tab-tx">
   <div class="card">
     <h2 id="txTitle">ثبت تراکنش</h2>
@@ -219,6 +276,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   </div>
 </section>
 
+<!-- ===== ابزارها ===== -->
 <section class="tab" id="tab-tools">
   <div class="grid two">
     <div class="card">
@@ -226,6 +284,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
       <div class="actions">
         <button class="btn" id="btnCsvTx">خروجی اکسل تراکنش‌ها</button>
         <button class="btn" id="btnCsvSt">خروجی اکسل زبان‌آموزان</button>
+        <button class="btn" id="btnCsvSe">خروجی اکسل جلسات</button>
         <button class="btn alt" id="btnPrint">چاپ گزارش کلی</button>
       </div>
       <p class="hint">فایل‌های CSV را می‌توانید مستقیم در Excel باز کنید.</p>
@@ -246,12 +305,12 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
     </div>
   </div>
 </section>
+
 </main>
 
 <div id="modal"><div class="box" id="modalBox"></div></div>
 <div class="toast" id="toast"></div>
 
-<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -259,12 +318,12 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
    تنظیمات
    ===================================================================== */
 const CONFIG = {
-  SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',   // ⚠️ اگر .com هست اصلاح کن
+  SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',
   SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
-  LOCAL_KEY:    'ali_naghli_finance_v1'
+  LOCAL_KEY:    'ali_naghli_finance_v2'
 };
 
-/* ---------- ابزارهای عمومی ---------- */
+/* ---------- ابزارها ---------- */
 const $  = id => document.getElementById(id);
 const MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const FA = '۰۱۲۳۴۵۶۷۸۹';
@@ -284,7 +343,7 @@ function toast(msg){
   clearTimeout(_toastH); _toastH = setTimeout(()=>t.classList.remove('on'), 2400);
 }
 
-/* ---------- تاریخ شمسی (با Intl) ---------- */
+/* ---------- تاریخ شمسی ---------- */
 const _persianFmt = new Intl.DateTimeFormat('en-u-ca-persian-nu-latn', {
   year:'numeric', month:'numeric', day:'numeric'
 });
@@ -296,11 +355,10 @@ function todayJ(){
 function jMonthDays(y, m){
   if(m <= 6) return 31;
   if(m <= 11) return 30;
-  // اسفند: با تست یک تاریخ واقعی چک می‌کنیم
-  const probe = new Date(y + 621, 2, 20); // حدود ۱ فروردین
+  const probe = new Date(y + 621, 2, 20);
   const parts = _persianFmt.formatToParts(probe);
   const py = +parts.find(p=>p.type==='year').value;
-  return py === y + 1 ? 29 : 30; // اگر probe به سال بعد رفته یعنی اسفند ۲۹ داشته
+  return py === y + 1 ? 29 : 30;
 }
 const pad = n => String(n).padStart(2,'0');
 const dateStr = a => a[0]+'/'+pad(a[1])+'/'+pad(a[2]);
@@ -330,7 +388,7 @@ function getDate(boxId){
 }
 
 /* =====================================================================
-   لایه‌ی داده — Supabase + fallback محلی
+   لایه‌ی داده
    ===================================================================== */
 const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY)
   ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY)
@@ -358,7 +416,6 @@ function setSync(state, label){
   b.textContent = label;
 }
 
-/* --- خواندن از Supabase --- */
 async function pullFromCloud(){
   if(!sb) return false;
   setSync('syncing','در حال همگام‌سازی…');
@@ -376,6 +433,8 @@ async function pullFromCloud(){
     db.tx = (txRes.data||[]).map(t => ({
       id: t.id, type: t.type, sid: t.sid, amount: t.amount,
       date: t.date, method: t.method || '', desc: t.descr || '',
+      session_date: t.session_date || null,
+      is_session: !!t.is_session,
       ts: t.created_at ? new Date(t.created_at).getTime() : Date.now()
     }));
     saveLocal();
@@ -388,7 +447,6 @@ async function pullFromCloud(){
   }
 }
 
-/* --- نوشتن: هر عملیات هم محلی و هم ابری --- */
 async function cloudInsertStudent(s){
   if(!sb) return;
   const { data, error } = await sb.from('students').insert([{
@@ -409,21 +467,23 @@ async function cloudDeleteStudent(id){
   const { error } = await sb.from('students').delete().eq('id', id);
   if(error){ console.warn(error); toast('خطای حذف در Supabase'); }
 }
+function txToRow(t){
+  return {
+    type:t.type, sid:t.sid, amount:t.amount, date:t.date,
+    method:t.method, descr:t.desc,
+    session_date: t.session_date || null,
+    is_session: !!t.is_session
+  };
+}
 async function cloudInsertTx(t){
   if(!sb) return;
-  const { data, error } = await sb.from('tx').insert([{
-    type:t.type, sid:t.sid, amount:t.amount, date:t.date,
-    method:t.method, descr:t.desc
-  }]).select().single();
+  const { data, error } = await sb.from('tx').insert([txToRow(t)]).select().single();
   if(error){ console.warn(error); toast('خطای ذخیره در Supabase'); return; }
   t.id = data.id;
 }
 async function cloudUpdateTx(t){
   if(!sb) return;
-  const { error } = await sb.from('tx').update({
-    type:t.type, sid:t.sid, amount:t.amount, date:t.date,
-    method:t.method, descr:t.desc
-  }).eq('id', t.id);
+  const { error } = await sb.from('tx').update(txToRow(t)).eq('id', t.id);
   if(error){ console.warn(error); toast('خطای ویرایش در Supabase'); }
 }
 async function cloudDeleteTx(id){
@@ -437,11 +497,12 @@ async function cloudDeleteTx(id){
    ===================================================================== */
 function balances(){
   const b = {};
-  db.students.forEach(s => b[s.id] = { charge:0, pay:0, bal:0 });
+  db.students.forEach(s => b[s.id] = { charge:0, pay:0, bal:0, sessions:0 });
   db.tx.forEach(t => {
     if(!b[t.sid]) return;
     if(t.type==='charge') b[t.sid].charge += t.amount;
     if(t.type==='payment') b[t.sid].pay += t.amount;
+    if(t.is_session) b[t.sid].sessions += 1;
   });
   Object.values(b).forEach(x => x.bal = x.charge - x.pay);
   return b;
@@ -449,10 +510,11 @@ function balances(){
 const statusOf   = bal => bal>0 ? 'debt' : bal<0 ? 'credit' : 'zero';
 const statusTag  = bal => bal>0 ? '<span class="tag t-debt">بدهکار</span>' : bal<0 ? '<span class="tag t-credit">بستانکار</span>' : '<span class="tag t-zero">تسویه</span>';
 const TYPE_NAME  = { charge:'بدهی', payment:'دریافتی', expense:'هزینه' };
-const typeTag    = t => ({charge:'<span class="tag t-debt">بدهی</span>',payment:'<span class="tag t-credit">دریافتی</span>',expense:'<span class="tag t-exp">هزینه</span>'})[t];
+const typeTag    = (t, isSession) => isSession
+  ? '<span class="tag t-session">جلسه</span>'
+  : ({charge:'<span class="tag t-debt">بدهی</span>',payment:'<span class="tag t-credit">دریافتی</span>',expense:'<span class="tag t-exp">هزینه</span>'})[t];
 const stName     = id => (db.students.find(s=>s.id===id)||{}).name || '—';
 
-/* ---------- ورودی مبلغ با جداکننده ---------- */
 document.addEventListener('input', e => {
   if(e.target.classList.contains('money')){
     const v = toEn(e.target.value).replace(/[^\d]/g,'');
@@ -484,16 +546,17 @@ function renderDash(){
   });
   const income = db.tx.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
   const exp    = db.tx.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
+  const sessionsCount = db.tx.filter(t=>t.is_session).length;
   const card = (cls,l,v) => `<div class="stat ${cls}"><small>${l}</small><b>${fa(v)}</b><i>تومان</i></div>`;
   $('stats').innerHTML =
     `<div class="stat"><small>تعداد زبان‌آموزان</small><b>${fa(db.students.length)}</b><i>نفر</i></div>` +
+    `<div class="stat"><small>کل جلسات برگزارشده</small><b>${fa(sessionsCount)}</b><i>جلسه</i></div>` +
     card('s-inc','کل درآمد دریافتی',income) +
     card('s-debt','مجموع بدهی زبان‌آموزان',debt) +
     card('s-credit','مجموع بستانکاری',credit) +
     card('s-exp','مجموع هزینه‌ها',exp) +
     card('s-net','سود خالص (درآمد − هزینه)',income-exp);
 
-  // دونات
   const tot = nd+nc+nz, R=42, C=2*Math.PI*R;
   const parts = [[nd,'var(--debt)','بدهکار'],[nc,'var(--credit)','بستانکار'],[nz,'var(--muted)','تسویه‌شده']];
   let off=0, circ='';
@@ -506,7 +569,6 @@ function renderDash(){
   $('donut').innerHTML = `<svg viewBox="0 0 120 120" width="170" height="170">${circ}<text x="60" y="58" text-anchor="middle" font-size="18" style="fill:var(--ink);font-weight:700">${fa(tot)}</text><text x="60" y="74" text-anchor="middle" font-size="9">زبان‌آموز</text></svg>
    <div class="legend" style="flex-direction:column;gap:8px">${parts.map(p=>`<span style="--c:${p[1]}">${p[2]}: <b>${fa(p[0])}</b> نفر</span>`).join('')}</div>`;
 
-  // میلگردی مانده
   const list = db.students.map(s=>({n:s.name, v:b[s.id].bal}))
     .filter(x=>x.v!==0).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,10);
   const mx = Math.max(1, ...list.map(x=>Math.abs(x.v)));
@@ -514,7 +576,6 @@ function renderDash(){
     ? list.map(x=>`<div class="row"><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><div class="track"><div class="fill" style="width:${Math.abs(x.v)/mx*100}%;background:${x.v>0?'var(--debt)':'var(--credit)'}"></div></div><span class="val ${x.v>0?'neg':'pos'}">${fa(Math.abs(x.v))}</span></div>`).join('')
     : '<div class="empty">همه‌ی حساب‌ها تسویه است.</div>';
 
-  // نمودار سالانه
   const years = new Set([todayJ()[0]]);
   db.tx.forEach(t => years.add(+t.date.slice(0,4)));
   const sel = $('chartYear'), cur = sel.value || todayJ()[0];
@@ -546,10 +607,9 @@ function renderDash(){
   $('yearSum').textContent = `سال ${faDigits(Y)}: درآمد ${fa(ti)} تومان، هزینه ${fa(te)} تومان، سود ${fa(ti-te)} تومان` +
     (ti ? `. پردرآمدترین ماه: ${MONTHS[best]} (اعداد بالای ستون‌ها به هزار تومان)` : '');
 
-  // آخرین تراکنش‌ها
   const rec = [...db.tx].sort((a,b)=>b.date.localeCompare(a.date) || b.ts-a.ts).slice(0,6);
   $('recent').innerHTML = rec.length
-    ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>`
+    ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>`
     : '<div class="empty">هنوز تراکنشی ثبت نشده است.</div>';
 }
 
@@ -565,12 +625,14 @@ function renderStudents(){
     return true;
   });
   $('stTable').innerHTML = rows.length
-    ? `<table><thead><tr><th>نام</th><th>دوره</th><th>شهریه</th><th>تلفن</th><th>کل بدهی</th><th>پرداختی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s=>{const x=b[s.id];return `<tr>
+    ? `<table><thead><tr><th>نام</th><th>دوره</th><th>شهریه/جلسه</th><th>تلفن</th><th>جلسات</th><th>کل بدهی</th><th>پرداختی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s=>{const x=b[s.id];return `<tr>
       <td><b>${esc(s.name)}</b></td><td>${esc(s.course)}</td><td class="n">${s.fee?fa(s.fee):'—'}</td><td>${faDigits(esc(s.phone))}</td>
+      <td class="n badgeSessions">${fa(x.sessions)}</td>
       <td class="n">${fa(x.charge)}</td><td class="n">${fa(x.pay)}</td>
       <td class="n ${x.bal>0?'neg':x.bal<0?'pos':''}"><b>${fa(Math.abs(x.bal))}</b></td><td>${statusTag(x.bal)}</td>
       <td><div class="actions">
         <button class="btn sm" onclick="openStatement('${s.id}')">صورت‌حساب</button>
+        <button class="btn sm alt" onclick="quickSession('${s.id}')">ثبت جلسه</button>
         <button class="btn sm alt" onclick="quickTx('${s.id}','payment')">دریافت</button>
         <button class="btn sm alt" onclick="quickTx('${s.id}','charge')">بدهی</button>
         <button class="btn sm alt" onclick="editStudent('${s.id}')">ویرایش</button>
@@ -623,6 +685,131 @@ $('stSearch').addEventListener('input', debounce(renderStudents));
 $('stFilter').addEventListener('change', renderStudents);
 
 /* =====================================================================
+   ثبت جلسه
+   ===================================================================== */
+let seSelected = {}; // { studentId: amount }
+function renderSessionPicker(){
+  const q = ($('sePicker')._q || '').trim().toLowerCase();
+  const list = db.students.filter(s => !q || s.name.toLowerCase().includes(q) || (s.course||'').toLowerCase().includes(q));
+  if(!list.length){
+    $('sePicker').innerHTML = '<div class="empty">زبان‌آموزی یافت نشد.</div>';
+    updateSessionCount(); return;
+  }
+  $('sePicker').innerHTML = list.map(s => {
+    const checked = s.id in seSelected;
+    const val = checked ? seSelected[s.id] : (s.fee||0);
+    return `<div class="pickerRow">
+      <input type="checkbox" data-id="${s.id}" ${checked?'checked':''}>
+      <span><b>${esc(s.name)}</b> <span class="fee">${esc(s.course||'')}</span></span>
+      <span class="fee">شهریه: ${fa(s.fee||0)}</span>
+      <input class="money" data-amount="${s.id}" inputmode="numeric" value="${val?Number(val).toLocaleString('en-US'):''}" placeholder="مبلغ" ${checked?'':'disabled'}>
+    </div>`;
+  }).join('');
+  updateSessionCount();
+}
+function updateSessionCount(){
+  const ids = Object.keys(seSelected);
+  $('seCount').textContent = `(${faDigits(ids.length)} نفر)`;
+  const total = ids.reduce((a,id)=>a + (+seSelected[id]||0), 0);
+  $('seTotal').textContent = ids.length ? `جمع کل: ${fa(total)} تومان` : '';
+}
+$('sePicker').addEventListener('change', e => {
+  const cb = e.target.closest('input[type=checkbox]');
+  if(cb){
+    const id = cb.dataset.id;
+    if(cb.checked){
+      const s = db.students.find(x=>x.id===id);
+      seSelected[id] = s.fee || 0;
+    } else {
+      delete seSelected[id];
+    }
+    renderSessionPicker();
+  }
+});
+$('sePicker').addEventListener('input', e => {
+  const inp = e.target.closest('input[data-amount]');
+  if(inp){
+    const id = inp.dataset.amount;
+    const v = Number(toEn(inp.value)) || 0;
+    seSelected[id] = v;
+    // فقط فرمت نمایش
+    inp.value = v ? v.toLocaleString('en-US') : '';
+    updateSessionCount();
+  }
+});
+$('seAll').onclick = () => {
+  db.students.forEach(s => { seSelected[s.id] = s.fee || 0; });
+  renderSessionPicker();
+};
+$('seNone').onclick = () => {
+  seSelected = {};
+  renderSessionPicker();
+};
+$('seSave').onclick = async () => {
+  const ids = Object.keys(seSelected);
+  if(!ids.length){ toast('حداقل یک زبان‌آموز انتخاب کنید'); return; }
+  const date = getDate('seDate');
+  const baseDesc = $('seDesc').value.trim();
+  const method = $('seMethod').value === '—' ? '' : $('seMethod').value;
+  const created = [];
+  for(const id of ids){
+    const amount = +seSelected[id] || 0;
+    if(amount <= 0){ toast(`مبلغ برای «${stName(id)}» صفر است`); return; }
+    const t = {
+      id: uid(), ts: Date.now(),
+      type: 'charge', sid: id, amount,
+      date, method,
+      desc: baseDesc ? `${baseDesc} — ${stName(id)}` : `جلسه‌ی ${showDate(date)}`,
+      session_date: date,
+      is_session: true
+    };
+    db.tx.push(t);
+    created.push(t);
+  }
+  saveLocal(); renderAll();
+  // ابر
+  for(const t of created) await cloudInsertTx(t);
+  saveLocal(); renderAll();
+
+  seSelected = {};
+  $('seDesc').value = '';
+  renderSessionPicker();
+  toast(`${faDigits(created.length)} جلسه ثبت شد`);
+};
+$('seFilterStudent').addEventListener('change', renderSessions);
+$('seFilterMonth').addEventListener('change', renderSessions);
+
+function renderSessions(){
+  // پر کردن فیلترها
+  const stOpts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+  const v1 = $('seFilterStudent').value;
+  $('seFilterStudent').innerHTML = '<option value="">همه زبان‌آموزان</option>' + stOpts;
+  if(db.students.some(s=>s.id===v1)) $('seFilterStudent').value = v1;
+
+  const ms = [...new Set(db.tx.filter(t=>t.is_session).map(t=>t.session_date.slice(0,7)))].sort().reverse();
+  const v2 = $('seFilterMonth').value;
+  $('seFilterMonth').innerHTML = '<option value="">همه ماه‌ها</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
+  $('seFilterMonth').value = ms.includes(v2) ? v2 : '';
+
+  const sFilter = $('seFilterStudent').value;
+  const mFilter = $('seFilterMonth').value;
+  const rows = db.tx.filter(t => t.is_session
+      && (!sFilter || t.sid === sFilter)
+      && (!mFilter || t.session_date.startsWith(mFilter)))
+    .sort((a,b)=> (b.session_date||b.date).localeCompare(a.session_date||a.date) || b.ts-a.ts);
+
+  $('seTable').innerHTML = rows.length
+    ? `<table><thead><tr><th>تاریخ جلسه</th><th>زبان‌آموز</th><th>مبلغ (تومان)</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.map(t=>`<tr>
+        <td>${showDate(t.session_date||t.date)}</td>
+        <td>${esc(stName(t.sid))}</td>
+        <td class="n"><b>${fa(t.amount)}</b></td>
+        <td style="white-space:normal;min-width:140px">${esc(t.desc)}</td>
+        <td><div class="actions"><button class="btn sm warn" onclick="delTx('${t.id}')">حذف</button></div></td>
+      </tr>`).join('')}</tbody></table>`
+    : '<div class="empty">هنوز جلسه‌ای ثبت نشده است.</div>';
+}
+
+/* =====================================================================
    تراکنش‌ها
    ===================================================================== */
 let editTx = null;
@@ -654,7 +841,8 @@ $('txForm').onsubmit = async e => {
     type,
     sid: type==='expense' ? null : $('txStudent').value,
     amount, date: getDate('txDate'),
-    method: $('txMethod').value, desc: $('txDesc').value.trim()
+    method: $('txMethod').value, desc: $('txDesc').value.trim(),
+    session_date: null, is_session: false
   };
   if(editTx){
     const t = db.tx.find(x=>x.id===editTx);
@@ -707,6 +895,13 @@ function quickTx(sid, type){
   if(type==='payment'){ const bl = balances()[sid].bal; if(bl>0) $('txAmount').value = bl.toLocaleString('en-US'); }
   $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'});
 }
+function quickSession(sid){
+  showTab('session');
+  seSelected = {};
+  seSelected[sid] = (db.students.find(x=>x.id===sid)||{}).fee || 0;
+  renderSessionPicker();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
 function filteredTx(){
   const q = $('fSearch').value.trim(), s = $('fStudent').value, t = $('fType').value, m = $('fMonth').value;
   return db.tx.filter(x => (!s||x.sid===s) && (!t||x.type===t) && (!m||x.date.startsWith(m)) && (!q||(x.desc||'').includes(q)||stName(x.sid).includes(q)))
@@ -719,7 +914,7 @@ function renderTx(){
   $('txSum').innerHTML = `نمایش ${faDigits(rows.length)} تراکنش — بدهی ثبت‌شده: <b>${fa(sum('charge'))}</b> | دریافتی: <b>${fa(sum('payment'))}</b> | هزینه: <b>${fa(sum('expense'))}</b> تومان`;
   $('txTable').innerHTML = rows.length
     ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ (تومان)</th><th>روش</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.map(t=>`<tr>
-      <td>${showDate(t.date)}</td><td>${typeTag(t.type)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td>
+      <td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td>
       <td class="n"><b>${fa(t.amount)}</b></td><td>${esc(t.method)}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td>
       <td><div class="actions"><button class="btn sm alt" onclick="editTransaction('${t.id}')">ویرایش</button><button class="btn sm warn" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>`
     : '<div class="empty">تراکنشی برای نمایش وجود ندارد.</div>';
@@ -732,16 +927,18 @@ $('fSearch').addEventListener('input', debounce(renderTx));
    ===================================================================== */
 function openStatement(id){
   const s = db.students.find(x=>x.id===id);
-  const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=> a.date.localeCompare(b.date) || a.ts-b.ts);
+  const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=> (a.session_date||a.date).localeCompare(b.session_date||b.date) || a.ts-b.ts);
   let run = 0;
   const body = rows.map(t=>{
     const d = t.type==='charge' ? t.amount : 0;
     const c = t.type==='payment' ? t.amount : 0;
     run += d - c;
-    return `<tr><td>${showDate(t.date)}</td><td>${esc(t.desc)||TYPE_NAME[t.type]}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`;
+    const label = (t.is_session ? '📅 ' : '') + (esc(t.desc)||TYPE_NAME[t.type]);
+    return `<tr><td>${showDate(t.session_date||t.date)}</td><td>${label}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`;
   }).join('');
+  const sessionCount = rows.filter(t=>t.is_session).length;
   $('modalBox').innerHTML = `<h2 style="margin-top:0">صورت‌حساب: ${esc(s.name)}</h2>
-   <p class="hint">${esc(s.course)} ${s.phone?'— تلفن: '+faDigits(esc(s.phone)):''} — تاریخ صدور: ${longDate(dateStr(todayJ()))}</p>
+   <p class="hint">${esc(s.course)} ${s.phone?'— تلفن: '+faDigits(esc(s.phone)):''} — شهریه/جلسه: ${fa(s.fee||0)} تومان — تعداد جلسات: ${faDigits(sessionCount)} — تاریخ صدور: ${longDate(dateStr(todayJ()))}</p>
    <div class="wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار (پرداخت)</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:'<div class="empty">تراکنشی ثبت نشده.</div>'}</div>
    <h3>${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'حساب تسویه است'}</h3>
    <div class="actions noprint"><button class="btn" onclick="printModal()">چاپ</button><button class="btn alt" onclick="closeModal()">بستن</button></div>`;
@@ -752,7 +949,7 @@ function printModal(){ document.body.classList.add('pm'); window.print(); setTim
 $('modal').onclick = e => { if(e.target.id==='modal') closeModal(); };
 
 /* =====================================================================
-   خروجی / پشتیبان (با fallback مرورگر)
+   خروجی / پشتیبان
    ===================================================================== */
 async function download(name, text, type){
   try{
@@ -760,7 +957,7 @@ async function download(name, text, type){
       const d = await window.claude.use('downloads');
       if(d){ await d.save({ filename:name, data:text }); toast('فایل ذخیره شد'); return; }
     }
-  }catch(e){ if(!e || e.code!=='declined'){ /* ادامه به fallback */ } }
+  }catch(e){ /* ادامه به fallback */ }
   try{
     const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -774,16 +971,22 @@ async function download(name, text, type){
 const csvCell = v => '"' + String(v??'').replace(/"/g,'""') + '"';
 
 $('btnCsvTx').onclick = () => {
-  const r = [['تاریخ','نوع','زبان‌آموز','مبلغ','روش','شرح']];
+  const r = [['تاریخ','نوع','جلسه؟','زبان‌آموز','مبلغ','روش','شرح']];
   [...db.tx].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t =>
-    r.push([t.date, TYPE_NAME[t.type], t.type==='expense'?'':stName(t.sid), t.amount, t.method, t.desc]));
+    r.push([t.date, TYPE_NAME[t.type], t.is_session?'بله':'خیر', t.type==='expense'?'':stName(t.sid), t.amount, t.method, t.desc]));
   download('transactions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
+};
+$('btnCsvSe').onclick = () => {
+  const r = [['تاریخ جلسه','زبان‌آموز','مبلغ','روش','شرح']];
+  db.tx.filter(t=>t.is_session).sort((a,b)=>(a.session_date||'').localeCompare(b.session_date||'')).forEach(t =>
+    r.push([t.session_date, stName(t.sid), t.amount, t.method, t.desc]));
+  download('sessions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
 };
 $('btnCsvSt').onclick = () => {
   const b = balances();
-  const r = [['نام','دوره','شهریه','تلفن','کل بدهی','پرداختی','مانده','وضعیت']];
+  const r = [['نام','دوره','شهریه/جلسه','تلفن','تعداد جلسات','کل بدهی','پرداختی','مانده','وضعیت']];
   db.students.forEach(s => { const x = b[s.id];
-    r.push([s.name, s.course, s.fee, s.phone, x.charge, x.pay, Math.abs(x.bal),
+    r.push([s.name, s.course, s.fee, s.phone, x.sessions, x.charge, x.pay, Math.abs(x.bal),
             x.bal>0?'بدهکار':x.bal<0?'بستانکار':'تسویه']); });
   download('students.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
 };
@@ -822,7 +1025,6 @@ $('btnResetCloud').onclick = async () => {
 };
 $('chartYear').onchange = renderDash;
 
-/* ---------- همگام‌سازی دستی ---------- */
 $('syncBtn').onclick = async () => {
   if(!sb){ toast('Supabase پیکربندی نشده'); return; }
   const ok = await pullFromCloud();
@@ -841,7 +1043,7 @@ $('themeBtn').onclick = () => {
 /* =====================================================================
    شروع
    ===================================================================== */
-function renderAll(){ renderDash(); renderStudents(); renderTx(); }
+function renderAll(){ renderDash(); renderStudents(); renderSessions(); renderTx(); }
 
 (async function init(){
   try{ const th = localStorage.getItem(CONFIG.LOCAL_KEY + '_theme'); if(th) document.documentElement.dataset.theme = th; }catch(e){}
@@ -849,7 +1051,8 @@ function renderAll(){ renderDash(); renderStudents(); renderTx(); }
   const t = todayJ();
   $('todayTxt').textContent = longDate(dateStr(t));
   buildDate('txDate'); txTypeUI();
-  renderAll();  // اول محلی
+  buildDate('seDate');
+  renderAll();
 
   if(sb){
     setSync('syncing','اتصال…');
