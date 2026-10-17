@@ -6,822 +6,1178 @@
 <title>امور مالی علی ناقلی</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ==========================================================
+   Design tokens
+   ========================================================== */
 :root{
-  --bg:#eef2f0;
-  --bg2:#f7faf8;
-  --card:#ffffff;
-  --ink:#0f2823;
-  --muted:#6b8079;
-  --line:#e2eae5;
-  --head:#0f2823;
-  --head2:#1a3a32;
-  --brass:#c99532;
-  --brass2:#e0b04a;
-  --debt:#c0392b;
-  --credit:#1e8a5f;
-  --inc:#1e8a5f;
-  --exp:#d97a3a;
-  --soft:#f0f5f2;
-  --soft2:#e6efe9;
-  --radius:16px;
+  --primary:#5b5bd6;
+  --primary-hover:#4a4ac4;
+  --primary-soft:#eeeefb;
+  --primary-glow:rgba(91,91,214,.18);
+
+  --accent:#e07a5f;
+  --accent-soft:#fdf0ec;
+
+  --success:#2a9d6e;
+  --success-soft:#e8f7ef;
+  --danger:#e05252;
+  --danger-soft:#fdecec;
+  --warning:#e0a43a;
+  --warning-soft:#fdf6e7;
+
+  --bg:#f5f6fb;
+  --bg-gradient:linear-gradient(135deg, #f5f6fb 0%, #eef0f9 50%, #f0f5f8 100%);
+  --surface:#ffffff;
+  --surface-2:#fafbfe;
+  --border:#e4e7f0;
+  --border-strong:#d0d5e3;
+
+  --text:#1a1d2e;
+  --text-muted:#6b7280;
+  --text-subtle:#9ca3af;
+
+  --shadow-xs:0 1px 2px rgba(26,29,46,.04);
+  --shadow-sm:0 2px 8px rgba(26,29,46,.06);
+  --shadow:0 4px 16px rgba(26,29,46,.08);
+  --shadow-lg:0 12px 40px rgba(26,29,46,.12);
+
   --radius-sm:10px;
-  --shadow-sm:0 1px 2px rgba(15,40,35,.04), 0 2px 6px rgba(15,40,35,.04);
-  --shadow:0 2px 4px rgba(15,40,35,.04), 0 8px 24px rgba(15,40,35,.06);
-  --shadow-lg:0 4px 12px rgba(15,40,35,.06), 0 16px 40px rgba(15,40,35,.08);
-  --sel:#fff8e6;
-  --selborder:#c99532;
+  --radius:14px;
+  --radius-lg:20px;
+  --radius-pill:999px;
+
+  --sidebar-w:240px;
+  --transition:all .18s cubic-bezier(.4,0,.2,1);
+}
+
+/* Dark theme */
+:root[data-theme="dark"]{
+  --primary:#7c7cf0;
+  --primary-hover:#9494ff;
+  --primary-soft:#22224a;
+  --primary-glow:rgba(124,124,240,.25);
+
+  --accent:#f0957c;
+  --accent-soft:#3d2620;
+
+  --success:#4ade80;
+  --success-soft:#1a2e22;
+  --danger:#f87171;
+  --danger-soft:#3d2020;
+  --warning:#fbbf24;
+  --warning-soft:#3d3118;
+
+  --bg:#0f1220;
+  --bg-gradient:linear-gradient(135deg, #0f1220 0%, #141829 50%, #101624 100%);
+  --surface:#181c30;
+  --surface-2:#1e2338;
+  --border:#2a3050;
+  --border-strong:#3a4166;
+
+  --text:#e8eaf5;
+  --text-muted:#a8aec8;
+  --text-subtle:#6b7292;
+
+  --shadow-xs:0 1px 2px rgba(0,0,0,.3);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow:0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.5);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0a1614;
-    --bg2:#0f1f1c;
-    --card:#152723;
-    --ink:#e8f0ec;
-    --muted:#8ba39b;
-    --line:#233d37;
-    --head:#061210;
-    --head2:#0b1a16;
-    --soft:#1a2f2a;
-    --soft2:#213a34;
-    --debt:#e57373;
-    --credit:#4fc08d;
-    --inc:#4fc08d;
-    --exp:#e59a5e;
-    --brass:#e0b04a;
-    --sel:#2a2415;
-    --selborder:#e0b04a;
-    --shadow-sm:0 1px 2px rgba(0,0,0,.3), 0 2px 6px rgba(0,0,0,.2);
-    --shadow:0 2px 4px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
-    --shadow-lg:0 4px 12px rgba(0,0,0,.35), 0 16px 40px rgba(0,0,0,.35);
+    --primary:#7c7cf0;
+    --primary-hover:#9494ff;
+    --primary-soft:#22224a;
+    --primary-glow:rgba(124,124,240,.25);
+    --accent:#f0957c;
+    --accent-soft:#3d2620;
+    --success:#4ade80;
+    --success-soft:#1a2e22;
+    --danger:#f87171;
+    --danger-soft:#3d2020;
+    --warning:#fbbf24;
+    --warning-soft:#3d3118;
+    --bg:#0f1220;
+    --bg-gradient:linear-gradient(135deg, #0f1220 0%, #141829 50%, #101624 100%);
+    --surface:#181c30;
+    --surface-2:#1e2338;
+    --border:#2a3050;
+    --border-strong:#3a4166;
+    --text:#e8eaf5;
+    --text-muted:#a8aec8;
+    --text-subtle:#6b7292;
+    --shadow-xs:0 1px 2px rgba(0,0,0,.3);
+    --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+    --shadow:0 4px 16px rgba(0,0,0,.4);
+    --shadow-lg:0 12px 40px rgba(0,0,0,.5);
   }
 }
-:root[data-theme="dark"]{
-  --bg:#0a1614;
-  --bg2:#0f1f1c;
-  --card:#152723;
-  --ink:#e8f0ec;
-  --muted:#8ba39b;
-  --line:#233d37;
-  --head:#061210;
-  --head2:#0b1a16;
-  --soft:#1a2f2a;
-  --soft2:#213a34;
-  --debt:#e57373;
-  --credit:#4fc08d;
-  --inc:#4fc08d;
-  --exp:#e59a5e;
-  --brass:#e0b04a;
-  --sel:#2a2415;
-  --selborder:#e0b04a;
-  --shadow-sm:0 1px 2px rgba(0,0,0,.3), 0 2px 6px rgba(0,0,0,.2);
-  --shadow:0 2px 4px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
-  --shadow-lg:0 4px 12px rgba(0,0,0,.35), 0 16px 40px rgba(0,0,0,.35);
-}
+
+/* ==========================================================
+   Base
+   ========================================================== */
 *{box-sizing:border-box}
-html,body{margin:0}
+html,body{margin:0;padding:0}
 body{
-  font-family:"Vazirmatn",Tahoma,"Segoe UI",Arial,sans-serif;
-  background:
-    radial-gradient(ellipse 1200px 600px at 100% -10%, rgba(201,149,50,.08), transparent 60%),
-    radial-gradient(ellipse 1000px 500px at -10% 0%, rgba(30,138,95,.06), transparent 60%),
-    var(--bg);
-  color:var(--ink);
-  line-height:1.75;
-  font-size:15px;
+  font-family:"Vazirmatn","Segoe UI",sans-serif;
+  background:var(--bg);
+  background-image:var(--bg-gradient);
+  background-attachment:fixed;
+  color:var(--text);
+  font-size:14.5px;
+  line-height:1.7;
   min-height:100vh;
+  -webkit-font-smoothing:antialiased;
 }
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-subtle)}
 
-/* ===== Header ===== */
-header{
-  background:linear-gradient(135deg, var(--head) 0%, var(--head2) 100%);
-  color:#fff;
-  padding:22px 20px 0;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 4px 20px rgba(0,0,0,.12);
-}
-header::before{
-  content:"";
-  position:absolute;inset:0;
-  background-image:
-    radial-gradient(circle at 15% 30%, rgba(201,149,50,.15), transparent 40%),
-    radial-gradient(circle at 85% 70%, rgba(30,138,95,.12), transparent 40%);
-  pointer-events:none;
-}
-header::after{
-  content:"";
-  position:absolute;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M0 0h20v20H0zM20 20h20v20H20z'/%3E%3C/g%3E%3C/svg%3E");
-  pointer-events:none;
-}
-.top{max-width:1200px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;position:relative;z-index:1}
-.top h1{margin:0;font-size:24px;font-weight:800;letter-spacing:-.3px}
-.top h1 span{
-  background:linear-gradient(135deg, var(--brass), var(--brass2));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  font-weight:800;
-}
-.today{font-size:13px;opacity:.9;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.icon-btn{
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);
-  color:#fff;border-radius:10px;padding:5px 12px;cursor:pointer;
-  transition:all .15s;font-size:14px;
-}
-.icon-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3);transform:translateY(-1px)}
+/* ==========================================================
+   Layout — Sidebar + Main
+   ========================================================== */
+.app{display:flex;min-height:100vh}
 
-nav{
-  max-width:1200px;margin:20px auto 0;
-  display:flex;gap:4px;overflow-x:auto;
-  position:relative;z-index:1;
-  scrollbar-width:none;
-}
-nav::-webkit-scrollbar{display:none}
-nav button{
-  background:transparent;color:rgba(255,255,255,.65);border:0;
-  padding:12px 20px;cursor:pointer;
-  border-bottom:3px solid transparent;
-  white-space:nowrap;font-weight:500;
-  border-radius:10px 10px 0 0;
-  transition:all .15s;
-}
-nav button:hover{color:#fff;background:rgba(255,255,255,.05)}
-nav button.on{
-  color:#fff;border-bottom-color:var(--brass);
-  font-weight:700;
-  background:linear-gradient(180deg, transparent, rgba(201,149,50,.08));
-}
-
-/* ===== Main ===== */
-main{max-width:1200px;margin:24px auto;padding:0 16px 80px}
-section.tab{display:none;animation:fadeIn .25s ease}
-section.tab.on{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-.grid{display:grid;gap:16px}
-.stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-
-/* ===== Stats cards ===== */
-.stat{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:16px 18px;
-  border-inline-start:5px solid var(--line);
-  box-shadow:var(--shadow-sm);
-  transition:all .2s;
-  position:relative;
-  overflow:hidden;
-}
-.stat:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.stat small{color:var(--muted);display:block;font-size:12.5px;font-weight:500}
-.stat b{font-size:22px;font-weight:800;letter-spacing:-.3px}
-.stat i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px;font-weight:500}
-.s-inc{border-inline-start-color:var(--inc)}
-.s-debt{border-inline-start-color:var(--debt)}
-.s-credit{border-inline-start-color:var(--credit)}
-.s-exp{border-inline-start-color:var(--exp)}
-.s-net{border-inline-start-color:var(--brass)}
-
-/* ===== Cards ===== */
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:20px;
-  box-shadow:var(--shadow-sm);
-  transition:box-shadow .2s;
-}
-.card:hover{box-shadow:var(--shadow)}
-.card h2{
-  margin:0 0 14px;font-size:16px;font-weight:700;
-  display:flex;align-items:center;gap:8px;
-}
-.two{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
-
-/* ===== Forms ===== */
-form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;align-items:end}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;font-weight:500}
-input,select,textarea{
-  width:100%;padding:10px 12px;
-  border:1.5px solid var(--line);
-  border-radius:var(--radius-sm);
-  background:var(--card);
-  transition:all .15s;
-  font-size:14px;
-}
-input:hover,select:hover,textarea:hover{border-color:var(--muted)}
-input:focus,select:focus,textarea:focus,button:focus-visible{
-  outline:none;
-  border-color:var(--brass);
-  box-shadow:0 0 0 3px rgba(201,149,50,.15);
-}
-.dateRow{display:grid;grid-template-columns:1.2fr 1.6fr 1fr;gap:6px}
-
-/* ===== Buttons ===== */
-.btn{
-  background:linear-gradient(135deg, var(--head), var(--head2));
-  color:#fff;border:0;border-radius:var(--radius-sm);
-  padding:10px 18px;cursor:pointer;
-  font-weight:600;font-size:14px;
-  transition:all .15s;
-  box-shadow:var(--shadow-sm);
-}
-.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
-.btn:active{transform:translateY(0)}
-.btn.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line);box-shadow:none}
-.btn.alt:hover{background:var(--soft2);border-color:var(--muted)}
-.btn.warn{background:linear-gradient(135deg, #c0392b, #a93226);color:#fff}
-.btn.ok{background:linear-gradient(135deg, #1e8a5f, #16704c);color:#fff}
-.btn.sm{padding:5px 12px;font-size:12.5px;border-radius:8px}
-.btn.lg{padding:14px 26px;font-size:16px;font-weight:700}
-.actions{display:flex;flex-wrap:wrap;gap:8px}
-
-/* ===== Tables ===== */
-.wrap{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--line)}
-table{width:100%;border-collapse:collapse;min-width:640px}
-th,td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;font-size:14px}
-th{
-  background:linear-gradient(180deg, var(--soft), var(--soft2));
-  font-size:12.5px;color:var(--muted);font-weight:700;
-  text-transform:uppercase;letter-spacing:.3px;
-  position:sticky;top:0;z-index:1;
-}
-tbody tr{transition:background .1s}
-tbody tr:hover{background:var(--soft)}
-tbody tr:last-child td{border-bottom:0}
-td.n{font-variant-numeric:tabular-nums;font-weight:500}
-
-/* ===== Tags ===== */
-.tag{
-  display:inline-block;padding:3px 12px;border-radius:20px;
-  font-size:12px;font-weight:600;
-}
-.t-debt{background:rgba(192,57,43,.12);color:var(--debt)}
-.t-credit{background:rgba(30,138,95,.13);color:var(--credit)}
-.t-zero{background:var(--soft2);color:var(--muted)}
-.t-exp{background:rgba(217,122,58,.14);color:var(--exp)}
-.t-session{background:rgba(201,149,50,.16);color:var(--brass)}
-
-/* ===== Filters ===== */
-.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
-.empty{
-  padding:40px 26px;text-align:center;color:var(--muted);
-  font-size:14px;
-  background:var(--soft);
-  border-radius:var(--radius-sm);
-}
-
-/* ===== Bars ===== */
-.bars .row{display:grid;grid-template-columns:110px 1fr 110px;gap:10px;align-items:center;margin:9px 0;font-size:13px}
-.bars .track{background:var(--soft2);height:16px;border-radius:8px;overflow:hidden;position:relative}
-.bars .fill{height:100%;border-radius:8px;transition:width .3s ease}
-.bars .val{text-align:left;direction:ltr;font-variant-numeric:tabular-nums;font-weight:600}
-.bars .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
-
-/* ===== Legend ===== */
-.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-top:12px}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend span::before{
-  content:"";display:inline-block;width:12px;height:12px;
-  border-radius:4px;background:var(--c);
-  box-shadow:0 1px 2px rgba(0,0,0,.1);
-}
-
-/* ===== Donut ===== */
-.donutBox{display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:center;padding:10px}
-svg text{font-family:"Vazirmatn",Tahoma,sans-serif;fill:var(--muted)}
-
-/* ===== Modal ===== */
-#modal{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
-  display:none;align-items:flex-start;justify-content:center;
-  padding:20px;overflow:auto;z-index:50;
-  animation:fadeIn .2s;
-}
-#modal.on{display:flex}
-#modal .box{
-  background:var(--card);border-radius:var(--radius);
-  max-width:820px;width:100%;padding:24px;
-  box-shadow:var(--shadow-lg);
-  animation:slideUp .25s ease;
-}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-/* ===== Toast ===== */
-.toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
-  background:linear-gradient(135deg, var(--head), var(--head2));
-  color:#fff;padding:12px 24px;border-radius:30px;
-  display:block;opacity:0;pointer-events:none;
-  z-index:99;font-weight:500;font-size:14px;
-  box-shadow:var(--shadow-lg);
-  transition:all .3s cubic-bezier(.34,1.56,.64,1);
-  border:1px solid rgba(255,255,255,.1);
-}
-.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
-.toast.err{background:linear-gradient(135deg, #c0392b, #a93226)}
-
-/* ===== Colors ===== */
-.pos{color:var(--credit);font-weight:600}
-.neg{color:var(--debt);font-weight:600}
-.hint{font-size:12.5px;color:var(--muted)}
-
-/* ===== Sync Badge ===== */
-#syncBadge{
-  font-size:11px;padding:3px 10px;border-radius:20px;
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.2);
-  font-weight:500;
-  transition:all .2s;
-  display:inline-flex;align-items:center;gap:5px;
-}
-#syncBadge::before{
-  content:"";width:6px;height:6px;border-radius:50%;
-  background:currentColor;
-}
-#syncBadge.online{background:rgba(79,192,141,.2);border-color:rgba(79,192,141,.4);color:#7ee7b3}
-#syncBadge.offline{background:rgba(229,115,115,.2);border-color:rgba(229,115,115,.4);color:#ff9b9b}
-#syncBadge.syncing{background:rgba(224,176,74,.2);border-color:rgba(224,176,74,.4);color:#ffd47a}
-#syncBadge.syncing::before{animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ===== Session tab ===== */
-.sessionTop{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;
-  background:linear-gradient(135deg, var(--card), var(--soft));
-  border:1px solid var(--line);border-radius:var(--radius);
-  padding:20px;margin-bottom:18px;
-  box-shadow:var(--shadow-sm);
-}
-@media (max-width:720px){.sessionTop{grid-template-columns:1fr}}
-.sessionTop .field label{font-size:12.5px;color:var(--muted);margin-bottom:6px;display:block;font-weight:600}
-.sessionTop .quickDates{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.sessionTop .quickDates button{
-  background:var(--card);border:1.5px solid var(--line);
-  border-radius:20px;padding:5px 14px;cursor:pointer;
-  font-size:12.5px;color:var(--muted);font-weight:500;
-  transition:all .15s;
-}
-.sessionTop .quickDates button:hover{
-  background:var(--sel);border-color:var(--selborder);color:var(--ink);
-  transform:translateY(-1px);
-}
-
-.searchWrap{position:relative;margin-bottom:14px}
-.searchWrap input{
-  padding-inline-start:44px;font-size:15px;height:48px;
-  border-radius:var(--radius-sm);
-  font-weight:500;
-}
-.searchWrap::before{
-  content:"🔍";position:absolute;inset-inline-start:16px;top:50%;transform:translateY(-50%);
-  font-size:16px;pointer-events:none;opacity:.5
-}
-
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.chip{
-  background:var(--card);border:1.5px solid var(--line);
-  border-radius:20px;padding:6px 16px;cursor:pointer;
-  font-size:13px;color:var(--muted);user-select:none;
-  transition:all .15s;font-weight:500;
-}
-.chip.on{
-  background:linear-gradient(135deg, var(--brass), var(--brass2));
-  color:#fff;border-color:transparent;font-weight:700;
-  box-shadow:0 2px 8px rgba(201,149,50,.3);
-}
-.chip:hover:not(.on){border-color:var(--brass);color:var(--ink);transform:translateY(-1px)}
-
-.studentsGrid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:12px;max-height:520px;overflow-y:auto;padding:4px;
-}
-.studentsGrid::-webkit-scrollbar{width:8px}
-.studentsGrid::-webkit-scrollbar-track{background:var(--soft);border-radius:4px}
-.studentsGrid::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
-.studentsGrid::-webkit-scrollbar-thumb:hover{background:var(--muted)}
-
-.stCard{
-  background:var(--card);
-  border:2px solid var(--line);
-  border-radius:var(--radius-sm);
-  padding:14px 16px;cursor:pointer;position:relative;
-  transition:all .18s ease;
+.sidebar{
+  width:var(--sidebar-w);
+  background:var(--surface);
+  border-inline-end:1px solid var(--border);
+  padding:22px 14px;
   display:flex;flex-direction:column;gap:8px;
-  box-shadow:var(--shadow-sm);
+  position:fixed;
+  top:0;bottom:0;
+  inset-inline-start:0;
+  z-index:20;
+  overflow-y:auto;
 }
-.stCard:hover{
-  border-color:var(--brass);
-  transform:translateY(-2px);
-  box-shadow:var(--shadow);
+.brand{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px 20px;
+  margin-bottom:8px;
+  border-bottom:1px solid var(--border);
 }
-.stCard.on{
-  background:linear-gradient(135deg, var(--card), var(--sel));
-  border-color:var(--selborder);
-  box-shadow:0 0 0 3px rgba(201,149,50,.15), var(--shadow);
-}
-.stCard .name{font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.stCard .name .check{
-  width:24px;height:24px;border-radius:50%;
-  border:2px solid var(--line);
+.brand-logo{
+  width:38px;height:38px;
+  background:linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  font-size:14px;color:transparent;flex:0 0 auto;
-  transition:all .2s;
+  font-weight:900;color:#fff;font-size:15px;
+  box-shadow:0 4px 12px var(--primary-glow);
+  flex-shrink:0;
 }
-.stCard.on .name .check{
-  background:linear-gradient(135deg, var(--brass), var(--brass2));
-  border-color:transparent;color:#fff;
-  transform:scale(1.05);
+.brand-text{display:flex;flex-direction:column;gap:1px;min-width:0}
+.brand-text b{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-text small{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav-btn{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;
+  background:transparent;border:0;
+  border-radius:12px;
+  cursor:pointer;
+  color:var(--text-muted);
+  font-weight:500;font-size:14px;
+  text-align:start;
+  transition:var(--transition);
+  position:relative;
 }
-.stCard .meta{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
-.stCard .meta .row{display:flex;justify-content:space-between;gap:8px}
-.stCard .meta .row b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
-.stCard .feeInp{margin-top:6px}
-.stCard .feeInp input{
-  padding:8px 10px;font-size:14px;text-align:center;
-  font-variant-numeric:tabular-nums;
-  background:var(--bg2);border:1.5px solid var(--line);
+.nav-btn svg{width:18px;height:18px;flex-shrink:0;opacity:.8}
+.nav-btn:hover{background:var(--surface-2);color:var(--text)}
+.nav-btn.on{
+  background:var(--primary-soft);
+  color:var(--primary);
   font-weight:600;
 }
-.stCard.on .feeInp input{background:var(--card);border-color:var(--selborder)}
+.nav-btn.on svg{opacity:1}
+.nav-btn.on::before{
+  content:"";position:absolute;
+  inset-inline-start:0;top:50%;transform:translateY(-50%);
+  width:3px;height:20px;
+  background:var(--primary);
+  border-radius:0 3px 3px 0;
+}
 
-.selectionBar{
-  background:linear-gradient(135deg, var(--head), var(--head2));
-  color:#fff;border-radius:var(--radius);
-  padding:18px 22px;margin-top:16px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:14px;flex-wrap:wrap;
-  box-shadow:0 8px 24px rgba(15,40,35,.15);
+.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.status-badge{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;
+  background:var(--surface-2);
+  border-radius:10px;
+  font-size:12px;
+  color:var(--text-muted);
+}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--text-subtle);flex-shrink:0;transition:var(--transition)}
+.status-badge.online .status-dot{background:var(--success);box-shadow:0 0 0 3px var(--success-soft)}
+.status-badge.offline .status-dot{background:var(--danger);box-shadow:0 0 0 3px var(--danger-soft)}
+.status-badge.syncing .status-dot{background:var(--warning);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.sidebar-actions{display:flex;gap:6px}
+.sidebar-actions button{
+  flex:1;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  color:var(--text-muted);
+  font-size:12px;
+  transition:var(--transition);
+}
+.sidebar-actions button:hover{background:var(--primary-soft);color:var(--primary);border-color:transparent}
+.sidebar-actions svg{width:15px;height:15px}
+
+.main{
+  flex:1;
+  margin-inline-start:var(--sidebar-w);
+  padding:28px 32px 80px;
+  max-width:1400px;
+  min-width:0;
+}
+
+/* Mobile */
+.mobile-header{
+  display:none;
+  position:fixed;
+  top:0;left:0;right:0;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+  z-index:19;
+  align-items:center;justify-content:space-between;
+  box-shadow:var(--shadow-sm);
+}
+.mobile-header .brand-logo{width:32px;height:32px;font-size:13px;border-radius:10px}
+.mobile-header b{font-size:14px}
+.menu-toggle{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:8px;cursor:pointer;display:flex}
+.menu-toggle svg{width:20px;height:20px;color:var(--text)}
+
+@media (max-width:900px){
+  .sidebar{
+    transform:translateX(100%);
+    transition:transform .25s cubic-bezier(.4,0,.2,1);
+    box-shadow:var(--shadow-lg);
+  }
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-inline-start:0;padding:80px 16px 60px}
+  .mobile-header{display:flex}
+  .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:19;backdrop-filter:blur(2px)}
+  .sidebar-backdrop.on{display:block}
+}
+
+/* ==========================================================
+   Page header
+   ========================================================== */
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:26px}
+.page-title{margin:0;font-size:26px;font-weight:800;letter-spacing:-.4px;color:var(--text)}
+.page-sub{margin:4px 0 0;font-size:13.5px;color:var(--text-muted)}
+.page-date{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-pill);
+  padding:8px 16px;
+  font-size:13px;
+  color:var(--text-muted);
+  box-shadow:var(--shadow-xs);
+}
+.page-date svg{width:15px;height:15px;color:var(--primary)}
+
+/* ==========================================================
+   Cards
+   ========================================================== */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px;
+  box-shadow:var(--shadow-sm);
+}
+.card h2{margin:0 0 16px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+.card h2 svg{width:18px;height:18px;color:var(--primary)}
+
+/* ==========================================================
+   Stat cards
+   ========================================================== */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:24px}
+.stat{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  box-shadow:var(--shadow-xs);
+  transition:var(--transition);
   position:relative;overflow:hidden;
 }
-.selectionBar::before{
-  content:"";
-  position:absolute;inset:0;
-  background:radial-gradient(circle at 100% 0%, rgba(201,149,50,.15), transparent 50%);
+.stat:hover{box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.stat-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:12px;
+  background:var(--primary-soft);
+  color:var(--primary);
+}
+.stat-icon svg{width:18px;height:18px}
+.stat-icon.green{background:var(--success-soft);color:var(--success)}
+.stat-icon.red{background:var(--danger-soft);color:var(--danger)}
+.stat-icon.orange{background:var(--warning-soft);color:var(--warning)}
+.stat-icon.teal{background:var(--accent-soft);color:var(--accent)}
+.stat-label{font-size:12px;color:var(--text-muted);font-weight:500;margin-bottom:4px}
+.stat-value{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1.2}
+.stat-value small{font-size:11.5px;font-weight:500;color:var(--text-subtle);margin-inline-start:4px}
+
+/* ==========================================================
+   Grid helpers
+   ========================================================== */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+
+/* ==========================================================
+   Forms
+   ========================================================== */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;align-items:end}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12.5px;font-weight:600;color:var(--text-muted)}
+input,select,textarea{
+  width:100%;
+  padding:11px 14px;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:14px;
+  color:var(--text);
+  transition:var(--transition);
+}
+input::placeholder{color:var(--text-subtle)}
+input:hover,select:hover,textarea:hover{border-color:var(--border-strong)}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-glow);
+}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-inline-start:36px;padding-inline-end:14px}
+
+.date-row{display:grid;grid-template-columns:1.2fr 1.6fr 1fr;gap:6px}
+.date-row select{padding-inline-start:28px;background-position:left 10px center}
+
+/* ==========================================================
+   Buttons
+   ========================================================== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 20px;
+  border:0;
+  border-radius:var(--radius-pill);
+  font-weight:600;font-size:13.5px;
+  cursor:pointer;
+  transition:var(--transition);
+  background:var(--primary);
+  color:#fff;
+  box-shadow:0 2px 8px var(--primary-glow);
+  white-space:nowrap;
+}
+.btn:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 4px 14px var(--primary-glow)}
+.btn:active{transform:translateY(0)}
+.btn svg{width:15px;height:15px}
+.btn.ghost{background:var(--surface);color:var(--text);border:1.5px solid var(--border);box-shadow:var(--shadow-xs)}
+.btn.ghost:hover{background:var(--surface-2);border-color:var(--border-strong)}
+.btn.danger{background:var(--danger);color:#fff;box-shadow:0 2px 8px rgba(224,82,82,.2)}
+.btn.danger:hover{background:#c94040;box-shadow:0 4px 14px rgba(224,82,82,.3)}
+.btn.success{background:var(--success);color:#fff;box-shadow:0 2px 8px rgba(42,157,110,.2)}
+.btn.success:hover{background:#228a5e}
+.btn.sm{padding:6px 14px;font-size:12.5px;border-radius:var(--radius-pill)}
+.btn.xs{padding:4px 10px;font-size:11.5px;border-radius:var(--radius-pill)}
+.btn-block{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn-row.tight{gap:6px}
+
+/* ==========================================================
+   Tables
+   ========================================================== */
+.table-wrap{
+  overflow-x:auto;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:var(--surface);
+}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:13px 16px;text-align:right;font-size:13.5px;white-space:nowrap}
+th{
+  background:var(--surface-2);
+  color:var(--text-muted);
+  font-weight:600;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;
+}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:nth-child(even){background:var(--surface-2)}
+tbody tr:hover{background:var(--primary-soft)}
+tbody tr:last-child{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ==========================================================
+   Tags / badges
+   ========================================================== */
+.tag{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 11px;border-radius:var(--radius-pill);
+  font-size:11.5px;font-weight:600;
+  white-space:nowrap;
+}
+.tag.debt{background:var(--danger-soft);color:var(--danger)}
+.tag.credit{background:var(--success-soft);color:var(--success)}
+.tag.zero{background:var(--surface-2);color:var(--text-muted);border:1px solid var(--border)}
+.tag.exp{background:var(--warning-soft);color:var(--warning)}
+.tag.session{background:var(--primary-soft);color:var(--primary)}
+
+/* ==========================================================
+   Empty state
+   ========================================================== */
+.empty{
+  padding:48px 24px;
+  text-align:center;
+  color:var(--text-muted);
+  font-size:13.5px;
+  background:var(--surface-2);
+  border-radius:var(--radius);
+}
+.empty svg{width:48px;height:48px;color:var(--text-subtle);margin:0 auto 12px;display:block;opacity:.5}
+
+/* ==========================================================
+   Filters bar
+   ========================================================== */
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+
+/* ==========================================================
+   Bars (dashboard)
+   ========================================================== */
+.bars-list{display:flex;flex-direction:column;gap:11px}
+.bar-row{display:grid;grid-template-columns:100px 1fr 100px;gap:10px;align-items:center;font-size:13px}
+.bar-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:var(--text)}
+.bar-track{background:var(--surface-2);height:10px;border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.bar-fill.debt{background:linear-gradient(90deg,var(--danger),#f08080)}
+.bar-fill.credit{background:linear-gradient(90deg,var(--success),#6ee7b7)}
+.bar-val{text-align:left;direction:ltr;font-variant-numeric:tabular-nums;font-weight:700;font-size:12.5px}
+
+/* ==========================================================
+   Legend
+   ========================================================== */
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--text-muted);margin-top:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+
+/* ==========================================================
+   Donut
+   ========================================================== */
+.donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:center;padding:12px 0}
+.donut-legend{display:flex;flex-direction:column;gap:12px;font-size:13px}
+.donut-legend .item{display:flex;align-items:center;gap:10px}
+.donut-legend .dot{width:12px;height:12px;border-radius:4px;flex-shrink:0}
+.donut-legend b{margin-inline-start:6px;font-variant-numeric:tabular-nums}
+svg text{font-family:"Vazirmatn",sans-serif}
+
+/* ==========================================================
+   Session (ثبت جلسه) — cards
+   ========================================================== */
+.session-header{
+  background:linear-gradient(135deg, var(--primary), var(--accent));
+  color:#fff;
+  border-radius:var(--radius-lg);
+  padding:24px;
+  margin-bottom:20px;
+  box-shadow:0 8px 30px var(--primary-glow);
+  position:relative;overflow:hidden;
+}
+.session-header::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 100% 0%, rgba(255,255,255,.15), transparent 50%);
   pointer-events:none;
 }
-.selectionBar .info{display:flex;gap:28px;align-items:center;flex-wrap:wrap;font-size:14px;position:relative;z-index:1}
-.selectionBar .info b{
-  font-size:20px;
-  background:linear-gradient(135deg, var(--brass), var(--brass2));
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;font-variant-numeric:tabular-nums;font-weight:800;
+.session-header h2{margin:0 0 4px;color:#fff;font-size:18px;font-weight:700}
+.session-header p{margin:0;color:rgba(255,255,255,.85);font-size:13px}
+.session-header .session-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;position:relative}
+@media (max-width:640px){.session-header .session-grid{grid-template-columns:1fr}}
+.session-header .field label{color:rgba(255,255,255,.85);font-weight:500}
+.session-header input,.session-header select{
+  background:rgba(255,255,255,.15);
+  border-color:rgba(255,255,255,.25);
+  color:#fff;
 }
-.selectionBar .info span{opacity:.75;font-size:12px;display:block;font-weight:500}
-.selectionBar button{
-  background:linear-gradient(135deg, var(--brass), var(--brass2));
-  color:#fff;border:0;border-radius:var(--radius-sm);
-  padding:14px 28px;font-weight:700;font-size:15px;cursor:pointer;
-  transition:all .2s;position:relative;z-index:1;
-  box-shadow:0 4px 12px rgba(201,149,50,.3);
+.session-header input::placeholder{color:rgba(255,255,255,.5)}
+.session-header input:focus,.session-header select:focus{
+  background:rgba(255,255,255,.25);
+  border-color:rgba(255,255,255,.5);
+  box-shadow:0 0 0 3px rgba(255,255,255,.15);
 }
-.selectionBar button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,149,50,.4)}
-.selectionBar button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
-.selectionBar button.clear{
-  background:transparent;border:1.5px solid rgba(255,255,255,.25);
-  font-weight:500;font-size:13px;padding:10px 16px;box-shadow:none;
-}
-.selectionBar button.clear:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.4)}
+.session-header select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center}
+.session-header option{color:var(--text);background:var(--surface)}
 
-/* ===== Report ===== */
-.rangeBox{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:var(--radius);padding:20px;margin-bottom:16px;
-  box-shadow:var(--shadow-sm);
+.quick-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.quick-btns button{
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;
+  border-radius:var(--radius-pill);
+  padding:5px 14px;
+  font-size:11.5px;
+  cursor:pointer;
+  transition:var(--transition);
 }
-.rangeGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:end}
-@media (max-width:720px){.rangeGrid{grid-template-columns:1fr}}
-.rangeGrid .field label{font-size:12.5px;color:var(--muted);display:block;margin-bottom:6px;font-weight:600}
+.quick-btns button:hover{background:rgba(255,255,255,.28)}
 
-.reportCards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:16px}
-.repCard{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:var(--radius);padding:16px 18px;
-  border-inline-start:5px solid var(--line);
-  box-shadow:var(--shadow-sm);
-  transition:all .2s;
+.search-box{position:relative;margin-bottom:16px}
+.search-box input{padding-inline-start:44px;height:46px;font-size:14.5px}
+.search-box svg{
+  position:absolute;inset-inline-start:16px;top:50%;transform:translateY(-50%);
+  width:17px;height:17px;color:var(--text-subtle);pointer-events:none;
 }
-.repCard:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.repCard small{display:block;color:var(--muted);font-size:12.5px;font-weight:500}
-.repCard b{font-size:24px;display:block;margin-top:6px;font-weight:800;letter-spacing:-.4px}
-.repCard i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px;font-weight:500}
 
-/* ===== Print ===== */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{
+  padding:7px 16px;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-pill);
+  font-size:12.5px;font-weight:500;
+  color:var(--text-muted);
+  cursor:pointer;
+  transition:var(--transition);
+  user-select:none;
+}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip.on{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#fff;
+  box-shadow:0 2px 8px var(--primary-glow);
+}
+
+.students-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:12px;
+  max-height:560px;
+  overflow-y:auto;
+  padding:4px;
+}
+.st-card{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  cursor:pointer;
+  transition:var(--transition);
+  display:flex;flex-direction:column;gap:8px;
+  position:relative;
+}
+.st-card:hover{border-color:var(--primary);box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.st-card.on{
+  border-color:var(--primary);
+  background:var(--primary-soft);
+  box-shadow:0 0 0 3px var(--primary-glow);
+}
+.st-card .st-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.st-card .st-name{font-weight:700;font-size:14.5px;color:var(--text)}
+.st-card .st-check{
+  width:24px;height:24px;
+  border-radius:50%;
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:transparent;flex-shrink:0;
+  transition:var(--transition);
+}
+.st-card.on .st-check{background:var(--primary);border-color:var(--primary);color:#fff}
+.st-card .st-check svg{width:14px;height:14px}
+.st-card .st-meta{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--text-muted)}
+.st-card .st-meta .row{display:flex;justify-content:space-between;gap:8px}
+.st-card .st-meta b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
+.st-card .st-amount{margin-top:6px}
+.st-card .st-amount input{
+  padding:8px 12px;
+  text-align:center;
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+  background:var(--surface-2);
+  font-size:13.5px;
+}
+.st-card.on .st-amount input{background:var(--surface)}
+
+/* Selection bar */
+.selection-bar{
+  position:sticky;
+  bottom:16px;
+  background:var(--surface);
+  border:1.5px solid var(--primary);
+  border-radius:var(--radius-lg);
+  padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;
+  box-shadow:0 8px 32px rgba(91,91,214,.15);
+  margin-top:18px;
+  z-index:10;
+}
+.selection-bar .info{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.selection-bar .info > div{display:flex;flex-direction:column;gap:1px}
+.selection-bar .info span{font-size:11.5px;color:var(--text-muted)}
+.selection-bar .info b{font-size:20px;color:var(--primary);font-weight:800;font-variant-numeric:tabular-nums}
+
+/* ==========================================================
+   Report
+   ========================================================== */
+.report-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.rep-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-xs);
+  transition:var(--transition);
+}
+.rep-card:hover{box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.rep-card::before{
+  content:"";position:absolute;
+  inset-inline-start:0;top:0;bottom:0;
+  width:4px;background:var(--accent);
+}
+.rep-card.green::before{background:var(--success)}
+.rep-card.red::before{background:var(--danger)}
+.rep-card.orange::before{background:var(--warning)}
+.rep-card.blue::before{background:var(--primary)}
+.rep-card.teal::before{background:var(--accent)}
+.rep-card small{font-size:12px;color:var(--text-muted);font-weight:500;display:block;margin-bottom:6px}
+.rep-card b{font-size:22px;color:var(--text);font-weight:800;letter-spacing:-.4px}
+.rep-card b small{display:inline;font-size:11.5px;color:var(--text-subtle);font-weight:500;margin-inline-start:4px;margin-bottom:0}
+
+/* ==========================================================
+   Toast
+   ========================================================== */
+.toast{
+  position:fixed;
+  bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(120px);
+  background:var(--text);
+  color:var(--surface);
+  padding:13px 24px;
+  border-radius:var(--radius-pill);
+  font-size:13.5px;font-weight:500;
+  box-shadow:var(--shadow-lg);
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  display:flex;align-items:center;gap:10px;
+}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+.toast.err{background:var(--danger);color:#fff}
+.toast.success{background:var(--success);color:#fff}
+
+/* ==========================================================
+   Modal
+   ========================================================== */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(15,18,32,.5);
+  backdrop-filter:blur(6px);
+  display:none;
+  align-items:flex-start;justify-content:center;
+  padding:24px;
+  overflow-y:auto;
+  z-index:100;
+  animation:fadeIn .2s;
+}
+.modal.on{display:flex}
+.modal-box{
+  background:var(--surface);
+  border-radius:var(--radius-lg);
+  max-width:860px;width:100%;
+  padding:28px;
+  box-shadow:var(--shadow-lg);
+  animation:slideUp .25s cubic-bezier(.34,1.56,.64,1);
+  margin-top:40px;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ==========================================================
+   Danger zone / Cleanup
+   ========================================================== */
+.cleanup-box{
+  background:linear-gradient(135deg, var(--warning-soft), var(--surface));
+  border:1.5px solid var(--warning);
+  border-radius:var(--radius-lg);
+  padding:22px;
+  margin-bottom:20px;
+}
+.cleanup-box h2{color:var(--warning);margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px}
+.cleanup-box h2 svg{width:18px;height:18px}
+.cleanup-box p{color:var(--text-muted);font-size:13.5px;margin:0 0 14px;line-height:1.7}
+
+.danger-zone{
+  background:var(--danger-soft);
+  border:1.5px solid var(--danger);
+  border-radius:var(--radius-lg);
+  padding:22px;
+  margin-top:20px;
+}
+.danger-zone h2{color:var(--danger);margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px}
+.danger-zone h2 svg{width:18px;height:18px}
+.danger-zone p{color:var(--text-muted);font-size:13px;margin:0 0 14px}
+
+/* ==========================================================
+   Utility
+   ========================================================== */
+.pos{color:var(--success);font-weight:600}
+.neg{color:var(--danger);font-weight:600}
+.hint{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.section-title{font-size:16px;font-weight:700;margin:0 0 16px;display:flex;align-items:center;gap:10px;color:var(--text)}
+.section-title svg{width:18px;height:18px;color:var(--primary)}
+
+/* ==========================================================
+   Print
+   ========================================================== */
 @media print{
-  header,nav,.noprint,.toast,.selectionBar .clear,#syncBadge,#syncBtn,#themeBtn{display:none!important}
+  .sidebar,.mobile-header,.no-print,.toast,.page-date,.quick-btns{display:none!important}
   body{background:#fff;color:#000}
-  body.pm main{display:none}
-  body.pm #modal{position:static;display:block;background:none;padding:0}
-  .card,.stat,.repCard,.stCard{break-inside:avoid;box-shadow:none!important}
+  .main{margin:0;padding:0;max-width:100%}
+  .card,.stat,.rep-card{box-shadow:none!important;border:1px solid #ddd;break-inside:avoid}
   section.tab{display:block!important}
   body:not(.pm) section.tab:not(.on){display:none!important}
-  body.report-print main{display:block!important}
-  body.report-print section.tab{display:none!important}
-  body.report-print section.tab#tab-report{display:block!important}
-  body.report-print nav,body.report-print .rangeBox .field:last-child,body.report-print .rangeBox .actions,body.report-print .noprint{display:none!important}
+  body.pm .main{display:none}
+  body.pm .modal{position:static;display:block;background:none;padding:0}
 }
-@media (max-width:560px){
-  .bars .row{grid-template-columns:80px 1fr 90px}
-  .top h1{font-size:20px}
-}
-
-/* ===== Danger zone ===== */
-.danger-zone{
-  background:linear-gradient(135deg, rgba(192,57,43,.05), rgba(192,57,43,.02));
-  border:1.5px solid rgba(192,57,43,.2);
-  border-radius:var(--radius);
-  padding:20px;
-}
-.danger-zone h2{color:var(--debt)}
-.danger-zone .btn.warn{background:linear-gradient(135deg, #c0392b, #a93226)}
-
-/* ===== Cleanup box ===== */
-.cleanup-box{
-  background:linear-gradient(135deg, rgba(201,149,50,.06), rgba(201,149,50,.02));
-  border:1.5px solid rgba(201,149,50,.25);
-  border-radius:var(--radius);
-  padding:20px;
-  margin-bottom:16px;
-}
-.cleanup-box h2{color:var(--brass);margin:0 0 8px}
-.cleanup-box p{color:var(--muted);margin:0 0 14px;font-size:14px}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="top">
-    <h1>امور مالی <span>علی ناقلی</span></h1>
-    <div class="today">
-      امروز: <b id="todayTxt"></b>
-      <span id="syncBadge" title="وضعیت اتصال">…</span>
-      <button class="icon-btn" id="syncBtn" title="همگام‌سازی دستی">↻</button>
-      <button class="icon-btn" id="themeBtn" title="تغییر تم">🌓</button>
-    </div>
-  </div>
-  <nav id="nav">
-    <button data-t="dash" class="on">داشبورد</button>
-    <button data-t="session">ثبت جلسه</button>
-    <button data-t="students">زبان‌آموزان</button>
-    <button data-t="tx">تراکنش‌ها</button>
-    <button data-t="report">گزارش دوره‌ای</button>
-    <button data-t="tools">پشتیبان‌گیری</button>
-  </nav>
-</header>
+<div class="app">
 
-<main>
-
-<!-- ===== داشبورد ===== -->
-<section class="tab on" id="tab-dash">
-  <div class="grid stats" id="stats"></div>
-  <div class="grid two" style="margin-top:16px">
-    <div class="card"><h2>وضعیت زبان‌آموزان</h2><div class="donutBox" id="donut"></div></div>
-    <div class="card"><h2>مانده حساب هر زبان‌آموز</h2><div class="bars" id="bars"></div>
-      <div class="legend"><span style="--c:var(--debt)">بدهکار</span><span style="--c:var(--credit)">بستانکار</span></div>
-    </div>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px">
-      <h2 style="margin:0">درآمد و هزینه ماهانه</h2>
-      <div style="width:140px"><select id="chartYear"></select></div>
-    </div>
-    <div class="wrap"><div id="monthly" style="min-width:560px"></div></div>
-    <div class="legend"><span style="--c:var(--inc)">دریافتی (درآمد)</span><span style="--c:var(--exp)">هزینه</span></div>
-    <p class="hint" id="yearSum"></p>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <h2>آخرین تراکنش‌ها</h2>
-    <div class="wrap" id="recent"></div>
-  </div>
-</section>
-
-<!-- ===== ثبت جلسه ===== -->
-<section class="tab" id="tab-session">
-  <div class="sessionTop">
-    <div class="field">
-      <label>📅 تاریخ برگزاری جلسه (شمسی) *</label>
-      <div class="dateRow" id="seDate"></div>
-      <div class="quickDates">
-        <button type="button" data-off="0">امروز</button>
-        <button type="button" data-off="-1">دیروز</button>
-        <button type="button" data-off="-2">۲ روز پیش</button>
-        <button type="button" data-off="-7">هفته‌ی پیش</button>
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">ع</div>
+      <div class="brand-text">
+        <b>علی ناقلی</b>
+        <small>امور مالی</small>
       </div>
     </div>
-    <div class="field">
-      <label>📝 شرح پیش‌فرض (اختیاری)</label>
-      <input id="seDesc" placeholder="مثلاً: جلسه‌ی گروه Elementary — فصل ۴">
-      <label style="margin-top:10px">💳 روش پرداخت (فقط یادداشت)</label>
-      <select id="seMethod"><option>—</option><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
+
+    <nav class="nav" id="nav">
+      <button class="nav-btn on" data-t="dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        داشبورد
+      </button>
+      <button class="nav-btn" data-t="session">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        ثبت جلسه
+      </button>
+      <button class="nav-btn" data-t="students">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        زبان‌آموزان
+      </button>
+      <button class="nav-btn" data-t="tx">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        تراکنش‌ها
+      </button>
+      <button class="nav-btn" data-t="report">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        گزارش دوره‌ای
+      </button>
+      <button class="nav-btn" data-t="tools">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        پشتیبان‌گیری
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="status-badge" id="syncBadge">
+        <span class="status-dot"></span>
+        <span id="syncText">در حال اتصال…</span>
+      </div>
+      <div class="sidebar-actions">
+        <button id="syncBtn" title="همگام‌سازی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          همگام‌سازی
+        </button>
+        <button id="themeBtn" title="تغییر تم">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          تم
+        </button>
+      </div>
     </div>
-  </div>
+  </aside>
 
-  <div class="searchWrap">
-    <input id="seSearch" placeholder="جستجوی نام زبان‌آموز، دوره یا تلفن…">
-  </div>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-  <div class="chips" id="seCourseChips"></div>
-
-  <div class="studentsGrid" id="seGrid"></div>
-
-  <div class="selectionBar">
-    <div class="info">
-      <div><span>تعداد انتخاب‌شده</span><b id="seCount">۰</b></div>
-      <div><span>جمع کل مبلغ</span><b id="seTotal">۰</b> <span style="display:inline;opacity:.7;font-size:11px">تومان</span></div>
+  <!-- ===================== Mobile Header ===================== -->
+  <div class="mobile-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="brand-logo">ع</div>
+      <b>علی ناقلی</b>
     </div>
-    <div style="display:flex;gap:10px">
-      <button type="button" class="clear" id="seClear">پاک کردن انتخاب‌ها</button>
-      <button type="button" id="seSave" disabled>✔ ثبت جلسه و افزودن بدهی</button>
-    </div>
+    <button class="menu-toggle" id="menuToggle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
   </div>
 
-  <div class="card" style="margin-top:18px">
-    <h2>جلسات اخیر</h2>
-    <div class="filters">
-      <select id="seFilterStudent"><option value="">همه زبان‌آموزان</option></select>
-      <select id="seFilterMonth"></select>
-    </div>
-    <div class="wrap" id="seTable"></div>
-  </div>
-</section>
+  <!-- ===================== Main ===================== -->
+  <main class="main">
 
-<!-- ===== زبان‌آموزان ===== -->
-<section class="tab" id="tab-students">
-  <div class="card">
-    <h2 id="stTitle">افزودن زبان‌آموز</h2>
-    <form class="f" id="stForm">
-      <div><label>نام و نام خانوادگی *</label><input id="stName" required></div>
-      <div><label>سطح / دوره زبان</label>
-        <input id="stCourse" list="courses" placeholder="مثلاً Elementary">
-        <datalist id="courses"><option>Starter</option><option>Elementary</option><option>Pre-Intermediate</option><option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option><option>IELTS</option><option>TOEFL</option><option>مکالمه</option><option>کودکان</option></datalist>
-      </div>
-      <div><label>شهریه هر جلسه (تومان)</label><input id="stFee" inputmode="numeric" class="money"></div>
-      <div><label>شماره تماس</label><input id="stPhone" inputmode="tel"></div>
-      <div><label>توضیحات</label><input id="stNote"></div>
-      <div class="actions">
-        <button class="btn" type="submit" id="stSave">افزودن</button>
-        <button class="btn alt" type="button" id="stCancel" style="display:none">انصراف</button>
-      </div>
-    </form>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <div class="filters" style="margin-bottom:10px">
-      <input id="stSearch" placeholder="جستجوی نام، دوره یا تلفن…">
-      <select id="stFilter">
-        <option value="">همه وضعیت‌ها</option>
-        <option value="debt">بدهکار</option>
-        <option value="credit">بستانکار</option>
-        <option value="zero">تسویه</option>
-      </select>
-    </div>
-    <div class="wrap" id="stTable"></div>
-  </div>
-</section>
-
-<!-- ===== تراکنش‌ها ===== -->
-<section class="tab" id="tab-tx">
-  <div class="card">
-    <h2 id="txTitle">ثبت تراکنش</h2>
-    <form class="f" id="txForm">
-      <div><label>نوع تراکنش</label>
-        <select id="txType">
-          <option value="charge">ثبت بدهی (شهریه / هزینه کلاس)</option>
-          <option value="payment">دریافت وجه از زبان‌آموز</option>
-          <option value="expense">هزینه‌ی من (کتاب، اجاره، …)</option>
-        </select>
-      </div>
-      <div id="txStWrap"><label>زبان‌آموز</label><select id="txStudent"></select></div>
-      <div><label>مبلغ (تومان) *</label><input id="txAmount" inputmode="numeric" class="money" required></div>
-      <div><label id="txDateLbl">تاریخ (شمسی)</label><div class="dateRow" id="txDate"></div></div>
-      <div><label>روش پرداخت</label>
-        <select id="txMethod"><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
-      </div>
-      <div><label>شرح</label><input id="txDesc" placeholder="مثلاً شهریه مهر ماه"></div>
-      <div class="actions">
-        <button class="btn" type="submit" id="txSave">ثبت</button>
-        <button class="btn alt" type="button" id="txCancel" style="display:none">انصراف</button>
-      </div>
-    </form>
-    <p class="hint" style="margin-top:10px">«ثبت بدهی» مبلغی را به بدهی زبان‌آموز اضافه می‌کند و «دریافت وجه» از بدهی او کم می‌کند.</p>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <div class="filters">
-      <input id="fSearch" placeholder="جستجو در شرح…">
-      <select id="fStudent"></select>
-      <select id="fType">
-        <option value="">همه انواع</option>
-        <option value="charge">بدهی</option>
-        <option value="payment">دریافتی</option>
-        <option value="expense">هزینه</option>
-      </select>
-      <select id="fMonth"></select>
-    </div>
-    <p class="hint" id="txSum"></p>
-    <div class="wrap" id="txTable"></div>
-  </div>
-</section>
-
-<!-- ===== گزارش دوره‌ای ===== -->
-<section class="tab" id="tab-report">
-  <div class="rangeBox">
-    <h2 style="margin:0 0 12px">گزارش بر اساس بازه‌ی تاریخ</h2>
-    <div class="rangeGrid">
-      <div class="field">
-        <label>از تاریخ (شمسی)</label>
-        <div class="dateRow" id="repFrom"></div>
-      </div>
-      <div class="field">
-        <label>تا تاریخ (شمسی)</label>
-        <div class="dateRow" id="repTo"></div>
-      </div>
-      <div class="field noprint">
-        <label>میان‌بر</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn sm alt" data-range="month">ماه جاری</button>
-          <button class="btn sm alt" data-range="lastMonth">ماه قبل</button>
-          <button class="btn sm alt" data-range="30">۳۰ روز اخیر</button>
-          <button class="btn sm alt" data-range="7">۷ روز اخیر</button>
-          <button class="btn sm alt" data-range="year">سال جاری</button>
+    <!-- ========== داشبورد ========== -->
+    <section class="tab on" id="tab-dash">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">داشبورد</h1>
+          <p class="page-sub">نمای کلی وضعیت مالی</p>
+        </div>
+        <div class="page-date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="todayTxt"></span>
         </div>
       </div>
-    </div>
-    <div class="actions noprint" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn" id="repRun">نمایش گزارش</button>
-      <button class="btn alt" id="repPrint">چاپ گزارش</button>
-      <span class="hint" style="align-self:center" id="repSummaryTxt"></span>
-    </div>
-  </div>
 
-  <div class="reportCards" id="repCards"></div>
+      <div class="stats" id="stats"></div>
 
-  <div class="card" style="margin-top:16px">
-    <h2>تفکیک بر اساس زبان‌آموز</h2>
-    <div class="wrap" id="repStudents"></div>
-  </div>
-
-  <div class="card" style="margin-top:16px">
-    <h2>جزئیات تراکنش‌ها در بازه</h2>
-    <div class="wrap" id="repTx"></div>
-  </div>
-</section>
-
-<!-- ===== ابزارها ===== -->
-<section class="tab" id="tab-tools">
-  <!-- بخش پاکسازی مالی -->
-  <div class="cleanup-box">
-    <h2>🧹 پاک‌سازی اطلاعات مالی</h2>
-    <p>با این گزینه، <b>همهٔ تراکنش‌ها</b> (بدهی، دریافتی، هزینه، جلسات) پاک می‌شوند ولی <b>زبان‌آموزان و اطلاعاتشان (نام، دوره، شهریه، تلفن) دست‌نخورده می‌مانند</b>. برای شروع از نو عالی است.</p>
-    <div class="actions">
-      <button class="btn warn" id="btnWipeTx">🗑️ پاک کردن همهٔ تراکنش‌ها (محلی + ابری)</button>
-      <button class="btn alt" id="btnWipeTxLocal">پاک کردن فقط تراکنش‌های محلی</button>
-    </div>
-    <p class="hint" style="margin-top:10px">⚠️ این کار قابل بازگشت نیست. قبلش از دکمهٔ «دانلود فایل پشتیبان» استفاده کن.</p>
-  </div>
-
-  <div class="grid two">
-    <div class="card">
-      <h2>خروجی و چاپ</h2>
-      <div class="actions">
-        <button class="btn" id="btnCsvTx">خروجی اکسل تراکنش‌ها</button>
-        <button class="btn" id="btnCsvSt">خروجی اکسل زبان‌آموزان</button>
-        <button class="btn" id="btnCsvSe">خروجی اکسل جلسات</button>
-        <button class="btn alt" id="btnPrint">چاپ گزارش کلی</button>
+      <div class="grid-2">
+        <div class="card">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            وضعیت زبان‌آموزان
+          </h2>
+          <div class="donut-wrap" id="donut"></div>
+        </div>
+        <div class="card">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+            مانده حساب هر زبان‌آموز
+          </h2>
+          <div class="bars-list" id="bars"></div>
+          <div class="legend">
+            <span style="--c:var(--danger)">بدهکار</span>
+            <span style="--c:var(--success)">بستانکار</span>
+          </div>
+        </div>
       </div>
-      <p class="hint" style="margin-top:10px">فایل‌های CSV را می‌توانید مستقیم در Excel باز کنید.</p>
-    </div>
-    <div class="card">
-      <h2>پشتیبان‌گیری</h2>
-      <div class="actions">
-        <button class="btn" id="btnBackup">دانلود فایل پشتیبان</button>
-        <button class="btn alt" id="btnRestore">بازیابی از فایل</button>
-        <input type="file" id="fileRestore" accept=".json" style="display:none">
+
+      <div class="card" style="margin-top:20px">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px">
+          <h2 style="margin:0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            درآمد و هزینه ماهانه
+          </h2>
+          <div style="width:150px"><select id="chartYear"></select></div>
+        </div>
+        <div style="overflow-x:auto"><div id="monthly" style="min-width:560px"></div></div>
+        <div class="legend">
+          <span style="--c:var(--success)">دریافتی</span>
+          <span style="--c:var(--warning)">هزینه</span>
+        </div>
+        <p class="hint" id="yearSum" style="margin-top:12px"></p>
       </div>
-      <p class="hint" style="margin-top:10px">پشتیبان شامل داده‌های محلی است. داده‌های Supabase به‌صورت زنده همگام می‌شوند.</p>
-    </div>
-  </div>
 
-  <div class="danger-zone" style="margin-top:16px">
-    <h2>⚠️ حذف کامل همه‌ی اطلاعات</h2>
-    <p class="hint">این بخش زبان‌آموزان را هم پاک می‌کند. اگر فقط می‌خواهی اطلاعات مالی را پاک کنی، از بخش «پاک‌سازی اطلاعات مالی» بالا استفاده کن.</p>
-    <div class="actions" style="margin-top:10px">
-      <button class="btn warn" id="btnReset">پاک‌کردن کامل داده‌ها (فقط محلی)</button>
-      <button class="btn warn" id="btnResetCloud">حذف داده‌های Supabase (همه چیز)</button>
-    </div>
-  </div>
-</section>
+      <div class="card" style="margin-top:20px">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          آخرین تراکنش‌ها
+        </h2>
+        <div class="table-wrap" id="recent"></div>
+      </div>
+    </section>
 
-</main>
+    <!-- ========== ثبت جلسه ========== -->
+    <section class="tab" id="tab-session">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">ثبت جلسه</h1>
+          <p class="page-sub">جلسات برگزارشده را ثبت کن و بدهی را به حساب اضافه کن</p>
+        </div>
+      </div>
 
-<div id="modal"><div class="box" id="modalBox"></div></div>
+      <div class="session-header">
+        <h2>📅 اطلاعات جلسه</h2>
+        <p>تاریخ و شرح را وارد کن، سپس زبان‌آموزان را انتخاب کن</p>
+        <div class="session-grid">
+          <div class="field">
+            <label>تاریخ برگزاری</label>
+            <div class="date-row" id="seDate"></div>
+            <div class="quick-btns">
+              <button type="button" data-off="0">امروز</button>
+              <button type="button" data-off="-1">دیروز</button>
+              <button type="button" data-off="-2">۲ روز پیش</button>
+              <button type="button" data-off="-7">هفته پیش</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>شرح (اختیاری)</label>
+            <input id="seDesc" placeholder="مثلاً: جلسه Elementary فصل ۴">
+            <label style="margin-top:10px">روش پرداخت (یادداشت)</label>
+            <select id="seMethod"><option>—</option><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="seSearch" placeholder="جستجو در نام، دوره یا تلفن…">
+      </div>
+
+      <div class="chips" id="seCourseChips"></div>
+
+      <div class="students-grid" id="seGrid"></div>
+
+      <div class="selection-bar">
+        <div class="info">
+          <div><span>انتخاب‌شده</span><b id="seCount">۰</b></div>
+          <div><span>جمع مبلغ</span><b id="seTotal">۰</b> <small style="font-size:11px;color:var(--text-muted)">تومان</small></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn ghost" id="seClear">پاک کردن</button>
+          <button class="btn success" id="seSave" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            ثبت جلسه
+          </button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:24px">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          جلسات اخیر
+        </h2>
+        <div class="filters">
+          <select id="seFilterStudent"><option value="">همه زبان‌آموزان</option></select>
+          <select id="seFilterMonth"></select>
+        </div>
+        <div class="table-wrap" id="seTable"></div>
+      </div>
+    </section>
+
+    <!-- ========== زبان‌آموزان ========== -->
+    <section class="tab" id="tab-students">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">زبان‌آموزان</h1>
+          <p class="page-sub">مدیریت لیست زبان‌آموزان و مانده حساب‌ها</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 id="stTitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          افزودن زبان‌آموز
+        </h2>
+        <form class="form-grid" id="stForm">
+          <div class="field"><label>نام و نام خانوادگی *</label><input id="stName" required></div>
+          <div class="field"><label>سطح / دوره</label>
+            <input id="stCourse" list="courses" placeholder="مثلاً Elementary">
+            <datalist id="courses"><option>Starter</option><option>Elementary</option><option>Pre-Intermediate</option><option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option><option>IELTS</option><option>TOEFL</option><option>مکالمه</option><option>کودکان</option></datalist>
+          </div>
+          <div class="field"><label>شهریه هر جلسه</label><input id="stFee" inputmode="numeric" class="money" placeholder="تومان"></div>
+          <div class="field"><label>شماره تماس</label><input id="stPhone" inputmode="tel"></div>
+          <div class="field"><label>توضیحات</label><input id="stNote"></div>
+          <div class="btn-row">
+            <button class="btn" type="submit" id="stSave">افزودن</button>
+            <button class="btn ghost" type="button" id="stCancel" style="display:none">انصراف</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="filters">
+          <input id="stSearch" placeholder="جستجوی نام، دوره یا تلفن…">
+          <select id="stFilter">
+            <option value="">همه وضعیت‌ها</option>
+            <option value="debt">بدهکار</option>
+            <option value="credit">بستانکار</option>
+            <option value="zero">تسویه</option>
+          </select>
+        </div>
+        <div class="table-wrap" id="stTable"></div>
+      </div>
+    </section>
+
+    <!-- ========== تراکنش‌ها ========== -->
+    <section class="tab" id="tab-tx">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">تراکنش‌ها</h1>
+          <p class="page-sub">ثبت بدهی، دریافتی و هزینه</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 id="txTitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          ثبت تراکنش
+        </h2>
+        <form class="form-grid" id="txForm">
+          <div class="field"><label>نوع تراکنش</label>
+            <select id="txType">
+              <option value="charge">ثبت بدهی (شهریه)</option>
+              <option value="payment">دریافت وجه</option>
+              <option value="expense">هزینه</option>
+            </select>
+          </div>
+          <div class="field" id="txStWrap"><label>زبان‌آموز</label><select id="txStudent"></select></div>
+          <div class="field"><label>مبلغ (تومان) *</label><input id="txAmount" inputmode="numeric" class="money" required></div>
+          <div class="field"><label id="txDateLbl">تاریخ</label><div class="date-row" id="txDate"></div></div>
+          <div class="field"><label>روش پرداخت</label>
+            <select id="txMethod"><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
+          </div>
+          <div class="field"><label>شرح</label><input id="txDesc" placeholder="مثلاً شهریه مهر"></div>
+          <div class="btn-row">
+            <button class="btn" type="submit" id="txSave">ثبت</button>
+            <button class="btn ghost" type="button" id="txCancel" style="display:none">انصراف</button>
+          </div>
+        </form>
+        <p class="hint" style="margin-top:12px">«ثبت بدهی» مبلغ را به بدهی اضافه می‌کند و «دریافت وجه» از بدهی کم می‌کند.</p>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="filters">
+          <input id="fSearch" placeholder="جستجو در شرح…">
+          <select id="fStudent"></select>
+          <select id="fType">
+            <option value="">همه انواع</option>
+            <option value="charge">بدهی</option>
+            <option value="payment">دریافتی</option>
+            <option value="expense">هزینه</option>
+          </select>
+          <select id="fMonth"></select>
+        </div>
+        <p class="hint" id="txSum" style="margin-bottom:12px"></p>
+        <div class="table-wrap" id="txTable"></div>
+      </div>
+    </section>
+
+    <!-- ========== گزارش دوره‌ای ========== -->
+    <section class="tab" id="tab-report">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">گزارش دوره‌ای</h1>
+          <p class="page-sub">گزارش بر اساس بازه‌ی تاریخ</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+          <div class="field"><label>از تاریخ</label><div class="date-row" id="repFrom"></div></div>
+          <div class="field"><label>تا تاریخ</label><div class="date-row" id="repTo"></div></div>
+          <div class="field">
+            <label>میان‌بر</label>
+            <div class="btn-row tight">
+              <button class="btn ghost sm" data-range="month">ماه جاری</button>
+              <button class="btn ghost sm" data-range="lastMonth">ماه قبل</button>
+              <button class="btn ghost sm" data-range="30">۳۰ روز</button>
+              <button class="btn ghost sm" data-range="7">۷ روز</button>
+              <button class="btn ghost sm" data-range="year">سال</button>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn" id="repRun">نمایش گزارش</button>
+          <button class="btn ghost" id="repPrint">چاپ</button>
+          <span class="hint" style="align-self:center" id="repSummaryTxt"></span>
+        </div>
+      </div>
+
+      <div class="report-cards" id="repCards"></div>
+
+      <div class="card" style="margin-top:20px">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          تفکیک بر اساس زبان‌آموز
+        </h2>
+        <div class="table-wrap" id="repStudents"></div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          جزئیات تراکنش‌ها
+        </h2>
+        <div class="table-wrap" id="repTx"></div>
+      </div>
+    </section>
+
+    <!-- ========== پشتیبان‌گیری ========== -->
+    <section class="tab" id="tab-tools">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">پشتیبان‌گیری و ابزارها</h1>
+          <p class="page-sub">خروجی، پشتیبان، و پاک‌سازی</p>
+        </div>
+      </div>
+
+      <div class="cleanup-box">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          پاک‌سازی اطلاعات مالی
+        </h2>
+        <p>همهٔ تراکنش‌ها (بدهی، دریافتی، هزینه، جلسات) پاک می‌شوند ولی <b>زبان‌آموزان و اطلاعاتشان دست‌نخورده می‌مانند</b>. برای شروع از نو مناسب است.</p>
+        <div class="btn-row">
+          <button class="btn danger" id="btnWipeTx">پاک کردن همهٔ تراکنش‌ها (محلی + ابری)</button>
+          <button class="btn ghost" id="btnWipeTxLocal">فقط محلی</button>
+        </div>
+        <p class="hint" style="margin-top:12px">⚠️ قابل بازگشت نیست. قبلش پشتیبان بگیر.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            خروجی و چاپ
+          </h2>
+          <div class="btn-row">
+            <button class="btn ghost" id="btnCsvTx">CSV تراکنش‌ها</button>
+            <button class="btn ghost" id="btnCsvSt">CSV زبان‌آموزان</button>
+            <button class="btn ghost" id="btnCsvSe">CSV جلسات</button>
+            <button class="btn" id="btnPrint">چاپ گزارش</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            پشتیبان‌گیری
+          </h2>
+          <div class="btn-row">
+            <button class="btn" id="btnBackup">دانلود پشتیبان</button>
+            <button class="btn ghost" id="btnRestore">بازیابی</button>
+            <input type="file" id="fileRestore" accept=".json" style="display:none">
+          </div>
+        </div>
+      </div>
+
+      <div class="danger-zone">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          حذف کامل همه‌ی اطلاعات
+        </h2>
+        <p>این بخش زبان‌آموزان را هم پاک می‌کند. اگر فقط می‌خواهی اطلاعات مالی را پاک کنی، از بخش بالا استفاده کن.</p>
+        <div class="btn-row">
+          <button class="btn danger" id="btnReset">پاک‌کردن کامل (محلی)</button>
+          <button class="btn danger" id="btnResetCloud">حذف داده‌های Supabase</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -837,7 +1193,6 @@ const CONFIG = {
   QUEUE_KEY:    'ali_naghli_finance_v4_queue'
 };
 
-/* ---------- ابزارها ---------- */
 const $  = id => document.getElementById(id);
 const MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const FA = '۰۱۲۳۴۵۶۷۸۹';
@@ -853,9 +1208,15 @@ const debounce = (fn, ms=200) => { let h; return (...a)=>{ clearTimeout(h); h=se
 const pad = n => String(n).padStart(2,'0');
 
 let _toastH;
-function toast(msg, isErr){
-  const t = $('toast'); t.textContent = msg; t.classList.add('on');
-  t.classList.toggle('err', !!isErr);
+function toast(msg, type){
+  const t = $('toast');
+  const icon = type === 'err'
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+    : type === 'success'
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>'
+    : '';
+  t.innerHTML = icon + '<span>' + msg + '</span>';
+  t.className = 'toast on' + (type === 'err' ? ' err' : type === 'success' ? ' success' : '');
   clearTimeout(_toastH); _toastH = setTimeout(()=>t.classList.remove('on'), 2600);
 }
 
@@ -883,13 +1244,10 @@ function jToG(jy, jm, jd){
   return [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()];
 }
 function gToJ(gy, gm, gd){
-  const gDays = (function(){
-    const d = Date.UTC(gy, gm-1, gd);
-    const epoch = Date.UTC(622, 2, 22);
-    return Math.round((d - epoch) / 86400000) + 1;
-  })();
-  let jy = 1, n = gDays;
-  jy = _div(n, 365) + 1;
+  const d = Date.UTC(gy, gm-1, gd);
+  const epoch = Date.UTC(622, 2, 22);
+  const gDays = Math.round((d - epoch) / 86400000) + 1;
+  let jy = _div(gDays, 365) + 1, n = gDays;
   let jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1;
   while(n <= jyDays){ jy--; jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1; }
   while(n > jyDays + 365){
@@ -947,7 +1305,7 @@ function getDate(boxId){
 }
 
 /* =====================================================================
-   لایه‌ی داده
+   Data layer
    ===================================================================== */
 const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY)
   ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY)
@@ -969,17 +1327,18 @@ function loadLocal(){
 }
 function saveLocal(){
   try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }
-  catch(e){ toast('ذخیره‌سازی محلی انجام نشد!', true); }
+  catch(e){ toast('ذخیره‌سازی محلی انجام نشد', 'err'); }
 }
 function saveQueue(){
   try{ localStorage.setItem(CONFIG.QUEUE_KEY, JSON.stringify(syncQueue)); }
   catch(e){}
 }
 function enqueue(op){ syncQueue.push(op); saveQueue(); }
+
 function setSync(state, label){
   const b = $('syncBadge');
-  b.className = state;
-  b.textContent = label;
+  b.className = 'status-badge ' + state;
+  $('syncText').textContent = label;
 }
 
 function rowToStudent(s){
@@ -1095,7 +1454,7 @@ async function doInsertStudent(s){
     console.warn(e);
     enqueue({action:'insert', table:'students', payload: studentToRow(s), localId: s.id});
     setSync('offline','آفلاین');
-    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
+    toast('آفلاین: در صف ذخیره شد', 'err');
   }
 }
 async function doUpdateStudent(s){
@@ -1108,7 +1467,6 @@ async function doUpdateStudent(s){
     console.warn(e);
     enqueue({action:'update', table:'students', payload: studentToRow(s), id: s.id});
     setSync('offline','آفلاین');
-    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
   }
 }
 async function doDeleteStudent(id){
@@ -1134,7 +1492,7 @@ async function doInsertTx(t){
     console.warn(e);
     enqueue({action:'insert', table:'tx', payload: txToRow(t), localId: t.id});
     setSync('offline','آفلاین');
-    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
+    toast('آفلاین: در صف ذخیره شد', 'err');
   }
 }
 async function doUpdateTx(t){
@@ -1163,7 +1521,7 @@ async function doDeleteTx(id){
 }
 
 /* =====================================================================
-   محاسبات
+   Calculations
    ===================================================================== */
 function balances(){
   const b = {};
@@ -1178,11 +1536,11 @@ function balances(){
   return b;
 }
 const statusOf   = bal => bal>0 ? 'debt' : bal<0 ? 'credit' : 'zero';
-const statusTag  = bal => bal>0 ? '<span class="tag t-debt">بدهکار</span>' : bal<0 ? '<span class="tag t-credit">بستانکار</span>' : '<span class="tag t-zero">تسویه</span>';
+const statusTag  = bal => bal>0 ? '<span class="tag debt">بدهکار</span>' : bal<0 ? '<span class="tag credit">بستانکار</span>' : '<span class="tag zero">تسویه</span>';
 const TYPE_NAME  = { charge:'بدهی', payment:'دریافتی', expense:'هزینه' };
 const typeTag    = (t, isSession) => isSession
-  ? '<span class="tag t-session">جلسه</span>'
-  : ({charge:'<span class="tag t-debt">بدهی</span>',payment:'<span class="tag t-credit">دریافتی</span>',expense:'<span class="tag t-exp">هزینه</span>'})[t];
+  ? '<span class="tag session">جلسه</span>'
+  : ({charge:'<span class="tag debt">بدهی</span>',payment:'<span class="tag credit">دریافتی</span>',expense:'<span class="tag exp">هزینه</span>'})[t];
 const stName     = id => (db.students.find(s=>s.id===id)||{}).name || '—';
 
 document.addEventListener('input', e => {
@@ -1194,18 +1552,51 @@ document.addEventListener('input', e => {
 const moneyVal = id => Number(toEn($(id).value)) || 0;
 
 /* =====================================================================
-   تب‌ها
+   Tabs
    ===================================================================== */
-$('nav').onclick = e => {
-  const b = e.target.closest('button'); if(!b) return;
-  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on', x===b));
-  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('on', s.id==='tab-'+b.dataset.t));
+function showTab(t){
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.toggle('on', x.dataset.t===t));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('on', s.id==='tab-'+t));
   renderAll();
+  // close mobile sidebar
+  $('sidebar').classList.remove('open');
+  $('sidebarBackdrop').classList.remove('on');
+}
+$('nav').onclick = e => {
+  const b = e.target.closest('.nav-btn'); if(!b) return;
+  showTab(b.dataset.t);
 };
-function showTab(t){ document.querySelector(`nav button[data-t=${t}]`).click(); }
+
+/* Mobile menu */
+$('menuToggle').onclick = () => {
+  $('sidebar').classList.add('open');
+  $('sidebarBackdrop').classList.add('on');
+};
+$('sidebarBackdrop').onclick = () => {
+  $('sidebar').classList.remove('open');
+  $('sidebarBackdrop').classList.remove('on');
+};
 
 /* =====================================================================
-   داشبورد
+   Icons helper
+   ===================================================================== */
+const ICON = {
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  income: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
+  debt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
+  credit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  expense: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  net: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  empty: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+};
+function emptyState(msg){
+  return `<div class="empty">${ICON.empty}<div>${msg}</div></div>`;
+}
+
+/* =====================================================================
+   Dashboard
    ===================================================================== */
 function renderDash(){
   const b = balances();
@@ -1217,35 +1608,57 @@ function renderDash(){
   const income = db.tx.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
   const exp    = db.tx.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
   const sessionsCount = db.tx.filter(t=>t.is_session).length;
-  const card = (cls,l,v) => `<div class="stat ${cls}"><small>${l}</small><b>${fa(v)}</b><i>تومان</i></div>`;
-  $('stats').innerHTML =
-    `<div class="stat"><small>تعداد زبان‌آموزان</small><b>${fa(db.students.length)}</b><i>نفر</i></div>` +
-    `<div class="stat"><small>کل جلسات برگزارشده</small><b>${fa(sessionsCount)}</b><i>جلسه</i></div>` +
-    card('s-inc','کل درآمد دریافتی',income) +
-    card('s-debt','مجموع بدهی زبان‌آموزان',debt) +
-    card('s-credit','مجموع بستانکاری',credit) +
-    card('s-exp','مجموع هزینه‌ها',exp) +
-    card('s-net','سود خالص (درآمد − هزینه)',income-exp);
 
+  const stats = [
+    { label:'تعداد زبان‌آموزان', value:fa(db.students.length), unit:'نفر', icon:ICON.users, color:'' },
+    { label:'کل جلسات', value:fa(sessionsCount), unit:'جلسه', icon:ICON.calendar, color:'teal' },
+    { label:'کل درآمد', value:fa(income), unit:'تومان', icon:ICON.income, color:'green' },
+    { label:'مجموع بدهی', value:fa(debt), unit:'تومان', icon:ICON.debt, color:'red' },
+    { label:'مجموع بستانکاری', value:fa(credit), unit:'تومان', icon:ICON.credit, color:'green' },
+    { label:'مجموع هزینه‌ها', value:fa(exp), unit:'تومان', icon:ICON.expense, color:'orange' },
+    { label:'سود خالص', value:fa(income-exp), unit:'تومان', icon:ICON.net, color:'' },
+  ];
+  $('stats').innerHTML = stats.map(s => `
+    <div class="stat">
+      <div class="stat-icon ${s.color}">${s.icon}</div>
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value">${s.value} <small>${s.unit}</small></div>
+    </div>
+  `).join('');
+
+  // Donut
   const tot = nd+nc+nz, R=42, C=2*Math.PI*R;
-  const parts = [[nd,'var(--debt)','بدهکار'],[nc,'var(--credit)','بستانکار'],[nz,'var(--muted)','تسویه‌شده']];
+  const parts = [[nd,'var(--danger)','بدهکار'],[nc,'var(--success)','بستانکار'],[nz,'var(--text-subtle)','تسویه']];
   let off=0, circ='';
   if(tot){
     parts.forEach(p => { if(!p[0]) return; const len=p[0]/tot*C;
-      circ += `<circle r="${R}" cx="60" cy="60" fill="none" stroke="${p[1]}" stroke-width="18" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;
+      circ += `<circle r="${R}" cx="60" cy="60" fill="none" stroke="${p[1]}" stroke-width="16" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)" stroke-linecap="round"/>`;
       off += len;
     });
-  } else circ = `<circle r="${R}" cx="60" cy="60" fill="none" stroke="var(--soft)" stroke-width="18"/>`;
-  $('donut').innerHTML = `<svg viewBox="0 0 120 120" width="170" height="170">${circ}<text x="60" y="58" text-anchor="middle" font-size="18" style="fill:var(--ink);font-weight:700">${fa(tot)}</text><text x="60" y="74" text-anchor="middle" font-size="9">زبان‌آموز</text></svg>
-   <div class="legend" style="flex-direction:column;gap:10px">${parts.map(p=>`<span style="--c:${p[1]}">${p[2]}: <b>${fa(p[0])}</b> نفر</span>`).join('')}</div>`;
+  } else circ = `<circle r="${R}" cx="60" cy="60" fill="none" stroke="var(--border)" stroke-width="16"/>`;
+  $('donut').innerHTML = `
+    <svg viewBox="0 0 120 120" width="170" height="170">${circ}
+      <text x="60" y="56" text-anchor="middle" font-size="20" font-weight="800" style="fill:var(--text)">${fa(tot)}</text>
+      <text x="60" y="74" text-anchor="middle" font-size="10" style="fill:var(--text-muted)">زبان‌آموز</text>
+    </svg>
+    <div class="donut-legend">
+      ${parts.map(p=>`<div class="item"><span class="dot" style="background:${p[1]}"></span>${p[2]}<b>${fa(p[0])}</b></div>`).join('')}
+    </div>
+  `;
 
+  // Bars
   const list = db.students.map(s=>({n:s.name, v:b[s.id].bal}))
     .filter(x=>x.v!==0).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,10);
   const mx = Math.max(1, ...list.map(x=>Math.abs(x.v)));
   $('bars').innerHTML = list.length
-    ? list.map(x=>`<div class="row"><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><div class="track"><div class="fill" style="width:${Math.abs(x.v)/mx*100}%;background:${x.v>0?'var(--debt)':'var(--credit)'}"></div></div><span class="val ${x.v>0?'neg':'pos'}">${fa(Math.abs(x.v))}</span></div>`).join('')
-    : '<div class="empty">همه‌ی حساب‌ها تسویه است.</div>';
+    ? list.map(x=>`<div class="bar-row">
+        <span class="bar-name" title="${esc(x.n)}">${esc(x.n)}</span>
+        <div class="bar-track"><div class="bar-fill ${x.v>0?'debt':'credit'}" style="width:${Math.abs(x.v)/mx*100}%"></div></div>
+        <span class="bar-val ${x.v>0?'neg':'pos'}">${fa(Math.abs(x.v))}</span>
+      </div>`).join('')
+    : emptyState('همه‌ی حساب‌ها تسویه است.');
 
+  // Yearly chart
   const years = new Set([todayJ()[0]]);
   db.tx.forEach(t => years.add(+t.date.slice(0,4)));
   const sel = $('chartYear'), cur = sel.value || todayJ()[0];
@@ -1261,14 +1674,14 @@ function renderDash(){
   const W=600, H=250, pl=10, pt=14, pb=34, cw=(W-pl*2)/12;
   const max = Math.max(1, ...inc, ...ex);
   let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%">`;
-  for(let i=0;i<=4;i++){ const y = pt+(H-pt-pb)*i/4; svg += `<line x1="${pl}" x2="${W-pl}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-dasharray="3 3"/>`; }
+  for(let i=0;i<=4;i++){ const y = pt+(H-pt-pb)*i/4; svg += `<line x1="${pl}" x2="${W-pl}" y1="${y}" y2="${y}" stroke="var(--border)" stroke-dasharray="3 3"/>`; }
   for(let m=0;m<12;m++){
     const cx = W-pl-cw*(m+.5), bw = cw*.32, ch = H-pt-pb;
     const h1 = inc[m]/max*ch, h2 = ex[m]/max*ch;
-    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="3" fill="var(--inc)"><title>${MONTHS[m]} - دریافتی: ${fa(inc[m])}</title></rect>`;
-    svg += `<rect x="${cx+1}"   y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="3" fill="var(--exp)"><title>${MONTHS[m]} - هزینه: ${fa(ex[m])}</title></rect>`;
-    svg += `<text x="${cx}" y="${H-14}" text-anchor="middle" font-size="10">${MONTHS[m]}</text>`;
-    if(inc[m]) svg += `<text x="${cx-bw/2-1}" y="${pt+ch-h1-3}" text-anchor="middle" font-size="8">${fa(inc[m]/1000)}</text>`;
+    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="4" fill="var(--success)"><title>${MONTHS[m]} - دریافتی: ${fa(inc[m])}</title></rect>`;
+    svg += `<rect x="${cx+1}"   y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="4" fill="var(--warning)"><title>${MONTHS[m]} - هزینه: ${fa(ex[m])}</title></rect>`;
+    svg += `<text x="${cx}" y="${H-14}" text-anchor="middle" font-size="10" style="fill:var(--text-muted)">${MONTHS[m]}</text>`;
+    if(inc[m]) svg += `<text x="${cx-bw/2-1}" y="${pt+ch-h1-3}" text-anchor="middle" font-size="8" style="fill:var(--text)">${fa(inc[m]/1000)}</text>`;
   }
   svg += '</svg>';
   $('monthly').innerHTML = svg;
@@ -1280,11 +1693,11 @@ function renderDash(){
   const rec = [...db.tx].sort((a,b)=>b.date.localeCompare(a.date) || b.ts-a.ts).slice(0,6);
   $('recent').innerHTML = rec.length
     ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>`
-    : '<div class="empty">هنوز تراکنشی ثبت نشده است.</div>';
+    : emptyState('هنوز تراکنشی ثبت نشده است.');
 }
 
 /* =====================================================================
-   زبان‌آموزان
+   Students
    ===================================================================== */
 let editSt = null;
 function renderStudents(){
@@ -1300,14 +1713,14 @@ function renderStudents(){
       <td class="n">${fa(x.sessions)}</td>
       <td class="n">${fa(x.charge)}</td><td class="n">${fa(x.pay)}</td>
       <td class="n ${x.bal>0?'neg':x.bal<0?'pos':''}"><b>${fa(Math.abs(x.bal))}</b></td><td>${statusTag(x.bal)}</td>
-      <td><div class="actions">
-        <button class="btn sm" onclick="openStatement('${s.id}')">صورت‌حساب</button>
-        <button class="btn sm alt" onclick="quickSession('${s.id}')">ثبت جلسه</button>
-        <button class="btn sm alt" onclick="quickTx('${s.id}','payment')">دریافت</button>
-        <button class="btn sm alt" onclick="quickTx('${s.id}','charge')">بدهی</button>
-        <button class="btn sm alt" onclick="editStudent('${s.id}')">ویرایش</button>
-        <button class="btn sm warn" onclick="delStudent('${s.id}')">حذف</button></div></td></tr>`}).join('')}</tbody></table>`
-    : '<div class="empty">زبان‌آموزی یافت نشد.</div>';
+      <td><div class="btn-row tight">
+        <button class="btn sm ghost" onclick="openStatement('${s.id}')">صورت‌حساب</button>
+        <button class="btn sm ghost" onclick="quickSession('${s.id}')">جلسه</button>
+        <button class="btn sm ghost" onclick="quickTx('${s.id}','payment')">دریافت</button>
+        <button class="btn sm ghost" onclick="quickTx('${s.id}','charge')">بدهی</button>
+        <button class="btn sm ghost" onclick="editStudent('${s.id}')">ویرایش</button>
+        <button class="btn sm danger" onclick="delStudent('${s.id}')">حذف</button></div></td></tr>`}).join('')}</tbody></table>`
+    : emptyState('زبان‌آموزی یافت نشد.');
 }
 $('stForm').onsubmit = async e => {
   e.preventDefault();
@@ -1317,12 +1730,12 @@ $('stForm').onsubmit = async e => {
     const s = db.students.find(x=>x.id===editSt);
     Object.assign(s, o);
     await doUpdateStudent(s);
-    toast('تغییرات ذخیره شد');
+    toast('تغییرات ذخیره شد', 'success');
   } else {
     const s = { id: uid(), ...o };
     db.students.push(s);
     await doInsertStudent(s);
-    toast('زبان‌آموز اضافه شد');
+    toast('زبان‌آموز اضافه شد', 'success');
   }
   cancelStudent(); saveLocal(); renderAll();
 };
@@ -1332,14 +1745,14 @@ function editStudent(id){
   $('stName').value = s.name; $('stCourse').value = s.course||'';
   $('stFee').value = s.fee ? s.fee.toLocaleString('en-US') : '';
   $('stPhone').value = s.phone||''; $('stNote').value = s.note||'';
-  $('stTitle').textContent = 'ویرایش زبان‌آموز';
+  $('stTitle').lastChild.textContent = ' ویرایش زبان‌آموز';
   $('stSave').textContent = 'ذخیره تغییرات';
   $('stCancel').style.display = '';
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function cancelStudent(){
   editSt = null; $('stForm').reset();
-  $('stTitle').textContent = 'افزودن زبان‌آموز';
+  $('stTitle').lastChild.textContent = ' افزودن زبان‌آموز';
   $('stSave').textContent = 'افزودن';
   $('stCancel').style.display = 'none';
 }
@@ -1352,13 +1765,13 @@ async function delStudent(id){
   await doDeleteStudent(id);
   db.students = db.students.filter(s=>s.id!==id);
   db.tx = db.tx.filter(t=>t.sid!==id);
-  saveLocal(); renderAll(); toast('حذف شد');
+  saveLocal(); renderAll(); toast('حذف شد', 'success');
 }
 $('stSearch').addEventListener('input', debounce(renderStudents));
 $('stFilter').addEventListener('change', renderStudents);
 
 /* =====================================================================
-   ثبت جلسه
+   Session tab
    ===================================================================== */
 let seSelected = {};
 let seCourseFilter = '';
@@ -1391,24 +1804,24 @@ function renderSessionGrid(){
   });
   const grid = $('seGrid');
   if(!list.length){
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">زبان‌آموزی یافت نشد. از تب «زبان‌آموزان» اضافه کنید.</div>';
+    grid.innerHTML = `<div style="grid-column:1/-1">${emptyState('زبان‌آموزی یافت نشد. از تب «زبان‌آموزان» اضافه کن.')}</div>`;
     updateSelectionBar(); return;
   }
   grid.innerHTML = list.map(s => {
     const on = s.id in seSelected;
     const val = on ? seSelected[s.id] : (s.fee||0);
     const b = bAll[s.id] || { bal:0, sessions:0 };
-    return `<div class="stCard ${on?'on':''}" data-id="${s.id}">
-      <div class="name">
-        <span>${esc(s.name)}</span>
-        <span class="check">✓</span>
+    return `<div class="st-card ${on?'on':''}" data-id="${s.id}">
+      <div class="st-head">
+        <span class="st-name">${esc(s.name)}</span>
+        <span class="st-check">${ICON.check}</span>
       </div>
-      <div class="meta">
+      <div class="st-meta">
         <div class="row"><span>دوره</span><span>${esc(s.course||'—')}</span></div>
-        <div class="row"><span>شهریه‌ی هر جلسه</span><b>${fa(s.fee||0)}</b></div>
+        <div class="row"><span>شهریه هر جلسه</span><b>${fa(s.fee||0)}</b></div>
         <div class="row"><span>مانده فعلی</span><b class="${b.bal>0?'neg':b.bal<0?'pos':''}">${fa(Math.abs(b.bal))} ${b.bal>0?'بدهکار':b.bal<0?'بستانکار':''}</b></div>
       </div>
-      <div class="feeInp" onclick="event.stopPropagation()">
+      <div class="st-amount" onclick="event.stopPropagation()">
         <input class="money" data-amount="${s.id}" inputmode="numeric" value="${val?Number(val).toLocaleString('en-US'):''}" placeholder="مبلغ این جلسه" ${on?'':'disabled'}>
       </div>
     </div>`;
@@ -1417,8 +1830,8 @@ function renderSessionGrid(){
 }
 
 $('seGrid').onclick = e => {
-  if(e.target.closest('.feeInp')) return;
-  const card = e.target.closest('.stCard'); if(!card) return;
+  if(e.target.closest('.st-amount')) return;
+  const card = e.target.closest('.st-card'); if(!card) return;
   const id = card.dataset.id;
   if(id in seSelected) delete seSelected[id];
   else {
@@ -1447,7 +1860,7 @@ function updateSelectionBar(){
 $('seClear').onclick = () => { seSelected = {}; renderSessionGrid(); };
 $('seSearch').addEventListener('input', debounce(e => { seSearchQuery = e.target.value; renderSessionGrid(); }));
 
-document.querySelectorAll('.quickDates button').forEach(b => {
+document.querySelectorAll('.quick-btns button').forEach(b => {
   b.onclick = () => {
     const off = +b.dataset.off;
     const t = todayJ();
@@ -1458,14 +1871,14 @@ document.querySelectorAll('.quickDates button').forEach(b => {
 
 $('seSave').onclick = async () => {
   const ids = Object.keys(seSelected);
-  if(!ids.length){ toast('حداقل یک زبان‌آموز انتخاب کنید'); return; }
+  if(!ids.length){ toast('حداقل یک زبان‌آموز انتخاب کن', 'err'); return; }
   const date = getDate('seDate');
   const baseDesc = $('seDesc').value.trim();
   const method = $('seMethod').value === '—' ? '' : $('seMethod').value;
   const created = [];
   for(const id of ids){
     const amount = +seSelected[id] || 0;
-    if(amount <= 0){ toast(`مبلغ برای «${stName(id)}» صفر است`); return; }
+    if(amount <= 0){ toast(`مبلغ برای «${stName(id)}» صفر است`, 'err'); return; }
     const t = {
       id: uid(), ts: Date.now(),
       type: 'charge', sid: id, amount,
@@ -1479,11 +1892,10 @@ $('seSave').onclick = async () => {
   saveLocal(); renderAll();
   await Promise.all(created.map(t => doInsertTx(t)));
   saveLocal(); renderAll();
-
   seSelected = {};
   $('seDesc').value = '';
   renderSessionGrid();
-  toast(`${faDigits(created.length)} جلسه ثبت شد`);
+  toast(`${faDigits(created.length)} جلسه ثبت شد`, 'success');
 };
 
 function renderSessions(){
@@ -1510,19 +1922,19 @@ function renderSessions(){
         <td>${esc(stName(t.sid))}</td>
         <td class="n"><b>${fa(t.amount)}</b></td>
         <td style="white-space:normal;min-width:140px">${esc(t.desc)}</td>
-        <td><div class="actions"><button class="btn sm warn" onclick="delTx('${t.id}')">حذف</button></div></td>
+        <td><div class="btn-row tight"><button class="btn xs danger" onclick="delTx('${t.id}')">حذف</button></div></td>
       </tr>`).join('')}</tbody></table>`
-    : '<div class="empty">هنوز جلسه‌ای ثبت نشده است.</div>';
+    : emptyState('هنوز جلسه‌ای ثبت نشده است.');
 }
 
 /* =====================================================================
-   تراکنش‌ها
+   Transactions
    ===================================================================== */
 let editTx = null;
 function fillStudentSelects(){
   const opts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
   const v1 = $('txStudent').value, v2 = $('fStudent').value;
-  $('txStudent').innerHTML = opts || '<option value="">— ابتدا زبان‌آموز اضافه کنید —</option>';
+  $('txStudent').innerHTML = opts || '<option value="">— ابتدا زبان‌آموز اضافه کن —</option>';
   $('fStudent').innerHTML = '<option value="">همه زبان‌آموزان</option>' + opts;
   if(db.students.some(s=>s.id===v1)) $('txStudent').value = v1;
   if(db.students.some(s=>s.id===v2)) $('fStudent').value = v2;
@@ -1534,15 +1946,15 @@ function fillStudentSelects(){
 function txTypeUI(){
   const ex = $('txType').value === 'expense';
   $('txStWrap').style.display = ex ? 'none' : '';
-  $('txDateLbl').textContent = $('txType').value==='payment' ? 'تاریخ دریافت (شمسی)' : 'تاریخ (شمسی)';
+  $('txDateLbl').textContent = $('txType').value==='payment' ? 'تاریخ دریافت' : 'تاریخ';
 }
 $('txType').onchange = txTypeUI;
 
 $('txForm').onsubmit = async e => {
   e.preventDefault();
   const type = $('txType').value, amount = moneyVal('txAmount');
-  if(amount <= 0){ toast('مبلغ را وارد کنید'); return; }
-  if(type !== 'expense' && !$('txStudent').value){ toast('ابتدا یک زبان‌آموز انتخاب کنید'); return; }
+  if(amount <= 0){ toast('مبلغ را وارد کن', 'err'); return; }
+  if(type !== 'expense' && !$('txStudent').value){ toast('ابتدا یک زبان‌آموز انتخاب کن', 'err'); return; }
   const o = {
     type,
     sid: type==='expense' ? null : $('txStudent').value,
@@ -1554,12 +1966,12 @@ $('txForm').onsubmit = async e => {
     const t = db.tx.find(x=>x.id===editTx);
     Object.assign(t, o);
     await doUpdateTx(t);
-    toast('تراکنش ویرایش شد');
+    toast('تراکنش ویرایش شد', 'success');
   } else {
     const t = { id: uid(), ts: Date.now(), ...o };
     db.tx.push(t);
     await doInsertTx(t);
-    toast('تراکنش ثبت شد');
+    toast('تراکنش ثبت شد', 'success');
   }
   const keepType = $('txType').value;
   const keepSt   = keepType === 'expense' ? '' : $('txStudent').value;
@@ -1570,7 +1982,7 @@ $('txForm').onsubmit = async e => {
 };
 function cancelTx(){
   editTx = null; $('txForm').reset(); setDate('txDate', todayJ()); txTypeUI();
-  $('txTitle').textContent = 'ثبت تراکنش';
+  $('txTitle').lastChild.textContent = ' ثبت تراکنش';
   $('txSave').textContent = 'ثبت';
   $('txCancel').style.display = 'none';
 }
@@ -1583,8 +1995,8 @@ function editTransaction(id){
   $('txAmount').value = t.amount.toLocaleString('en-US');
   setDate('txDate', t.date.split('/').map(Number));
   $('txMethod').value = t.method; $('txDesc').value = t.desc||'';
-  $('txTitle').textContent = 'ویرایش تراکنش';
-  $('txSave').textContent = 'ذخیره تغییرات';
+  $('txTitle').lastChild.textContent = ' ویرایش تراکنش';
+  $('txSave').textContent = 'ذخیره';
   $('txCancel').style.display = '';
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -1592,7 +2004,7 @@ async function delTx(id){
   if(!confirm('این تراکنش حذف شود؟')) return;
   await doDeleteTx(id);
   db.tx = db.tx.filter(t=>t.id!==id);
-  saveLocal(); renderAll(); toast('حذف شد');
+  saveLocal(); renderAll(); toast('حذف شد', 'success');
 }
 function quickTx(sid, type){
   showTab('tx'); cancelTx();
@@ -1620,24 +2032,24 @@ function renderTx(){
   fillStudentSelects();
   const rows = filteredTx();
   const sum = t => rows.filter(x=>x.type===t).reduce((a,x)=>a+x.amount,0);
-  $('txSum').innerHTML = `نمایش ${faDigits(rows.length)} تراکنش — بدهی ثبت‌شده: <b>${fa(sum('charge'))}</b> | دریافتی: <b>${fa(sum('payment'))}</b> | هزینه: <b>${fa(sum('expense'))}</b> تومان`;
+  $('txSum').innerHTML = `نمایش ${faDigits(rows.length)} تراکنش — بدهی: <b>${fa(sum('charge'))}</b> | دریافتی: <b>${fa(sum('payment'))}</b> | هزینه: <b>${fa(sum('expense'))}</b> تومان`;
   $('txTable').innerHTML = rows.length
     ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ (تومان)</th><th>روش</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.map(t=>`<tr>
       <td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td>
       <td class="n"><b>${fa(t.amount)}</b></td><td>${esc(t.method)}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td>
-      <td><div class="actions"><button class="btn sm alt" onclick="editTransaction('${t.id}')">ویرایش</button><button class="btn sm warn" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>`
-    : '<div class="empty">تراکنشی برای نمایش وجود ندارد.</div>';
+      <td><div class="btn-row tight"><button class="btn xs ghost" onclick="editTransaction('${t.id}')">ویرایش</button><button class="btn xs danger" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>`
+    : emptyState('تراکنشی برای نمایش وجود ندارد.');
 }
 $('fSearch').addEventListener('input', debounce(renderTx));
 ['fStudent','fType','fMonth'].forEach(id => $(id).addEventListener('change', renderTx));
 
 /* =====================================================================
-   گزارش دوره‌ای
+   Report
    ===================================================================== */
 function runReport(){
   const from = getDate('repFrom');
   const to   = getDate('repTo');
-  if(from > to){ toast('تاریخ شروع بعد از پایان است'); return; }
+  if(from > to){ toast('تاریخ شروع بعد از پایان است', 'err'); return; }
 
   const rows = db.tx.filter(t => {
     const d = t.is_session && t.session_date ? t.session_date : t.date;
@@ -1659,24 +2071,12 @@ function runReport(){
   });
 
   $('repCards').innerHTML = `
-    <div class="repCard" style="border-inline-start-color:var(--inc)">
-      <small>درآمد (دریافتی) در بازه</small><b>${fa(income)}</b><i>تومان</i>
-    </div>
-    <div class="repCard" style="border-inline-start-color:var(--debt)">
-      <small>بدهی ثبت‌شده در بازه</small><b>${fa(charge)}</b><i>تومان</i>
-    </div>
-    <div class="repCard" style="border-inline-start-color:var(--brass)">
-      <small>تعداد جلسات در بازه</small><b>${fa(sessions)}</b><i>جلسه</i>
-    </div>
-    <div class="repCard" style="border-inline-start-color:var(--exp)">
-      <small>هزینه در بازه</small><b>${fa(expense)}</b><i>تومان</i>
-    </div>
-    <div class="repCard" style="border-inline-start-color:var(--credit)">
-      <small>سود خالص بازه</small><b>${fa(net)}</b><i>تومان</i>
-    </div>
-    <div class="repCard" style="border-inline-start-color:var(--debt)">
-      <small>مجموع بدهی معوق (تا پایان بازه)</small><b>${fa(Math.max(0,overdue))}</b><i>تومان</i>
-    </div>
+    <div class="rep-card green"><small>درآمد در بازه</small><b>${fa(income)}<small>تومان</small></b></div>
+    <div class="rep-card red"><small>بدهی ثبت‌شده</small><b>${fa(charge)}<small>تومان</small></b></div>
+    <div class="rep-card blue"><small>تعداد جلسات</small><b>${fa(sessions)}<small>جلسه</small></b></div>
+    <div class="rep-card orange"><small>هزینه در بازه</small><b>${fa(expense)}<small>تومان</small></b></div>
+    <div class="rep-card teal"><small>سود خالص</small><b>${fa(net)}<small>تومان</small></b></div>
+    <div class="rep-card red"><small>بدهی معوق (تا پایان بازه)</small><b>${fa(Math.max(0,overdue))}<small>تومان</small></b></div>
   `;
 
   $('repSummaryTxt').textContent = `از ${showDate(from)} تا ${showDate(to)} — ${faDigits(rows.length)} تراکنش`;
@@ -1692,7 +2092,7 @@ function runReport(){
   const list = Object.values(byStudent).filter(x => x.charge || x.payment || x.sessions)
     .sort((a,b)=> (b.charge + b.payment) - (a.charge + a.payment));
   $('repStudents').innerHTML = list.length
-    ? `<table><thead><tr><th>زبان‌آموز</th><th>تعداد جلسات</th><th>بدهی ثبت‌شده</th><th>دریافتی</th><th>خالص بازه</th></tr></thead><tbody>${list.map(x=>`
+    ? `<table><thead><tr><th>زبان‌آموز</th><th>جلسات</th><th>بدهی</th><th>دریافتی</th><th>خالص بازه</th></tr></thead><tbody>${list.map(x=>`
         <tr>
           <td><b>${esc(x.name)}</b></td>
           <td class="n">${fa(x.sessions)}</td>
@@ -1700,7 +2100,7 @@ function runReport(){
           <td class="n pos">${fa(x.payment)}</td>
           <td class="n ${x.charge-x.payment>0?'neg':'pos'}">${fa(Math.abs(x.charge-x.payment))} ${x.charge-x.payment>0?'بدهکار':x.charge-x.payment<0?'بستانکار':''}</td>
         </tr>`).join('')}</tbody></table>`
-    : '<div class="empty">در این بازه تراکنشی ثبت نشده است.</div>';
+    : emptyState('در این بازه تراکنشی ثبت نشده است.');
 
   const sortedRows = [...rows].sort((a,b)=>{
     const da = a.is_session&&a.session_date ? a.session_date : a.date;
@@ -1718,20 +2118,20 @@ function runReport(){
           <td style="white-space:normal;min-width:160px">${esc(t.desc)}</td>
         </tr>`;
       }).join('')}</tbody></table>`
-    : '<div class="empty">تراکنشی برای نمایش نیست.</div>';
+    : emptyState('تراکنشی برای نمایش نیست.');
 }
 
 $('repRun').onclick = runReport;
 $('repPrint').onclick = () => {
   runReport();
-  document.body.classList.add('report-print');
+  document.body.classList.add('pm');
   setTimeout(()=>{
     window.print();
-    setTimeout(()=>document.body.classList.remove('report-print'), 400);
+    setTimeout(()=>document.body.classList.remove('pm'), 400);
   }, 100);
 };
 
-document.querySelectorAll('.rangeBox [data-range]').forEach(b => {
+document.querySelectorAll('[data-range]').forEach(b => {
   b.onclick = () => {
     const t = todayJ();
     const r = b.dataset.range;
@@ -1752,11 +2152,11 @@ document.querySelectorAll('.rangeBox [data-range]').forEach(b => {
 });
 
 /* =====================================================================
-   صورت‌حساب
+   Statement modal
    ===================================================================== */
 function openStatement(id){
   const s = db.students.find(x=>x.id===id);
-  if(!s){ toast('زبان‌آموز یافت نشد'); return; }
+  if(!s){ toast('زبان‌آموز یافت نشد', 'err'); return; }
   const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=>{
     const da = a.is_session && a.session_date ? a.session_date : a.date;
     const db_ = b.is_session && b.session_date ? b.session_date : b.date;
@@ -1772,11 +2172,15 @@ function openStatement(id){
     return `<tr><td>${showDate(dShow)}</td><td>${label}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`;
   }).join('');
   const sessionCount = rows.filter(t=>t.is_session).length;
-  $('modalBox').innerHTML = `<h2 style="margin-top:0">صورت‌حساب: ${esc(s.name)}</h2>
-   <p class="hint">${esc(s.course||'—')} ${s.phone?'— تلفن: '+faDigits(esc(s.phone)):''} — شهریه/جلسه: ${fa(s.fee||0)} تومان — تعداد جلسات: ${faDigits(sessionCount)} — تاریخ صدور: ${longDate(dateStr(todayJ()))}</p>
-   <div class="wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار (پرداخت)</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:'<div class="empty">تراکنشی ثبت نشده.</div>'}</div>
-   <h3>${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'حساب تسویه است'}</h3>
-   <div class="actions noprint"><button class="btn" onclick="printModal()">چاپ</button><button class="btn alt" onclick="closeModal()">بستن</button></div>`;
+  $('modalBox').innerHTML = `
+    <h2 style="margin-top:0">صورت‌حساب: ${esc(s.name)}</h2>
+    <p class="hint">${esc(s.course||'—')} ${s.phone?'— تلفن: '+faDigits(esc(s.phone)):''} — شهریه: ${fa(s.fee||0)} — جلسات: ${faDigits(sessionCount)} — تاریخ: ${longDate(dateStr(todayJ()))}</p>
+    <div class="table-wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:emptyState('تراکنشی ثبت نشده.')}</div>
+    <h3 style="margin-top:20px">${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'حساب تسویه است'}</h3>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn" onclick="printModal()">چاپ</button>
+      <button class="btn ghost" onclick="closeModal()">بستن</button>
+    </div>`;
   $('modal').classList.add('on');
 }
 function closeModal(){ $('modal').classList.remove('on'); }
@@ -1784,15 +2188,9 @@ function printModal(){ document.body.classList.add('pm'); window.print(); setTim
 $('modal').onclick = e => { if(e.target.id==='modal') closeModal(); };
 
 /* =====================================================================
-   خروجی / پشتیبان
+   Export / Backup
    ===================================================================== */
 async function download(name, text, type){
-  try{
-    if(window.claude && window.claude.use){
-      const d = await window.claude.use('downloads');
-      if(d){ await d.save({ filename:name, data:text }); toast('فایل ذخیره شد'); return; }
-    }
-  }catch(e){}
   try{
     const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -1800,8 +2198,8 @@ async function download(name, text, type){
     a.href = url; a.download = name;
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100);
-    toast('فایل دانلود شد');
-  }catch(e){ toast('ذخیره فایل انجام نشد', true); }
+    toast('فایل دانلود شد', 'success');
+  }catch(e){ toast('ذخیره فایل انجام نشد', 'err'); }
 }
 const csvCell = v => '"' + String(v??'').replace(/"/g,'""') + '"';
 
@@ -1836,10 +2234,10 @@ $('fileRestore').onchange = e => {
       const st = Array.isArray(d.students) ? d.students : (Array.isArray(d) ? d : null);
       const tx = Array.isArray(d.tx) ? d.tx : [];
       if(!st) throw 0;
-      if(!confirm('اطلاعات فعلی محلی با فایل پشتیبان جایگزین شود؟ (روی Supabase اعمال نمی‌شود)')) return;
+      if(!confirm('اطلاعات فعلی محلی با فایل پشتیبان جایگزین شود؟')) return;
       db = { students: st, tx };
-      saveLocal(); renderAll(); toast('بازیابی محلی انجام شد');
-    }catch(_){ toast('فایل معتبر نیست', true); }
+      saveLocal(); renderAll(); toast('بازیابی انجام شد', 'success');
+    }catch(_){ toast('فایل معتبر نیست', 'err'); }
   };
   r.readAsText(f); e.target.value = '';
 };
@@ -1852,84 +2250,77 @@ $('btnPrint').onclick = () => {
   }, 100);
 };
 $('btnReset').onclick = () => {
-  if(confirm('همه‌ی اطلاعات محلی پاک می‌شود. مطمئنید؟') && confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')){
+  if(confirm('همه‌ی اطلاعات محلی پاک می‌شود. مطمئنید؟') && confirm('این کار قابل بازگشت نیست.')){
     db = { students:[], tx:[] }; syncQueue = [];
-    saveLocal(); saveQueue(); renderAll(); toast('پاک شد (محلی)');
+    saveLocal(); saveQueue(); renderAll(); toast('پاک شد (محلی)', 'success');
   }
 };
 $('btnResetCloud').onclick = async () => {
-  if(!sb){ toast('Supabase در دسترس نیست', true); return; }
+  if(!sb){ toast('Supabase در دسترس نیست', 'err'); return; }
   if(!confirm('همه‌ی داده‌ها از Supabase حذف می‌شوند! مطمئنید؟')) return;
-  if(!confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')) return;
+  if(!confirm('این کار قابل بازگشت نیست.')) return;
   setSync('syncing','در حال حذف…');
   try{
     await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000');
     await sb.from('students').delete().neq('id','00000000-0000-0000-0000-000000000000');
     db = { students:[], tx:[] }; syncQueue = [];
     saveLocal(); saveQueue(); renderAll();
-    setSync('online','متصل'); toast('داده‌های Supabase حذف شد');
-  }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا در حذف ابری', true); }
+    setSync('online','متصل'); toast('داده‌های Supabase حذف شد', 'success');
+  }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا در حذف ابری', 'err'); }
 };
 $('chartYear').onchange = renderDash;
 
 $('syncBtn').onclick = async () => {
-  if(!sb){ toast('Supabase پیکربندی نشده', true); return; }
+  if(!sb){ toast('Supabase پیکربندی نشده', 'err'); return; }
   setSync('syncing','همگام‌سازی…');
   await flushQueue();
   const ok = await pullFromCloud();
-  if(ok){ renderAll(); toast('همگام‌سازی انجام شد'); }
-  else toast('اتصال برقرار نشد', true);
+  if(ok){ renderAll(); toast('همگام‌سازی انجام شد', 'success'); }
+  else toast('اتصال برقرار نشد', 'err');
 };
 
-/* =====================================================================
-   پاک‌سازی اطلاعات مالی (بدون حذف دانش‌آموزان)
-   ===================================================================== */
+/* Cleanup */
 $('btnWipeTxLocal').onclick = () => {
-  if(!confirm(`همهٔ ${faDigits(db.tx.length)} تراکنش محلی پاک می‌شود (زبان‌آموزان می‌مانند). مطمئنید؟`)) return;
+  if(!confirm(`همهٔ ${faDigits(db.tx.length)} تراکنش محلی پاک می‌شود. مطمئنید؟`)) return;
   db.tx = [];
-  // صف را هم خالی کن (چون مربوط به تراکنش‌های حذف‌شده است)
   syncQueue = syncQueue.filter(op => op.table !== 'tx');
   saveLocal(); saveQueue(); renderAll();
-  toast('تراکنش‌های محلی پاک شد');
+  toast('تراکنش‌های محلی پاک شد', 'success');
 };
 
 $('btnWipeTx').onclick = async () => {
-  if(!confirm(`همهٔ ${faDigits(db.tx.length)} تراکنش (محلی و ابری) پاک می‌شود. زبان‌آموزان و اطلاعاتشان دست‌نخورده می‌مانند. مطمئنید؟`)) return;
-  if(!confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')) return;
-
-  // ۱) محلی پاک کن
+  if(!confirm(`همهٔ ${faDigits(db.tx.length)} تراکنش (محلی و ابری) پاک می‌شود. زبان‌آموزان می‌مانند. مطمئنید؟`)) return;
+  if(!confirm('این کار قابل بازگشت نیست.')) return;
   db.tx = [];
   syncQueue = syncQueue.filter(op => op.table !== 'tx');
   saveLocal(); saveQueue(); renderAll();
-
-  // ۲) ابری پاک کن
   if(sb){
-    setSync('syncing','در حال حذف تراکنش‌ها…');
+    setSync('syncing','در حال حذف…');
     try{
       const { error } = await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000');
       if(error) throw error;
       setSync('online','متصل');
-      toast('همهٔ تراکنش‌ها پاک شد (محلی + ابری)');
+      toast('همهٔ تراکنش‌ها پاک شد (محلی + ابری)', 'success');
     }catch(e){
       console.warn(e);
       setSync('offline','آفلاین');
-      toast('محلی پاک شد، ولی حذف ابری نشد — دوباره تلاش کن', true);
+      toast('محلی پاک شد، حذف ابری نشد', 'err');
     }
   } else {
-    toast('محلی پاک شد (Supabase در دسترس نیست)');
+    toast('محلی پاک شد', 'success');
   }
 };
 
-/* ---------- تم ---------- */
+/* Theme */
 $('themeBtn').onclick = () => {
   const r = document.documentElement;
-  const dark = getComputedStyle(r).getPropertyValue('--bg').trim() === '#0a1614';
+  const dark = r.dataset.theme === 'dark' || (r.dataset.theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   r.dataset.theme = dark ? 'light' : 'dark';
   try{ localStorage.setItem(CONFIG.LOCAL_KEY + '_theme', r.dataset.theme); }catch(e){}
 };
 
 /* =====================================================================
-   شروع
+   Start
    ===================================================================== */
 function renderAll(){
   renderCourseChips();
