@@ -4,198 +4,524 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>امور مالی علی ناقلی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f2f5f3; --card:#ffffff; --ink:#16302b; --muted:#6a7f79; --line:#dbe4e0;
-  --head:#16302b; --brass:#b8892b; --debt:#b83a3a; --credit:#2f7d5b; --inc:#2f7d5b; --exp:#c9773a;
-  --soft:#eaf0ed; --radius:10px;
-  --sel:#fdf6e8; --selborder:#b8892b;
+  --bg:#eef2f0;
+  --bg2:#f7faf8;
+  --card:#ffffff;
+  --ink:#0f2823;
+  --muted:#6b8079;
+  --line:#e2eae5;
+  --head:#0f2823;
+  --head2:#1a3a32;
+  --brass:#c99532;
+  --brass2:#e0b04a;
+  --debt:#c0392b;
+  --credit:#1e8a5f;
+  --inc:#1e8a5f;
+  --exp:#d97a3a;
+  --soft:#f0f5f2;
+  --soft2:#e6efe9;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow-sm:0 1px 2px rgba(15,40,35,.04), 0 2px 6px rgba(15,40,35,.04);
+  --shadow:0 2px 4px rgba(15,40,35,.04), 0 8px 24px rgba(15,40,35,.06);
+  --shadow-lg:0 4px 12px rgba(15,40,35,.06), 0 16px 40px rgba(15,40,35,.08);
+  --sel:#fff8e6;
+  --selborder:#c99532;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0f1a17; --card:#172522; --ink:#e6efeb; --muted:#93a8a1; --line:#28403a; --head:#0b1311; --soft:#1e302c;
-    --debt:#e26a6a; --credit:#4fc08d; --inc:#4fc08d; --exp:#e59a5e; --brass:#d9a94a;
-    --sel:#2a2415; --selborder:#d9a94a;
+    --bg:#0a1614;
+    --bg2:#0f1f1c;
+    --card:#152723;
+    --ink:#e8f0ec;
+    --muted:#8ba39b;
+    --line:#233d37;
+    --head:#061210;
+    --head2:#0b1a16;
+    --soft:#1a2f2a;
+    --soft2:#213a34;
+    --debt:#e57373;
+    --credit:#4fc08d;
+    --inc:#4fc08d;
+    --exp:#e59a5e;
+    --brass:#e0b04a;
+    --sel:#2a2415;
+    --selborder:#e0b04a;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3), 0 2px 6px rgba(0,0,0,.2);
+    --shadow:0 2px 4px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    --shadow-lg:0 4px 12px rgba(0,0,0,.35), 0 16px 40px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0f1a17; --card:#172522; --ink:#e6efeb; --muted:#93a8a1; --line:#28403a; --head:#0b1311; --soft:#1e302c;
-  --debt:#e26a6a; --credit:#4fc08d; --inc:#4fc08d; --exp:#e59a5e; --brass:#d9a94a;
-  --sel:#2a2415; --selborder:#d9a94a;
+  --bg:#0a1614;
+  --bg2:#0f1f1c;
+  --card:#152723;
+  --ink:#e8f0ec;
+  --muted:#8ba39b;
+  --line:#233d37;
+  --head:#061210;
+  --head2:#0b1a16;
+  --soft:#1a2f2a;
+  --soft2:#213a34;
+  --debt:#e57373;
+  --credit:#4fc08d;
+  --inc:#4fc08d;
+  --exp:#e59a5e;
+  --brass:#e0b04a;
+  --sel:#2a2415;
+  --selborder:#e0b04a;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3), 0 2px 6px rgba(0,0,0,.2);
+  --shadow:0 2px 4px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  --shadow-lg:0 4px 12px rgba(0,0,0,.35), 0 16px 40px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{font-family:Tahoma,"Vazirmatn","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-size:15px}
+body{
+  font-family:"Vazirmatn",Tahoma,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(ellipse 1200px 600px at 100% -10%, rgba(201,149,50,.08), transparent 60%),
+    radial-gradient(ellipse 1000px 500px at -10% 0%, rgba(30,138,95,.06), transparent 60%),
+    var(--bg);
+  color:var(--ink);
+  line-height:1.75;
+  font-size:15px;
+  min-height:100vh;
+}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
-header{background:var(--head);color:#fff;padding:18px 20px 0}
-.top{max-width:1200px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
-.top h1{margin:0;font-size:22px;font-weight:700}
-.top h1 span{color:var(--brass)}
-.today{font-size:13px;opacity:.85;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.icon-btn{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:2px 10px;cursor:pointer}
-nav{max-width:1200px;margin:14px auto 0;display:flex;gap:4px;overflow-x:auto}
-nav button{background:transparent;color:#cfe0da;border:0;padding:10px 18px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
-nav button.on{color:#fff;border-bottom-color:var(--brass);font-weight:700}
-main{max-width:1200px;margin:20px auto;padding:0 14px 60px}
-section.tab{display:none}
-section.tab.on{display:block}
-.grid{display:grid;gap:14px}
-.stats{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;border-inline-start:5px solid var(--line)}
-.stat small{color:var(--muted);display:block}
-.stat b{font-size:20px}
-.stat i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px}
-.s-inc{border-inline-start-color:var(--inc)} .s-debt{border-inline-start-color:var(--debt)}
-.s-credit{border-inline-start-color:var(--credit)} .s-exp{border-inline-start-color:var(--exp)} .s-net{border-inline-start-color:var(--brass)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
-.card h2{margin:0 0 12px;font-size:16px}
-.two{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
-form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:3px}
-input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
-input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
-.dateRow{display:grid;grid-template-columns:1.2fr 1.6fr 1fr;gap:6px}
-.btn{background:var(--head);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
-.btn.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
-.btn.warn{background:var(--debt);color:#fff}
-.btn.ok{background:var(--credit);color:#fff}
-.btn.sm{padding:3px 10px;font-size:13px}
-.btn.lg{padding:12px 22px;font-size:16px;font-weight:700}
-.actions{display:flex;flex-wrap:wrap;gap:6px}
-.wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:640px}
-th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-th{background:var(--soft);font-size:13px;color:var(--muted);font-weight:700}
-td.n{font-variant-numeric:tabular-nums}
-.tag{display:inline-block;padding:1px 10px;border-radius:20px;font-size:12px}
-.t-debt{background:rgba(184,58,58,.13);color:var(--debt)}
-.t-credit{background:rgba(47,125,91,.15);color:var(--credit)}
-.t-zero{background:var(--soft);color:var(--muted)}
-.t-exp{background:rgba(201,119,58,.15);color:var(--exp)}
-.t-session{background:rgba(184,137,43,.18);color:var(--brass)}
-.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
-.empty{padding:26px;text-align:center;color:var(--muted)}
-.bars .row{display:grid;grid-template-columns:110px 1fr 110px;gap:8px;align-items:center;margin:7px 0;font-size:13px}
-.bars .track{background:var(--soft);height:14px;border-radius:7px;overflow:hidden}
-.bars .fill{height:100%;border-radius:7px}
-.bars .val{text-align:left;direction:ltr;font-variant-numeric:tabular-nums}
-.bars .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-top:8px}
-.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;background:var(--c)}
-.donutBox{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
-svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
-#modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow:auto;z-index:50}
-#modal.on{display:flex}
-#modal .box{background:var(--card);border-radius:12px;max-width:820px;width:100%;padding:20px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--head);color:#fff;padding:10px 20px;border-radius:30px;display:none;z-index:99}
-.toast.on{display:block}
-.toast.err{background:var(--debt)}
-.pos{color:var(--credit)} .neg{color:var(--debt)}
-.hint{font-size:12px;color:var(--muted)}
-#syncBadge{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)}
-#syncBadge.online{background:rgba(79,192,141,.25);border-color:rgba(79,192,141,.5)}
-#syncBadge.offline{background:rgba(226,106,106,.25);border-color:rgba(226,106,106,.5)}
-#syncBadge.syncing{background:rgba(217,169,74,.25);border-color:rgba(217,169,74,.5)}
 
-/* ===== ثبت جلسه — طراحی جدید ===== */
+/* ===== Header ===== */
+header{
+  background:linear-gradient(135deg, var(--head) 0%, var(--head2) 100%);
+  color:#fff;
+  padding:22px 20px 0;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);
+}
+header::before{
+  content:"";
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 15% 30%, rgba(201,149,50,.15), transparent 40%),
+    radial-gradient(circle at 85% 70%, rgba(30,138,95,.12), transparent 40%);
+  pointer-events:none;
+}
+header::after{
+  content:"";
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M0 0h20v20H0zM20 20h20v20H20z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.top{max-width:1200px;margin:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;position:relative;z-index:1}
+.top h1{margin:0;font-size:24px;font-weight:800;letter-spacing:-.3px}
+.top h1 span{
+  background:linear-gradient(135deg, var(--brass), var(--brass2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  font-weight:800;
+}
+.today{font-size:13px;opacity:.9;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.icon-btn{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;border-radius:10px;padding:5px 12px;cursor:pointer;
+  transition:all .15s;font-size:14px;
+}
+.icon-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3);transform:translateY(-1px)}
+
+nav{
+  max-width:1200px;margin:20px auto 0;
+  display:flex;gap:4px;overflow-x:auto;
+  position:relative;z-index:1;
+  scrollbar-width:none;
+}
+nav::-webkit-scrollbar{display:none}
+nav button{
+  background:transparent;color:rgba(255,255,255,.65);border:0;
+  padding:12px 20px;cursor:pointer;
+  border-bottom:3px solid transparent;
+  white-space:nowrap;font-weight:500;
+  border-radius:10px 10px 0 0;
+  transition:all .15s;
+}
+nav button:hover{color:#fff;background:rgba(255,255,255,.05)}
+nav button.on{
+  color:#fff;border-bottom-color:var(--brass);
+  font-weight:700;
+  background:linear-gradient(180deg, transparent, rgba(201,149,50,.08));
+}
+
+/* ===== Main ===== */
+main{max-width:1200px;margin:24px auto;padding:0 16px 80px}
+section.tab{display:none;animation:fadeIn .25s ease}
+section.tab.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+
+/* ===== Stats cards ===== */
+.stat{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px 18px;
+  border-inline-start:5px solid var(--line);
+  box-shadow:var(--shadow-sm);
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.stat:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.stat small{color:var(--muted);display:block;font-size:12.5px;font-weight:500}
+.stat b{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.stat i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px;font-weight:500}
+.s-inc{border-inline-start-color:var(--inc)}
+.s-debt{border-inline-start-color:var(--debt)}
+.s-credit{border-inline-start-color:var(--credit)}
+.s-exp{border-inline-start-color:var(--exp)}
+.s-net{border-inline-start-color:var(--brass)}
+
+/* ===== Cards ===== */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .2s;
+}
+.card:hover{box-shadow:var(--shadow)}
+.card h2{
+  margin:0 0 14px;font-size:16px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.two{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+
+/* ===== Forms ===== */
+form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;align-items:end}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;font-weight:500}
+input,select,textarea{
+  width:100%;padding:10px 12px;
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-sm);
+  background:var(--card);
+  transition:all .15s;
+  font-size:14px;
+}
+input:hover,select:hover,textarea:hover{border-color:var(--muted)}
+input:focus,select:focus,textarea:focus,button:focus-visible{
+  outline:none;
+  border-color:var(--brass);
+  box-shadow:0 0 0 3px rgba(201,149,50,.15);
+}
+.dateRow{display:grid;grid-template-columns:1.2fr 1.6fr 1fr;gap:6px}
+
+/* ===== Buttons ===== */
+.btn{
+  background:linear-gradient(135deg, var(--head), var(--head2));
+  color:#fff;border:0;border-radius:var(--radius-sm);
+  padding:10px 18px;cursor:pointer;
+  font-weight:600;font-size:14px;
+  transition:all .15s;
+  box-shadow:var(--shadow-sm);
+}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn:active{transform:translateY(0)}
+.btn.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.alt:hover{background:var(--soft2);border-color:var(--muted)}
+.btn.warn{background:linear-gradient(135deg, #c0392b, #a93226);color:#fff}
+.btn.ok{background:linear-gradient(135deg, #1e8a5f, #16704c);color:#fff}
+.btn.sm{padding:5px 12px;font-size:12.5px;border-radius:8px}
+.btn.lg{padding:14px 26px;font-size:16px;font-weight:700}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ===== Tables ===== */
+.wrap{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;font-size:14px}
+th{
+  background:linear-gradient(180deg, var(--soft), var(--soft2));
+  font-size:12.5px;color:var(--muted);font-weight:700;
+  text-transform:uppercase;letter-spacing:.3px;
+  position:sticky;top:0;z-index:1;
+}
+tbody tr{transition:background .1s}
+tbody tr:hover{background:var(--soft)}
+tbody tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ===== Tags ===== */
+.tag{
+  display:inline-block;padding:3px 12px;border-radius:20px;
+  font-size:12px;font-weight:600;
+}
+.t-debt{background:rgba(192,57,43,.12);color:var(--debt)}
+.t-credit{background:rgba(30,138,95,.13);color:var(--credit)}
+.t-zero{background:var(--soft2);color:var(--muted)}
+.t-exp{background:rgba(217,122,58,.14);color:var(--exp)}
+.t-session{background:rgba(201,149,50,.16);color:var(--brass)}
+
+/* ===== Filters ===== */
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.empty{
+  padding:40px 26px;text-align:center;color:var(--muted);
+  font-size:14px;
+  background:var(--soft);
+  border-radius:var(--radius-sm);
+}
+
+/* ===== Bars ===== */
+.bars .row{display:grid;grid-template-columns:110px 1fr 110px;gap:10px;align-items:center;margin:9px 0;font-size:13px}
+.bars .track{background:var(--soft2);height:16px;border-radius:8px;overflow:hidden;position:relative}
+.bars .fill{height:100%;border-radius:8px;transition:width .3s ease}
+.bars .val{text-align:left;direction:ltr;font-variant-numeric:tabular-nums;font-weight:600}
+.bars .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+
+/* ===== Legend ===== */
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend span::before{
+  content:"";display:inline-block;width:12px;height:12px;
+  border-radius:4px;background:var(--c);
+  box-shadow:0 1px 2px rgba(0,0,0,.1);
+}
+
+/* ===== Donut ===== */
+.donutBox{display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:center;padding:10px}
+svg text{font-family:"Vazirmatn",Tahoma,sans-serif;fill:var(--muted)}
+
+/* ===== Modal ===== */
+#modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  display:none;align-items:flex-start;justify-content:center;
+  padding:20px;overflow:auto;z-index:50;
+  animation:fadeIn .2s;
+}
+#modal.on{display:flex}
+#modal .box{
+  background:var(--card);border-radius:var(--radius);
+  max-width:820px;width:100%;padding:24px;
+  box-shadow:var(--shadow-lg);
+  animation:slideUp .25s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:linear-gradient(135deg, var(--head), var(--head2));
+  color:#fff;padding:12px 24px;border-radius:30px;
+  display:block;opacity:0;pointer-events:none;
+  z-index:99;font-weight:500;font-size:14px;
+  box-shadow:var(--shadow-lg);
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  border:1px solid rgba(255,255,255,.1);
+}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.err{background:linear-gradient(135deg, #c0392b, #a93226)}
+
+/* ===== Colors ===== */
+.pos{color:var(--credit);font-weight:600}
+.neg{color:var(--debt);font-weight:600}
+.hint{font-size:12.5px;color:var(--muted)}
+
+/* ===== Sync Badge ===== */
+#syncBadge{
+  font-size:11px;padding:3px 10px;border-radius:20px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  font-weight:500;
+  transition:all .2s;
+  display:inline-flex;align-items:center;gap:5px;
+}
+#syncBadge::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:currentColor;
+}
+#syncBadge.online{background:rgba(79,192,141,.2);border-color:rgba(79,192,141,.4);color:#7ee7b3}
+#syncBadge.offline{background:rgba(229,115,115,.2);border-color:rgba(229,115,115,.4);color:#ff9b9b}
+#syncBadge.syncing{background:rgba(224,176,74,.2);border-color:rgba(224,176,74,.4);color:#ffd47a}
+#syncBadge.syncing::before{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ===== Session tab ===== */
 .sessionTop{
-  display:grid;grid-template-columns:1fr 1fr;gap:14px;
-  background:linear-gradient(135deg,var(--card),var(--soft));
-  border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  background:linear-gradient(135deg, var(--card), var(--soft));
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;margin-bottom:18px;
+  box-shadow:var(--shadow-sm);
 }
 @media (max-width:720px){.sessionTop{grid-template-columns:1fr}}
-.sessionTop .field label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block}
-.sessionTop .quickDates{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.sessionTop .field label{font-size:12.5px;color:var(--muted);margin-bottom:6px;display:block;font-weight:600}
+.sessionTop .quickDates{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .sessionTop .quickDates button{
-  background:var(--soft);border:1px solid var(--line);border-radius:20px;
-  padding:3px 12px;cursor:pointer;font-size:12px;color:var(--muted)
+  background:var(--card);border:1.5px solid var(--line);
+  border-radius:20px;padding:5px 14px;cursor:pointer;
+  font-size:12.5px;color:var(--muted);font-weight:500;
+  transition:all .15s;
 }
-.sessionTop .quickDates button:hover{background:var(--sel);border-color:var(--selborder);color:var(--ink)}
+.sessionTop .quickDates button:hover{
+  background:var(--sel);border-color:var(--selborder);color:var(--ink);
+  transform:translateY(-1px);
+}
 
-.searchWrap{position:relative;margin-bottom:10px}
-.searchWrap input{padding-inline-start:36px;font-size:15px;height:42px}
+.searchWrap{position:relative;margin-bottom:14px}
+.searchWrap input{
+  padding-inline-start:44px;font-size:15px;height:48px;
+  border-radius:var(--radius-sm);
+  font-weight:500;
+}
 .searchWrap::before{
-  content:"🔍";position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);
-  font-size:15px;pointer-events:none;opacity:.6
+  content:"🔍";position:absolute;inset-inline-start:16px;top:50%;transform:translateY(-50%);
+  font-size:16px;pointer-events:none;opacity:.5
 }
 
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .chip{
-  background:var(--soft);border:1px solid var(--line);border-radius:20px;
-  padding:4px 14px;cursor:pointer;font-size:13px;color:var(--muted);user-select:none
+  background:var(--card);border:1.5px solid var(--line);
+  border-radius:20px;padding:6px 16px;cursor:pointer;
+  font-size:13px;color:var(--muted);user-select:none;
+  transition:all .15s;font-weight:500;
 }
-.chip.on{background:var(--brass);color:#fff;border-color:var(--brass);font-weight:700}
-.chip:hover{border-color:var(--brass)}
+.chip.on{
+  background:linear-gradient(135deg, var(--brass), var(--brass2));
+  color:#fff;border-color:transparent;font-weight:700;
+  box-shadow:0 2px 8px rgba(201,149,50,.3);
+}
+.chip:hover:not(.on){border-color:var(--brass);color:var(--ink);transform:translateY(-1px)}
 
 .studentsGrid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:10px;max-height:480px;overflow-y:auto;padding:4px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:12px;max-height:520px;overflow-y:auto;padding:4px;
 }
+.studentsGrid::-webkit-scrollbar{width:8px}
+.studentsGrid::-webkit-scrollbar-track{background:var(--soft);border-radius:4px}
+.studentsGrid::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.studentsGrid::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
 .stCard{
-  background:var(--card);border:2px solid var(--line);border-radius:12px;
-  padding:12px 14px;cursor:pointer;position:relative;
-  transition:border-color .15s, background .15s, transform .1s;
-  display:flex;flex-direction:column;gap:6px;
+  background:var(--card);
+  border:2px solid var(--line);
+  border-radius:var(--radius-sm);
+  padding:14px 16px;cursor:pointer;position:relative;
+  transition:all .18s ease;
+  display:flex;flex-direction:column;gap:8px;
+  box-shadow:var(--shadow-sm);
 }
-.stCard:hover{border-color:var(--brass);transform:translateY(-1px)}
-.stCard.on{background:var(--sel);border-color:var(--selborder);box-shadow:0 0 0 3px rgba(184,137,43,.15)}
+.stCard:hover{
+  border-color:var(--brass);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.stCard.on{
+  background:linear-gradient(135deg, var(--card), var(--sel));
+  border-color:var(--selborder);
+  box-shadow:0 0 0 3px rgba(201,149,50,.15), var(--shadow);
+}
 .stCard .name{font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .stCard .name .check{
-  width:22px;height:22px;border-radius:50%;border:2px solid var(--line);
-  display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;
-  flex:0 0 auto;transition:background .15s, color .15s
+  width:24px;height:24px;border-radius:50%;
+  border:2px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:transparent;flex:0 0 auto;
+  transition:all .2s;
 }
-.stCard.on .name .check{background:var(--brass);border-color:var(--brass);color:#fff}
-.stCard .meta{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.stCard.on .name .check{
+  background:linear-gradient(135deg, var(--brass), var(--brass2));
+  border-color:transparent;color:#fff;
+  transform:scale(1.05);
+}
+.stCard .meta{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 .stCard .meta .row{display:flex;justify-content:space-between;gap:8px}
-.stCard .meta .row b{color:var(--ink);font-variant-numeric:tabular-nums}
-.stCard .feeInp{margin-top:4px}
+.stCard .meta .row b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.stCard .feeInp{margin-top:6px}
 .stCard .feeInp input{
-  padding:6px 8px;font-size:14px;text-align:center;font-variant-numeric:tabular-nums;
-  background:var(--card);border:1px solid var(--line)
+  padding:8px 10px;font-size:14px;text-align:center;
+  font-variant-numeric:tabular-nums;
+  background:var(--bg2);border:1.5px solid var(--line);
+  font-weight:600;
 }
 .stCard.on .feeInp input{background:var(--card);border-color:var(--selborder)}
 
 .selectionBar{
-  background:linear-gradient(135deg,var(--head),#0b1311);color:#fff;
-  border-radius:14px;padding:14px 18px;margin-top:12px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  box-shadow:0 4px 14px rgba(0,0,0,.12)
+  background:linear-gradient(135deg, var(--head), var(--head2));
+  color:#fff;border-radius:var(--radius);
+  padding:18px 22px;margin-top:16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;
+  box-shadow:0 8px 24px rgba(15,40,35,.15);
+  position:relative;overflow:hidden;
 }
-.selectionBar .info{display:flex;gap:22px;align-items:center;flex-wrap:wrap;font-size:14px}
-.selectionBar .info b{font-size:18px;color:var(--brass);font-variant-numeric:tabular-nums}
-.selectionBar .info span{opacity:.85;font-size:12px;display:block}
-.selectionBar button{background:var(--brass);color:#fff;border:0;border-radius:10px;padding:12px 24px;font-weight:700;font-size:15px;cursor:pointer}
-.selectionBar button:disabled{opacity:.4;cursor:not-allowed}
-.selectionBar button.clear{background:transparent;border:1px solid rgba(255,255,255,.3);font-weight:400;font-size:13px;padding:8px 14px}
+.selectionBar::before{
+  content:"";
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 100% 0%, rgba(201,149,50,.15), transparent 50%);
+  pointer-events:none;
+}
+.selectionBar .info{display:flex;gap:28px;align-items:center;flex-wrap:wrap;font-size:14px;position:relative;z-index:1}
+.selectionBar .info b{
+  font-size:20px;
+  background:linear-gradient(135deg, var(--brass), var(--brass2));
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;font-variant-numeric:tabular-nums;font-weight:800;
+}
+.selectionBar .info span{opacity:.75;font-size:12px;display:block;font-weight:500}
+.selectionBar button{
+  background:linear-gradient(135deg, var(--brass), var(--brass2));
+  color:#fff;border:0;border-radius:var(--radius-sm);
+  padding:14px 28px;font-weight:700;font-size:15px;cursor:pointer;
+  transition:all .2s;position:relative;z-index:1;
+  box-shadow:0 4px 12px rgba(201,149,50,.3);
+}
+.selectionBar button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,149,50,.4)}
+.selectionBar button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.selectionBar button.clear{
+  background:transparent;border:1.5px solid rgba(255,255,255,.25);
+  font-weight:500;font-size:13px;padding:10px 16px;box-shadow:none;
+}
+.selectionBar button.clear:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.4)}
 
-/* ===== گزارش دوره‌ای ===== */
+/* ===== Report ===== */
 .rangeBox{
-  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:20px;margin-bottom:16px;
+  box-shadow:var(--shadow-sm);
 }
-.rangeGrid{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end
-}
+.rangeGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:end}
 @media (max-width:720px){.rangeGrid{grid-template-columns:1fr}}
-.rangeGrid .field label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.rangeGrid .field label{font-size:12.5px;color:var(--muted);display:block;margin-bottom:6px;font-weight:600}
 
-.reportCards{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px
-}
+.reportCards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:16px}
 .repCard{
-  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
-  border-inline-start:5px solid var(--line)
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px 18px;
+  border-inline-start:5px solid var(--line);
+  box-shadow:var(--shadow-sm);
+  transition:all .2s;
 }
-.repCard small{display:block;color:var(--muted);font-size:12px}
-.repCard b{font-size:22px;display:block;margin-top:4px}
-.repCard i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px}
+.repCard:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.repCard small{display:block;color:var(--muted);font-size:12.5px;font-weight:500}
+.repCard b{font-size:24px;display:block;margin-top:6px;font-weight:800;letter-spacing:-.4px}
+.repCard i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px;font-weight:500}
 
+/* ===== Print ===== */
 @media print{
   header,nav,.noprint,.toast,.selectionBar .clear,#syncBadge,#syncBtn,#themeBtn{display:none!important}
   body{background:#fff;color:#000}
   body.pm main{display:none}
   body.pm #modal{position:static;display:block;background:none;padding:0}
-  .card,.stat,.repCard,.stCard{break-inside:avoid}
+  .card,.stat,.repCard,.stCard{break-inside:avoid;box-shadow:none!important}
   section.tab{display:block!important}
   body:not(.pm) section.tab:not(.on){display:none!important}
   body.report-print main{display:block!important}
@@ -203,7 +529,31 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   body.report-print section.tab#tab-report{display:block!important}
   body.report-print nav,body.report-print .rangeBox .field:last-child,body.report-print .rangeBox .actions,body.report-print .noprint{display:none!important}
 }
-@media (max-width:560px){.bars .row{grid-template-columns:80px 1fr 90px}}
+@media (max-width:560px){
+  .bars .row{grid-template-columns:80px 1fr 90px}
+  .top h1{font-size:20px}
+}
+
+/* ===== Danger zone ===== */
+.danger-zone{
+  background:linear-gradient(135deg, rgba(192,57,43,.05), rgba(192,57,43,.02));
+  border:1.5px solid rgba(192,57,43,.2);
+  border-radius:var(--radius);
+  padding:20px;
+}
+.danger-zone h2{color:var(--debt)}
+.danger-zone .btn.warn{background:linear-gradient(135deg, #c0392b, #a93226)}
+
+/* ===== Cleanup box ===== */
+.cleanup-box{
+  background:linear-gradient(135deg, rgba(201,149,50,.06), rgba(201,149,50,.02));
+  border:1.5px solid rgba(201,149,50,.25);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:16px;
+}
+.cleanup-box h2{color:var(--brass);margin:0 0 8px}
+.cleanup-box p{color:var(--muted);margin:0 0 14px;font-size:14px}
 </style>
 </head>
 <body>
@@ -233,22 +583,22 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 <!-- ===== داشبورد ===== -->
 <section class="tab on" id="tab-dash">
   <div class="grid stats" id="stats"></div>
-  <div class="grid two" style="margin-top:14px">
+  <div class="grid two" style="margin-top:16px">
     <div class="card"><h2>وضعیت زبان‌آموزان</h2><div class="donutBox" id="donut"></div></div>
     <div class="card"><h2>مانده حساب هر زبان‌آموز</h2><div class="bars" id="bars"></div>
       <div class="legend"><span style="--c:var(--debt)">بدهکار</span><span style="--c:var(--credit)">بستانکار</span></div>
     </div>
   </div>
-  <div class="card" style="margin-top:14px">
-    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center">
+  <div class="card" style="margin-top:16px">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px">
       <h2 style="margin:0">درآمد و هزینه ماهانه</h2>
-      <div style="width:130px"><select id="chartYear"></select></div>
+      <div style="width:140px"><select id="chartYear"></select></div>
     </div>
     <div class="wrap"><div id="monthly" style="min-width:560px"></div></div>
     <div class="legend"><span style="--c:var(--inc)">دریافتی (درآمد)</span><span style="--c:var(--exp)">هزینه</span></div>
     <p class="hint" id="yearSum"></p>
   </div>
-  <div class="card" style="margin-top:14px">
+  <div class="card" style="margin-top:16px">
     <h2>آخرین تراکنش‌ها</h2>
     <div class="wrap" id="recent"></div>
   </div>
@@ -270,7 +620,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
     <div class="field">
       <label>📝 شرح پیش‌فرض (اختیاری)</label>
       <input id="seDesc" placeholder="مثلاً: جلسه‌ی گروه Elementary — فصل ۴">
-      <label style="margin-top:8px">💳 روش پرداخت (فقط یادداشت)</label>
+      <label style="margin-top:10px">💳 روش پرداخت (فقط یادداشت)</label>
       <select id="seMethod"><option>—</option><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
     </div>
   </div>
@@ -288,13 +638,13 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
       <div><span>تعداد انتخاب‌شده</span><b id="seCount">۰</b></div>
       <div><span>جمع کل مبلغ</span><b id="seTotal">۰</b> <span style="display:inline;opacity:.7;font-size:11px">تومان</span></div>
     </div>
-    <div style="display:flex;gap:8px">
+    <div style="display:flex;gap:10px">
       <button type="button" class="clear" id="seClear">پاک کردن انتخاب‌ها</button>
       <button type="button" id="seSave" disabled>✔ ثبت جلسه و افزودن بدهی</button>
     </div>
   </div>
 
-  <div class="card" style="margin-top:16px">
+  <div class="card" style="margin-top:18px">
     <h2>جلسات اخیر</h2>
     <div class="filters">
       <select id="seFilterStudent"><option value="">همه زبان‌آموزان</option></select>
@@ -323,8 +673,8 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
       </div>
     </form>
   </div>
-  <div class="card" style="margin-top:14px">
-    <div class="filters" style="margin-bottom:8px">
+  <div class="card" style="margin-top:16px">
+    <div class="filters" style="margin-bottom:10px">
       <input id="stSearch" placeholder="جستجوی نام، دوره یا تلفن…">
       <select id="stFilter">
         <option value="">همه وضعیت‌ها</option>
@@ -361,9 +711,9 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
         <button class="btn alt" type="button" id="txCancel" style="display:none">انصراف</button>
       </div>
     </form>
-    <p class="hint">«ثبت بدهی» مبلغی را به بدهی زبان‌آموز اضافه می‌کند و «دریافت وجه» از بدهی او کم می‌کند.</p>
+    <p class="hint" style="margin-top:10px">«ثبت بدهی» مبلغی را به بدهی زبان‌آموز اضافه می‌کند و «دریافت وجه» از بدهی او کم می‌کند.</p>
   </div>
-  <div class="card" style="margin-top:14px">
+  <div class="card" style="margin-top:16px">
     <div class="filters">
       <input id="fSearch" placeholder="جستجو در شرح…">
       <select id="fStudent"></select>
@@ -383,7 +733,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 <!-- ===== گزارش دوره‌ای ===== -->
 <section class="tab" id="tab-report">
   <div class="rangeBox">
-    <h2 style="margin:0 0 10px">گزارش بر اساس بازه‌ی تاریخ</h2>
+    <h2 style="margin:0 0 12px">گزارش بر اساس بازه‌ی تاریخ</h2>
     <div class="rangeGrid">
       <div class="field">
         <label>از تاریخ (شمسی)</label>
@@ -404,7 +754,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
         </div>
       </div>
     </div>
-    <div class="actions noprint" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+    <div class="actions noprint" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn" id="repRun">نمایش گزارش</button>
       <button class="btn alt" id="repPrint">چاپ گزارش</button>
       <span class="hint" style="align-self:center" id="repSummaryTxt"></span>
@@ -413,12 +763,12 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 
   <div class="reportCards" id="repCards"></div>
 
-  <div class="card" style="margin-top:14px">
+  <div class="card" style="margin-top:16px">
     <h2>تفکیک بر اساس زبان‌آموز</h2>
     <div class="wrap" id="repStudents"></div>
   </div>
 
-  <div class="card" style="margin-top:14px">
+  <div class="card" style="margin-top:16px">
     <h2>جزئیات تراکنش‌ها در بازه</h2>
     <div class="wrap" id="repTx"></div>
   </div>
@@ -426,6 +776,17 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 
 <!-- ===== ابزارها ===== -->
 <section class="tab" id="tab-tools">
+  <!-- بخش پاکسازی مالی -->
+  <div class="cleanup-box">
+    <h2>🧹 پاک‌سازی اطلاعات مالی</h2>
+    <p>با این گزینه، <b>همهٔ تراکنش‌ها</b> (بدهی، دریافتی، هزینه، جلسات) پاک می‌شوند ولی <b>زبان‌آموزان و اطلاعاتشان (نام، دوره، شهریه، تلفن) دست‌نخورده می‌مانند</b>. برای شروع از نو عالی است.</p>
+    <div class="actions">
+      <button class="btn warn" id="btnWipeTx">🗑️ پاک کردن همهٔ تراکنش‌ها (محلی + ابری)</button>
+      <button class="btn alt" id="btnWipeTxLocal">پاک کردن فقط تراکنش‌های محلی</button>
+    </div>
+    <p class="hint" style="margin-top:10px">⚠️ این کار قابل بازگشت نیست. قبلش از دکمهٔ «دانلود فایل پشتیبان» استفاده کن.</p>
+  </div>
+
   <div class="grid two">
     <div class="card">
       <h2>خروجی و چاپ</h2>
@@ -435,7 +796,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
         <button class="btn" id="btnCsvSe">خروجی اکسل جلسات</button>
         <button class="btn alt" id="btnPrint">چاپ گزارش کلی</button>
       </div>
-      <p class="hint">فایل‌های CSV را می‌توانید مستقیم در Excel باز کنید.</p>
+      <p class="hint" style="margin-top:10px">فایل‌های CSV را می‌توانید مستقیم در Excel باز کنید.</p>
     </div>
     <div class="card">
       <h2>پشتیبان‌گیری</h2>
@@ -444,12 +805,16 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
         <button class="btn alt" id="btnRestore">بازیابی از فایل</button>
         <input type="file" id="fileRestore" accept=".json" style="display:none">
       </div>
-      <p class="hint">پشتیبان شامل داده‌های محلی است. داده‌های Supabase به‌صورت زنده همگام می‌شوند.</p>
+      <p class="hint" style="margin-top:10px">پشتیبان شامل داده‌های محلی است. داده‌های Supabase به‌صورت زنده همگام می‌شوند.</p>
     </div>
-    <div class="card">
-      <h2>حذف همه‌ی اطلاعات</h2>
+  </div>
+
+  <div class="danger-zone" style="margin-top:16px">
+    <h2>⚠️ حذف کامل همه‌ی اطلاعات</h2>
+    <p class="hint">این بخش زبان‌آموزان را هم پاک می‌کند. اگر فقط می‌خواهی اطلاعات مالی را پاک کنی، از بخش «پاک‌سازی اطلاعات مالی» بالا استفاده کن.</p>
+    <div class="actions" style="margin-top:10px">
       <button class="btn warn" id="btnReset">پاک‌کردن کامل داده‌ها (فقط محلی)</button>
-      <button class="btn warn" id="btnResetCloud" style="margin-top:8px">حذف داده‌های Supabase</button>
+      <button class="btn warn" id="btnResetCloud">حذف داده‌های Supabase (همه چیز)</button>
     </div>
   </div>
 </section>
@@ -468,8 +833,8 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 const CONFIG = {
   SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',
   SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
-  LOCAL_KEY:    'ali_naghli_finance_v4',   // ← نسخهٔ جدید برای جلوگیری از تداخل
-  QUEUE_KEY:    'ali_naghli_finance_v4_queue' // ← صف عملیات آفلاین
+  LOCAL_KEY:    'ali_naghli_finance_v4',
+  QUEUE_KEY:    'ali_naghli_finance_v4_queue'
 };
 
 /* ---------- ابزارها ---------- */
@@ -495,7 +860,7 @@ function toast(msg, isErr){
 }
 
 /* =====================================================================
-   تاریخ شمسی — الگوریتم دقیق (بدون کتابخانه خارجی)
+   تاریخ شمسی
    ===================================================================== */
 const _persianFmt = new Intl.DateTimeFormat('en-u-ca-persian-nu-latn', {
   year:'numeric', month:'numeric', day:'numeric'
@@ -505,47 +870,32 @@ function todayJ(){
   const g = t => +parts.find(p=>p.type===t).value;
   return [g('year'), g('month'), g('day')];
 }
-// الگوریتم دقیق تبدیل شمسی → میلادی (بر اساس jalaali-js)
 function _div(a,b){ return ~~(a/b); }
 function jToG(jy, jm, jd){
-  let gy = jy + 621;
-  let days = -1;
-  if(jm === 12){ days = 29; } else { days = (jm <= 6) ? 31 : 30; }
-  // محاسبهٔ روزِ سال
   let n = 0;
   for(let m = 1; m < jm; m++) n += (m <= 6) ? 31 : 30;
   n += jd;
-  // ۱۹ مارس ۲۰۲۴ = ۳۰ اسفند ۱۴۰۲
-  // از مبدأ: ۱ فروردین ۱ = ۱۹ مارس ۶۲۲
-  const epoch = Date.UTC(622, 2, 22); // ۲۲ مارس ۶۲۲
+  const epoch = Date.UTC(622, 2, 22);
   const msPerDay = 86400000;
-  // تعداد روز از مبدأ تا تاریخ هدف
   const jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1;
   const totalDays = jyDays + n;
-  // محاسبهٔ میلادی از مبدأ (با استفاده از Date.UTC)
-  // ۱ فروردین ۱ = ۲۲ مارس ۶۲۲
-  // پس Date = epoch + (totalDays - 1) روز
   const d = new Date(epoch + (totalDays - 1) * msPerDay);
   return [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()];
 }
-// تبدیل میلادی → شمسی (دقیق، بر اساس الگوریتم jalaali)
 function gToJ(gy, gm, gd){
   const gDays = (function(){
     const d = Date.UTC(gy, gm-1, gd);
-    // تعداد روز از مبدأ (۲۲ مارس ۶۲۲)
     const epoch = Date.UTC(622, 2, 22);
     return Math.round((d - epoch) / 86400000) + 1;
   })();
   let jy = 1, n = gDays;
-  // تخمین سال
   jy = _div(n, 365) + 1;
   let jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1;
   while(n <= jyDays){ jy--; jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1; }
-  while(n > jyDays + 365){ 
+  while(n > jyDays + 365){
     const nextDays = jy * 365 + _div(jy+1, 4) - _div(jy+1, 100) + _div(jy+1, 400) - 1;
     if(n > nextDays){ jy++; jyDays = nextDays; } else break;
   }
-  // محاسبهٔ ماه و روز
   n -= jyDays;
   let jm = 1;
   while(true){
@@ -558,7 +908,6 @@ function gToJ(gy, gm, gd){
 function jMonthDays(y, m){
   if(m <= 6) return 31;
   if(m <= 11) return 30;
-  // اسفند: ۲۹ یا ۳۰ (کبیسه)
   const [gy, gm, gd] = jToG(y, 12, 1);
   const next = new Date(Date.UTC(gy, gm - 1, gd + 30));
   const [ny, nm] = gToJ(next.getUTCFullYear(), next.getUTCMonth() + 1, next.getUTCDate());
@@ -598,15 +947,14 @@ function getDate(boxId){
 }
 
 /* =====================================================================
-   لایه‌ی داده — Offline-first با صف sync
+   لایه‌ی داده
    ===================================================================== */
-let _sbReady = false;
 const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY)
   ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY)
   : null;
 
 let db = { students: [], tx: [] };
-let syncQueue = [];   // { action:'insert'|'update'|'delete', table:'students'|'tx', payload, id }
+let syncQueue = [];
 
 function loadLocal(){
   try{
@@ -627,29 +975,21 @@ function saveQueue(){
   try{ localStorage.setItem(CONFIG.QUEUE_KEY, JSON.stringify(syncQueue)); }
   catch(e){}
 }
-function enqueue(op){
-  syncQueue.push(op);
-  saveQueue();
-}
+function enqueue(op){ syncQueue.push(op); saveQueue(); }
 function setSync(state, label){
   const b = $('syncBadge');
   b.className = state;
   b.textContent = label;
 }
 
-/* ---------- تبدیل ردیف Supabase ↔ شکل داخلی ---------- */
 function rowToStudent(s){
-  return {
-    id: s.id, name: s.name, course: s.course || '',
-    fee: s.fee || 0, phone: s.phone || '', note: s.note || ''
-  };
+  return { id: s.id, name: s.name, course: s.course || '', fee: s.fee || 0, phone: s.phone || '', note: s.note || '' };
 }
 function rowToTx(t){
   return {
     id: t.id, type: t.type, sid: t.sid, amount: t.amount,
     date: t.date, method: t.method || '', desc: t.descr || '',
-    session_date: t.session_date || null,
-    is_session: !!t.is_session,
+    session_date: t.session_date || null, is_session: !!t.is_session,
     ts: t.created_at ? new Date(t.created_at).getTime() : Date.now()
   };
 }
@@ -657,15 +997,13 @@ function txToRow(t){
   return {
     type:t.type, sid:t.sid, amount:t.amount, date:t.date,
     method:t.method, descr:t.desc,
-    session_date: t.session_date || null,
-    is_session: !!t.is_session
+    session_date: t.session_date || null, is_session: !!t.is_session
   };
 }
 function studentToRow(s){
   return { name:s.name, course:s.course, fee:s.fee, phone:s.phone, note:s.note };
 }
 
-/* ---------- Pull + Merge (بدون گم شدن داده‌های محلی) ---------- */
 async function pullFromCloud(){
   if(!sb) return false;
   setSync('syncing','در حال همگام‌سازی…');
@@ -680,8 +1018,6 @@ async function pullFromCloud(){
     const cloudStudents = (stRes.data||[]).map(rowToStudent);
     const cloudTx = (txRes.data||[]).map(rowToTx);
 
-    // Merge: هر ردیفی که در cloud هست، جایگزین محلی می‌شود؛
-    // ردیف‌های محلی که در cloud نیستند (insert نشده) حفظ می‌شوند.
     const cloudSIds = new Set(cloudStudents.map(s=>s.id));
     const cloudTxIds = new Set(cloudTx.map(t=>t.id));
 
@@ -701,7 +1037,6 @@ async function pullFromCloud(){
   }
 }
 
-/* ---------- اجرای صف (بعد از آنلاین شدن) ---------- */
 async function flushQueue(){
   if(!sb || !syncQueue.length) return;
   setSync('syncing','ارسال صف…');
@@ -712,7 +1047,6 @@ async function flushQueue(){
         if(op.table === 'students'){
           const { data, error } = await sb.from('students').insert([op.payload]).select().single();
           if(error) throw error;
-          // id محلی رو با id ابری جایگزین کن
           if(op.localId && data.id !== op.localId){
             const s = db.students.find(x=>x.id===op.localId);
             if(s) s.id = data.id;
@@ -742,14 +1076,10 @@ async function flushQueue(){
   }
   syncQueue = remaining;
   saveQueue();
-  if(syncQueue.length){
-    setSync('offline', `صف: ${syncQueue.length}`);
-  } else {
-    setSync('online','متصل');
-  }
+  if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`);
+  else setSync('online','متصل');
 }
 
-/* ---------- عملیات CRUD با fallback به صف ---------- */
 async function doInsertStudent(s){
   if(!sb) { enqueue({action:'insert', table:'students', payload: studentToRow(s), localId: s.id}); return; }
   try{
@@ -798,10 +1128,7 @@ async function doInsertTx(t){
   try{
     const { data, error } = await sb.from('tx').insert([txToRow(t)]).select().single();
     if(error) throw error;
-    if(t.id !== data.id){
-      const oldId = t.id;
-      t.id = data.id;
-    }
+    if(t.id !== data.id) t.id = data.id;
     setSync('online','متصل');
   }catch(e){
     console.warn(e);
@@ -820,7 +1147,6 @@ async function doUpdateTx(t){
     console.warn(e);
     enqueue({action:'update', table:'tx', payload: txToRow(t), id: t.id});
     setSync('offline','آفلاین');
-    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
   }
 }
 async function doDeleteTx(id){
@@ -911,7 +1237,7 @@ function renderDash(){
     });
   } else circ = `<circle r="${R}" cx="60" cy="60" fill="none" stroke="var(--soft)" stroke-width="18"/>`;
   $('donut').innerHTML = `<svg viewBox="0 0 120 120" width="170" height="170">${circ}<text x="60" y="58" text-anchor="middle" font-size="18" style="fill:var(--ink);font-weight:700">${fa(tot)}</text><text x="60" y="74" text-anchor="middle" font-size="9">زبان‌آموز</text></svg>
-   <div class="legend" style="flex-direction:column;gap:8px">${parts.map(p=>`<span style="--c:${p[1]}">${p[2]}: <b>${fa(p[0])}</b> نفر</span>`).join('')}</div>`;
+   <div class="legend" style="flex-direction:column;gap:10px">${parts.map(p=>`<span style="--c:${p[1]}">${p[2]}: <b>${fa(p[0])}</b> نفر</span>`).join('')}</div>`;
 
   const list = db.students.map(s=>({n:s.name, v:b[s.id].bal}))
     .filter(x=>x.v!==0).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,10);
@@ -939,8 +1265,8 @@ function renderDash(){
   for(let m=0;m<12;m++){
     const cx = W-pl-cw*(m+.5), bw = cw*.32, ch = H-pt-pb;
     const h1 = inc[m]/max*ch, h2 = ex[m]/max*ch;
-    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="2" fill="var(--inc)"><title>${MONTHS[m]} - دریافتی: ${fa(inc[m])}</title></rect>`;
-    svg += `<rect x="${cx+1}"   y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="2" fill="var(--exp)"><title>${MONTHS[m]} - هزینه: ${fa(ex[m])}</title></rect>`;
+    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="3" fill="var(--inc)"><title>${MONTHS[m]} - دریافتی: ${fa(inc[m])}</title></rect>`;
+    svg += `<rect x="${cx+1}"   y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="3" fill="var(--exp)"><title>${MONTHS[m]} - هزینه: ${fa(ex[m])}</title></rect>`;
     svg += `<text x="${cx}" y="${H-14}" text-anchor="middle" font-size="10">${MONTHS[m]}</text>`;
     if(inc[m]) svg += `<text x="${cx-bw/2-1}" y="${pt+ch-h1-3}" text-anchor="middle" font-size="8">${fa(inc[m]/1000)}</text>`;
   }
@@ -1021,7 +1347,6 @@ $('stCancel').onclick = cancelStudent;
 async function delStudent(id){
   const n = db.tx.filter(t=>t.sid===id).length;
   if(!confirm(`«${stName(id)}» و ${faDigits(n)} تراکنش او حذف شود؟`)) return;
-  // اول tx ها، بعد student (ترتیب امن برای FK)
   const txIds = db.tx.filter(t=>t.sid===id).map(t=>t.id);
   for(const tid of txIds) await doDeleteTx(tid);
   await doDeleteStudent(id);
@@ -1146,14 +1471,12 @@ $('seSave').onclick = async () => {
       type: 'charge', sid: id, amount,
       date, method,
       desc: baseDesc ? `${baseDesc} — ${stName(id)}` : `جلسه‌ی ${showDate(date)}`,
-      session_date: date,
-      is_session: true
+      session_date: date, is_session: true
     };
     db.tx.push(t);
     created.push(t);
   }
   saveLocal(); renderAll();
-  // ارسال موازی به cloud (سریع‌تر)
   await Promise.all(created.map(t => doInsertTx(t)));
   saveLocal(); renderAll();
 
@@ -1280,7 +1603,6 @@ function quickTx(sid, type){
   $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'});
 }
 function quickSession(sid){
-  // فیلترها را ریست کن تا کارت زبان‌آموز دیده شود
   seCourseFilter = ''; seSearchQuery = ''; $('seSearch').value = '';
   showTab('session');
   seSelected = {};
@@ -1312,8 +1634,6 @@ $('fSearch').addEventListener('input', debounce(renderTx));
 /* =====================================================================
    گزارش دوره‌ای
    ===================================================================== */
-function rangeInRange(d, from, to){ return d >= from && d <= to; }
-
 function runReport(){
   const from = getDate('repFrom');
   const to   = getDate('repTo');
@@ -1321,7 +1641,7 @@ function runReport(){
 
   const rows = db.tx.filter(t => {
     const d = t.is_session && t.session_date ? t.session_date : t.date;
-    return rangeInRange(d, from, to);
+    return d >= from && d <= to;
   });
 
   const income  = rows.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
@@ -1403,7 +1723,6 @@ function runReport(){
 
 $('repRun').onclick = runReport;
 $('repPrint').onclick = () => {
-  // ابتدا گزارش را رندر کن، سپس چاپ
   runReport();
   document.body.classList.add('report-print');
   setTimeout(()=>{
@@ -1526,7 +1845,6 @@ $('fileRestore').onchange = e => {
 };
 $('btnPrint').onclick = () => {
   showTab('dash');
-  // چاپ همهٔ تب‌های پرشده
   document.querySelectorAll('section.tab').forEach(s=>s.classList.add('on'));
   setTimeout(()=>{
     window.print();
@@ -1557,18 +1875,55 @@ $('chartYear').onchange = renderDash;
 $('syncBtn').onclick = async () => {
   if(!sb){ toast('Supabase پیکربندی نشده', true); return; }
   setSync('syncing','همگام‌سازی…');
-  // ۱) ابتدا صف را خالی کن
   await flushQueue();
-  // ۲) سپس pull کن
   const ok = await pullFromCloud();
   if(ok){ renderAll(); toast('همگام‌سازی انجام شد'); }
   else toast('اتصال برقرار نشد', true);
 };
 
+/* =====================================================================
+   پاک‌سازی اطلاعات مالی (بدون حذف دانش‌آموزان)
+   ===================================================================== */
+$('btnWipeTxLocal').onclick = () => {
+  if(!confirm(`همهٔ ${faDigits(db.tx.length)} تراکنش محلی پاک می‌شود (زبان‌آموزان می‌مانند). مطمئنید؟`)) return;
+  db.tx = [];
+  // صف را هم خالی کن (چون مربوط به تراکنش‌های حذف‌شده است)
+  syncQueue = syncQueue.filter(op => op.table !== 'tx');
+  saveLocal(); saveQueue(); renderAll();
+  toast('تراکنش‌های محلی پاک شد');
+};
+
+$('btnWipeTx').onclick = async () => {
+  if(!confirm(`همهٔ ${faDigits(db.tx.length)} تراکنش (محلی و ابری) پاک می‌شود. زبان‌آموزان و اطلاعاتشان دست‌نخورده می‌مانند. مطمئنید؟`)) return;
+  if(!confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')) return;
+
+  // ۱) محلی پاک کن
+  db.tx = [];
+  syncQueue = syncQueue.filter(op => op.table !== 'tx');
+  saveLocal(); saveQueue(); renderAll();
+
+  // ۲) ابری پاک کن
+  if(sb){
+    setSync('syncing','در حال حذف تراکنش‌ها…');
+    try{
+      const { error } = await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000');
+      if(error) throw error;
+      setSync('online','متصل');
+      toast('همهٔ تراکنش‌ها پاک شد (محلی + ابری)');
+    }catch(e){
+      console.warn(e);
+      setSync('offline','آفلاین');
+      toast('محلی پاک شد، ولی حذف ابری نشد — دوباره تلاش کن', true);
+    }
+  } else {
+    toast('محلی پاک شد (Supabase در دسترس نیست)');
+  }
+};
+
 /* ---------- تم ---------- */
 $('themeBtn').onclick = () => {
   const r = document.documentElement;
-  const dark = getComputedStyle(r).getPropertyValue('--bg').trim() === '#0f1a17';
+  const dark = getComputedStyle(r).getPropertyValue('--bg').trim() === '#0a1614';
   r.dataset.theme = dark ? 'light' : 'dark';
   try{ localStorage.setItem(CONFIG.LOCAL_KEY + '_theme', r.dataset.theme); }catch(e){}
 };
@@ -1598,12 +1953,9 @@ function renderAll(){
 
   if(sb){
     setSync('syncing','اتصال…');
-    // ۱) صف آفلاین را ابتدا ارسال کن
     await flushQueue();
-    // ۲) سپس pull کن
     const ok = await pullFromCloud();
     if(ok) renderAll();
-    // ۳) نمایش تعداد صف باقی‌مانده (اگر آفلاین بود)
     if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`);
   } else {
     setSync('offline','آفلاین (بدون Supabase)');
