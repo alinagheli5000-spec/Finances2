@@ -89,6 +89,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 #modal .box{background:var(--card);border-radius:12px;max-width:820px;width:100%;padding:20px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--head);color:#fff;padding:10px 20px;border-radius:30px;display:none;z-index:99}
 .toast.on{display:block}
+.toast.err{background:var(--debt)}
 .pos{color:var(--credit)} .neg{color:var(--debt)}
 .hint{font-size:12px;color:var(--muted)}
 #syncBadge{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)}
@@ -190,13 +191,17 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 .repCard i{font-style:normal;font-size:12px;color:var(--muted);margin-inline-start:4px}
 
 @media print{
-  header,nav,.noprint,.toast,.selectionBar .clear{display:none!important}
+  header,nav,.noprint,.toast,.selectionBar .clear,#syncBadge,#syncBtn,#themeBtn{display:none!important}
   body{background:#fff;color:#000}
   body.pm main{display:none}
   body.pm #modal{position:static;display:block;background:none;padding:0}
   .card,.stat,.repCard,.stCard{break-inside:avoid}
   section.tab{display:block!important}
   body:not(.pm) section.tab:not(.on){display:none!important}
+  body.report-print main{display:block!important}
+  body.report-print section.tab{display:none!important}
+  body.report-print section.tab#tab-report{display:block!important}
+  body.report-print nav,body.report-print .rangeBox .field:last-child,body.report-print .rangeBox .actions,body.report-print .noprint{display:none!important}
 }
 @media (max-width:560px){.bars .row{grid-template-columns:80px 1fr 90px}}
 </style>
@@ -249,10 +254,8 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
   </div>
 </section>
 
-<!-- ===== ثبت جلسه (طراحی جدید) ===== -->
+<!-- ===== ثبت جلسه ===== -->
 <section class="tab" id="tab-session">
-
-  <!-- بخش بالا: تاریخ + شرح + انتخاب سریع -->
   <div class="sessionTop">
     <div class="field">
       <label>📅 تاریخ برگزاری جلسه (شمسی) *</label>
@@ -272,18 +275,14 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
     </div>
   </div>
 
-  <!-- جستجو -->
   <div class="searchWrap">
     <input id="seSearch" placeholder="جستجوی نام زبان‌آموز، دوره یا تلفن…">
   </div>
 
-  <!-- چیپ دوره‌ها -->
   <div class="chips" id="seCourseChips"></div>
 
-  <!-- کارت‌های زبان‌آموز -->
   <div class="studentsGrid" id="seGrid"></div>
 
-  <!-- نوار انتخاب -->
   <div class="selectionBar">
     <div class="info">
       <div><span>تعداد انتخاب‌شده</span><b id="seCount">۰</b></div>
@@ -295,7 +294,6 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
     </div>
   </div>
 
-  <!-- جلسات اخیر -->
   <div class="card" style="margin-top:16px">
     <h2>جلسات اخیر</h2>
     <div class="filters">
@@ -395,7 +393,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
         <label>تا تاریخ (شمسی)</label>
         <div class="dateRow" id="repTo"></div>
       </div>
-      <div class="field">
+      <div class="field noprint">
         <label>میان‌بر</label>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn sm alt" data-range="month">ماه جاری</button>
@@ -406,7 +404,7 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
         </div>
       </div>
     </div>
-    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+    <div class="actions noprint" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn" id="repRun">نمایش گزارش</button>
       <button class="btn alt" id="repPrint">چاپ گزارش</button>
       <span class="hint" style="align-self:center" id="repSummaryTxt"></span>
@@ -470,7 +468,8 @@ svg text{font-family:Tahoma,sans-serif;fill:var(--muted)}
 const CONFIG = {
   SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',
   SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
-  LOCAL_KEY:    'ali_naghli_finance_v3'
+  LOCAL_KEY:    'ali_naghli_finance_v4',   // ← نسخهٔ جدید برای جلوگیری از تداخل
+  QUEUE_KEY:    'ali_naghli_finance_v4_queue' // ← صف عملیات آفلاین
 };
 
 /* ---------- ابزارها ---------- */
@@ -486,14 +485,18 @@ const toEn = s => String(s||'')
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2,7));
 const debounce = (fn, ms=200) => { let h; return (...a)=>{ clearTimeout(h); h=setTimeout(()=>fn(...a), ms); }; };
+const pad = n => String(n).padStart(2,'0');
 
 let _toastH;
-function toast(msg){
+function toast(msg, isErr){
   const t = $('toast'); t.textContent = msg; t.classList.add('on');
-  clearTimeout(_toastH); _toastH = setTimeout(()=>t.classList.remove('on'), 2400);
+  t.classList.toggle('err', !!isErr);
+  clearTimeout(_toastH); _toastH = setTimeout(()=>t.classList.remove('on'), 2600);
 }
 
-/* ---------- تاریخ شمسی ---------- */
+/* =====================================================================
+   تاریخ شمسی — الگوریتم دقیق (بدون کتابخانه خارجی)
+   ===================================================================== */
 const _persianFmt = new Intl.DateTimeFormat('en-u-ca-persian-nu-latn', {
   year:'numeric', month:'numeric', day:'numeric'
 });
@@ -502,45 +505,74 @@ function todayJ(){
   const g = t => +parts.find(p=>p.type===t).value;
   return [g('year'), g('month'), g('day')];
 }
+// الگوریتم دقیق تبدیل شمسی → میلادی (بر اساس jalaali-js)
+function _div(a,b){ return ~~(a/b); }
+function jToG(jy, jm, jd){
+  let gy = jy + 621;
+  let days = -1;
+  if(jm === 12){ days = 29; } else { days = (jm <= 6) ? 31 : 30; }
+  // محاسبهٔ روزِ سال
+  let n = 0;
+  for(let m = 1; m < jm; m++) n += (m <= 6) ? 31 : 30;
+  n += jd;
+  // ۱۹ مارس ۲۰۲۴ = ۳۰ اسفند ۱۴۰۲
+  // از مبدأ: ۱ فروردین ۱ = ۱۹ مارس ۶۲۲
+  const epoch = Date.UTC(622, 2, 22); // ۲۲ مارس ۶۲۲
+  const msPerDay = 86400000;
+  // تعداد روز از مبدأ تا تاریخ هدف
+  const jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1;
+  const totalDays = jyDays + n;
+  // محاسبهٔ میلادی از مبدأ (با استفاده از Date.UTC)
+  // ۱ فروردین ۱ = ۲۲ مارس ۶۲۲
+  // پس Date = epoch + (totalDays - 1) روز
+  const d = new Date(epoch + (totalDays - 1) * msPerDay);
+  return [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()];
+}
+// تبدیل میلادی → شمسی (دقیق، بر اساس الگوریتم jalaali)
+function gToJ(gy, gm, gd){
+  const gDays = (function(){
+    const d = Date.UTC(gy, gm-1, gd);
+    // تعداد روز از مبدأ (۲۲ مارس ۶۲۲)
+    const epoch = Date.UTC(622, 2, 22);
+    return Math.round((d - epoch) / 86400000) + 1;
+  })();
+  let jy = 1, n = gDays;
+  // تخمین سال
+  jy = _div(n, 365) + 1;
+  let jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1;
+  while(n <= jyDays){ jy--; jyDays = (jy - 1) * 365 + _div(jy, 4) - _div(jy, 100) + _div(jy, 400) - 1; }
+  while(n > jyDays + 365){ 
+    const nextDays = jy * 365 + _div(jy+1, 4) - _div(jy+1, 100) + _div(jy+1, 400) - 1;
+    if(n > nextDays){ jy++; jyDays = nextDays; } else break;
+  }
+  // محاسبهٔ ماه و روز
+  n -= jyDays;
+  let jm = 1;
+  while(true){
+    const md = (jm <= 6) ? 31 : 30;
+    if(n <= md) break;
+    n -= md; jm++;
+  }
+  return [jy, jm, n];
+}
 function jMonthDays(y, m){
   if(m <= 6) return 31;
   if(m <= 11) return 30;
-  const probe = new Date(y + 621, 2, 20);
-  const parts = _persianFmt.formatToParts(probe);
-  const py = +parts.find(p=>p.type==='year').value;
-  return py === y + 1 ? 29 : 30;
+  // اسفند: ۲۹ یا ۳۰ (کبیسه)
+  const [gy, gm, gd] = jToG(y, 12, 1);
+  const next = new Date(Date.UTC(gy, gm - 1, gd + 30));
+  const [ny, nm] = gToJ(next.getUTCFullYear(), next.getUTCMonth() + 1, next.getUTCDate());
+  return (ny === y && nm === 1) ? 30 : 29;
 }
-const pad = n => String(n).padStart(2,'0');
-const dateStr = a => a[0]+'/'+pad(a[1])+'/'+pad(a[2]);
+const dateStr = a => a[0] + '/' + pad(a[1]) + '/' + pad(a[2]);
 const showDate = s => faDigits(s);
 const longDate = s => { const [y,m,d]=s.split('/').map(Number); return faDigits(d)+' '+MONTHS[m-1]+' '+faDigits(y); };
 
-/* ---------- جابجایی در تاریخ شمسی ---------- */
 function jAddDays(jy, jm, jd, delta){
-  // تبدیل به میلادی → جمع → تبدیل به شمسی
-  // از کتابخانه‌ی Intl استفاده می‌کنیم
-  // تخمین میلادی
   const g = jToG(jy, jm, jd);
-  const d = new Date(g[0], g[1]-1, g[2]);
-  d.setDate(d.getDate() + delta);
-  return gToJ(d.getFullYear(), d.getMonth()+1, d.getDate());
-}
-function gToJ(gy, gm, gd){
-  const parts = _persianFmt.formatToParts(new Date(gy, gm-1, gd));
-  const g = t => +parts.find(p=>p.type===t).value;
-  return [g('year'), g('month'), g('day')];
-}
-function jToG(jy, jm, jd){
-  // جستجوی دودویی/تخمینی
-  const guess = new Date(jy + 621, jm - 1, jd);
-  // تصحیح با مقایسه
-  for(let i = -5; i <= 5; i++){
-    const cand = new Date(guess); cand.setDate(cand.getDate() + i);
-    const [y,m,d] = gToJ(cand.getFullYear(), cand.getMonth()+1, cand.getDate());
-    if(y === jy && m === jm && d === jd)
-      return [cand.getFullYear(), cand.getMonth()+1, cand.getDate()];
-  }
-  return [guess.getFullYear(), guess.getMonth()+1, guess.getDate()];
+  const d = new Date(Date.UTC(g[0], g[1]-1, g[2]));
+  d.setUTCDate(d.getUTCDate() + delta);
+  return gToJ(d.getUTCFullYear(), d.getUTCMonth()+1, d.getUTCDate());
 }
 
 function buildDate(boxId, date){
@@ -558,7 +590,7 @@ function setDate(boxId,arr){
   sy.value=arr[0]; sm.value=arr[1];
   const n=jMonthDays(arr[0],arr[1]); let h='';
   for(let i=1;i<=n;i++) h+=`<option value="${i}">${faDigits(i)}</option>`;
-  sd.innerHTML=h; sd.value=arr[2];
+  sd.innerHTML=h; sd.value=Math.min(arr[2], n);
 }
 function getDate(boxId){
   const box=$(boxId);
@@ -566,25 +598,38 @@ function getDate(boxId){
 }
 
 /* =====================================================================
-   لایه‌ی داده
+   لایه‌ی داده — Offline-first با صف sync
    ===================================================================== */
+let _sbReady = false;
 const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY)
   ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY)
   : null;
 
 let db = { students: [], tx: [] };
+let syncQueue = [];   // { action:'insert'|'update'|'delete', table:'students'|'tx', payload, id }
 
 function loadLocal(){
   try{
     const r = localStorage.getItem(CONFIG.LOCAL_KEY);
     if(r) db = JSON.parse(r);
+    const q = localStorage.getItem(CONFIG.QUEUE_KEY);
+    if(q) syncQueue = JSON.parse(q);
   }catch(e){}
   db.students = db.students || [];
   db.tx = db.tx || [];
+  syncQueue = Array.isArray(syncQueue) ? syncQueue : [];
 }
 function saveLocal(){
   try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }
-  catch(e){ toast('ذخیره‌سازی محلی انجام نشد!'); }
+  catch(e){ toast('ذخیره‌سازی محلی انجام نشد!', true); }
+}
+function saveQueue(){
+  try{ localStorage.setItem(CONFIG.QUEUE_KEY, JSON.stringify(syncQueue)); }
+  catch(e){}
+}
+function enqueue(op){
+  syncQueue.push(op);
+  saveQueue();
 }
 function setSync(state, label){
   const b = $('syncBadge');
@@ -592,6 +637,35 @@ function setSync(state, label){
   b.textContent = label;
 }
 
+/* ---------- تبدیل ردیف Supabase ↔ شکل داخلی ---------- */
+function rowToStudent(s){
+  return {
+    id: s.id, name: s.name, course: s.course || '',
+    fee: s.fee || 0, phone: s.phone || '', note: s.note || ''
+  };
+}
+function rowToTx(t){
+  return {
+    id: t.id, type: t.type, sid: t.sid, amount: t.amount,
+    date: t.date, method: t.method || '', desc: t.descr || '',
+    session_date: t.session_date || null,
+    is_session: !!t.is_session,
+    ts: t.created_at ? new Date(t.created_at).getTime() : Date.now()
+  };
+}
+function txToRow(t){
+  return {
+    type:t.type, sid:t.sid, amount:t.amount, date:t.date,
+    method:t.method, descr:t.desc,
+    session_date: t.session_date || null,
+    is_session: !!t.is_session
+  };
+}
+function studentToRow(s){
+  return { name:s.name, course:s.course, fee:s.fee, phone:s.phone, note:s.note };
+}
+
+/* ---------- Pull + Merge (بدون گم شدن داده‌های محلی) ---------- */
 async function pullFromCloud(){
   if(!sb) return false;
   setSync('syncing','در حال همگام‌سازی…');
@@ -602,17 +676,21 @@ async function pullFromCloud(){
     ]);
     if(stRes.error) throw stRes.error;
     if(txRes.error) throw txRes.error;
-    db.students = (stRes.data||[]).map(s => ({
-      id: s.id, name: s.name, course: s.course || '',
-      fee: s.fee || 0, phone: s.phone || '', note: s.note || ''
-    }));
-    db.tx = (txRes.data||[]).map(t => ({
-      id: t.id, type: t.type, sid: t.sid, amount: t.amount,
-      date: t.date, method: t.method || '', desc: t.descr || '',
-      session_date: t.session_date || null,
-      is_session: !!t.is_session,
-      ts: t.created_at ? new Date(t.created_at).getTime() : Date.now()
-    }));
+
+    const cloudStudents = (stRes.data||[]).map(rowToStudent);
+    const cloudTx = (txRes.data||[]).map(rowToTx);
+
+    // Merge: هر ردیفی که در cloud هست، جایگزین محلی می‌شود؛
+    // ردیف‌های محلی که در cloud نیستند (insert نشده) حفظ می‌شوند.
+    const cloudSIds = new Set(cloudStudents.map(s=>s.id));
+    const cloudTxIds = new Set(cloudTx.map(t=>t.id));
+
+    const localOnlyStudents = db.students.filter(s => !cloudSIds.has(s.id));
+    const localOnlyTx = db.tx.filter(t => !cloudTxIds.has(t.id));
+
+    db.students = [...cloudStudents, ...localOnlyStudents];
+    db.tx = [...cloudTx, ...localOnlyTx];
+
     saveLocal();
     setSync('online','متصل');
     return true;
@@ -623,49 +701,139 @@ async function pullFromCloud(){
   }
 }
 
-async function cloudInsertStudent(s){
-  if(!sb) return;
-  const { data, error } = await sb.from('students').insert([{
-    name:s.name, course:s.course, fee:s.fee, phone:s.phone, note:s.note
-  }]).select().single();
-  if(error){ console.warn(error); toast('خطای ذخیره در Supabase'); return; }
-  s.id = data.id;
+/* ---------- اجرای صف (بعد از آنلاین شدن) ---------- */
+async function flushQueue(){
+  if(!sb || !syncQueue.length) return;
+  setSync('syncing','ارسال صف…');
+  const remaining = [];
+  for(const op of syncQueue){
+    try{
+      if(op.action === 'insert'){
+        if(op.table === 'students'){
+          const { data, error } = await sb.from('students').insert([op.payload]).select().single();
+          if(error) throw error;
+          // id محلی رو با id ابری جایگزین کن
+          if(op.localId && data.id !== op.localId){
+            const s = db.students.find(x=>x.id===op.localId);
+            if(s) s.id = data.id;
+            db.tx.forEach(t => { if(t.sid === op.localId) t.sid = data.id; });
+            saveLocal();
+          }
+        } else if(op.table === 'tx'){
+          const { data, error } = await sb.from('tx').insert([op.payload]).select().single();
+          if(error) throw error;
+          if(op.localId && data.id !== op.localId){
+            const t = db.tx.find(x=>x.id===op.localId);
+            if(t) t.id = data.id;
+            saveLocal();
+          }
+        }
+      } else if(op.action === 'update'){
+        const { error } = await sb.from(op.table).update(op.payload).eq('id', op.id);
+        if(error) throw error;
+      } else if(op.action === 'delete'){
+        const { error } = await sb.from(op.table).delete().eq('id', op.id);
+        if(error) throw error;
+      }
+    }catch(e){
+      console.warn('queue op failed', op, e);
+      remaining.push(op);
+    }
+  }
+  syncQueue = remaining;
+  saveQueue();
+  if(syncQueue.length){
+    setSync('offline', `صف: ${syncQueue.length}`);
+  } else {
+    setSync('online','متصل');
+  }
 }
-async function cloudUpdateStudent(s){
-  if(!sb) return;
-  const { error } = await sb.from('students').update({
-    name:s.name, course:s.course, fee:s.fee, phone:s.phone, note:s.note
-  }).eq('id', s.id);
-  if(error){ console.warn(error); toast('خطای ویرایش در Supabase'); }
+
+/* ---------- عملیات CRUD با fallback به صف ---------- */
+async function doInsertStudent(s){
+  if(!sb) { enqueue({action:'insert', table:'students', payload: studentToRow(s), localId: s.id}); return; }
+  try{
+    const { data, error } = await sb.from('students').insert([studentToRow(s)]).select().single();
+    if(error) throw error;
+    if(s.id !== data.id){
+      const oldId = s.id;
+      s.id = data.id;
+      db.tx.forEach(t => { if(t.sid === oldId) t.sid = data.id; });
+    }
+    setSync('online','متصل');
+  }catch(e){
+    console.warn(e);
+    enqueue({action:'insert', table:'students', payload: studentToRow(s), localId: s.id});
+    setSync('offline','آفلاین');
+    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
+  }
 }
-async function cloudDeleteStudent(id){
-  if(!sb) return;
-  const { error } = await sb.from('students').delete().eq('id', id);
-  if(error){ console.warn(error); toast('خطای حذف در Supabase'); }
+async function doUpdateStudent(s){
+  if(!sb) { enqueue({action:'update', table:'students', payload: studentToRow(s), id: s.id}); return; }
+  try{
+    const { error } = await sb.from('students').update(studentToRow(s)).eq('id', s.id);
+    if(error) throw error;
+    setSync('online','متصل');
+  }catch(e){
+    console.warn(e);
+    enqueue({action:'update', table:'students', payload: studentToRow(s), id: s.id});
+    setSync('offline','آفلاین');
+    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
+  }
 }
-function txToRow(t){
-  return {
-    type:t.type, sid:t.sid, amount:t.amount, date:t.date,
-    method:t.method, descr:t.desc,
-    session_date: t.session_date || null,
-    is_session: !!t.is_session
-  };
+async function doDeleteStudent(id){
+  if(!sb) { enqueue({action:'delete', table:'students', id}); return; }
+  try{
+    const { error } = await sb.from('students').delete().eq('id', id);
+    if(error) throw error;
+    setSync('online','متصل');
+  }catch(e){
+    console.warn(e);
+    enqueue({action:'delete', table:'students', id});
+    setSync('offline','آفلاین');
+  }
 }
-async function cloudInsertTx(t){
-  if(!sb) return;
-  const { data, error } = await sb.from('tx').insert([txToRow(t)]).select().single();
-  if(error){ console.warn(error); toast('خطای ذخیره در Supabase'); return; }
-  t.id = data.id;
+async function doInsertTx(t){
+  if(!sb) { enqueue({action:'insert', table:'tx', payload: txToRow(t), localId: t.id}); return; }
+  try{
+    const { data, error } = await sb.from('tx').insert([txToRow(t)]).select().single();
+    if(error) throw error;
+    if(t.id !== data.id){
+      const oldId = t.id;
+      t.id = data.id;
+    }
+    setSync('online','متصل');
+  }catch(e){
+    console.warn(e);
+    enqueue({action:'insert', table:'tx', payload: txToRow(t), localId: t.id});
+    setSync('offline','آفلاین');
+    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
+  }
 }
-async function cloudUpdateTx(t){
-  if(!sb) return;
-  const { error } = await sb.from('tx').update(txToRow(t)).eq('id', t.id);
-  if(error){ console.warn(error); toast('خطای ویرایش در Supabase'); }
+async function doUpdateTx(t){
+  if(!sb) { enqueue({action:'update', table:'tx', payload: txToRow(t), id: t.id}); return; }
+  try{
+    const { error } = await sb.from('tx').update(txToRow(t)).eq('id', t.id);
+    if(error) throw error;
+    setSync('online','متصل');
+  }catch(e){
+    console.warn(e);
+    enqueue({action:'update', table:'tx', payload: txToRow(t), id: t.id});
+    setSync('offline','آفلاین');
+    toast('آفلاین: در صف همگام‌سازی ذخیره شد', true);
+  }
 }
-async function cloudDeleteTx(id){
-  if(!sb) return;
-  const { error } = await sb.from('tx').delete().eq('id', id);
-  if(error){ console.warn(error); toast('خطای حذف در Supabase'); }
+async function doDeleteTx(id){
+  if(!sb) { enqueue({action:'delete', table:'tx', id}); return; }
+  try{
+    const { error } = await sb.from('tx').delete().eq('id', id);
+    if(error) throw error;
+    setSync('online','متصل');
+  }catch(e){
+    console.warn(e);
+    enqueue({action:'delete', table:'tx', id});
+    setSync('offline','آفلاین');
+  }
 }
 
 /* =====================================================================
@@ -803,7 +971,7 @@ function renderStudents(){
   $('stTable').innerHTML = rows.length
     ? `<table><thead><tr><th>نام</th><th>دوره</th><th>شهریه/جلسه</th><th>تلفن</th><th>جلسات</th><th>کل بدهی</th><th>پرداختی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s=>{const x=b[s.id];return `<tr>
       <td><b>${esc(s.name)}</b></td><td>${esc(s.course)}</td><td class="n">${s.fee?fa(s.fee):'—'}</td><td>${faDigits(esc(s.phone))}</td>
-      <td class="n badgeSessions">${fa(x.sessions)}</td>
+      <td class="n">${fa(x.sessions)}</td>
       <td class="n">${fa(x.charge)}</td><td class="n">${fa(x.pay)}</td>
       <td class="n ${x.bal>0?'neg':x.bal<0?'pos':''}"><b>${fa(Math.abs(x.bal))}</b></td><td>${statusTag(x.bal)}</td>
       <td><div class="actions">
@@ -822,18 +990,19 @@ $('stForm').onsubmit = async e => {
   if(editSt){
     const s = db.students.find(x=>x.id===editSt);
     Object.assign(s, o);
-    await cloudUpdateStudent(s);
+    await doUpdateStudent(s);
     toast('تغییرات ذخیره شد');
   } else {
     const s = { id: uid(), ...o };
     db.students.push(s);
-    await cloudInsertStudent(s);
+    await doInsertStudent(s);
     toast('زبان‌آموز اضافه شد');
   }
   cancelStudent(); saveLocal(); renderAll();
 };
 function editStudent(id){
-  const s = db.students.find(x=>x.id===id); editSt = id;
+  const s = db.students.find(x=>x.id===id); if(!s) return;
+  editSt = id;
   $('stName').value = s.name; $('stCourse').value = s.course||'';
   $('stFee').value = s.fee ? s.fee.toLocaleString('en-US') : '';
   $('stPhone').value = s.phone||''; $('stNote').value = s.note||'';
@@ -852,7 +1021,10 @@ $('stCancel').onclick = cancelStudent;
 async function delStudent(id){
   const n = db.tx.filter(t=>t.sid===id).length;
   if(!confirm(`«${stName(id)}» و ${faDigits(n)} تراکنش او حذف شود؟`)) return;
-  await cloudDeleteStudent(id);
+  // اول tx ها، بعد student (ترتیب امن برای FK)
+  const txIds = db.tx.filter(t=>t.sid===id).map(t=>t.id);
+  for(const tid of txIds) await doDeleteTx(tid);
+  await doDeleteStudent(id);
   db.students = db.students.filter(s=>s.id!==id);
   db.tx = db.tx.filter(t=>t.sid!==id);
   saveLocal(); renderAll(); toast('حذف شد');
@@ -861,11 +1033,11 @@ $('stSearch').addEventListener('input', debounce(renderStudents));
 $('stFilter').addEventListener('change', renderStudents);
 
 /* =====================================================================
-   ثبت جلسه — طراحی جدید
+   ثبت جلسه
    ===================================================================== */
-let seSelected = {};          // { studentId: amount }
-let seCourseFilter = '';      // فیلتر دوره (چیپ)
-let seSearchQuery = '';       // جستجو
+let seSelected = {};
+let seCourseFilter = '';
+let seSearchQuery = '';
 
 function renderCourseChips(){
   const courses = [...new Set(db.students.map(s => (s.course||'').trim()).filter(Boolean))].sort();
@@ -883,6 +1055,7 @@ $('seCourseChips').onclick = e => {
 
 function renderSessionGrid(){
   const q = seSearchQuery.trim().toLowerCase();
+  const bAll = balances();
   const list = db.students.filter(s => {
     if(seCourseFilter && (s.course||'').trim() !== seCourseFilter) return false;
     if(q){
@@ -899,7 +1072,7 @@ function renderSessionGrid(){
   grid.innerHTML = list.map(s => {
     const on = s.id in seSelected;
     const val = on ? seSelected[s.id] : (s.fee||0);
-    const b = balances()[s.id] || { bal:0, sessions:0 };
+    const b = bAll[s.id] || { bal:0, sessions:0 };
     return `<div class="stCard ${on?'on':''}" data-id="${s.id}">
       <div class="name">
         <span>${esc(s.name)}</span>
@@ -919,7 +1092,6 @@ function renderSessionGrid(){
 }
 
 $('seGrid').onclick = e => {
-  // کلیک روی input نباید کارت را toggle کند
   if(e.target.closest('.feeInp')) return;
   const card = e.target.closest('.stCard'); if(!card) return;
   const id = card.dataset.id;
@@ -950,7 +1122,6 @@ function updateSelectionBar(){
 $('seClear').onclick = () => { seSelected = {}; renderSessionGrid(); };
 $('seSearch').addEventListener('input', debounce(e => { seSearchQuery = e.target.value; renderSessionGrid(); }));
 
-/* میان‌بر تاریخ */
 document.querySelectorAll('.quickDates button').forEach(b => {
   b.onclick = () => {
     const off = +b.dataset.off;
@@ -960,7 +1131,6 @@ document.querySelectorAll('.quickDates button').forEach(b => {
   };
 });
 
-/* ثبت */
 $('seSave').onclick = async () => {
   const ids = Object.keys(seSelected);
   if(!ids.length){ toast('حداقل یک زبان‌آموز انتخاب کنید'); return; }
@@ -983,7 +1153,8 @@ $('seSave').onclick = async () => {
     created.push(t);
   }
   saveLocal(); renderAll();
-  for(const t of created) await cloudInsertTx(t);
+  // ارسال موازی به cloud (سریع‌تر)
+  await Promise.all(created.map(t => doInsertTx(t)));
   saveLocal(); renderAll();
 
   seSelected = {};
@@ -991,10 +1162,6 @@ $('seSave').onclick = async () => {
   renderSessionGrid();
   toast(`${faDigits(created.length)} جلسه ثبت شد`);
 };
-
-/* جلسات اخیر */
-$('seFilterStudent').addEventListener('change', renderSessions);
-$('seFilterMonth').addEventListener('change', renderSessions);
 
 function renderSessions(){
   const stOpts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
@@ -1063,12 +1230,12 @@ $('txForm').onsubmit = async e => {
   if(editTx){
     const t = db.tx.find(x=>x.id===editTx);
     Object.assign(t, o);
-    await cloudUpdateTx(t);
+    await doUpdateTx(t);
     toast('تراکنش ویرایش شد');
   } else {
     const t = { id: uid(), ts: Date.now(), ...o };
     db.tx.push(t);
-    await cloudInsertTx(t);
+    await doInsertTx(t);
     toast('تراکنش ثبت شد');
   }
   const keepType = $('txType').value;
@@ -1086,7 +1253,8 @@ function cancelTx(){
 }
 $('txCancel').onclick = cancelTx;
 function editTransaction(id){
-  const t = db.tx.find(x=>x.id===id); editTx = id; showTab('tx');
+  const t = db.tx.find(x=>x.id===id); if(!t) return;
+  editTx = id; showTab('tx');
   $('txType').value = t.type; txTypeUI();
   if(t.sid) $('txStudent').value = t.sid;
   $('txAmount').value = t.amount.toLocaleString('en-US');
@@ -1099,7 +1267,7 @@ function editTransaction(id){
 }
 async function delTx(id){
   if(!confirm('این تراکنش حذف شود؟')) return;
-  await cloudDeleteTx(id);
+  await doDeleteTx(id);
   db.tx = db.tx.filter(t=>t.id!==id);
   saveLocal(); renderAll(); toast('حذف شد');
 }
@@ -1112,9 +1280,12 @@ function quickTx(sid, type){
   $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'});
 }
 function quickSession(sid){
+  // فیلترها را ریست کن تا کارت زبان‌آموز دیده شود
+  seCourseFilter = ''; seSearchQuery = ''; $('seSearch').value = '';
   showTab('session');
   seSelected = {};
   seSelected[sid] = (db.students.find(x=>x.id===sid)||{}).fee || 0;
+  renderCourseChips();
   renderSessionGrid();
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -1141,9 +1312,7 @@ $('fSearch').addEventListener('input', debounce(renderTx));
 /* =====================================================================
    گزارش دوره‌ای
    ===================================================================== */
-function rangeInRange(dateStr_, from, to){
-  return dateStr_ >= from && dateStr_ <= to;
-}
+function rangeInRange(d, from, to){ return d >= from && d <= to; }
 
 function runReport(){
   const from = getDate('repFrom');
@@ -1155,14 +1324,12 @@ function runReport(){
     return rangeInRange(d, from, to);
   });
 
-  // کارت‌های خلاصه
   const income  = rows.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
   const charge  = rows.filter(t=>t.type==='charge').reduce((a,t)=>a+t.amount,0);
   const expense = rows.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
   const sessions = rows.filter(t=>t.is_session).length;
   const net = income - expense;
 
-  // بدهی معوق (کل) — از اول تا «to»
   let overdue = 0;
   db.tx.forEach(t => {
     const d = t.is_session && t.session_date ? t.session_date : t.date;
@@ -1194,7 +1361,6 @@ function runReport(){
 
   $('repSummaryTxt').textContent = `از ${showDate(from)} تا ${showDate(to)} — ${faDigits(rows.length)} تراکنش`;
 
-  // تفکیک بر اساس زبان‌آموز
   const byStudent = {};
   db.students.forEach(s => byStudent[s.id] = { name:s.name, sessions:0, charge:0, payment:0 });
   rows.forEach(t => {
@@ -1216,7 +1382,6 @@ function runReport(){
         </tr>`).join('')}</tbody></table>`
     : '<div class="empty">در این بازه تراکنشی ثبت نشده است.</div>';
 
-  // جزئیات
   const sortedRows = [...rows].sort((a,b)=>{
     const da = a.is_session&&a.session_date ? a.session_date : a.date;
     const db_ = b.is_session&&b.session_date ? b.session_date : b.date;
@@ -1238,19 +1403,15 @@ function runReport(){
 
 $('repRun').onclick = runReport;
 $('repPrint').onclick = () => {
-  document.body.classList.add('pm');
-  // برای چاپ کل صفحه‌ی گزارش، همه‌ی تب‌ها رو مخفی می‌کنیم به جز report
-  document.querySelectorAll('section.tab').forEach(s => s.classList.add('on'));
+  // ابتدا گزارش را رندر کن، سپس چاپ
+  runReport();
+  document.body.classList.add('report-print');
   setTimeout(()=>{
     window.print();
-    setTimeout(()=>{
-      document.body.classList.remove('pm');
-      showTab('report');
-    }, 400);
+    setTimeout(()=>document.body.classList.remove('report-print'), 400);
   }, 100);
 };
 
-/* میان‌برهای بازه */
 document.querySelectorAll('.rangeBox [data-range]').forEach(b => {
   b.onclick = () => {
     const t = todayJ();
@@ -1276,6 +1437,7 @@ document.querySelectorAll('.rangeBox [data-range]').forEach(b => {
    ===================================================================== */
 function openStatement(id){
   const s = db.students.find(x=>x.id===id);
+  if(!s){ toast('زبان‌آموز یافت نشد'); return; }
   const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=>{
     const da = a.is_session && a.session_date ? a.session_date : a.date;
     const db_ = b.is_session && b.session_date ? b.session_date : b.date;
@@ -1292,7 +1454,7 @@ function openStatement(id){
   }).join('');
   const sessionCount = rows.filter(t=>t.is_session).length;
   $('modalBox').innerHTML = `<h2 style="margin-top:0">صورت‌حساب: ${esc(s.name)}</h2>
-   <p class="hint">${esc(s.course)} ${s.phone?'— تلفن: '+faDigits(esc(s.phone)):''} — شهریه/جلسه: ${fa(s.fee||0)} تومان — تعداد جلسات: ${faDigits(sessionCount)} — تاریخ صدور: ${longDate(dateStr(todayJ()))}</p>
+   <p class="hint">${esc(s.course||'—')} ${s.phone?'— تلفن: '+faDigits(esc(s.phone)):''} — شهریه/جلسه: ${fa(s.fee||0)} تومان — تعداد جلسات: ${faDigits(sessionCount)} — تاریخ صدور: ${longDate(dateStr(todayJ()))}</p>
    <div class="wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار (پرداخت)</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:'<div class="empty">تراکنشی ثبت نشده.</div>'}</div>
    <h3>${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'حساب تسویه است'}</h3>
    <div class="actions noprint"><button class="btn" onclick="printModal()">چاپ</button><button class="btn alt" onclick="closeModal()">بستن</button></div>`;
@@ -1311,7 +1473,7 @@ async function download(name, text, type){
       const d = await window.claude.use('downloads');
       if(d){ await d.save({ filename:name, data:text }); toast('فایل ذخیره شد'); return; }
     }
-  }catch(e){ /* ادامه */ }
+  }catch(e){}
   try{
     const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -1320,7 +1482,7 @@ async function download(name, text, type){
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100);
     toast('فایل دانلود شد');
-  }catch(e){ toast('ذخیره فایل انجام نشد'); }
+  }catch(e){ toast('ذخیره فایل انجام نشد', true); }
 }
 const csvCell = v => '"' + String(v??'').replace(/"/g,'""') + '"';
 
@@ -1344,7 +1506,7 @@ $('btnCsvSt').onclick = () => {
             x.bal>0?'بدهکار':x.bal<0?'بستانکار':'تسویه']); });
   download('students.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
 };
-$('btnBackup').onclick = () => download('backup-'+dateStr(todayJ()).replace(/\//g,'-')+'.json', JSON.stringify(db), 'application/json');
+$('btnBackup').onclick = () => download('backup-'+dateStr(todayJ()).replace(/\//g,'-')+'.json', JSON.stringify({students:db.students, tx:db.tx, queue:syncQueue}), 'application/json');
 $('btnRestore').onclick = () => $('fileRestore').click();
 $('fileRestore').onchange = e => {
   const f = e.target.files[0]; if(!f) return;
@@ -1352,38 +1514,55 @@ $('fileRestore').onchange = e => {
   r.onload = () => {
     try{
       const d = JSON.parse(r.result);
-      if(!Array.isArray(d.students) || !Array.isArray(d.tx)) throw 0;
+      const st = Array.isArray(d.students) ? d.students : (Array.isArray(d) ? d : null);
+      const tx = Array.isArray(d.tx) ? d.tx : [];
+      if(!st) throw 0;
       if(!confirm('اطلاعات فعلی محلی با فایل پشتیبان جایگزین شود؟ (روی Supabase اعمال نمی‌شود)')) return;
-      db = d; saveLocal(); renderAll(); toast('بازیابی محلی انجام شد');
-    }catch(_){ toast('فایل معتبر نیست'); }
+      db = { students: st, tx };
+      saveLocal(); renderAll(); toast('بازیابی محلی انجام شد');
+    }catch(_){ toast('فایل معتبر نیست', true); }
   };
   r.readAsText(f); e.target.value = '';
 };
-$('btnPrint').onclick = () => { showTab('dash'); setTimeout(()=>window.print(), 100); };
+$('btnPrint').onclick = () => {
+  showTab('dash');
+  // چاپ همهٔ تب‌های پرشده
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.add('on'));
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>showTab('dash'), 400);
+  }, 100);
+};
 $('btnReset').onclick = () => {
   if(confirm('همه‌ی اطلاعات محلی پاک می‌شود. مطمئنید؟') && confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')){
-    db = { students:[], tx:[] }; saveLocal(); renderAll(); toast('پاک شد (محلی)');
+    db = { students:[], tx:[] }; syncQueue = [];
+    saveLocal(); saveQueue(); renderAll(); toast('پاک شد (محلی)');
   }
 };
 $('btnResetCloud').onclick = async () => {
-  if(!sb){ toast('Supabase در دسترس نیست'); return; }
+  if(!sb){ toast('Supabase در دسترس نیست', true); return; }
   if(!confirm('همه‌ی داده‌ها از Supabase حذف می‌شوند! مطمئنید؟')) return;
   if(!confirm('این کار قابل بازگشت نیست. ادامه می‌دهید؟')) return;
   setSync('syncing','در حال حذف…');
   try{
     await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000');
     await sb.from('students').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    db = { students:[], tx:[] }; saveLocal(); renderAll();
+    db = { students:[], tx:[] }; syncQueue = [];
+    saveLocal(); saveQueue(); renderAll();
     setSync('online','متصل'); toast('داده‌های Supabase حذف شد');
-  }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا در حذف ابری'); }
+  }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا در حذف ابری', true); }
 };
 $('chartYear').onchange = renderDash;
 
 $('syncBtn').onclick = async () => {
-  if(!sb){ toast('Supabase پیکربندی نشده'); return; }
+  if(!sb){ toast('Supabase پیکربندی نشده', true); return; }
+  setSync('syncing','همگام‌سازی…');
+  // ۱) ابتدا صف را خالی کن
+  await flushQueue();
+  // ۲) سپس pull کن
   const ok = await pullFromCloud();
   if(ok){ renderAll(); toast('همگام‌سازی انجام شد'); }
-  else toast('اتصال برقرار نشد');
+  else toast('اتصال برقرار نشد', true);
 };
 
 /* ---------- تم ---------- */
@@ -1419,8 +1598,13 @@ function renderAll(){
 
   if(sb){
     setSync('syncing','اتصال…');
+    // ۱) صف آفلاین را ابتدا ارسال کن
+    await flushQueue();
+    // ۲) سپس pull کن
     const ok = await pullFromCloud();
     if(ok) renderAll();
+    // ۳) نمایش تعداد صف باقی‌مانده (اگر آفلاین بود)
+    if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`);
   } else {
     setSync('offline','آفلاین (بدون Supabase)');
   }
