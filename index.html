@@ -892,6 +892,88 @@ svg text{font-family:"Vazirmatn",sans-serif}
 }
 
 /* ==========================================================
+   Daily income (NEW)
+   ========================================================== */
+.daily-toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.daily-toolbar .month-picker{
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+.daily-toolbar .month-picker select{
+  min-width:130px;
+  padding:8px 32px 8px 12px;
+  font-size:13px;
+}
+.daily-summary{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+  margin-bottom:16px;
+}
+.daily-summary .dsum{
+  background:var(--card-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.daily-summary .dsum small{
+  font-size:11.5px;
+  color:var(--ink-2);
+  font-weight:500;
+}
+.daily-summary .dsum b{
+  font-size:18px;
+  color:var(--ink);
+  font-weight:800;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.3px;
+}
+.daily-summary .dsum b small{
+  font-size:10.5px;
+  color:var(--ink-3);
+  font-weight:500;
+  margin-inline-start:3px;
+}
+.daily-summary .dsum.gold{background:linear-gradient(135deg, var(--gold-glow), var(--card-2)); border-color:var(--gold)}
+.daily-summary .dsum.gold b{color:var(--gold)}
+.daily-summary .dsum.gold small{color:var(--gold)}
+
+.daily-chart{
+  overflow-x:auto;
+  padding:8px 0;
+  margin-bottom:12px;
+}
+.daily-chart svg{display:block}
+
+.daily-table-wrap{
+  max-height:420px;
+  overflow-y:auto;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:var(--card-2);
+}
+.daily-table-wrap table{min-width:560px}
+.daily-table-wrap thead th{
+  background:var(--surface);
+  position:sticky;top:0;z-index:2;
+}
+.daily-table-wrap td.day{font-weight:700;color:var(--ink)}
+.daily-table-wrap tr.zero td{color:var(--ink-3);opacity:.65}
+.daily-table-wrap tr.highlight td{background:var(--gold-glow)}
+.daily-table-wrap tr.highlight td.day{color:var(--gold);font-weight:800}
+
+/* ==========================================================
    Toast
    ========================================================== */
 .toast{
@@ -1027,6 +1109,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
   .stat-value{font-size:20px}
   .bar-row{grid-template-columns:80px 1fr 90px;gap:8px}
   .date-chip,.sync-chip{font-size:11.5px;padding:5px 10px}
+  .daily-toolbar{flex-direction:column;align-items:stretch}
 }
 </style>
 </head>
@@ -1149,6 +1232,33 @@ svg text{font-family:"Vazirmatn",sans-serif}
         <span style="--c:var(--coral)">هزینه</span>
       </div>
       <p class="hint" id="yearSum" style="margin-top:12px"></p>
+    </div>
+
+    <!-- ============ NEW: درآمد روزانه ============ -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px">
+        <h3 class="card-title" style="margin:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="15" x2="12" y2="19"/></svg>
+          درآمد روزانه
+        </h3>
+        <div class="daily-toolbar" style="margin:0">
+          <div class="month-picker">
+            <select id="dailyYear"></select>
+            <select id="dailyMonth"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="daily-summary" id="dailySummary"></div>
+
+      <div class="daily-chart"><div id="dailyChart" style="min-width:640px"></div></div>
+
+      <div class="legend" style="margin-bottom:12px">
+        <span style="--c:var(--emerald)">درآمد (دریافتی)</span>
+        <span style="--c:var(--coral)">هزینه</span>
+      </div>
+
+      <div class="daily-table-wrap" id="dailyTable"></div>
     </div>
 
     <div class="card">
@@ -1841,17 +1951,14 @@ function emptyState(msg){
 }
 
 /* =====================================================================
-   Tab switching — CRITICAL: define before any click
+   Tab switching — defined BEFORE any interaction
    ===================================================================== */
 function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
   document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
-  // re-render after switching
   renderAll();
   window.scrollTo({top:0, behavior:'smooth'});
 }
-
-// Wire tab buttons IMMEDIATELY (before init)
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => switchTab(btn.dataset.tab));
 });
@@ -1952,6 +2059,156 @@ function renderDash(){
   $('recent').innerHTML = rec.length
     ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>`
     : emptyState('هنوز تراکنشی ثبت نشده است.');
+
+  renderDaily();
+}
+
+/* =====================================================================
+   NEW: درآمد روزانه به تفکیک
+   ===================================================================== */
+function renderDaily(){
+  // پر کردن سال‌ها و ماه‌ها
+  const years = new Set([todayJ()[0]]);
+  db.tx.forEach(t => { if(t.date) years.add(+t.date.slice(0,4)); });
+  const yearList = [...years].sort((a,b)=>b-a);
+
+  const yearSel = $('dailyYear');
+  const monthSel = $('dailyMonth');
+  const curYear = yearSel.value || todayJ()[0];
+  yearSel.innerHTML = yearList.map(y => `<option value="${y}">${faDigits(y)}</option>`).join('');
+  yearSel.value = years.has(+curYear) ? curYear : todayJ()[0];
+
+  const curMonth = monthSel.value || todayJ()[1];
+  monthSel.innerHTML = MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+  monthSel.value = (+curMonth >= 1 && +curMonth <= 12) ? curMonth : todayJ()[1];
+
+  const Y = +yearSel.value;
+  const M = +monthSel.value;
+  const daysInMonth = jMonthDays(Y, M);
+
+  // جمع‌آوری داده‌های روزانه
+  const days = Array.from({length: daysInMonth}, (_,i) => ({
+    d: i + 1,
+    income: 0,
+    expense: 0,
+    count: 0,
+    txCount: 0
+  }));
+
+  db.tx.forEach(t => {
+    if(!t.date) return;
+    const [ty, tm, td] = t.date.split('/').map(Number);
+    if(ty !== Y || tm !== M) return;
+    const day = days[td - 1];
+    if(!day) return;
+    if(t.type === 'payment'){ day.income += t.amount; day.txCount++; }
+    if(t.type === 'expense'){ day.expense += t.amount; day.txCount++; }
+    if(t.type === 'charge'){ day.count += t.amount; }
+  });
+
+  const totalIncome = days.reduce((a,d)=>a+d.income, 0);
+  const totalExpense = days.reduce((a,d)=>a+d.expense, 0);
+  const netIncome = totalIncome - totalExpense;
+  const activeDays = days.filter(d => d.income > 0).length;
+  const avgPerActive = activeDays ? Math.round(totalIncome / activeDays) : 0;
+  const bestDay = days.reduce((best, d) => d.income > best.income ? d : best, days[0]);
+  const bestDayLabel = bestDay && bestDay.income > 0
+    ? `${faDigits(bestDay.d)} ${MONTHS[M-1]}`
+    : '—';
+
+  // کارت‌های خلاصه
+  $('dailySummary').innerHTML = `
+    <div class="dsum gold">
+      <small>کل درآمد ماه</small>
+      <b>${fa(totalIncome)}<small>تومان</small></b>
+    </div>
+    <div class="dsum">
+      <small>هزینه ماه</small>
+      <b>${fa(totalExpense)}<small>تومان</small></b>
+    </div>
+    <div class="dsum">
+      <small>خالص ماه</small>
+      <b class="${netIncome >= 0 ? 'pos' : 'neg'}">${fa(netIncome)}<small>تومان</small></b>
+    </div>
+    <div class="dsum">
+      <small>پردرآمدترین روز</small>
+      <b style="font-size:15px">${bestDayLabel}${bestDay && bestDay.income > 0 ? ` <small style="font-size:10px;color:var(--gold)">(${fa(bestDay.income)})</small>` : ''}</b>
+    </div>
+    <div class="dsum">
+      <small>میانگین روزهای فعال</small>
+      <b>${fa(avgPerActive)}<small>تومان</small></b>
+    </div>
+  `;
+
+  // نمودار ستونی روزانه
+  const W = Math.max(640, daysInMonth * 26);
+  const H = 240;
+  const pl = 10, pt = 20, pb = 30;
+  const cw = (W - pl*2) / daysInMonth;
+  const maxVal = Math.max(1, ...days.map(d => Math.max(d.income, d.expense)));
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:${W}px">`;
+  // خطوط راهنما
+  for(let i=0;i<=4;i++){
+    const y = pt + (H-pt-pb) * i/4;
+    svg += `<line x1="${pl}" x2="${W-pl}" y1="${y}" y2="${y}" stroke="var(--border)" stroke-dasharray="3 3"/>`;
+  }
+  for(let i=0;i<days.length;i++){
+    const d = days[i];
+    const cx = W - pl - cw*(i+.5); // راست به چپ
+    const bw = cw*0.34;
+    const ch = H - pt - pb;
+    const h1 = d.income / maxVal * ch;
+    const h2 = d.expense / maxVal * ch;
+    // ستون درآمد
+    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="2" fill="var(--emerald)"><title>${faDigits(d.d)} ${MONTHS[M-1]} — درآمد: ${fa(d.income)} تومان</title></rect>`;
+    // ستون هزینه
+    svg += `<rect x="${cx+1}" y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="2" fill="var(--coral)"><title>${faDigits(d.d)} ${MONTHS[M-1]} — هزینه: ${fa(d.expense)} تومان</title></rect>`;
+    // لیبل روز (هر ۵ روز یا اگر تعداد کم است همه)
+    if(daysInMonth <= 15 || d.d === 1 || d.d % 5 === 0 || d.d === daysInMonth){
+      svg += `<text x="${cx}" y="${H-12}" text-anchor="middle" font-size="9" style="fill:var(--ink-2)">${faDigits(d.d)}</text>`;
+    }
+  }
+  svg += '</svg>';
+  $('dailyChart').innerHTML = svg;
+
+  // جدول تفکیک روزانه
+  const rows = days.map(d => {
+    const isHighlight = bestDay && d.d === bestDay.d && d.income > 0;
+    const isZero = d.income === 0 && d.expense === 0 && d.count === 0;
+    const net = d.income - d.expense;
+    return `<tr class="${isZero ? 'zero' : ''} ${isHighlight ? 'highlight' : ''}">
+      <td class="day">${faDigits(d.d)} ${MONTHS[M-1]}</td>
+      <td class="n ${d.income > 0 ? 'pos' : ''}">${d.income ? fa(d.income) : '—'}</td>
+      <td class="n ${d.expense > 0 ? 'neg' : ''}">${d.expense ? fa(d.expense) : '—'}</td>
+      <td class="n ${net > 0 ? 'pos' : net < 0 ? 'neg' : ''}">${net !== 0 ? fa(Math.abs(net)) + (net > 0 ? ' +' : ' −') : '—'}</td>
+      <td class="n">${d.txCount ? faDigits(d.txCount) : '—'}</td>
+      <td>${d.count ? `<span class="tag debt">${fa(d.count)}</span>` : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  $('dailyTable').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>روز</th>
+          <th>درآمد</th>
+          <th>هزینه</th>
+          <th>خالص</th>
+          <th>تعداد تراکنش</th>
+          <th>بدهی ثبت‌شده</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+
+  // اتصال event listener یک بار
+  if(!yearSel._bound){
+    yearSel._bound = true;
+    yearSel.addEventListener('change', renderDaily);
+    monthSel.addEventListener('change', renderDaily);
+  }
 }
 
 /* =====================================================================
