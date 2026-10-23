@@ -1,19 +1,898 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>آموزشگاه زبان علی ناقلی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0e15;--bg-2:#15131d;--bg-3:#1c1a27;--card:#1a1825;--card-2:#211f2e;--surface:#262336;
+  --border:#2f2b40;--border-strong:#3f3a56;
+  --ink:#f0edf7;--ink-2:#a8a3bd;--ink-3:#6e6985;
+  --primary:#e0b04a;--primary-2:#f2c76a;--primary-glow:rgba(224,176,74,.18);
+  --rose:#e07a8f;--rose-soft:rgba(224,122,143,.14);
+  --emerald:#4ec5a0;--emerald-soft:rgba(78,197,160,.14);
+  --coral:#e89b6c;--coral-soft:rgba(232,155,108,.14);
+  --violet:#9d7cf0;--violet-soft:rgba(157,124,240,.14);
+  --cyan:#5ac8e0;--cyan-soft:rgba(90,200,224,.14);
+  --radius-sm:8px;--radius:14px;--radius-lg:20px;--radius-pill:999px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.25);
+  --shadow:0 4px 20px rgba(0,0,0,.3);
+  --shadow-lg:0 12px 48px rgba(0,0,0,.4);
+  --transition:all .2s cubic-bezier(.4,0,.2,1);
+}
+:root[data-palette="blue"]{--primary:#4a90e2;--primary-2:#6ba7f0;--primary-glow:rgba(74,144,226,.18)}
+:root[data-palette="emerald"]{--primary:#4ec5a0;--primary-2:#6eddb5;--primary-glow:rgba(78,197,160,.18)}
+:root[data-palette="violet"]{--primary:#9d7cf0;--primary-2:#b69bff;--primary-glow:rgba(157,124,240,.18)}
+:root[data-palette="rose"]{--primary:#e07a8f;--primary-2:#f099ab;--primary-glow:rgba(224,122,143,.18)}
+:root[data-palette="sunset"]{--primary:#e89b6c;--primary-2:#f2b088;--primary-glow:rgba(232,155,108,.18)}
+
+:root[data-theme="light"]{
+  --bg:#f8f6f1;--bg-2:#fdfcf9;--bg-3:#f0ece2;--card:#fff;--card-2:#faf9f5;--surface:#f2efe6;
+  --border:#e8e2d4;--border-strong:#d4cdba;
+  --ink:#1a1720;--ink-2:#6b6578;--ink-3:#9a95a8;
+  --rose-soft:rgba(201,82,106,.1);--emerald-soft:rgba(42,157,110,.1);
+  --coral-soft:rgba(209,117,68,.1);--violet-soft:rgba(124,92,209,.1);--cyan-soft:rgba(58,156,181,.1);
+  --shadow-sm:0 1px 3px rgba(26,23,32,.05);--shadow:0 4px 20px rgba(26,23,32,.08);--shadow-lg:0 12px 48px rgba(26,23,32,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Vazirmatn","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.75;min-height:100vh;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse 800px 400px at 10% 0%,rgba(224,176,74,.06),transparent 50%),radial-gradient(ellipse 600px 300px at 90% 100%,rgba(157,124,240,.05),transparent 50%);background-attachment:fixed;transition:background-color .3s}
+body.compact{font-size:13px}
+body.compact .card{padding:14px}
+body.compact th,body.compact td{padding:8px 10px;font-size:12px}
+body.compact .stat{padding:12px}
+body.compact .stat-value{font-size:18px}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+
+/* Splash */
+#splash{position:fixed;inset:0;background:linear-gradient(135deg,var(--bg),var(--bg-3));z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .6s,visibility .6s}
+#splash.hide{opacity:0;visibility:hidden}
+#splash .splash-logo{width:80px;height:80px;background:linear-gradient(135deg,var(--primary),var(--primary-2));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#1a1720;box-shadow:0 10px 40px var(--primary-glow);animation:splashPulse 1.5s ease-in-out infinite}
+@keyframes splashPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+#splash h1{font-size:22px;font-weight:800;color:var(--ink);margin:0;text-align:center}
+#splash p{font-size:13px;color:var(--ink-2);margin:0;text-align:center;max-width:300px}
+
+/* Topbar */
+.topbar{background:linear-gradient(180deg,var(--bg-2),var(--bg));border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30;backdrop-filter:blur(12px)}
+.topbar-inner{max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand-mark{width:42px;height:42px;background:linear-gradient(135deg,var(--primary),var(--primary-2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#1a1720;box-shadow:0 4px 16px var(--primary-glow);flex-shrink:0;transition:var(--transition)}
+.brand-mark:hover{transform:rotate(-8deg) scale(1.05)}
+.brand-text{display:flex;flex-direction:column;line-height:1.2}
+.brand-text b{font-size:15px;font-weight:800;color:var(--ink)}
+.brand-text small{font-size:11.5px;color:var(--ink-2);font-weight:500}
+.top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.date-chip,.sync-chip{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-pill);padding:7px 14px;font-size:12.5px;color:var(--ink-2);font-weight:500}
+.date-chip svg{width:14px;height:14px;color:var(--primary)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--ink-3);flex-shrink:0}
+.sync-chip.online .sync-dot{background:var(--emerald);box-shadow:0 0 0 3px var(--emerald-soft)}
+.sync-chip.offline .sync-dot{background:var(--rose);box-shadow:0 0 0 3px var(--rose-soft)}
+.sync-chip.syncing .sync-dot{background:var(--primary);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.icon-btn{width:38px;height:38px;background:var(--card);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);transition:var(--transition);position:relative}
+.icon-btn:hover{background:var(--primary);border-color:var(--primary);color:#1a1720;transform:translateY(-1px)}
+.icon-btn svg{width:17px;height:17px}
+.icon-btn .badge{position:absolute;top:-4px;inset-inline-end:-4px;background:var(--rose);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:10px;min-width:16px;text-align:center}
+.search-top{position:relative;width:220px}
+.search-top input{width:100%;padding:8px 36px 8px 12px;height:38px;font-size:12.5px;border-radius:10px;background:var(--card);border:1px solid var(--border)}
+.search-top svg{position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--ink-3);pointer-events:none}
+.search-top kbd{position:absolute;inset-inline-end:10px;top:50%;transform:translateY(-50%);font-size:10px;background:var(--surface);color:var(--ink-3);padding:2px 6px;border-radius:4px;border:1px solid var(--border);font-family:monospace}
+@media (max-width:900px){.search-top{width:100%;order:3}.search-top kbd{display:none}}
+
+/* Tabbar */
+.tabbar{background:var(--bg-2);border-bottom:1px solid var(--border);position:sticky;top:71px;z-index:29;backdrop-filter:blur(12px)}
+.tabbar-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabbar-inner::-webkit-scrollbar{display:none}
+.tab-btn{background:transparent;border:0;padding:14px 18px;font-size:13px;font-weight:500;color:var(--ink-2);white-space:nowrap;display:flex;align-items:center;gap:7px;border-bottom:2px solid transparent;transition:var(--transition);margin-bottom:-1px}
+.tab-btn svg{width:15px;height:15px;opacity:.7}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
+.tab-btn.on svg{opacity:1;color:var(--primary)}
+
+.container{max-width:1280px;margin:0 auto;padding:24px 24px 80px}
+section.tab{display:none;animation:fadeIn .3s ease}
+section.tab.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.page-title{font-size:25px;font-weight:800;letter-spacing:-.5px;color:var(--ink);display:flex;align-items:center;gap:12px}
+.page-title-icon{width:40px;height:40px;border-radius:12px;background:var(--primary-glow);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.page-title-icon svg{width:20px;height:20px}
+.page-sub{font-size:13.5px;color:var(--ink-2);margin-top:6px}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow-sm);margin-bottom:20px;transition:var(--transition)}
+.card-title{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;color:var(--ink);flex-wrap:wrap}
+.card-title svg{width:17px;height:17px;color:var(--primary);flex-shrink:0}
+
+/* Quick Actions */
+.quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.qa-btn{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:var(--transition);text-align:center;position:relative;overflow:hidden}
+.qa-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--primary-glow),transparent);opacity:0;transition:opacity .2s}
+.qa-btn:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:var(--shadow)}
+.qa-btn:hover::before{opacity:1}
+.qa-btn:hover .qa-icon{background:var(--primary);color:#1a1720;transform:scale(1.1) rotate(-5deg)}
+.qa-icon{width:44px;height:44px;border-radius:12px;background:var(--primary-glow);color:var(--primary);display:flex;align-items:center;justify-content:center;transition:var(--transition);position:relative;z-index:1}
+.qa-icon svg{width:22px;height:22px}
+.qa-btn b{font-size:13.5px;font-weight:700;color:var(--ink);position:relative;z-index:1}
+.qa-btn small{font-size:11px;color:var(--ink-2);position:relative;z-index:1}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:var(--transition);display:flex;flex-direction:column;gap:10px}
+.stat:hover{border-color:var(--border-strong);transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--primary-glow);color:var(--primary);flex-shrink:0}
+.stat-icon svg{width:18px;height:18px}
+.stat-icon.green{background:var(--emerald-soft);color:var(--emerald)}
+.stat-icon.red{background:var(--rose-soft);color:var(--rose)}
+.stat-icon.orange{background:var(--coral-soft);color:var(--coral)}
+.stat-icon.purple{background:var(--violet-soft);color:var(--violet)}
+.stat-icon.cyan{background:var(--cyan-soft);color:var(--cyan)}
+.stat-label{font-size:12px;color:var(--ink-2);font-weight:500;line-height:1.4}
+.stat-value{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.5px;display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
+.stat-value small{font-size:11px;color:var(--ink-3);font-weight:500}
+.stat-delta{font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:var(--radius-pill);margin-top:4px;width:fit-content}
+.stat-delta.up{background:var(--emerald-soft);color:var(--emerald)}
+.stat-delta.down{background:var(--rose-soft);color:var(--rose)}
+
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;margin-bottom:20px}
+
+/* Forms */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;align-items:end}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{font-size:12px;font-weight:600;color:var(--ink-2);display:block}
+.field label .req{color:var(--rose)}
+input,select,textarea{width:100%;padding:11px 14px;background:var(--bg-3);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--ink);font-size:14px;transition:var(--transition);font-weight:500}
+input::placeholder,textarea::placeholder{color:var(--ink-3);font-weight:400}
+input:hover,select:hover,textarea:hover{border-color:var(--border-strong)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);background:var(--card);box-shadow:0 0 0 3px var(--primary-glow)}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a8a3bd' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-inline-start:36px}
+.date-row{display:grid;grid-template-columns:1.1fr 1.6fr 1fr;gap:6px}
+.date-row select{padding-inline-start:28px;background-position:left 10px center;font-size:13px;padding-block:10px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border:0;border-radius:var(--radius-pill);font-weight:700;font-size:13.5px;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#1a1720;transition:var(--transition);box-shadow:0 3px 12px var(--primary-glow);white-space:nowrap}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--primary-glow)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn svg{width:15px;height:15px}
+.btn.ghost{background:var(--card-2);color:var(--ink);border:1.5px solid var(--border);box-shadow:none}
+.btn.ghost:hover{background:var(--surface);border-color:var(--border-strong)}
+.btn.danger{background:linear-gradient(135deg,var(--rose),#c9526a);color:#fff;box-shadow:0 3px 12px var(--rose-soft)}
+.btn.success{background:linear-gradient(135deg,var(--emerald),#3ba882);color:#fff;box-shadow:0 3px 12px var(--emerald-soft)}
+.btn.sm{padding:7px 14px;font-size:12px}
+.btn.xs{padding:4px 10px;font-size:11px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn-row.tight{gap:5px}
+
+/* Tables */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-2)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:12px 14px;text-align:right;font-size:13px;white-space:nowrap;color:var(--ink)}
+th{background:var(--surface);color:var(--ink-2);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:0}
+tbody tr:hover{background:var(--surface)}
+td.n{font-variant-numeric:tabular-nums;font-weight:600}
+.copy-btn{background:transparent;border:0;color:var(--ink-3);padding:0 4px;cursor:pointer;display:inline-flex;vertical-align:middle;opacity:.5;transition:opacity .15s}
+.copy-btn:hover{opacity:1;color:var(--primary)}
+.copy-btn svg{width:13px;height:13px}
+
+/* Tags */
+.tag{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:var(--radius-pill);font-size:11.5px;font-weight:600;white-space:nowrap}
+.tag.debt{background:var(--rose-soft);color:var(--rose)}
+.tag.credit{background:var(--emerald-soft);color:var(--emerald)}
+.tag.zero{background:var(--surface);color:var(--ink-2);border:1px solid var(--border)}
+.tag.exp{background:var(--coral-soft);color:var(--coral)}
+.tag.session{background:var(--primary-glow);color:var(--primary)}
+.tag.absent{background:var(--rose-soft);color:var(--rose)}
+.tag.tutor-tag{background:var(--violet-soft);color:var(--violet);font-size:11px}
+.tag.birthday{background:linear-gradient(135deg,#e07a8f,#f2c76a);color:#fff;font-size:11px}
+
+/* Empty */
+.empty{padding:52px 24px;text-align:center;color:var(--ink-2);font-size:13.5px;background:var(--card-2);border-radius:var(--radius)}
+.empty svg{width:52px;height:52px;color:var(--ink-3);margin:0 auto 14px;display:block;opacity:.5}
+
+/* Filters */
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+
+/* Bars */
+.bars-list{display:flex;flex-direction:column;gap:12px}
+.bar-row{display:grid;grid-template-columns:100px 1fr 100px;gap:12px;align-items:center;font-size:13px}
+.bar-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:var(--ink)}
+.bar-track{background:var(--surface);height:10px;border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.bar-fill.debt{background:linear-gradient(90deg,var(--rose),#f09bac)}
+.bar-fill.credit{background:linear-gradient(90deg,var(--emerald),#8ee0c3)}
+.bar-val{text-align:left;direction:ltr;font-variant-numeric:tabular-nums;font-weight:700;font-size:12.5px}
+
+/* Legend */
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);margin-top:14px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:center;padding:16px 0}
+.donut-legend{display:flex;flex-direction:column;gap:12px;font-size:13px}
+.donut-legend .item{display:flex;align-items:center;gap:10px}
+.donut-legend .dot{width:11px;height:11px;border-radius:4px;flex-shrink:0}
+.donut-legend b{margin-inline-start:6px;font-variant-numeric:tabular-nums;color:var(--ink)}
+svg text{font-family:"Vazirmatn",sans-serif}
+
+/* Session hero */
+.session-hero{background:linear-gradient(135deg,var(--card-2),var(--surface));border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.session-hero::before{content:"";position:absolute;top:-50px;inset-inline-end:-50px;width:180px;height:180px;background:radial-gradient(circle,var(--primary-glow),transparent 70%);pointer-events:none}
+.session-hero h2{font-size:16px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.session-hero h2 svg{width:18px;height:18px;color:var(--primary)}
+.session-hero p{font-size:13px;color:var(--ink-2);margin-bottom:18px}
+.session-hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;position:relative}
+@media (max-width:720px){.session-hero-grid{grid-template-columns:1fr}}
+.quick-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.quick-btns button{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-pill);padding:5px 13px;font-size:11.5px;color:var(--ink-2);font-weight:500;transition:var(--transition)}
+.quick-btns button:hover{background:var(--primary-glow);color:var(--primary);border-color:var(--primary)}
+
+/* Search */
+.search-box{position:relative;margin-bottom:16px}
+.search-box input{padding-inline-start:44px;height:48px;font-size:14.5px}
+.search-box svg{position:absolute;inset-inline-start:16px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ink-3);pointer-events:none}
+
+/* Chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{background:var(--card-2);border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:7px 16px;font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;transition:var(--transition);user-select:none}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip.on{background:var(--primary);border-color:var(--primary);color:#1a1720;font-weight:700;box-shadow:0 3px 12px var(--primary-glow)}
+
+/* Student cards */
+.students-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-height:560px;overflow-y:auto;padding:4px}
+.st-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:var(--transition);display:flex;flex-direction:column;gap:9px;position:relative}
+.st-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.st-card.on{border-color:var(--primary);background:linear-gradient(135deg,var(--card),var(--primary-glow));box-shadow:0 0 0 3px var(--primary-glow)}
+.st-card.absent-mode{border-color:var(--rose);background:linear-gradient(135deg,var(--card),var(--rose-soft))}
+.st-card .st-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.st-card .st-name{font-weight:700;font-size:14.5px;color:var(--ink)}
+.st-card .st-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;transition:var(--transition)}
+.st-card.on .st-check{background:var(--primary);border-color:var(--primary);color:#1a1720}
+.st-card .st-check svg{width:13px;height:13px}
+.st-card .st-meta{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-2)}
+.st-card .st-meta .row{display:flex;justify-content:space-between;gap:8px}
+.st-card .st-meta b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.st-card .st-amount{margin-top:4px}
+.st-card .st-amount input{padding:8px 12px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;font-size:13px}
+.st-card .st-badge{position:absolute;top:8px;inset-inline-end:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);background:var(--emerald-soft);color:var(--emerald)}
+.st-card .st-badge.low{background:var(--rose-soft);color:var(--rose)}
+.st-card .st-badge.birthday{background:linear-gradient(135deg,#e07a8f,#f2c76a);color:#fff}
+
+/* Selection bar */
+.selection-bar{position:sticky;bottom:16px;background:linear-gradient(135deg,var(--card),var(--card-2));border:1.5px solid var(--primary);border-radius:var(--radius-lg);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:18px;box-shadow:0 8px 32px var(--primary-glow);z-index:10}
+.selection-bar .info{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.selection-bar .info>div{display:flex;flex-direction:column;gap:1px}
+.selection-bar .info span{font-size:11px;color:var(--ink-2);font-weight:500}
+.selection-bar .info b{font-size:20px;color:var(--primary);font-weight:800;font-variant-numeric:tabular-nums}
+.selection-bar .info small{font-size:11px;color:var(--ink-3);font-weight:500;margin-inline-start:3px}
+
+/* Report cards */
+.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.rep-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;transition:var(--transition)}
+.rep-card:hover{border-color:var(--border-strong);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.rep-card::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--primary)}
+.rep-card.green::before{background:var(--emerald)}
+.rep-card.red::before{background:var(--rose)}
+.rep-card.orange::before{background:var(--coral)}
+.rep-card.purple::before{background:var(--violet)}
+.rep-card small{font-size:12px;color:var(--ink-2);font-weight:500;display:block;margin-bottom:8px}
+.rep-card b{font-size:22px;color:var(--ink);font-weight:800;letter-spacing:-.4px;display:flex;align-items:baseline;gap:4px}
+.rep-card b small{display:inline;font-size:11px;color:var(--ink-3);margin:0;font-weight:500}
+
+/* Daily */
+.daily-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.daily-toolbar .month-picker{display:flex;gap:6px;align-items:center}
+.daily-toolbar .month-picker select{min-width:130px;padding:8px 32px 8px 12px;font-size:13px}
+.daily-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.daily-summary .dsum{background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.daily-summary .dsum small{font-size:11.5px;color:var(--ink-2);font-weight:500}
+.daily-summary .dsum b{font-size:18px;color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.daily-summary .dsum b small{font-size:10.5px;color:var(--ink-3);font-weight:500;margin-inline-start:3px}
+.daily-summary .dsum.gold{background:linear-gradient(135deg,var(--primary-glow),var(--card-2));border-color:var(--primary)}
+.daily-summary .dsum.gold b{color:var(--primary)}
+.daily-chart{overflow-x:auto;padding:8px 0;margin-bottom:12px}
+.daily-table-wrap{max-height:420px;overflow-y:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-2)}
+.daily-table-wrap table{min-width:560px}
+.daily-table-wrap thead th{background:var(--surface);position:sticky;top:0;z-index:2}
+.daily-table-wrap td.day{font-weight:700;color:var(--ink)}
+.daily-table-wrap tr.zero td{color:var(--ink-3);opacity:.65}
+.daily-table-wrap tr.highlight td{background:var(--primary-glow)}
+.daily-table-wrap tr.highlight td.day{color:var(--primary);font-weight:800}
+
+/* Calendar */
+.calendar-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.calendar-head .cal-nav{display:flex;gap:6px;align-items:center}
+.calendar-head h3{font-size:16px;font-weight:700;color:var(--ink);margin:0}
+.calendar-head .cal-nav button{width:34px;height:34px;border-radius:10px;background:var(--card-2);border:1px solid var(--border);color:var(--ink-2);display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.calendar-head .cal-nav button:hover{background:var(--primary);color:#1a1720;border-color:var(--primary)}
+.calendar-head .cal-nav button svg{width:16px;height:16px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-dayname{text-align:center;font-size:11.5px;font-weight:600;color:var(--ink-2);padding:8px 0;text-transform:uppercase;letter-spacing:.5px}
+.cal-cell{aspect-ratio:1;background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:6px;cursor:pointer;transition:var(--transition);position:relative;display:flex;flex-direction:column;gap:2px;min-height:80px;overflow:hidden}
+.cal-cell:hover{border-color:var(--primary);transform:translateY(-1px)}
+.cal-cell.today{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-glow)}
+.cal-cell.birthday{border-color:var(--rose);background:linear-gradient(135deg,var(--card-2),var(--rose-soft))}
+.cal-cell.empty{background:transparent;border:0;cursor:default}
+.cal-cell.empty:hover{transform:none}
+.cal-cell .cal-date{font-size:12px;font-weight:700;color:var(--ink)}
+.cal-cell.today .cal-date{color:var(--primary)}
+.cal-cell .cal-inc{font-size:10px;font-weight:600;color:var(--emerald);font-variant-numeric:tabular-nums}
+.cal-cell .cal-exp{font-size:10px;font-weight:600;color:var(--coral);font-variant-numeric:tabular-nums}
+.cal-cell .cal-sessions{position:absolute;bottom:4px;inset-inline-end:4px;font-size:9px;font-weight:700;background:var(--primary-glow);color:var(--primary);padding:1px 5px;border-radius:6px}
+.cal-cell .cal-bday{position:absolute;top:4px;inset-inline-end:4px;font-size:11px}
+@media (max-width:640px){.cal-cell{min-height:60px}.cal-cell .cal-date{font-size:10px}.cal-cell .cal-inc,.cal-cell .cal-exp{font-size:8px}.cal-cell .cal-sessions{font-size:8px;padding:0 4px}}
+
+/* Overdue */
+.overdue-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;flex-wrap:wrap;transition:var(--transition)}
+.overdue-item:hover{border-color:var(--rose)}
+.overdue-item .oi-info{display:flex;flex-direction:column;gap:2px}
+.overdue-item .oi-name{font-weight:700;color:var(--ink)}
+.overdue-item .oi-meta{font-size:11.5px;color:var(--ink-2)}
+.overdue-item .oi-amount{font-weight:800;color:var(--rose);font-variant-numeric:tabular-nums}
+.overdue-item .oi-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Birthday card */
+.bday-card{background:linear-gradient(135deg,#e07a8f,#f2c76a);color:#fff;border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;position:relative;overflow:hidden}
+.bday-card::before{content:"🎂";position:absolute;top:-10px;inset-inline-end:-10px;font-size:100px;opacity:.15;transform:rotate(-15deg)}
+.bday-card h3{font-size:16px;font-weight:800;margin:0 0 6px}
+.bday-card p{font-size:13px;margin:0 0 14px;opacity:.9}
+.bday-item{background:rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;backdrop-filter:blur(10px)}
+.bday-item b{font-size:14px}
+.bday-item span{font-size:12px;opacity:.85}
+.bday-item button{background:#fff;color:#e07a8f;border:0;padding:6px 14px;border-radius:var(--radius-pill);font-weight:700;font-size:11.5px;cursor:pointer;transition:var(--transition)}
+.bday-item button:hover{background:#fafafa;transform:scale(1.05)}
+
+/* Achievements */
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.ach-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:var(--transition);position:relative;overflow:hidden}
+.ach-card.locked{opacity:.5;filter:grayscale(1)}
+.ach-card:not(.locked):hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:var(--shadow)}
+.ach-icon{font-size:36px;margin-bottom:8px;display:block;line-height:1}
+.ach-card b{font-size:13px;font-weight:700;color:var(--ink);display:block;margin-bottom:4px}
+.ach-card small{font-size:11px;color:var(--ink-2);line-height:1.4;display:block}
+.ach-date{font-size:10px;color:var(--emerald);font-weight:600;margin-top:6px;display:block}
+
+/* Confetti */
+.confetti{position:fixed;width:8px;height:8px;background:var(--primary);z-index:99998;pointer-events:none;animation:confettiFall 2.5s linear forwards}
+@keyframes confettiFall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* SMS section */
+.sms-tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--border);overflow-x:auto}
+.sms-tab{background:transparent;border:0;padding:10px 18px;font-size:13px;color:var(--ink-2);cursor:pointer;border-bottom:2px solid transparent;transition:var(--transition);font-weight:500;white-space:nowrap}
+.sms-tab.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
+.sms-panel{display:none}
+.sms-panel.on{display:block}
+.recipient-list{max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--card-2);padding:4px}
+.recipient{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;transition:background .15s;cursor:pointer}
+.recipient:hover{background:var(--surface)}
+.recipient input[type=checkbox]{width:18px;height:18px;padding:0;margin:0;accent-color:var(--primary);flex-shrink:0;cursor:pointer}
+.recipient .rc-info{flex:1;min-width:0}
+.recipient .rc-name{font-weight:600;color:var(--ink);font-size:13px}
+.recipient .rc-phone{font-size:11.5px;color:var(--ink-2);direction:ltr;text-align:right}
+.recipient .rc-amount{font-weight:700;color:var(--rose);font-variant-numeric:tabular-nums;font-size:12.5px}
+.sms-preview{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;line-height:1.8;color:var(--ink);white-space:pre-wrap;min-height:80px;font-family:inherit}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:var(--bg);padding:13px 22px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);z-index:9999;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px)}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+.toast.err{background:var(--rose);color:#fff}
+.toast.success{background:var(--emerald);color:#fff}
+.toast .toast-action{background:rgba(255,255,255,.2);border:0;color:inherit;padding:4px 10px;border-radius:var(--radius-pill);font-size:11px;font-weight:700;cursor:pointer;margin-inline-start:8px}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(15,14,21,.7);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto;z-index:100;animation:fadeIn .2s}
+.modal.on{display:flex}
+.modal-box{background:var(--card);border-radius:var(--radius-lg);max-width:860px;width:100%;padding:28px;box-shadow:var(--shadow-lg);animation:slideUp .3s cubic-bezier(.34,1.56,.64,1);margin-top:40px;border:1px solid var(--border)}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* Cleanup / danger */
+.cleanup-box{background:linear-gradient(135deg,var(--primary-glow),transparent);border:1.5px solid var(--primary);border-radius:var(--radius-lg);padding:24px;margin-bottom:20px}
+.cleanup-box h2{color:var(--primary);font-size:15px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cleanup-box h2 svg{width:18px;height:18px}
+.cleanup-box p{color:var(--ink-2);font-size:13px;margin-bottom:16px;line-height:1.8}
+.danger-box{background:linear-gradient(135deg,var(--rose-soft),transparent);border:1.5px solid var(--rose);border-radius:var(--radius-lg);padding:24px;margin-top:20px}
+.danger-box h2{color:var(--rose);font-size:15px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.danger-box h2 svg{width:18px;height:18px}
+.danger-box p{color:var(--ink-2);font-size:13px;margin-bottom:16px}
+
+/* Settings */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.setting-item{background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.setting-item .si-info{flex:1;min-width:0}
+.setting-item .si-info b{font-size:13px;font-weight:700;color:var(--ink);display:block}
+.setting-item .si-info small{font-size:11.5px;color:var(--ink-2);display:block;margin-top:2px}
+.palette-picker{display:flex;gap:8px;flex-wrap:wrap}
+.palette-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:var(--transition);position:relative}
+.palette-dot:hover{transform:scale(1.15)}
+.palette-dot.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ink)}
+
+/* Invoice */
+.invoice{background:#fff;color:#111;padding:32px;border-radius:12px;font-family:"Vazirmatn",sans-serif}
+.invoice-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #b8862b;flex-wrap:wrap}
+.invoice-head h1{font-size:22px;font-weight:800;color:#b8862b;margin:0}
+.invoice-head .inv-num{font-size:13px;color:#666;margin-top:4px}
+.invoice-meta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;font-size:13px}
+.invoice-meta>div{display:flex;flex-direction:column;gap:4px}
+.invoice-meta label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px}
+.invoice-meta b{color:#111}
+.invoice-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.invoice-table th{background:#f5f2ea;padding:10px;text-align:right;font-size:12px;color:#555;border:1px solid #ddd}
+.invoice-table td{padding:10px;border:1px solid #ddd;font-size:13px}
+.invoice-total{text-align:left;font-size:16px;font-weight:800;color:#b8862b;padding:16px;background:#faf6ec;border-radius:8px;margin-top:16px;direction:rtl}
+.invoice-footer{margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#888;text-align:center}
+
+@media print{
+  .topbar,.tabbar,.no-print,.toast,.quick-btns{display:none!important}
+  body{background:#fff;color:#000}
+  .container{max-width:100%;padding:0}
+  .card,.stat,.rep-card{box-shadow:none!important;border:1px solid #ddd;break-inside:avoid}
+  section.tab{display:block!important}
+  body:not(.pm) section.tab:not(.on){display:none!important}
+  body.pm .container{display:none}
+  body.pm .modal{position:static;display:block;background:none;padding:0}
+}
+@media (max-width:640px){
+  .container{padding:20px 16px 60px}
+  .topbar-inner{padding:12px 16px}
+  .tabbar-inner{padding:0 12px}
+  .page-title{font-size:21px}
+  .stat-value{font-size:19px}
+  .date-chip,.sync-chip{font-size:11px;padding:5px 10px}
+  .quick-actions{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">ع</div>
+  <h1>آموزشگاه زبان علی ناقلی</h1>
+  <p id="splashMsg">در حال بارگذاری…</p>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">ع</div>
+      <div class="brand-text"><b>علی ناقلی</b><small>آموزشگاه زبان</small></div>
+    </div>
+    <div class="top-actions">
+      <div class="search-top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="globalSearch" placeholder="جستجو…" autocomplete="off">
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="date-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span id="todayTxt">—</span></div>
+      <div class="sync-chip" id="syncChip"><span class="sync-dot"></span><span id="syncText">اتصال…</span></div>
+      <button class="icon-btn" id="notifBtn" title="اعلان‌ها"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="badge" id="notifBadge" style="display:none">0</span></button>
+      <button class="icon-btn" id="syncBtn" title="همگام‌سازی"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+      <button class="icon-btn" id="themeBtn" title="تغییر تم"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tabbar">
+  <div class="tabbar-inner">
+    <button class="tab-btn on" data-tab="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>داشبورد</button>
+    <button class="tab-btn" data-tab="students"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>زبان‌آموزان</button>
+    <button class="tab-btn" data-tab="session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>ثبت جلسه</button>
+    <button class="tab-btn" data-tab="tx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>مالی</button>
+    <button class="tab-btn" data-tab="sms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>پیامک</button>
+    <button class="tab-btn" data-tab="birthdays"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>تولدها</button>
+    <button class="tab-btn" data-tab="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>تقویم</button>
+    <button class="tab-btn" data-tab="achievements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>دستاوردها</button>
+    <button class="tab-btn" data-tab="report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>گزارش</button>
+    <button class="tab-btn" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>تنظیمات</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="container">
+
+<!-- ========== DASHBOARD ========== -->
+<section class="tab on" id="tab-dash">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></div>داشبورد</div>
+      <div class="page-sub" id="dashGreeting">نمای کلی آموزشگاه</div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <div class="qa-btn" data-action="new-session">
+      <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <b>ثبت جلسه</b><small>سریع ثبت کن</small>
+    </div>
+    <div class="qa-btn" data-action="new-payment">
+      <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div>
+      <b>دریافت وجه</b><small>ثبت پرداخت</small>
+    </div>
+    <div class="qa-btn" data-action="new-student">
+      <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+      <b>زبان‌آموز جدید</b><small>افزودن</small>
+    </div>
+    <div class="qa-btn" data-action="send-sms">
+      <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <b>ارسال پیامک</b><small>به بدهکاران</small>
+    </div>
+  </div>
+
+  <div id="bdayTodayCard"></div>
+  <div class="stats-grid" id="stats"></div>
+
+  <div class="card" id="overdueCard" style="display:none">
+    <h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>بدهکاران معوق <span id="overdueCount" style="color:var(--rose);font-size:13px"></span></h3>
+    <div id="overdueList"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card"><h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>وضعیت زبان‌آموزان</h3><div class="donut-wrap" id="donut"></div></div>
+    <div class="card"><h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>مانده حساب</h3><div class="bars-list" id="bars"></div><div class="legend"><span style="--c:var(--rose)">بدهکار</span><span style="--c:var(--emerald)">بستانکار</span></div></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px">
+      <h3 class="card-title" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>درآمد و هزینه ماهانه</h3>
+      <div style="width:150px"><select id="chartYear"></select></div>
+    </div>
+    <div style="overflow-x:auto"><div id="monthly" style="min-width:560px"></div></div>
+    <div class="legend"><span style="--c:var(--emerald)">دریافتی</span><span style="--c:var(--coral)">هزینه</span></div>
+    <p class="hint" id="yearSum" style="margin-top:12px"></p>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px">
+      <h3 class="card-title" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="15" x2="12" y2="19"/></svg>درآمد روزانه</h3>
+      <div class="daily-toolbar" style="margin:0"><div class="month-picker"><select id="dailyYear"></select><select id="dailyMonth"></select></div></div>
+    </div>
+    <div class="daily-summary" id="dailySummary"></div>
+    <div class="daily-chart"><div id="dailyChart" style="min-width:640px"></div></div>
+    <div class="daily-table-wrap" id="dailyTable"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card"><h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>تفکیک هزینه‌ها</h3><div id="expenseChart"></div></div>
+    <div class="card"><h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>آمار پیشرفته</h3><div id="advancedStats"></div></div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>آخرین تراکنش‌ها</h3>
+    <div class="table-wrap" id="recent"></div>
+  </div>
+</section>
+
+<!-- ========== STUDENTS ========== -->
+<section class="tab" id="tab-students">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>زبان‌آموزان</div><div class="page-sub">مدیریت لیست و مانده حساب‌ها</div></div></div>
+
+  <div class="card">
+    <h3 class="card-title" id="stTitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>افزودن زبان‌آموز</span></h3>
+    <form class="form-grid" id="stForm">
+      <div class="field"><label>نام و نام خانوادگی <span class="req">*</span></label><input id="stName" required></div>
+      <div class="field"><label>سطح / دوره</label><input id="stCourse" list="courses" placeholder="Elementary"><datalist id="courses"><option>Starter</option><option>Elementary</option><option>Pre-Intermediate</option><option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option><option>IELTS</option><option>TOEFL</option><option>مکالمه</option><option>کودکان</option></datalist></div>
+      <div class="field"><label>شهریه هر جلسه</label><input id="stFee" inputmode="numeric" class="money" placeholder="تومان"></div>
+      <div class="field"><label>شماره تماس</label><input id="stPhone" inputmode="tel" placeholder="09..."></div>
+      <div class="field"><label>تاریخ تولد</label><div class="date-row" id="stBirthday"></div></div>
+      <div class="field"><label>توضیحات</label><input id="stNote"></div>
+      <div class="btn-row" style="grid-column:1/-1"><button class="btn" type="submit" id="stSave">افزودن</button><button class="btn ghost" type="button" id="stCancel" style="display:none">انصراف</button></div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="filters"><input id="stSearch" placeholder="جستجوی نام، دوره یا تلفن…"><select id="stFilter"><option value="">همه</option><option value="debt">بدهکار</option><option value="credit">بستانکار</option><option value="zero">تسویه</option></select></div>
+    <div class="table-wrap" id="stTable"></div>
+  </div>
+</section>
+
+<!-- ========== SESSION ========== -->
+<section class="tab" id="tab-session">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>ثبت جلسه</div><div class="page-sub">جلسات برگزارشده را ثبت کن</div></div></div>
+
+  <div class="session-hero">
+    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>اطلاعات جلسه</h2>
+    <p>تاریخ و شرح را مشخص کن، سپس زبان‌آموزان را انتخاب کن</p>
+    <div class="session-hero-grid">
+      <div class="field">
+        <label>تاریخ برگزاری</label>
+        <div class="date-row" id="seDate"></div>
+        <div class="quick-btns"><button type="button" data-off="0">امروز</button><button type="button" data-off="-1">دیروز</button><button type="button" data-off="-2">۲ روز پیش</button><button type="button" data-off="-7">هفته پیش</button></div>
+        <label style="margin-top:12px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--ink-2)">
+          <input type="checkbox" id="seAbsentMode" style="width:auto;padding:0;margin:0">
+          حالت غیاب
+        </label>
+      </div>
+      <div class="field">
+        <label>شرح (اختیاری)</label>
+        <input id="seDesc" placeholder="جلسه Elementary فصل ۴">
+        <label style="margin-top:10px">روش پرداخت</label>
+        <select id="seMethod"><option>—</option><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select>
+        <label style="margin-top:10px">تگ</label>
+        <input id="seTag" placeholder="ترم_تابستان">
+      </div>
+    </div>
+  </div>
+
+  <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="seSearch" placeholder="جستجو…"></div>
+  <div class="chips" id="seCourseChips"></div>
+  <div class="students-grid" id="seGrid"></div>
+
+  <div class="selection-bar">
+    <div class="info">
+      <div><span>انتخاب‌شده</span><b id="seCount">۰</b></div>
+      <div><span>جمع مبلغ</span><b id="seTotal">۰</b><small>تومان</small></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" id="seClear">پاک کردن</button>
+      <button class="btn success" id="seSave" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>ثبت جلسه</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>جلسات اخیر</h3>
+    <div class="filters"><select id="seFilterStudent"><option value="">همه زبان‌آموزان</option></select><select id="seFilterMonth"></select></div>
+    <div class="table-wrap" id="seTable"></div>
+  </div>
+</section>
+
+<!-- ========== TRANSACTIONS ========== -->
+<section class="tab" id="tab-tx">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>مالی</div><div class="page-sub">بدهی، دریافتی و هزینه</div></div></div>
+
+  <div class="card">
+    <h3 class="card-title" id="txTitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>ثبت تراکنش</span></h3>
+    <form class="form-grid" id="txForm">
+      <div class="field"><label>نوع تراکنش</label><select id="txType"><option value="charge">ثبت بدهی</option><option value="payment">دریافت وجه</option><option value="expense">هزینه</option></select></div>
+      <div class="field" id="txStWrap"><label>زبان‌آموز</label><select id="txStudent"></select></div>
+      <div class="field"><label>مبلغ (تومان) *</label><input id="txAmount" inputmode="numeric" class="money" required></div>
+      <div class="field"><label id="txDateLbl">تاریخ</label><div class="date-row" id="txDate"></div></div>
+      <div class="field" id="txCategoryWrap" style="display:none"><label>دسته هزینه</label><select id="txCategory"><option value="other">سایر</option><option value="rent">اجاره</option><option value="books">کتاب</option><option value="salary">حقوق</option><option value="internet">اینترنت</option><option value="ads">تبلیغات</option><option value="transport">حمل و نقل</option><option value="food">پذیرایی</option></select></div>
+      <div class="field"><label>روش پرداخت</label><select id="txMethod"><option>نقدی</option><option>کارت به کارت</option><option>کارت‌خوان</option><option>چک</option><option>سایر</option></select></div>
+      <div class="field"><label>شرح</label><input id="txDesc" placeholder="شهریه مهر"></div>
+      <div class="field"><label>تگ</label><input id="txTag" placeholder="ترم_تابستان"></div>
+      <div class="btn-row" style="grid-column:1/-1"><button class="btn" type="submit" id="txSave">ثبت</button><button class="btn ghost" type="button" id="txCancel" style="display:none">انصراف</button></div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="filters"><input id="fSearch" placeholder="جستجو…"><select id="fStudent"></select><select id="fType"><option value="">همه</option><option value="charge">بدهی</option><option value="payment">دریافتی</option><option value="expense">هزینه</option></select><select id="fMonth"></select></div>
+    <p class="hint" id="txSum" style="margin-bottom:12px"></p>
+    <div class="table-wrap" id="txTable"></div>
+  </div>
+</section>
+
+<!-- ========== SMS ========== -->
+<section class="tab" id="tab-sms">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>ارسال پیامک</div><div class="page-sub">یادآوری، تبریک، پیام دسته‌جمعی</div></div></div>
+
+  <div class="sms-tabs">
+    <button class="sms-tab on" data-sms="debt">💰 یادآوری بدهی</button>
+    <button class="sms-tab" data-sms="birthday">🎂 تبریک تولد</button>
+    <button class="sms-tab" data-sms="custom">✏️ دلخواه</button>
+    <button class="sms-tab" data-sms="config">⚙️ تنظیمات</button>
+  </div>
+
+  <div class="sms-panel on" id="sms-debt">
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="card-title">گیرندگان</h3>
+        <p class="hint" style="margin-bottom:10px">فقط بدهکاران نمایش داده می‌شوند.</p>
+        <div class="btn-row" style="margin-bottom:10px"><button class="btn xs ghost" onclick="smsSelectAll('debt')">همه</button><button class="btn xs ghost" onclick="smsSelectNone('debt')">هیچ‌کدام</button></div>
+        <div class="recipient-list" id="smsDebtList"></div>
+      </div>
+      <div class="card">
+        <h3 class="card-title">متن پیام</h3>
+        <textarea id="smsDebtText" rows="6" placeholder="متن پیام…"></textarea>
+        <p class="hint" style="margin-top:8px">متغیرها: <code>{name}</code>، <code>{amount}</code>، <code>{academy}</code></p>
+        <div class="sms-preview" id="smsDebtPreview" style="margin-top:12px"></div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn success" onclick="sendSms('debt')">📤 ارسال پیامک</button>
+          <button class="btn ghost" onclick="openSmsFallback('debt')">📱 باز کردن در اپ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sms-panel" id="sms-birthday">
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="card-title">تولدهای امروز</h3>
+        <div class="recipient-list" id="smsBdayList"></div>
+      </div>
+      <div class="card">
+        <h3 class="card-title">متن تبریک</h3>
+        <textarea id="smsBdayText" rows="6">🎂 {name} عزیز، تولدت مبارک! — {academy}</textarea>
+        <div class="sms-preview" id="smsBdayPreview" style="margin-top:12px"></div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn success" onclick="sendSms('birthday')">📤 ارسال</button>
+          <button class="btn ghost" onclick="openSmsFallback('birthday')">📱 باز کردن در اپ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sms-panel" id="sms-custom">
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="card-title">گیرندگان</h3>
+        <div class="btn-row" style="margin-bottom:10px"><button class="btn xs ghost" onclick="smsSelectAll('custom')">همه</button><button class="btn xs ghost" onclick="smsSelectNone('custom')">هیچ‌کدام</button></div>
+        <div class="recipient-list" id="smsCustomList"></div>
+      </div>
+      <div class="card">
+        <h3 class="card-title">متن پیام</h3>
+        <textarea id="smsCustomText" rows="8" placeholder="متن…"></textarea>
+        <div class="sms-preview" id="smsCustomPreview" style="margin-top:12px"></div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn success" onclick="sendSms('custom')">📤 ارسال</button>
+          <button class="btn ghost" onclick="openSmsFallback('custom')">📱 باز کردن در اپ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sms-panel" id="sms-config">
+    <div class="card">
+      <h3 class="card-title">تنظیمات</h3>
+      <p class="hint" style="margin-bottom:16px">برای ارسال خودکار، API Key سرویس پیامک را وارد کن. اگر نداری، از دکمهٔ «باز کردن در اپ» استفاده کن (رایگان).</p>
+      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+        <div class="field"><label>سرویس</label><select id="smsProvider"><option value="none">غیرفعال</option><option value="kavenegar">کاوه‌نگار</option><option value="smsir">SMS.ir</option><option value="faraz">فراز</option></select></div>
+        <div class="field"><label>API Key</label><input id="smsApiKey" type="password"></div>
+        <div class="field"><label>شماره فرستنده</label><input id="smsSender"></div>
+        <div class="field"><label>نام آموزشگاه</label><input id="smsAcademy" value="آموزشگاه زبان علی ناقلی"></div>
+      </div>
+      <div class="btn-row" style="margin-top:16px"><button class="btn" onclick="saveSmsConfig()">ذخیره</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BIRTHDAYS ========== -->
+<section class="tab" id="tab-birthdays">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>تولدها</div><div class="page-sub">امروز و ماه</div></div></div>
+  <div id="bdayContent"></div>
+</section>
+
+<!-- ========== CALENDAR ========== -->
+<section class="tab" id="tab-calendar">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>تقویم</div><div class="page-sub">نمای ماهانه</div></div></div>
+  <div class="card">
+    <div class="calendar-head">
+      <h3 id="calTitle">—</h3>
+      <div class="cal-nav">
+        <button id="calPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button id="calToday" style="width:auto;padding:0 12px;font-size:12px">امروز</button>
+        <button id="calNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      </div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="legend" style="margin-top:16px"><span style="--c:var(--emerald)">درآمد</span><span style="--c:var(--coral)">هزینه</span><span style="--c:var(--primary)">جلسه</span><span style="--c:var(--rose)">تولد</span></div>
+  </div>
+  <div class="card" id="calDayDetail" style="display:none"><h3 class="card-title" id="calDayTitle">—</h3><div class="table-wrap" id="calDayTable"></div></div>
+</section>
+
+<!-- ========== ACHIEVEMENTS ========== -->
+<section class="tab" id="tab-achievements">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div>دستاوردها</div><div class="page-sub">هر کاری کردی، نشون بگیر</div></div></div>
+  <div class="achievements-grid" id="achGrid"></div>
+</section>
+
+<!-- ========== REPORT ========== -->
+<section class="tab" id="tab-report">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>گزارش</div><div class="page-sub">بازهٔ تاریخ</div></div></div>
+  <div class="card">
+    <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+      <div class="field"><label>از</label><div class="date-row" id="repFrom"></div></div>
+      <div class="field"><label>تا</label><div class="date-row" id="repTo"></div></div>
+      <div class="field"><label>میان‌بر</label><div class="btn-row tight"><button class="btn ghost sm" data-range="month">ماه</button><button class="btn ghost sm" data-range="lastMonth">ماه قبل</button><button class="btn ghost sm" data-range="30">۳۰ روز</button><button class="btn ghost sm" data-range="7">۷ روز</button><button class="btn ghost sm" data-range="year">سال</button></div></div>
+    </div>
+    <div class="btn-row" style="margin-top:16px"><button class="btn" id="repRun">نمایش</button><button class="btn ghost" id="repPrint">چاپ</button><span class="hint" style="align-self:center" id="repSummaryTxt"></span></div>
+  </div>
+  <div class="report-grid" id="repCards"></div>
+  <div class="card"><h3 class="card-title">تفکیک زبان‌آموز</h3><div class="table-wrap" id="repStudents"></div></div>
+  <div class="card"><h3 class="card-title">جزئیات تراکنش‌ها</h3><div class="table-wrap" id="repTx"></div></div>
+</section>
+
+<!-- ========== SETTINGS ========== -->
+<section class="tab" id="tab-settings">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>تنظیمات</div><div class="page-sub">ظاهر، پشتیبان، ابزارها</div></div></div>
+
+  <div class="card">
+    <h3 class="card-title">🎨 ظاهر</h3>
+    <div class="settings-grid">
+      <div class="setting-item">
+        <div class="si-info"><b>پالت رنگی</b><small>رنگ اصلی</small></div>
+        <div class="palette-picker" id="palettePicker">
+          <div class="palette-dot on" data-pal="gold" style="background:linear-gradient(135deg,#e0b04a,#f2c76a)"></div>
+          <div class="palette-dot" data-pal="blue" style="background:linear-gradient(135deg,#4a90e2,#6ba7f0)"></div>
+          <div class="palette-dot" data-pal="emerald" style="background:linear-gradient(135deg,#4ec5a0,#6eddb5)"></div>
+          <div class="palette-dot" data-pal="violet" style="background:linear-gradient(135deg,#9d7cf0,#b69bff)"></div>
+          <div class="palette-dot" data-pal="rose" style="background:linear-gradient(135deg,#e07a8f,#f099ab)"></div>
+          <div class="palette-dot" data-pal="sunset" style="background:linear-gradient(135deg,#e89b6c,#f2b088)"></div>
+        </div>
+      </div>
+      <div class="setting-item">
+        <div class="si-info"><b>حالت فشرده</b><small>کوچک‌تر</small></div>
+        <button class="btn sm ghost" id="compactToggle">فعال</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cleanup-box">
+    <h2>🧹 پاک‌سازی مالی</h2>
+    <p>همه تراکنش‌ها پاک می‌شوند ولی زبان‌آموزان دست‌نخورده می‌مانند.</p>
+    <div class="btn-row"><button class="btn danger" id="btnWipeTx">پاک کردن همه (محلی + ابری)</button><button class="btn ghost" id="btnWipeTxLocal">فقط محلی</button></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card"><h3 class="card-title">📥 خروجی</h3><div class="btn-row"><button class="btn ghost" id="btnCsvTx">CSV تراکنش‌ها</button><button class="btn ghost" id="btnCsvSt">CSV زبان‌آموزان</button><button class="btn ghost" id="btnCsvSe">CSV جلسات</button><button class="btn" id="btnPrint">چاپ گزارش</button></div></div>
+    <div class="card"><h3 class="card-title">💾 پشتیبان</h3><div class="btn-row"><button class="btn" id="btnBackup">دانلود پشتیبان</button><button class="btn ghost" id="btnRestore">بازیابی</button><input type="file" id="fileRestore" accept=".json" style="display:none"><button class="btn ghost" id="btnSnapshots">نسخه‌های قبلی</button></div></div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">📦 پکیج جلسات</h3>
+    <div class="form-grid">
+      <div class="field"><label>زبان‌آموز</label><select id="pkgStudent"></select></div>
+      <div class="field"><label>تعداد</label><input id="pkgSize" type="number" min="1" placeholder="۱۰"></div>
+      <div class="field"><label>مبلغ کل</label><input id="pkgAmount" class="money" placeholder="تومان"></div>
+      <div class="btn-row"><button class="btn success" id="btnAddPkg">افزودن</button></div>
+    </div>
+    <div class="table-wrap" id="pkgTable" style="margin-top:16px"></div>
+  </div>
+
+  <div class="danger-box">
+    <h2>⚠️ حذف کامل همه‌چیز</h2>
+    <p>زبان‌آموزان هم پاک می‌شوند.</p>
+    <div class="btn-row"><button class="btn danger" id="btnReset">حذف محلی</button><button class="btn danger" id="btnResetCloud">حذف ابری</button></div>
+  </div>
+</section>
+
+</main>
+
+<div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+'use strict';
+
 /* =====================================================================
-   CONFIG
+   CONFIG & UTILS
    ===================================================================== */
 const CONFIG = {
   SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',
   SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
-  LOCAL_KEY:    'ali_english_academy_v7',
-  QUEUE_KEY:    'ali_english_academy_v7_queue',
-  SNAPSHOT_KEY: 'ali_english_academy_v7_snapshots',
-  SETTINGS_KEY: 'ali_english_academy_v7_settings',
-  ACH_KEY:      'ali_english_academy_v7_achievements',
-  OLD_KEYS:     ['ali_naghli_finance_v6','ali_naghli_finance_v5']
+  LOCAL_KEY:    'ali_academy_v8',
+  QUEUE_KEY:    'ali_academy_v8_queue',
+  SNAPSHOT_KEY: 'ali_academy_v8_snapshots',
+  SETTINGS_KEY: 'ali_academy_v8_settings',
+  ACH_KEY:      'ali_academy_v8_achievements',
+  OLD_KEYS:     ['ali_english_academy_v7', 'ali_naghli_finance_v6', 'ali_naghli_finance_v5']
 };
 
+// امن: helper با محافظ
 const $ = id => document.getElementById(id);
+function on(id, event, handler){
+  const el = typeof id === 'string' ? $(id) : id;
+  if(!el) return null;
+  el.addEventListener(event, handler);
+  return el;
+}
+function click(id, handler){ return on(id, 'click', handler); }
+
 const MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const WEEKDAYS = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
 const FA = '۰۱۲۳۴۵۶۷۸۹';
@@ -30,7 +909,7 @@ const CAT_COLORS = { rent:'#e07a8f', books:'#4ec5a0', salary:'#9d7cf0', internet
 
 let _toastH;
 function toast(msg, type, action){
-  const t = $('toast');
+  const t = $('toast'); if(!t) return;
   const icons = {
     err: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
     success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>',
@@ -44,12 +923,11 @@ function toast(msg, type, action){
 }
 
 const COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-function copyBtn(text){ return `<button class="copy-btn" title="کپی" onclick="event.stopPropagation();navigator.clipboard.writeText('${String(text).replace(/'/g,"\\'")}').then(()=>toast('کپی شد','success'))">${COPY_ICON}</button>`; }
+function copyBtn(text){ return `<button class="copy-btn" title="کپی" onclick="event.stopPropagation();copyText('${String(text).replace(/'/g,"\\'")}')">${COPY_ICON}</button>`; }
 
-/* Confetti */
 function launchConfetti(){
   const colors = ['#e0b04a','#f2c76a','#4ec5a0','#9d7cf0','#e07a8f','#5ac8e0'];
-  for(let i = 0; i < 50; i++){
+  for(let i = 0; i < 40; i++){
     const c = document.createElement('div');
     c.className = 'confetti';
     c.style.left = Math.random() * 100 + 'vw';
@@ -94,8 +972,9 @@ function buildDate(boxId, date, allowEmpty){
 }
 function setDate(boxId, arr){
   const box = $(boxId); if(!box) return;
-  if(!arr){ ['y','m','d'].forEach(r=>{ box.querySelector(`[data-r=${r}]`).value = ''; }); return; }
+  if(!arr){ ['y','m','d'].forEach(r=>{ const el = box.querySelector(`[data-r=${r}]`); if(el) el.value = ''; }); return; }
   const [sy,sm,sd] = ['y','m','d'].map(r=>box.querySelector(`[data-r=${r}]`));
+  if(!sy || !sm || !sd) return;
   sy.value = arr[0]; sm.value = arr[1];
   const n = jMonthDays(arr[0], arr[1]); let h = '';
   for(let i=1;i<=n;i++) h += `<option value="${i}">${faDigits(i)}</option>`;
@@ -103,7 +982,7 @@ function setDate(boxId, arr){
 }
 function getDate(boxId){
   const box = $(boxId); if(!box) return null;
-  const v = ['y','m','d'].map(r => box.querySelector(`[data-r=${r}]`).value);
+  const v = ['y','m','d'].map(r => { const el = box.querySelector(`[data-r=${r}]`); return el ? el.value : null; });
   if(v.some(x => !x)) return null;
   return dateStr(v.map(Number));
 }
@@ -166,13 +1045,13 @@ function saveLocal(){
       localStorage.setItem(CONFIG.SNAPSHOT_KEY, JSON.stringify(snaps));
     }
     localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db));
-  }catch(e){ toast('ذخیره‌سازی محلی انجام نشد', 'err'); }
+  }catch(e){ toast('ذخیره نشد', 'err'); }
 }
 function saveQueue(){ try{ localStorage.setItem(CONFIG.QUEUE_KEY, JSON.stringify(syncQueue)); }catch(e){} }
 function saveSettings(){ try{ localStorage.setItem(CONFIG.SETTINGS_KEY, JSON.stringify(settings)); }catch(e){} }
 function saveAch(){ try{ localStorage.setItem(CONFIG.ACH_KEY, JSON.stringify(achievements)); }catch(e){} }
 function enqueue(op){ syncQueue.push(op); saveQueue(); }
-function setSync(state, label){ $('syncChip').className = 'sync-chip ' + state; $('syncText').textContent = label; }
+function setSync(state, label){ const c = $('syncChip'), t = $('syncText'); if(c) c.className = 'sync-chip ' + state; if(t) t.textContent = label; }
 
 function rowToStudent(s){ return { id: s.id, name: s.name, course: s.course || '', fee: s.fee || 0, phone: s.phone || '', note: s.note || '', birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0 }; }
 function rowToTx(t){ return { id: t.id, type: t.type, sid: t.sid, amount: t.amount, date: t.date, method: t.method || '', desc: t.descr || '', session_date: t.session_date || null, is_session: !!t.is_session, category: t.category || null, tag: t.tag || null, absent: !!t.absent, ts: t.created_at ? new Date(t.created_at).getTime() : Date.now() }; }
@@ -269,7 +1148,7 @@ const statusTag = bal => bal>0 ? '<span class="tag debt">بدهکار</span>' : 
 const TYPE_NAME = { charge:'بدهی', payment:'دریافتی', expense:'هزینه' };
 const typeTag = (t, isSession, absent) => { if(isSession) return absent ? '<span class="tag absent">غایب</span>' : '<span class="tag session">جلسه</span>'; return ({charge:'<span class="tag debt">بدهی</span>',payment:'<span class="tag credit">دریافتی</span>',expense:'<span class="tag exp">هزینه</span>'})[t]; };
 const stName = id => (db.students.find(s=>s.id===id)||{}).name || '—';
-const moneyVal = id => Number(toEn($(id).value)) || 0;
+const moneyVal = id => { const el = $(id); return el ? (Number(toEn(el.value)) || 0) : 0; };
 
 document.addEventListener('input', e => { if(e.target.classList.contains('money')){ const v = toEn(e.target.value).replace(/[^\d]/g,''); e.target.value = v ? Number(v).toLocaleString('en-US') : ''; } });
 
@@ -286,7 +1165,6 @@ const ICON = {
 };
 function emptyState(msg){ return `<div class="empty">${ICON.empty}<div>${msg}</div></div>`; }
 
-/* Animated count-up */
 function animateValue(el, from, to, duration = 800){
   if(!el) return;
   const start = performance.now();
@@ -300,28 +1178,11 @@ function animateValue(el, from, to, duration = 800){
   requestAnimationFrame(step);
 }
 
-/* Birthday helpers */
-function isBirthdayToday(s){
-  if(!s.birthday) return false;
-  const [, m, d] = s.birthday.split('/').map(Number);
-  const t = todayJ();
-  return m === t[1] && d === t[2];
-}
-function birthdayThisMonth(s){
-  if(!s.birthday) return false;
-  const [, m] = s.birthday.split('/').map(Number);
-  return m === todayJ()[1];
-}
-function birthdayInDays(s){
-  if(!s.birthday) return null;
-  const [, bm, bd] = s.birthday.split('/').map(Number);
-  const t = todayJ();
-  let target = [t[0], bm, bd];
-  if(daysBetween(t, target) < 0) target = [t[0]+1, bm, bd];
-  return daysBetween(t, target);
-}
-  /* =====================================================================
-   TABS
+function isBirthdayToday(s){ if(!s.birthday) return false; const [, m, d] = s.birthday.split('/').map(Number); const t = todayJ(); return m === t[1] && d === t[2]; }
+function birthdayThisMonth(s){ if(!s.birthday) return false; const [, m] = s.birthday.split('/').map(Number); return m === todayJ()[1]; }
+function birthdayInDays(s){ if(!s.birthday) return null; const [, bm, bd] = s.birthday.split('/').map(Number); const t = todayJ(); let target = [t[0], bm, bd]; if(daysBetween(t, target) < 0) target = [t[0]+1, bm, bd]; return daysBetween(t, target); }
+/* =====================================================================
+   TAB SWITCHING
    ===================================================================== */
 function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
@@ -329,36 +1190,37 @@ function switchTab(t){
   renderAll();
   if(t !== 'calendar') window.scrollTo({top:0, behavior:'smooth'});
 }
-document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
 
 /* Global search */
-const globalSearch = $('globalSearch');
-globalSearch.addEventListener('input', debounce(e => {
+on('globalSearch', 'input', debounce(e => {
   const q = e.target.value.trim();
   if(q.length < 2) return;
   const st = db.students.find(s => s.name.includes(q));
-  if(st){ switchTab('students'); $('stSearch').value = q; renderStudents(); return; }
-  switchTab('tx'); $('fSearch').value = q; renderTx();
+  if(st){ switchTab('students'); const el = $('stSearch'); if(el) el.value = q; renderStudents(); return; }
+  switchTab('tx'); const f = $('fSearch'); if(f) f.value = q; renderTx();
 }, 300));
 document.addEventListener('keydown', e => {
-  if((e.metaKey || e.ctrlKey) && e.key === 'k'){ e.preventDefault(); globalSearch.focus(); }
+  if((e.metaKey || e.ctrlKey) && e.key === 'k'){ e.preventDefault(); const el = $('globalSearch'); if(el) el.focus(); }
 });
 
 /* =====================================================================
-   DASHBOARD
+   DASHBOARD RENDER
    ===================================================================== */
 function renderDash(){
-  // Greeting
   const hour = new Date().getHours();
   const greet = hour < 12 ? 'صبح بخیر ☀️' : hour < 17 ? 'ظهر بخیر 🌤' : 'عصر بخیر 🌙';
   const b = balances();
   let debt = 0, nd = 0;
   db.students.forEach(s => { if(b[s.id].bal > 0){ debt += b[s.id].bal; nd++; } });
-  $('dashGreeting').textContent = `${greet} — ${faDigits(nd)} زبان‌آموز بدهکار، مجموع ${fa(debt)} تومان`;
+  const gr = $('dashGreeting');
+  if(gr) gr.textContent = `${greet} — ${faDigits(nd)} زبان‌آموز بدهکار، مجموع ${fa(debt)} تومان`;
 
   // Stats
   let credit = 0, nc = 0, nz = 0;
-  db.students.forEach(s => { const v = b[s.id].bal; if(v > 0){ nd++; } else if(v < 0){ credit += -v; nc++; } else nz++; });
+  db.students.forEach(s => { const v = b[s.id].bal; if(v > 0){} else if(v < 0){ credit += -v; nc++; } else nz++; });
   const income = db.tx.filter(t => t.type==='payment').reduce((a,t)=>a+t.amount,0);
   const exp = db.tx.filter(t => t.type==='expense').reduce((a,t)=>a+t.amount,0);
   const sessionsCount = db.tx.filter(t => t.is_session).length;
@@ -379,7 +1241,8 @@ function renderDash(){
     { label:'سود خالص', value:income-exp, unit:'تومان', icon:ICON.net, color:'' },
     { label:'درآمد این ماه', value:thisMonthIncome, unit:'تومان', icon:ICON.income, color:'green', delta: monthDelta }
   ];
-  $('stats').innerHTML = stats.map(s => `
+  const statsEl = $('stats');
+  if(statsEl) statsEl.innerHTML = stats.map(s => `
     <div class="stat">
       <div class="stat-icon ${s.color}">${s.icon}</div>
       <div class="stat-label">${s.label}</div>
@@ -387,7 +1250,6 @@ function renderDash(){
       ${s.delta !== undefined && s.delta !== 0 ? `<div class="stat-delta ${s.delta>0?'up':'down'}">${s.delta>0?'▲':'▼'} ${faDigits(Math.abs(s.delta))}٪</div>` : ''}
     </div>
   `).join('');
-  // animate count-up
   document.querySelectorAll('.count-up').forEach(el => {
     const target = Number(el.dataset.target) || 0;
     if(target > 0) animateValue(el, 0, target, 800);
@@ -398,7 +1260,6 @@ function renderDash(){
   renderDonut(nd, nc, nz);
   renderBars(b);
   renderMonthlyChart();
-  renderComparison();
   renderDaily();
   renderExpenseChart();
   renderAdvancedStats();
@@ -406,25 +1267,16 @@ function renderDash(){
 }
 
 function renderBirthdayCard(){
+  const el = $('bdayTodayCard'); if(!el) return;
   const today = db.students.filter(isBirthdayToday);
-  if(!today.length){ $('bdayTodayCard').innerHTML = ''; return; }
-  $('bdayTodayCard').innerHTML = `
+  if(!today.length){ el.innerHTML = ''; return; }
+  el.innerHTML = `
     <div class="bday-card">
       <h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3>
       <p>با یه پیام قشنگ، روزشون رو خاص کن</p>
       ${today.map(s => `<div class="bday-item"><b>${esc(s.name)}</b><span>${esc(s.course||'')}</span><button onclick="sendBirthdayTo('${s.id}')">پیام تبریک</button></div>`).join('')}
-    </div>
-  `;
+    </div>`;
 }
-window.sendBirthdayTo = (id) => {
-  const s = db.students.find(x=>x.id===id); if(!s) return;
-  const text = `🎂 ${s.name} عزیز، تولدت مبارک! — ${settings.smsAcademy}`;
-  if(s.phone){
-    openSmsFor(s.phone, text);
-  } else {
-    navigator.clipboard.writeText(text).then(() => toast('متن کپی شد (شماره ثبت نشده)', 'info'));
-  }
-};
 
 function renderOverdue(){
   const b = balances();
@@ -443,11 +1295,12 @@ function renderOverdue(){
     if(daysSince >= 30) overdue.push({ student:s, bal, days:daysSince });
   });
   overdue.sort((a,b)=>b.bal - a.bal);
-  const card = $('overdueCard');
+  const card = $('overdueCard'), countEl = $('overdueCount'), listEl = $('overdueList');
+  if(!card || !listEl) return;
   if(!overdue.length){ card.style.display = 'none'; return; }
   card.style.display = '';
-  $('overdueCount').textContent = `(${faDigits(overdue.length)} نفر)`;
-  $('overdueList').innerHTML = overdue.map(o => {
+  if(countEl) countEl.textContent = `(${faDigits(overdue.length)} نفر)`;
+  listEl.innerHTML = overdue.map(o => {
     const msg = `سلام ${o.student.name} عزیز، مبلغ ${fa(o.bal)} تومان بدهی کلاس زبان دارید. لطفاً تسویه کنید. — ${settings.smsAcademy}`;
     return `<div class="overdue-item">
       <div class="oi-info">
@@ -463,28 +1316,29 @@ function renderOverdue(){
     </div>`;
   }).join('');
 }
-window.copyText = (text) => { navigator.clipboard.writeText(text).then(()=>toast('کپی شد', 'success')); };
-window.openSmsFor = (phone, text) => { window.location.href = `sms:${phone}?&body=${encodeURIComponent(text)}`; };
 
 function renderDonut(nd, nc, nz){
+  const el = $('donut'); if(!el) return;
   const tot = nd+nc+nz, R = 42, C = 2*Math.PI*R;
   const parts = [[nd,'var(--rose)','بدهکار'],[nc,'var(--emerald)','بستانکار'],[nz,'var(--ink-3)','تسویه']];
   let off = 0, circ = '';
   if(tot){ parts.forEach(p => { if(!p[0]) return; const len = p[0]/tot*C; circ += `<circle r="${R}" cx="60" cy="60" fill="none" stroke="${p[1]}" stroke-width="16" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)" stroke-linecap="round"/>`; off += len; }); }
   else circ = `<circle r="${R}" cx="60" cy="60" fill="none" stroke="var(--border)" stroke-width="16"/>`;
-  $('donut').innerHTML = `<svg viewBox="0 0 120 120" width="170" height="170">${circ}<text x="60" y="56" text-anchor="middle" font-size="20" font-weight="800" style="fill:var(--ink)">${fa(tot)}</text><text x="60" y="74" text-anchor="middle" font-size="10" style="fill:var(--ink-2)">زبان‌آموز</text></svg><div class="donut-legend">${parts.map(p=>`<div class="item"><span class="dot" style="background:${p[1]}"></span>${p[2]}<b>${fa(p[0])}</b></div>`).join('')}</div>`;
+  el.innerHTML = `<svg viewBox="0 0 120 120" width="170" height="170">${circ}<text x="60" y="56" text-anchor="middle" font-size="20" font-weight="800" style="fill:var(--ink)">${fa(tot)}</text><text x="60" y="74" text-anchor="middle" font-size="10" style="fill:var(--ink-2)">زبان‌آموز</text></svg><div class="donut-legend">${parts.map(p=>`<div class="item"><span class="dot" style="background:${p[1]}"></span>${p[2]}<b>${fa(p[0])}</b></div>`).join('')}</div>`;
 }
 
 function renderBars(b){
+  const el = $('bars'); if(!el) return;
   const list = db.students.map(s=>({n:s.name, v:b[s.id].bal})).filter(x=>x.v!==0).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,10);
   const mx = Math.max(1, ...list.map(x=>Math.abs(x.v)));
-  $('bars').innerHTML = list.length ? list.map(x=>`<div class="bar-row"><span class="bar-name" title="${esc(x.n)}">${esc(x.n)}</span><div class="bar-track"><div class="bar-fill ${x.v>0?'debt':'credit'}" style="width:${Math.abs(x.v)/mx*100}%"></div></div><span class="bar-val ${x.v>0?'neg':'pos'}">${fa(Math.abs(x.v))}</span></div>`).join('') : emptyState('همه تسویه');
+  el.innerHTML = list.length ? list.map(x=>`<div class="bar-row"><span class="bar-name" title="${esc(x.n)}">${esc(x.n)}</span><div class="bar-track"><div class="bar-fill ${x.v>0?'debt':'credit'}" style="width:${Math.abs(x.v)/mx*100}%"></div></div><span class="bar-val ${x.v>0?'neg':'pos'}">${fa(Math.abs(x.v))}</span></div>`).join('') : emptyState('همه تسویه');
 }
 
 function renderMonthlyChart(){
+  const sel = $('chartYear'); if(!sel) return;
   const years = new Set([todayJ()[0]]);
   db.tx.forEach(t => years.add(+t.date.slice(0,4)));
-  const sel = $('chartYear'), cur = sel.value || todayJ()[0];
+  const cur = sel.value || todayJ()[0];
   sel.innerHTML = [...years].sort((a,b)=>b-a).map(y=>`<option value="${y}">${faDigits(y)}</option>`).join('');
   sel.value = years.has(+cur) ? cur : todayJ()[0];
   const Y = sel.value, inc = Array(12).fill(0), ex = Array(12).fill(0);
@@ -502,32 +1356,18 @@ function renderMonthlyChart(){
     if(inc[m]) svg += `<text x="${cx-bw/2-1}" y="${pt+ch-h1-3}" text-anchor="middle" font-size="8" style="fill:var(--ink)">${fa(inc[m]/1000)}</text>`;
   }
   svg += '</svg>';
-  $('monthly').innerHTML = svg;
+  const monthlyEl = $('monthly');
+  if(monthlyEl) monthlyEl.innerHTML = svg;
   const ti = inc.reduce((a,b)=>a+b,0), te = ex.reduce((a,b)=>a+b,0);
-  $('yearSum').textContent = `سال ${faDigits(Y)}: درآمد ${fa(ti)} | هزینه ${fa(te)} | سود ${fa(ti-te)} تومان`;
-}
-
-function renderComparison(){
-  const t = todayJ();
-  const data = [];
-  for(let i = 5; i >= 0; i--){
-    let y = t[0], m = t[1] - i;
-    while(m < 1){ m += 12; y--; }
-    const prefix = `${y}/${pad(m)}`;
-    const income = db.tx.filter(x => x.type==='payment' && x.date.startsWith(prefix)).reduce((a,x)=>a+x.amount,0);
-    data.push({ y, m, income });
-  }
-  const max = Math.max(1, ...data.map(d => d.income));
-  const last = data[data.length-1], prev = data[data.length-2];
-  const delta = prev && prev.income > 0 ? Math.round((last.income - prev.income) / prev.income * 100) : 0;
-  $('comparison').innerHTML = `<div class="hint" style="margin-bottom:12px">${delta === 0 ? 'درآمد این ماه برابر ماه قبل' : delta > 0 ? `📈 درآمد این ماه <b style="color:var(--emerald)">${faDigits(delta)}٪</b> بیشتر` : `📉 درآمد این ماه <b style="color:var(--rose)">${faDigits(Math.abs(delta))}٪</b> کمتر`}</div>
-    <div class="bars-list">${data.map(d => `<div class="bar-row"><span class="bar-name">${MONTHS[d.m-1]} ${faDigits(d.y)}</span><div class="bar-track" style="height:20px"><div class="bar-fill credit" style="width:${Math.max(3, d.income/max*100)}%;display:flex;align-items:center;justify-content:flex-end;padding-inline-end:6px;color:#fff;font-size:10px;font-weight:700">${d.income ? fa(d.income) : ''}</div></div><span class="bar-val">${fa(d.income)}</span></div>`).join('')}</div>`;
+  const ys = $('yearSum');
+  if(ys) ys.textContent = `سال ${faDigits(Y)}: درآمد ${fa(ti)} | هزینه ${fa(te)} | سود ${fa(ti-te)} تومان`;
 }
 
 function renderDaily(){
+  const yearSel = $('dailyYear'), monthSel = $('dailyMonth');
+  if(!yearSel || !monthSel) return;
   const years = new Set([todayJ()[0]]);
   db.tx.forEach(t => { if(t.date) years.add(+t.date.slice(0,4)); });
-  const yearSel = $('dailyYear'), monthSel = $('dailyMonth');
   const curYear = yearSel.value || todayJ()[0];
   yearSel.innerHTML = [...years].sort((a,b)=>b-a).map(y => `<option value="${y}">${faDigits(y)}</option>`).join('');
   yearSel.value = years.has(+curYear) ? curYear : todayJ()[0];
@@ -545,7 +1385,8 @@ function renderDaily(){
   const avgPerActive = activeDays ? Math.round(totalIncome / activeDays) : 0;
   const bestDay = days.reduce((best, d) => d.income > best.income ? d : best, days[0]);
   const bestDayLabel = bestDay && bestDay.income > 0 ? `${faDigits(bestDay.d)} ${MONTHS[M-1]}` : '—';
-  $('dailySummary').innerHTML = `
+  const sumEl = $('dailySummary');
+  if(sumEl) sumEl.innerHTML = `
     <div class="dsum gold"><small>کل درآمد ماه</small><b>${fa(totalIncome)}<small>تومان</small></b></div>
     <div class="dsum"><small>هزینه</small><b>${fa(totalExpense)}<small>تومان</small></b></div>
     <div class="dsum"><small>خالص</small><b class="${netIncome >= 0 ? 'pos' : 'neg'}">${fa(netIncome)}<small>تومان</small></b></div>
@@ -566,33 +1407,37 @@ function renderDaily(){
     if(daysInMonth <= 15 || d.d === 1 || d.d % 5 === 0 || d.d === daysInMonth) svg += `<text x="${cx}" y="${H-12}" text-anchor="middle" font-size="9" style="fill:var(--ink-2)">${faDigits(d.d)}</text>`;
   }
   svg += '</svg>';
-  $('dailyChart').innerHTML = svg;
+  const chartEl = $('dailyChart');
+  if(chartEl) chartEl.innerHTML = svg;
   const rows = days.map(d => {
     const isHighlight = bestDay && d.d === bestDay.d && d.income > 0;
     const isZero = d.income === 0 && d.expense === 0 && d.count === 0;
     const net = d.income - d.expense;
     return `<tr class="${isZero ? 'zero' : ''} ${isHighlight ? 'highlight' : ''}"><td class="day">${faDigits(d.d)} ${MONTHS[M-1]}</td><td class="n ${d.income > 0 ? 'pos' : ''}">${d.income ? fa(d.income) : '—'}</td><td class="n ${d.expense > 0 ? 'neg' : ''}">${d.expense ? fa(d.expense) : '—'}</td><td class="n ${net > 0 ? 'pos' : net < 0 ? 'neg' : ''}">${net !== 0 ? fa(Math.abs(net)) + (net > 0 ? ' +' : ' −') : '—'}</td><td class="n">${d.txCount ? faDigits(d.txCount) : '—'}</td><td>${d.count ? `<span class="tag debt">${fa(d.count)}</span>` : '—'}</td></tr>`;
   }).join('');
-  $('dailyTable').innerHTML = `<table><thead><tr><th>روز</th><th>درآمد</th><th>هزینه</th><th>خالص</th><th>تراکنش</th><th>بدهی</th></tr></thead><tbody>${rows}</tbody></table>`;
+  const dailyTableEl = $('dailyTable');
+  if(dailyTableEl) dailyTableEl.innerHTML = `<table><thead><tr><th>روز</th><th>درآمد</th><th>هزینه</th><th>خالص</th><th>تراکنش</th><th>بدهی</th></tr></thead><tbody>${rows}</tbody></table>`;
   if(!yearSel._bound){ yearSel._bound = true; yearSel.addEventListener('change', renderDaily); monthSel.addEventListener('change', renderDaily); }
 }
 
 function renderExpenseChart(){
+  const el = $('expenseChart'); if(!el) return;
   const t = todayJ();
   const prefix = `${t[0]}/${pad(t[1])}`;
   const expenses = db.tx.filter(x => x.type==='expense' && x.date.startsWith(prefix));
   const byCat = {};
   expenses.forEach(e => { const c = e.category || 'other'; byCat[c] = (byCat[c] || 0) + e.amount; });
   const entries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
-  if(!entries.length){ $('expenseChart').innerHTML = emptyState('این ماه هزینه‌ای نیست'); return; }
+  if(!entries.length){ el.innerHTML = emptyState('این ماه هزینه‌ای نیست'); return; }
   const total = entries.reduce((a,[k,v])=>a+v, 0);
   const R = 42, C = 2 * Math.PI * R;
   let off = 0, circ = '';
   entries.forEach(([cat, val]) => { const len = val / total * C; circ += `<circle r="${R}" cx="60" cy="60" fill="none" stroke="${CAT_COLORS[cat]}" stroke-width="16" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)" stroke-linecap="round"/>`; off += len; });
-  $('expenseChart').innerHTML = `<div class="donut-wrap"><svg viewBox="0 0 120 120" width="160" height="160">${circ}<text x="60" y="56" text-anchor="middle" font-size="14" font-weight="800" style="fill:var(--ink)">${fa(total)}</text><text x="60" y="72" text-anchor="middle" font-size="9" style="fill:var(--ink-2)">تومان</text></svg><div class="donut-legend">${entries.map(([cat,val]) => `<div class="item"><span class="dot" style="background:${CAT_COLORS[cat]}"></span>${EXPENSE_CATS[cat]}<b>${faDigits(Math.round(val/total*100))}٪</b></div>`).join('')}</div></div>`;
+  el.innerHTML = `<div class="donut-wrap"><svg viewBox="0 0 120 120" width="160" height="160">${circ}<text x="60" y="56" text-anchor="middle" font-size="14" font-weight="800" style="fill:var(--ink)">${fa(total)}</text><text x="60" y="72" text-anchor="middle" font-size="9" style="fill:var(--ink-2)">تومان</text></svg><div class="donut-legend">${entries.map(([cat,val]) => `<div class="item"><span class="dot" style="background:${CAT_COLORS[cat]}"></span>${EXPENSE_CATS[cat]}<b>${faDigits(Math.round(val/total*100))}٪</b></div>`).join('')}</div></div>`;
 }
 
 function renderAdvancedStats(){
+  const el = $('advancedStats'); if(!el) return;
   const t = todayJ();
   const b = balances();
   const paidCount = db.students.filter(s => b[s.id] && b[s.id].bal <= 0).length;
@@ -609,7 +1454,7 @@ function renderAdvancedStats(){
   const totalSessions = db.tx.filter(x=>x.is_session).length;
   const absentCount = db.tx.filter(x=>x.is_session && x.absent).length;
   const attendance = totalSessions ? Math.round((totalSessions - absentCount) / totalSessions * 100) : 0;
-  $('advancedStats').innerHTML = `<div class="daily-summary" style="margin-bottom:0">
+  el.innerHTML = `<div class="daily-summary" style="margin-bottom:0">
     <div class="dsum"><small>نرخ تسویه</small><b>${faDigits(payRate)}٪</b><div class="hint" style="font-size:10.5px;margin-top:2px">${faDigits(paidCount)} از ${faDigits(db.students.length)}</div></div>
     <div class="dsum"><small>میانگین درآمد هر نفر</small><b>${fa(avgPerStudent)}<small>تومان</small></b></div>
     <div class="dsum"><small>پیش‌بینی ماه بعد</small><b>${fa(prediction)}<small>تومان</small></b></div>
@@ -618,8 +1463,9 @@ function renderAdvancedStats(){
 }
 
 function renderRecent(){
+  const el = $('recent'); if(!el) return;
   const rec = [...db.tx].sort((a,b)=>b.date.localeCompare(a.date) || b.ts-a.ts).slice(0,6);
-  $('recent').innerHTML = rec.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n">${fa(t.amount)} ${copyBtn(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>` : emptyState('هنوز تراکنشی نیست');
+  el.innerHTML = rec.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n">${fa(t.amount)} ${copyBtn(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>` : emptyState('هنوز تراکنشی نیست');
 }
 
 /* =====================================================================
@@ -627,14 +1473,15 @@ function renderRecent(){
    ===================================================================== */
 let editSt = null;
 function renderStudents(){
-  const b = balances(), q = $('stSearch').value.trim(), f = $('stFilter').value;
+  const table = $('stTable'); if(!table) return;
+  const b = balances(), q = ($('stSearch')?.value || '').trim(), f = ($('stFilter')?.value || '');
   const rows = db.students.filter(s => { if(q && !(s.name+' '+s.course+' '+s.phone).includes(q)) return false; if(f && statusOf(b[s.id].bal) !== f) return false; return true; });
-  $('stTable').innerHTML = rows.length
+  table.innerHTML = rows.length
     ? `<table><thead><tr><th>نام</th><th>دوره</th><th>شهریه</th><th>تلفن</th><th>تولد</th><th>جلسات</th><th>پکیج</th><th>بدهی</th><th>پرداختی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s=>{
       const x = b[s.id];
       const pkgLeft = (s.package_size||0) - (s.package_used||0);
       const pkgBadge = s.package_size ? (pkgLeft > 0 ? `<span class="tag credit">${faDigits(pkgLeft)}/${faDigits(s.package_size)}</span>` : `<span class="tag debt">تمام</span>`) : '—';
-      const bdayTag = s.birthday ? (isBirthdayToday(s) ? `<span class="tag birthday">🎂 امروز</span>` : `<span style="font-size:11.5px;color:var(--ink-2)">${showDate(s.birthday)}</span>`) : '—';
+      const bdayTag = s.birthday ? (isBirthdayToday(s) ? `<span class="tag birthday">🎂</span>` : `<span style="font-size:11.5px;color:var(--ink-2)">${showDate(s.birthday)}</span>`) : '—';
       return `<tr>
         <td><b>${esc(s.name)}</b></td><td>${esc(s.course)}</td><td class="n">${s.fee?fa(s.fee):'—'}</td><td>${faDigits(esc(s.phone))}</td>
         <td>${bdayTag}</td>
@@ -644,17 +1491,15 @@ function renderStudents(){
         <td>${statusTag(x.bal)}</td>
         <td><div class="btn-row tight">
           <button class="btn xs ghost" onclick="openStatement('${s.id}')">صورت‌حساب</button>
-          <button class="btn xs ghost" onclick="openInvoice('${s.id}')">فاکتور</button>
           <button class="btn xs ghost" onclick="quickSession('${s.id}')">جلسه</button>
           <button class="btn xs ghost" onclick="quickTx('${s.id}','payment')">دریافت</button>
-          <button class="btn xs ghost" onclick="quickTx('${s.id}','charge')">بدهی</button>
           <button class="btn xs ghost" onclick="editStudent('${s.id}')">ویرایش</button>
           <button class="btn xs danger" onclick="delStudent('${s.id}')">حذف</button>
         </div></td></tr>`;
     }).join('')}</tbody></table>`
     : emptyState('زبان‌آموزی یافت نشد.');
 }
-$('stForm').onsubmit = async e => {
+on('stForm', 'submit', async e => {
   e.preventDefault();
   const birthday = getDate('stBirthday');
   const o = { name: $('stName').value.trim(), course: $('stCourse').value.trim(), fee: moneyVal('stFee'), phone: toEn($('stPhone').value), note: $('stNote').value.trim(), birthday };
@@ -663,15 +1508,15 @@ $('stForm').onsubmit = async e => {
     const s = db.students.find(x=>x.id===editSt);
     Object.assign(s, o);
     await cloudUpdate('students', studentToRow(s), s.id);
-    toast('تغییرات ذخیره شد', 'success');
+    toast('ذخیره شد', 'success');
   } else {
     const s = { id: uid(), ...o, package_size: 0, package_used: 0 };
     db.students.push(s);
     await cloudInsert('students', studentToRow(s), s.id);
-    toast('زبان‌آموز اضافه شد', 'success');
+    toast('اضافه شد', 'success');
   }
   cancelStudent(); saveLocal(); renderAll(); checkAchievements();
-};
+});
 function editStudent(id){
   const s = db.students.find(x=>x.id===id); if(!s) return;
   editSt = id;
@@ -680,19 +1525,20 @@ function editStudent(id){
   $('stPhone').value = s.phone||''; $('stNote').value = s.note||'';
   if(s.birthday) setDate('stBirthday', s.birthday.split('/').map(Number));
   else setDate('stBirthday', null);
-  $('stTitle').querySelector('span').textContent = 'ویرایش زبان‌آموز';
+  const t = $('stTitle'); if(t) t.querySelector('span').textContent = 'ویرایش زبان‌آموز';
   $('stSave').textContent = 'ذخیره';
   $('stCancel').style.display = '';
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function cancelStudent(){
-  editSt = null; $('stForm').reset();
+  editSt = null;
+  const f = $('stForm'); if(f) f.reset();
   setDate('stBirthday', null);
-  $('stTitle').querySelector('span').textContent = 'افزودن زبان‌آموز';
-  $('stSave').textContent = 'افزودن';
-  $('stCancel').style.display = 'none';
+  const t = $('stTitle'); if(t) t.querySelector('span').textContent = 'افزودن زبان‌آموز';
+  const b = $('stSave'); if(b) b.textContent = 'افزودن';
+  const c = $('stCancel'); if(c) c.style.display = 'none';
 }
-$('stCancel').onclick = cancelStudent;
+click('stCancel', cancelStudent);
 async function delStudent(id){
   const n = db.tx.filter(t=>t.sid===id).length;
   if(!confirm(`«${stName(id)}» و ${faDigits(n)} تراکنش حذف شود؟`)) return;
@@ -705,29 +1551,29 @@ async function delStudent(id){
   saveLocal(); renderAll();
   pushUndo('st-delete', { student: s, txs }, 'زبان‌آموز حذف شد');
 }
-$('stSearch').addEventListener('input', debounce(renderStudents));
-$('stFilter').addEventListener('change', renderStudents);
+on('stSearch', 'input', debounce(renderStudents));
+on('stFilter', 'change', renderStudents);
 
 /* =====================================================================
    SESSION
    ===================================================================== */
 let seSelected = {}, seCourseFilter = '', seSearchQuery = '', seAbsentMode = false;
 
-$('seAbsentMode').addEventListener('change', e => { seAbsentMode = e.target.checked; renderSessionGrid(); });
+on('seAbsentMode', 'change', e => { seAbsentMode = e.target.checked; renderSessionGrid(); });
 
 function renderCourseChips(){
+  const box = $('seCourseChips'); if(!box) return;
   const courses = [...new Set(db.students.map(s => (s.course||'').trim()).filter(Boolean))].sort();
-  const box = $('seCourseChips');
   if(!courses.length){ box.innerHTML = ''; return; }
   box.innerHTML = `<div class="chip ${seCourseFilter===''?'on':''}" data-c="">همه</div>` + courses.map(c => `<div class="chip ${seCourseFilter===c?'on':''}" data-c="${esc(c)}">${esc(c)}</div>`).join('');
 }
-$('seCourseChips').onclick = e => { const c = e.target.closest('.chip'); if(!c) return; seCourseFilter = c.dataset.c || ''; renderCourseChips(); renderSessionGrid(); };
+on('seCourseChips', 'click', e => { const c = e.target.closest('.chip'); if(!c) return; seCourseFilter = c.dataset.c || ''; renderCourseChips(); renderSessionGrid(); });
 
 function renderSessionGrid(){
+  const grid = $('seGrid'); if(!grid) return;
   const q = seSearchQuery.trim().toLowerCase();
   const bAll = balances();
   const list = db.students.filter(s => { if(seCourseFilter && (s.course||'').trim() !== seCourseFilter) return false; if(q && !(s.name+' '+(s.course||'')+' '+(s.phone||'')).toLowerCase().includes(q)) return false; return true; });
-  const grid = $('seGrid');
   if(!list.length){ grid.innerHTML = `<div style="grid-column:1/-1">${emptyState('زبان‌آموزی یافت نشد')}</div>`; updateSelectionBar(); return; }
   grid.innerHTML = list.map(s => {
     const on = s.id in seSelected;
@@ -751,30 +1597,32 @@ function renderSessionGrid(){
   updateSelectionBar();
 }
 
-$('seGrid').onclick = e => { if(e.target.closest('.st-amount')) return; const card = e.target.closest('.st-card'); if(!card) return; const id = card.dataset.id; if(id in seSelected) delete seSelected[id]; else { const s = db.students.find(x=>x.id===id); seSelected[id] = seAbsentMode ? 0 : (s ? (s.fee||0) : 0); } renderSessionGrid(); };
-$('seGrid').addEventListener('input', e => { const inp = e.target.closest('input[data-amount]'); if(!inp) return; const id = inp.dataset.amount; const v = Number(toEn(inp.value)) || 0; seSelected[id] = v; inp.value = v ? v.toLocaleString('en-US') : ''; updateSelectionBar(); });
+on('seGrid', 'click', e => { if(e.target.closest('.st-amount')) return; const card = e.target.closest('.st-card'); if(!card) return; const id = card.dataset.id; if(id in seSelected) delete seSelected[id]; else { const s = db.students.find(x=>x.id===id); seSelected[id] = seAbsentMode ? 0 : (s ? (s.fee||0) : 0); } renderSessionGrid(); });
+on('seGrid', 'input', e => { const inp = e.target.closest('input[data-amount]'); if(!inp) return; const id = inp.dataset.amount; const v = Number(toEn(inp.value)) || 0; seSelected[id] = v; inp.value = v ? v.toLocaleString('en-US') : ''; updateSelectionBar(); });
 
 function updateSelectionBar(){
   const ids = Object.keys(seSelected);
   const total = ids.reduce((a,id)=> a + (+seSelected[id]||0), 0);
-  $('seCount').textContent = faDigits(ids.length);
-  $('seTotal').textContent = fa(total);
-  $('seSave').disabled = ids.length === 0;
+  const c = $('seCount'), t = $('seTotal'), s = $('seSave');
+  if(c) c.textContent = faDigits(ids.length);
+  if(t) t.textContent = fa(total);
+  if(s) s.disabled = ids.length === 0;
 }
-$('seClear').onclick = () => { seSelected = {}; renderSessionGrid(); };
-$('seSearch').addEventListener('input', debounce(e => { seSearchQuery = e.target.value; renderSessionGrid(); }));
+click('seClear', () => { seSelected = {}; renderSessionGrid(); });
+on('seSearch', 'input', debounce(e => { seSearchQuery = e.target.value; renderSessionGrid(); }));
 
 document.querySelectorAll('.quick-btns button').forEach(b => {
-  b.onclick = () => { const off = +b.dataset.off; const t = todayJ(); const target = off === 0 ? t : jAddDays(t[0], t[1], t[2], off); setDate('seDate', target); };
+  b.addEventListener('click', () => { const off = +b.dataset.off; const t = todayJ(); const target = off === 0 ? t : jAddDays(t[0], t[1], t[2], off); setDate('seDate', target); });
 });
 
-$('seSave').onclick = async () => {
+click('seSave', async () => {
   const ids = Object.keys(seSelected);
-  if(!ids.length){ toast('حداقل یک زبان‌آموز انتخاب کن', 'err'); return; }
+  if(!ids.length){ toast('حداقل یکی انتخاب کن', 'err'); return; }
   const date = getDate('seDate');
-  const baseDesc = $('seDesc').value.trim();
-  const method = $('seMethod').value === '—' ? '' : $('seMethod').value;
-  const tag = $('seTag').value.trim().replace(/^#/, '') || null;
+  if(!date){ toast('تاریخ را انتخاب کن', 'err'); return; }
+  const baseDesc = ($('seDesc')?.value || '').trim();
+  const method = ($('seMethod')?.value === '—') ? '' : ($('seMethod')?.value || '');
+  const tag = ($('seTag')?.value || '').trim().replace(/^#/, '') || null;
   const created = [];
   for(const id of ids){
     const amount = +seSelected[id] || 0;
@@ -793,24 +1641,28 @@ $('seSave').onclick = async () => {
   saveLocal(); renderAll();
   await Promise.all(created.map(t => cloudInsert('tx', txToRow(t), t.id)));
   saveLocal(); renderAll();
-  seSelected = {}; $('seDesc').value = ''; $('seTag').value = '';
+  seSelected = {};
+  if($('seDesc')) $('seDesc').value = '';
+  if($('seTag')) $('seTag').value = '';
   renderSessionGrid();
   toast(`${faDigits(created.length)} جلسه ثبت شد`, 'success');
   checkAchievements();
-};
+});
 
 function renderSessions(){
+  const stEl = $('seFilterStudent'), mEl = $('seFilterMonth'), table = $('seTable');
+  if(!stEl || !mEl || !table) return;
   const stOpts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
-  const v1 = $('seFilterStudent').value;
-  $('seFilterStudent').innerHTML = '<option value="">همه</option>' + stOpts;
-  if(db.students.some(s=>s.id===v1)) $('seFilterStudent').value = v1;
+  const v1 = stEl.value;
+  stEl.innerHTML = '<option value="">همه</option>' + stOpts;
+  if(db.students.some(s=>s.id===v1)) stEl.value = v1;
   const ms = [...new Set(db.tx.filter(t=>t.is_session && t.session_date).map(t=>t.session_date.slice(0,7)))].sort().reverse();
-  const v2 = $('seFilterMonth').value;
-  $('seFilterMonth').innerHTML = '<option value="">همه ماه‌ها</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
-  $('seFilterMonth').value = ms.includes(v2) ? v2 : '';
-  const sFilter = $('seFilterStudent').value, mFilter = $('seFilterMonth').value;
+  const v2 = mEl.value;
+  mEl.innerHTML = '<option value="">همه ماه‌ها</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
+  mEl.value = ms.includes(v2) ? v2 : '';
+  const sFilter = stEl.value, mFilter = mEl.value;
   const rows = db.tx.filter(t => t.is_session && (!sFilter || t.sid === sFilter) && (!mFilter || (t.session_date||'').startsWith(mFilter))).sort((a,b)=> (b.session_date||b.date).localeCompare(a.session_date||a.date) || b.ts-a.ts);
-  $('seTable').innerHTML = rows.length ? `<table><thead><tr><th>تاریخ</th><th>زبان‌آموز</th><th>مبلغ</th><th>وضعیت</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.slice(0,50).map(t=>`<tr><td>${showDate(t.session_date||t.date)}</td><td>${esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b> ${copyBtn(t.amount)}</td><td>${t.absent ? '<span class="tag absent">غایب</span>' : '<span class="tag session">حاضر</span>'}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td><td><div class="btn-row tight"><button class="btn xs danger" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>` : emptyState('هنوز جلسه‌ای نیست');
+  table.innerHTML = rows.length ? `<table><thead><tr><th>تاریخ</th><th>زبان‌آموز</th><th>مبلغ</th><th>وضعیت</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.slice(0,50).map(t=>`<tr><td>${showDate(t.session_date||t.date)}</td><td>${esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b> ${copyBtn(t.amount)}</td><td>${t.absent ? '<span class="tag absent">غایب</span>' : '<span class="tag session">حاضر</span>'}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td><td><div class="btn-row tight"><button class="btn xs danger" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>` : emptyState('هنوز جلسه‌ای نیست');
 }
 
 /* =====================================================================
@@ -819,32 +1671,35 @@ function renderSessions(){
 let editTx = null;
 function fillStudentSelects(){
   const opts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
-  const v1 = $('txStudent').value, v2 = $('fStudent').value, v3 = $('pkgStudent') ? $('pkgStudent').value : '';
-  $('txStudent').innerHTML = opts || '<option value="">—</option>';
-  $('fStudent').innerHTML = '<option value="">همه</option>' + opts;
-  if($('pkgStudent')) $('pkgStudent').innerHTML = opts || '<option value="">—</option>';
-  if(db.students.some(s=>s.id===v1)) $('txStudent').value = v1;
-  if(db.students.some(s=>s.id===v2)) $('fStudent').value = v2;
-  if($('pkgStudent') && db.students.some(s=>s.id===v3)) $('pkgStudent').value = v3;
+  const ts = $('txStudent'), fs = $('fStudent'), ps = $('pkgStudent');
+  const v1 = ts?.value, v2 = fs?.value, v3 = ps?.value;
+  if(ts) ts.innerHTML = opts || '<option value="">—</option>';
+  if(fs) fs.innerHTML = '<option value="">همه</option>' + opts;
+  if(ps) ps.innerHTML = opts || '<option value="">—</option>';
+  if(ts && db.students.some(s=>s.id===v1)) ts.value = v1;
+  if(fs && db.students.some(s=>s.id===v2)) fs.value = v2;
+  if(ps && db.students.some(s=>s.id===v3)) ps.value = v3;
   const ms = [...new Set(db.tx.map(t=>t.date.slice(0,7)))].sort().reverse();
-  const v4 = $('fMonth').value;
-  $('fMonth').innerHTML = '<option value="">همه</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
-  $('fMonth').value = ms.includes(v4) ? v4 : '';
+  const fm = $('fMonth'), v4 = fm?.value;
+  if(fm){
+    fm.innerHTML = '<option value="">همه</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
+    fm.value = ms.includes(v4) ? v4 : '';
+  }
 }
 function txTypeUI(){
-  const type = $('txType').value;
-  $('txStWrap').style.display = type === 'expense' ? 'none' : '';
-  $('txCategoryWrap').style.display = type === 'expense' ? '' : 'none';
-  $('txDateLbl').textContent = type==='payment' ? 'تاریخ دریافت' : 'تاریخ';
+  const type = $('txType')?.value;
+  if($('txStWrap')) $('txStWrap').style.display = type === 'expense' ? 'none' : '';
+  if($('txCategoryWrap')) $('txCategoryWrap').style.display = type === 'expense' ? '' : 'none';
+  if($('txDateLbl')) $('txDateLbl').textContent = type==='payment' ? 'تاریخ دریافت' : 'تاریخ';
 }
-$('txType').onchange = txTypeUI;
+on('txType', 'change', txTypeUI);
 
-$('txForm').onsubmit = async e => {
+on('txForm', 'submit', async e => {
   e.preventDefault();
   const type = $('txType').value, amount = moneyVal('txAmount');
   if(amount <= 0){ toast('مبلغ را وارد کن', 'err'); return; }
-  if(type !== 'expense' && !$('txStudent').value){ toast('ابتدا زبان‌آموز را انتخاب کن', 'err'); return; }
-  const o = { type, sid: type==='expense' ? null : $('txStudent').value, amount, date: getDate('txDate'), method: $('txMethod').value, desc: $('txDesc').value.trim(), session_date: null, is_session: false, category: type==='expense' ? $('txCategory').value : null, tag: $('txTag').value.trim().replace(/^#/, '') || null, absent: false };
+  if(type !== 'expense' && !$('txStudent').value){ toast('زبان‌آموز را انتخاب کن', 'err'); return; }
+  const o = { type, sid: type==='expense' ? null : $('txStudent').value, amount, date: getDate('txDate'), method: $('txMethod').value, desc: $('txDesc').value.trim(), session_date: null, is_session: false, category: type==='expense' ? $('txCategory').value : null, tag: ($('txTag')?.value||'').trim().replace(/^#/, '') || null, absent: false };
   if(editTx){
     const t = db.tx.find(x=>x.id===editTx);
     Object.assign(t, o);
@@ -862,14 +1717,16 @@ $('txForm').onsubmit = async e => {
   $('txType').value = keepType; txTypeUI();
   $('txStudent').value = keepSt;
   saveLocal(); renderAll(); checkAchievements();
-};
+});
 function cancelTx(){
-  editTx = null; $('txForm').reset(); setDate('txDate', todayJ()); txTypeUI();
-  $('txTitle').querySelector('span').textContent = 'ثبت تراکنش';
-  $('txSave').textContent = 'ثبت';
-  $('txCancel').style.display = 'none';
+  editTx = null;
+  const f = $('txForm'); if(f) f.reset();
+  setDate('txDate', todayJ()); txTypeUI();
+  const t = $('txTitle'); if(t) t.querySelector('span').textContent = 'ثبت تراکنش';
+  if($('txSave')) $('txSave').textContent = 'ثبت';
+  if($('txCancel')) $('txCancel').style.display = 'none';
 }
-$('txCancel').onclick = cancelTx;
+click('txCancel', cancelTx);
 function editTransaction(id){
   const t = db.tx.find(x=>x.id===id); if(!t) return;
   editTx = id; switchTab('tx');
@@ -879,10 +1736,10 @@ function editTransaction(id){
   setDate('txDate', t.date.split('/').map(Number));
   $('txMethod').value = t.method; $('txDesc').value = t.desc||'';
   if(t.category) $('txCategory').value = t.category;
-  $('txTag').value = t.tag || '';
-  $('txTitle').querySelector('span').textContent = 'ویرایش تراکنش';
-  $('txSave').textContent = 'ذخیره';
-  $('txCancel').style.display = '';
+  if($('txTag')) $('txTag').value = t.tag || '';
+  const ti = $('txTitle'); if(ti) ti.querySelector('span').textContent = 'ویرایش تراکنش';
+  if($('txSave')) $('txSave').textContent = 'ذخیره';
+  if($('txCancel')) $('txCancel').style.display = '';
   window.scrollTo({top:0, behavior:'smooth'});
 }
 async function delTx(id){
@@ -907,7 +1764,7 @@ function quickTx(sid, type){
   $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'});
 }
 function quickSession(sid){
-  seCourseFilter = ''; seSearchQuery = ''; $('seSearch').value = '';
+  seCourseFilter = ''; seSearchQuery = ''; if($('seSearch')) $('seSearch').value = '';
   switchTab('session');
   seSelected = {};
   seSelected[sid] = (db.students.find(x=>x.id===sid)||{}).fee || 0;
@@ -915,35 +1772,39 @@ function quickSession(sid){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function filteredTx(){
-  const q = $('fSearch').value.trim(), s = $('fStudent').value, t = $('fType').value, m = $('fMonth').value;
+  const q = ($('fSearch')?.value || '').trim(), s = $('fStudent')?.value, t = $('fType')?.value, m = $('fMonth')?.value;
   return db.tx.filter(x => (!s||x.sid===s) && (!t||x.type===t) && (!m||x.date.startsWith(m)) && (!q||(x.desc||'').includes(q)||(x.tag||'').includes(q)||stName(x.sid).includes(q))).sort((a,b)=> b.date.localeCompare(a.date) || b.ts-a.ts);
 }
 function renderTx(){
+  const table = $('txTable'), sumEl = $('txSum');
+  if(!table) return;
   fillStudentSelects();
   const rows = filteredTx();
   const sum = t => rows.filter(x=>x.type===t).reduce((a,x)=>a+x.amount,0);
-  $('txSum').innerHTML = `${faDigits(rows.length)} تراکنش — بدهی: <b>${fa(sum('charge'))}</b> | دریافتی: <b>${fa(sum('payment'))}</b> | هزینه: <b>${fa(sum('expense'))}</b> تومان`;
-  $('txTable').innerHTML = rows.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>دسته/تگ</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b> ${copyBtn(t.amount)}</td><td>${t.type==='expense' && t.category ? `<span class="tag exp">${EXPENSE_CATS[t.category]||'سایر'}</span>` : ''}${t.tag ? ` <span class="tag tutor-tag">#${esc(t.tag)}</span>` : ''}${!t.category && !t.tag ? '—' : ''}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td><td><div class="btn-row tight"><button class="btn xs ghost" onclick="editTransaction('${t.id}')">ویرایش</button><button class="btn xs danger" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
+  if(sumEl) sumEl.innerHTML = `${faDigits(rows.length)} تراکنش — بدهی: <b>${fa(sum('charge'))}</b> | دریافتی: <b>${fa(sum('payment'))}</b> | هزینه: <b>${fa(sum('expense'))}</b> تومان`;
+  table.innerHTML = rows.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>دسته/تگ</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b> ${copyBtn(t.amount)}</td><td>${t.type==='expense' && t.category ? `<span class="tag exp">${EXPENSE_CATS[t.category]||'سایر'}</span>` : ''}${t.tag ? ` <span class="tag tutor-tag">#${esc(t.tag)}</span>` : ''}${!t.category && !t.tag ? '—' : ''}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td><td><div class="btn-row tight"><button class="btn xs ghost" onclick="editTransaction('${t.id}')">ویرایش</button><button class="btn xs danger" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
 }
-$('fSearch').addEventListener('input', debounce(renderTx));
-['fStudent','fType','fMonth'].forEach(id => $(id).addEventListener('change', renderTx));
-  /* =====================================================================
+on('fSearch', 'input', debounce(renderTx));
+['fStudent','fType','fMonth'].forEach(id => on(id, 'change', renderTx));
+
+/* =====================================================================
    PACKAGES
    ===================================================================== */
-$('btnAddPkg').onclick = async () => {
+click('btnAddPkg', async () => {
   const sid = $('pkgStudent').value;
   const size = Number($('pkgSize').value) || 0;
   if(!sid){ toast('زبان‌آموز را انتخاب کن', 'err'); return; }
-  if(size <= 0){ toast('تعداد جلسات را وارد کن', 'err'); return; }
+  if(size <= 0){ toast('تعداد را وارد کن', 'err'); return; }
   const s = db.students.find(x=>x.id===sid); if(!s) return;
   s.package_size = (s.package_size || 0) + size;
   s.package_used = s.package_used || 0;
   await cloudUpdate('students', studentToRow(s), s.id);
   saveLocal(); renderPkgs(); renderStudents();
-  toast(`پکیج ${faDigits(size)} جلسه‌ای اضافه شد`, 'success');
+  toast(`پکیج ${faDigits(size)} جلسه اضافه شد`, 'success');
   $('pkgSize').value = ''; $('pkgAmount').value = '';
-};
+});
 function renderPkgs(){
+  const table = $('pkgTable'); if(!table) return;
   const tbody = db.students.map(s => {
     const total = s.package_size || 0, used = s.package_used || 0;
     const left = total - used;
@@ -951,7 +1812,7 @@ function renderPkgs(){
     const pct = total ? Math.round(left / total * 100) : 0;
     return `<tr><td><b>${esc(s.name)}</b></td><td class="n">${faDigits(total)}</td><td class="n">${faDigits(used)}</td><td class="n ${left > 0 ? 'pos' : 'neg'}"><b>${faDigits(left)}</b></td><td style="min-width:120px"><div class="bar-track" style="height:8px"><div class="bar-fill ${left > 0 ? 'credit' : 'debt'}" style="width:${pct}%"></div></div></td><td><button class="btn xs ghost" onclick="resetPkg('${s.id}')">ریست</button></td></tr>`;
   }).filter(Boolean).join('');
-  $('pkgTable').innerHTML = tbody ? `<table><thead><tr><th>زبان‌آموز</th><th>کل</th><th>استفاده</th><th>باقی</th><th>پیشرفت</th><th></th></tr></thead><tbody>${tbody}</tbody></table>` : emptyState('پکیجی تعریف نشده');
+  table.innerHTML = tbody ? `<table><thead><tr><th>زبان‌آموز</th><th>کل</th><th>استفاده</th><th>باقی</th><th>پیشرفت</th><th></th></tr></thead><tbody>${tbody}</tbody></table>` : emptyState('پکیجی نیست');
 }
 window.resetPkg = async (id) => {
   const s = db.students.find(x=>x.id===id); if(!s) return;
@@ -963,10 +1824,10 @@ window.resetPkg = async (id) => {
 };
 
 /* =====================================================================
-   SMS — TAB
+   SMS
    ===================================================================== */
 document.querySelectorAll('.sms-tab').forEach(tab => {
-  tab.onclick = () => {
+  tab.addEventListener('click', () => {
     const t = tab.dataset.sms;
     document.querySelectorAll('.sms-tab').forEach(x => x.classList.toggle('on', x === tab));
     document.querySelectorAll('.sms-panel').forEach(p => p.classList.toggle('on', p.id === 'sms-' + t));
@@ -974,23 +1835,22 @@ document.querySelectorAll('.sms-tab').forEach(tab => {
     if(t === 'birthday') renderSmsBday();
     if(t === 'custom') renderSmsCustom();
     if(t === 'config') loadSmsConfig();
-  };
+  });
 });
 
 let smsSelectedDebt = new Set();
 let smsSelectedCustom = new Set();
+let smsSelectedBday = new Set();
 
 function renderSmsDebt(){
+  const el = $('smsDebtList'); if(!el) return;
   const b = balances();
   const debtors = db.students.filter(s => b[s.id].bal > 0).sort((a,b2) => b[b2.id].bal - b[a.id].bal);
-  if(!debtors.length){ $('smsDebtList').innerHTML = emptyState('بدهکاری نیست'); }
-  else {
-    $('smsDebtList').innerHTML = debtors.map(s => {
-      const checked = smsSelectedDebt.has(s.id) ? 'checked' : '';
-      return `<label class="recipient"><input type="checkbox" ${checked} onchange="toggleSmsRecipient('debt','${s.id}',this.checked)"><div class="rc-info"><div class="rc-name">${esc(s.name)}</div><div class="rc-phone">${faDigits(s.phone||'—')}</div></div><div class="rc-amount">${fa(b[s.id].bal)}</div></label>`;
-    }).join('');
-  }
-  if(!$('smsDebtText').value){
+  el.innerHTML = debtors.length ? debtors.map(s => {
+    const checked = smsSelectedDebt.has(s.id) ? 'checked' : '';
+    return `<label class="recipient"><input type="checkbox" ${checked} onchange="toggleSmsRecipient('debt','${s.id}',this.checked)"><div class="rc-info"><div class="rc-name">${esc(s.name)}</div><div class="rc-phone">${faDigits(s.phone||'—')}</div></div><div class="rc-amount">${fa(b[s.id].bal)}</div></label>`;
+  }).join('') : emptyState('بدهکاری نیست');
+  if($('smsDebtText') && !$('smsDebtText').value){
     $('smsDebtText').value = `{name} عزیز، مبلغ {amount} تومان بدهی کلاس زبان دارید. لطفاً تسویه کنید.\n— {academy}`;
   }
   updateSmsPreview('debt');
@@ -1002,21 +1862,19 @@ window.toggleSmsRecipient = (type, id, checked) => {
 };
 
 function renderSmsBday(){
+  const el = $('smsBdayList'); if(!el) return;
   const today = db.students.filter(isBirthdayToday);
-  if(!today.length){ $('smsBdayList').innerHTML = emptyState('امروز تولدی نیست'); }
-  else {
-    $('smsBdayList').innerHTML = today.map(s => `<label class="recipient"><input type="checkbox" checked onchange="toggleSmsBday('${s.id}',this.checked)"><div class="rc-info"><div class="rc-name">${esc(s.name)} 🎂</div><div class="rc-phone">${faDigits(s.phone||'—')}</div></div></label>`).join('');
-  }
+  if(!today.length){ el.innerHTML = emptyState('امروز تولدی نیست'); return; }
+  today.forEach(s => smsSelectedBday.add(s.id));
+  el.innerHTML = today.map(s => `<label class="recipient"><input type="checkbox" checked onchange="toggleSmsBday('${s.id}',this.checked)"><div class="rc-info"><div class="rc-name">${esc(s.name)} 🎂</div><div class="rc-phone">${faDigits(s.phone||'—')}</div></div></label>`).join('');
   updateSmsPreview('birthday');
 }
-let smsSelectedBday = new Set();
 window.toggleSmsBday = (id, checked) => { if(checked) smsSelectedBday.add(id); else smsSelectedBday.delete(id); updateSmsPreview('birthday'); };
 
 function renderSmsCustom(){
-  if(!smsSelectedCustom.size){
-    db.students.forEach(s => { if(s.phone) smsSelectedCustom.add(s.id); });
-  }
-  $('smsCustomList').innerHTML = db.students.filter(s => s.phone).map(s => {
+  const el = $('smsCustomList'); if(!el) return;
+  if(!smsSelectedCustom.size){ db.students.forEach(s => { if(s.phone) smsSelectedCustom.add(s.id); }); }
+  el.innerHTML = db.students.filter(s => s.phone).map(s => {
     const checked = smsSelectedCustom.has(s.id) ? 'checked' : '';
     return `<label class="recipient"><input type="checkbox" ${checked} onchange="toggleSmsRecipient('custom','${s.id}',this.checked)"><div class="rc-info"><div class="rc-name">${esc(s.name)}</div><div class="rc-phone">${faDigits(s.phone)}</div></div></label>`;
   }).join('') || emptyState('هیچ زبان‌آموزی با شماره نیست');
@@ -1035,20 +1893,21 @@ window.smsSelectNone = (type) => {
 
 function updateSmsPreview(type){
   const b = balances();
-  let text = '', targetStudents = [];
+  let text = '', targets = [];
   if(type === 'debt'){
-    text = $('smsDebtText').value || '';
-    targetStudents = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s);
+    text = $('smsDebtText')?.value || '';
+    targets = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s);
   } else if(type === 'birthday'){
-    if(!smsSelectedBday.size){ db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); }
-    text = $('smsBdayText').value || '';
-    targetStudents = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s);
+    if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id));
+    text = $('smsBdayText')?.value || '';
+    targets = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s);
   } else {
-    text = $('smsCustomText').value || '';
-    targetStudents = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s);
+    text = $('smsCustomText')?.value || '';
+    targets = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s);
   }
-  const sample = targetStudents[0] ? applySmsVars(text, targetStudents[0].s, targetStudents[0].amount) : text;
-  const preview = $('sms' + type[0].toUpperCase() + type.slice(1) + 'Preview');
+  const sample = targets[0] ? applySmsVars(text, targets[0].s, targets[0].amount) : text;
+  const previewId = 'sms' + type[0].toUpperCase() + type.slice(1) + 'Preview';
+  const preview = $(previewId);
   if(preview) preview.textContent = sample || '—';
 }
 
@@ -1058,18 +1917,14 @@ function applySmsVars(text, s, amount){
     .replace(/{amount}/g, fa(amount))
     .replace(/{academy}/g, settings.smsAcademy || 'آموزشگاه');
 }
-
-// wire textarea inputs
 ['smsDebtText','smsBdayText','smsCustomText'].forEach(id => {
-  const el = $(id); if(!el) return;
-  el.addEventListener('input', debounce(() => {
+  on(id, 'input', debounce(() => {
     if(id === 'smsDebtText') updateSmsPreview('debt');
     if(id === 'smsBdayText') updateSmsPreview('birthday');
     if(id === 'smsCustomText') updateSmsPreview('custom');
   }));
 });
 
-// ارسال
 async function sendSms(type){
   const b = balances();
   let text = '', recipients = [];
@@ -1084,15 +1939,12 @@ async function sendSms(type){
     text = $('smsCustomText').value;
     recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone);
   }
-  if(!recipients.length){ toast('هیچ گیرنده‌ای انتخاب نشده', 'err'); return; }
+  if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; }
   if(settings.smsProvider === 'none'){
-    if(confirm(`${faDigits(recipients.length)} پیام آماده است. می‌خواهی به‌جای ارسال خودکار، در اپ پیامک باز شوند؟ (تک‌تک باید بفرستی)`)){
-      openSmsFallback(type);
-    }
+    if(confirm(`${faDigits(recipients.length)} پیام آماده است. می‌خواهی در اپ پیامک باز شوند؟ (تک‌تک بفرستی)`)){ openSmsFallback(type); }
     return;
   }
   if(!settings.smsApiKey){ toast('API Key تنظیم نشده', 'err'); switchTab('settings'); return; }
-  // ارسال از طریق Supabase Edge Function
   if(!sb){ toast('Supabase در دسترس نیست', 'err'); return; }
   let sent = 0, failed = 0;
   toast('در حال ارسال…', 'info');
@@ -1104,8 +1956,10 @@ async function sendSms(type){
       });
       if(error || (data && data.error)) throw (error || new Error(data.error));
       sent++;
-    }catch(e){ console.warn('send sms failed', e); failed++; }
+    }catch(e){ console.warn('send failed', e); failed++; }
   }
+  achievements._sms_sent = (achievements._sms_sent || 0) + sent;
+  saveAch(); checkAchievements();
   toast(`ارسال شد: ${faDigits(sent)} موفق، ${faDigits(failed)} ناموفق`, sent ? 'success' : 'err');
 }
 
@@ -1124,7 +1978,6 @@ window.openSmsFallback = (type) => {
     recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone);
   }
   if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; }
-  // فقط اولی
   const r = recipients[0];
   const msg = applySmsVars(text, r.s, r.amount);
   window.location.href = `sms:${r.s.phone}?&body=${encodeURIComponent(msg)}`;
@@ -1132,10 +1985,10 @@ window.openSmsFallback = (type) => {
 };
 
 function loadSmsConfig(){
-  $('smsProvider').value = settings.smsProvider || 'none';
-  $('smsApiKey').value = settings.smsApiKey || '';
-  $('smsSender').value = settings.smsSender || '';
-  $('smsAcademy').value = settings.smsAcademy || 'آموزشگاه زبان علی ناقلی';
+  if($('smsProvider')) $('smsProvider').value = settings.smsProvider || 'none';
+  if($('smsApiKey')) $('smsApiKey').value = settings.smsApiKey || '';
+  if($('smsSender')) $('smsSender').value = settings.smsSender || '';
+  if($('smsAcademy')) $('smsAcademy').value = settings.smsAcademy || 'آموزشگاه زبان علی ناقلی';
 }
 window.saveSmsConfig = () => {
   settings.smsProvider = $('smsProvider').value;
@@ -1143,13 +1996,22 @@ window.saveSmsConfig = () => {
   settings.smsSender = $('smsSender').value.trim();
   settings.smsAcademy = $('smsAcademy').value.trim() || 'آموزشگاه';
   saveSettings();
-  toast('تنظیمات ذخیره شد', 'success');
+  toast('ذخیره شد', 'success');
 };
+window.sendBirthdayTo = (id) => {
+  const s = db.students.find(x=>x.id===id); if(!s) return;
+  const text = `🎂 ${s.name} عزیز، تولدت مبارک! — ${settings.smsAcademy}`;
+  if(s.phone) openSmsFor(s.phone, text);
+  else copyText(text);
+};
+window.openSmsFor = (phone, text) => { window.location.href = `sms:${phone}?&body=${encodeURIComponent(text)}`; };
+window.copyText = (text) => { navigator.clipboard.writeText(text).then(()=>toast('کپی شد', 'success')); };
 
 /* =====================================================================
    BIRTHDAYS TAB
    ===================================================================== */
 function renderBirthdaysTab(){
+  const el = $('bdayContent'); if(!el) return;
   const today = db.students.filter(isBirthdayToday);
   const thisMonth = db.students.filter(birthdayThisMonth).filter(s => !isBirthdayToday(s));
   const upcoming = db.students.filter(s => { if(!s.birthday) return false; const d = birthdayInDays(s); return d !== null && d <= 30 && d > 0 && !birthdayThisMonth(s); }).sort((a,b) => birthdayInDays(a) - birthdayInDays(b));
@@ -1158,7 +2020,7 @@ function renderBirthdaysTab(){
     content.push(`<div class="bday-card" style="margin-bottom:20px">
       <h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3>
       <p>پیام تبریک بفرست</p>
-      ${today.map(s => `<div class="bday-item"><b>${esc(s.name)}</b><span>${esc(s.phone||'—')}</span><button onclick="sendBirthdayTo('${s.id}')">${s.phone?'پیام':'کپی متن'}</button></div>`).join('')}
+      ${today.map(s => `<div class="bday-item"><b>${esc(s.name)}</b><span>${esc(s.phone||'—')}</span><button onclick="sendBirthdayTo('${s.id}')">${s.phone?'پیام':'کپی'}</button></div>`).join('')}
     </div>`);
   }
   if(thisMonth.length){
@@ -1168,53 +2030,46 @@ function renderBirthdaysTab(){
     content.push(`<div class="card"><h3 class="card-title">📅 تولدهای ماه بعد (${faDigits(upcoming.length)})</h3><div class="table-wrap"><table><thead><tr><th>نام</th><th>تاریخ</th><th>تا تولد</th><th>تلفن</th></tr></thead><tbody>${upcoming.map(s => `<tr><td><b>${esc(s.name)}</b></td><td>${showDate(s.birthday)}</td><td><span class="tag credit">${faDigits(birthdayInDays(s))} روز</span></td><td>${faDigits(esc(s.phone))}</td></tr>`).join('')}</tbody></table></div></div>`);
   }
   if(!content.length) content.push(emptyState('هیچ تولدی ثبت نشده. از تب زبان‌آموزان تاریخ تولد را وارد کن.'));
-  $('bdayContent').innerHTML = content.join('');
+  el.innerHTML = content.join('');
 }
 
 /* =====================================================================
    ACHIEVEMENTS
    ===================================================================== */
 const ACH_DEFS = [
-  { id:'first_student', icon:'🎓', title:'اولین قدم', desc:'اولین زبان‌آموز ثبت شد', check: () => db.students.length >= 1 },
+  { id:'first_student', icon:'🎓', title:'اولین قدم', desc:'اولین زبان‌آموز', check: () => db.students.length >= 1 },
   { id:'ten_students', icon:'👥', title:'کلاس شلوغ', desc:'۱۰ زبان‌آموز', check: () => db.students.length >= 10 },
   { id:'fifty_students', icon:'🏫', title:'آموزشگاه بزرگ', desc:'۵۰ زبان‌آموز', check: () => db.students.length >= 50 },
-  { id:'first_session', icon:'📅', title:'اولین جلسه', desc:'اولین جلسه ثبت شد', check: () => db.tx.filter(t=>t.is_session).length >= 1 },
-  { id:'hundred_sessions', icon:'💯', title:'صد جلسه', desc:'۱۰۰ جلسه ثبت شد', check: () => db.tx.filter(t=>t.is_session).length >= 100 },
-  { id:'first_payment', icon:'💰', title:'اولین درآمد', desc:'اولین پرداخت دریافت شد', check: () => db.tx.filter(t=>t.type==='payment').length >= 1 },
-  { id:'million_income', icon:'💎', title:'میلیونر', desc:'اولین درآمد ۱۰ میلیون تومان', check: () => db.tx.filter(t=>t.type==='payment').reduce((a,x)=>a+x.amount,0) >= 10000000 },
-  { id:'ten_million_month', icon:'🌟', title:'ماه طلایی', desc:'درآمد بیش از ۱۰ میلیون در یک ماه', check: () => { const months = {}; db.tx.filter(t=>t.type==='payment').forEach(t => { const m = t.date.slice(0,7); months[m] = (months[m]||0) + t.amount; }); return Object.values(months).some(v => v >= 10000000); } },
-  { id:'all_paid', icon:'✅', title:'همه تسویه', desc:'هیچ بدهکاری نماند (با حداقل ۳ زبان‌آموز)', check: () => { if(db.students.length < 3) return false; const b = balances(); return db.students.every(s => b[s.id].bal <= 0); } },
-  { id:'three_months_profit', icon:'📈', title:'۳ ماه سود', desc:'۳ ماه پشت سر هم سود مثبت', check: () => { const t = todayJ(); let count = 0; for(let i = 1; i <= 6; i++){ let y = t[0], m = t[1] - i; while(m < 1){ m += 12; y--; } const prefix = `${y}/${pad(m)}`; const inc = db.tx.filter(x => x.type==='payment' && x.date.startsWith(prefix)).reduce((a,x)=>a+x.amount,0); const exp = db.tx.filter(x => x.type==='expense' && x.date.startsWith(prefix)).reduce((a,x)=>a+x.amount,0); if(inc > 0 && inc - exp > 0) count++; else count = 0; if(count >= 3) return true; } return false; } },
-  { id:'birthday_collector', icon:'🎂', title:'تولدها رو بلدی', desc:'برای ۵ زبان‌آموز تاریخ تولد ثبت کردی', check: () => db.students.filter(s => s.birthday).length >= 5 },
-  { id:'package_seller', icon:'📦', title:'فروشنده پکیج', desc:'اولین پکیج جلسات', check: () => db.students.some(s => s.package_size > 0) },
-  { id:'first_sms', icon:'📱', title:'ارتباط برقرار شد', desc:'اولین پیامک ارسال شد', check: () => achievements._sms_sent > 0 },
-  { id:'debt_reminder', icon:'🔔', title:'یادآور', desc:'اولین یادآوری بدهی', check: () => achievements._reminder_sent > 0 },
-  { id:'tag_master', icon:'🏷️', title:'سازمان‌دهنده', desc:'۵ تگ مختلف استفاده کردی', check: () => new Set(db.tx.filter(t=>t.tag).map(t=>t.tag)).size >= 5 },
-  { id:'hundred_days', icon:'🔥', title:'صد روز', desc:'۱۰۰ روز از اولین استفاده', check: () => achievements._first_use && (Date.now() - achievements._first_use) >= 100 * 86400000 }
+  { id:'first_session', icon:'📅', title:'اولین جلسه', desc:'اولین جلسه', check: () => db.tx.filter(t=>t.is_session).length >= 1 },
+  { id:'hundred_sessions', icon:'💯', title:'صد جلسه', desc:'۱۰۰ جلسه', check: () => db.tx.filter(t=>t.is_session).length >= 100 },
+  { id:'first_payment', icon:'💰', title:'اولین درآمد', desc:'اولین پرداخت', check: () => db.tx.filter(t=>t.type==='payment').length >= 1 },
+  { id:'million_income', icon:'💎', title:'میلیونر', desc:'۱۰ میلیون تومان درآمد', check: () => db.tx.filter(t=>t.type==='payment').reduce((a,x)=>a+x.amount,0) >= 10000000 },
+  { id:'ten_million_month', icon:'🌟', title:'ماه طلایی', desc:'۱۰ میلیون در یک ماه', check: () => { const months = {}; db.tx.filter(t=>t.type==='payment').forEach(t => { const m = t.date.slice(0,7); months[m] = (months[m]||0) + t.amount; }); return Object.values(months).some(v => v >= 10000000); } },
+  { id:'all_paid', icon:'✅', title:'همه تسویه', desc:'هیچ بدهکاری نماند', check: () => { if(db.students.length < 3) return false; const b = balances(); return db.students.every(s => b[s.id].bal <= 0); } },
+  { id:'birthday_collector', icon:'🎂', title:'تولدها رو بلدی', desc:'۵ تولد ثبت شده', check: () => db.students.filter(s => s.birthday).length >= 5 },
+  { id:'package_seller', icon:'📦', title:'فروشنده پکیج', desc:'اولین پکیج', check: () => db.students.some(s => s.package_size > 0) },
+  { id:'first_sms', icon:'📱', title:'ارتباط برقرار شد', desc:'اولین پیامک', check: () => (achievements._sms_sent || 0) > 0 },
+  { id:'tag_master', icon:'🏷️', title:'سازمان‌دهنده', desc:'۵ تگ مختلف', check: () => new Set(db.tx.filter(t=>t.tag).map(t=>t.tag)).size >= 5 }
 ];
 
 function checkAchievements(){
-  if(!achievements._first_use) achievements._first_use = Date.now();
   let changed = false;
   ACH_DEFS.forEach(a => {
     if(!achievements[a.id] && a.check()){
       achievements[a.id] = Date.now();
       changed = true;
-      showUnlock(a);
+      launchConfetti();
+      toast(`🏆 دستاورد جدید: ${a.title}`, 'success');
     }
   });
   if(changed){ saveAch(); renderAchievements(); }
 }
-function showUnlock(a){
-  launchConfetti();
-  toast(`🏆 دستاورد جدید: ${a.title}`, 'success');
-  setTimeout(() => toast(a.desc, 'info'), 800);
-}
 
 function renderAchievements(){
-  $('achGrid').innerHTML = ACH_DEFS.map(a => {
+  const el = $('achGrid'); if(!el) return;
+  el.innerHTML = ACH_DEFS.map(a => {
     const unlocked = achievements[a.id];
-    return `<div class="ach-card ${unlocked ? '' : 'locked'} ${unlocked && Date.now() - unlocked < 2000 ? 'just-unlocked' : ''}">
+    return `<div class="ach-card ${unlocked ? '' : 'locked'}">
       <span class="ach-icon">${a.icon}</span>
       <b>${a.title}</b>
       <small>${a.desc}</small>
@@ -1230,14 +2085,15 @@ let calYear, calMonth;
 function initCalendar(){
   const t = todayJ();
   calYear = t[0]; calMonth = t[1];
-  $('calPrev').onclick = () => { calMonth--; if(calMonth < 1){ calMonth = 12; calYear--; } renderCalendar(); };
-  $('calNext').onclick = () => { calMonth++; if(calMonth > 12){ calMonth = 1; calYear++; } renderCalendar(); };
-  $('calToday').onclick = () => { calYear = t[0]; calMonth = t[1]; renderCalendar(); };
+  click('calPrev', () => { calMonth--; if(calMonth < 1){ calMonth = 12; calYear--; } renderCalendar(); });
+  click('calNext', () => { calMonth++; if(calMonth > 12){ calMonth = 1; calYear++; } renderCalendar(); });
+  click('calToday', () => { calYear = t[0]; calMonth = t[1]; renderCalendar(); });
 }
 function renderCalendar(){
+  const grid = $('calGrid'); if(!grid) return;
   const daysInMonth = jMonthDays(calYear, calMonth);
   const firstDay = dayOfWeek(calYear, calMonth, 1);
-  $('calTitle').textContent = `${MONTHS[calMonth-1]} ${faDigits(calYear)}`;
+  if($('calTitle')) $('calTitle').textContent = `${MONTHS[calMonth-1]} ${faDigits(calYear)}`;
   const t = todayJ();
   const days = Array.from({length: daysInMonth}, (_,i) => ({ d: i+1, income:0, expense:0, sessions:0, birthday:false }));
   db.tx.forEach(tx => {
@@ -1271,21 +2127,21 @@ function renderCalendar(){
   const remainder = (7 - (cells.length % 7)) % 7;
   for(let i = 0; i < remainder; i++) cells.push(`<div class="cal-cell empty"></div>`);
   const header = WEEKDAYS.map(d => `<div class="cal-dayname">${d}</div>`).join('');
-  $('calGrid').innerHTML = header + cells.join('');
+  grid.innerHTML = header + cells.join('');
 }
 window.showCalDay = (d) => {
+  const detail = $('calDayDetail'), title = $('calDayTitle'), table = $('calDayTable');
+  if(!detail || !table) return;
   const dateStr_ = `${calYear}/${pad(calMonth)}/${pad(d)}`;
   const rows = db.tx.filter(t => t.date === dateStr_).sort((a,b)=>b.ts-a.ts);
   const bdays = db.students.filter(s => { if(!s.birthday) return false; const [,m,dd] = s.birthday.split('/').map(Number); return m === calMonth && dd === d; });
-  $('calDayDetail').style.display = '';
-  $('calDayTitle').textContent = `${faDigits(d)} ${MONTHS[calMonth-1]} ${faDigits(calYear)}`;
+  detail.style.display = '';
+  if(title) title.textContent = `${faDigits(d)} ${MONTHS[calMonth-1]} ${faDigits(calYear)}`;
   let html = '';
-  if(bdays.length){
-    html += `<div class="bday-card" style="margin-bottom:14px"><h3>🎂 تولد ${bdays.map(s=>s.name).join('، ')}</h3></div>`;
-  }
+  if(bdays.length) html += `<div class="bday-card" style="margin-bottom:14px"><h3>🎂 تولد ${bdays.map(s=>s.name).join('، ')}</h3></div>`;
   if(rows.length) html += `<table><thead><tr><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rows.map(t => `<tr><td>${typeTag(t.type,t.is_session,t.absent)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b></td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>`;
   if(!rows.length && !bdays.length) html = emptyState('این روز تراکنشی ندارد');
-  $('calDayTable').innerHTML = html;
+  table.innerHTML = html;
 };
 
 /* =====================================================================
@@ -1304,26 +2160,27 @@ function runReport(){
   const net = income - expense;
   let overdue = 0;
   db.tx.forEach(t => { const d = t.is_session && t.session_date ? t.session_date : t.date; if(d > to) return; if(t.type==='charge') overdue += t.amount; if(t.type==='payment') overdue -= t.amount; });
-  $('repCards').innerHTML = `
+  const cards = $('repCards');
+  if(cards) cards.innerHTML = `
     <div class="rep-card green"><small>درآمد</small><b>${fa(income)}<small>تومان</small></b></div>
-    <div class="rep-card red"><small>بدهی ثبت‌شده</small><b>${fa(charge)}<small>تومان</small></b></div>
+    <div class="rep-card red"><small>بدهی</small><b>${fa(charge)}<small>تومان</small></b></div>
     <div class="rep-card purple"><small>جلسات (${faDigits(absentCount)} غایب)</small><b>${fa(sessions)}<small>جلسه</small></b></div>
     <div class="rep-card orange"><small>هزینه</small><b>${fa(expense)}<small>تومان</small></b></div>
     <div class="rep-card green"><small>سود خالص</small><b>${fa(net)}<small>تومان</small></b></div>
     <div class="rep-card red"><small>بدهی معوق</small><b>${fa(Math.max(0,overdue))}<small>تومان</small></b></div>`;
-  $('repSummaryTxt').textContent = `از ${showDate(from)} تا ${showDate(to)} — ${faDigits(rows.length)} تراکنش`;
+  if($('repSummaryTxt')) $('repSummaryTxt').textContent = `از ${showDate(from)} تا ${showDate(to)} — ${faDigits(rows.length)} تراکنش`;
   const byStudent = {};
   db.students.forEach(s => byStudent[s.id] = { name:s.name, sessions:0, absent:0, charge:0, payment:0 });
   rows.forEach(t => { if(!byStudent[t.sid]) return; const o = byStudent[t.sid]; if(t.type==='charge'){ o.charge += t.amount; if(t.is_session){ o.sessions += 1; if(t.absent) o.absent += 1; } } if(t.type==='payment'){ o.payment += t.amount; } });
   const list = Object.values(byStudent).filter(x => x.charge || x.payment || x.sessions).sort((a,b)=> (b.charge + b.payment) - (a.charge + a.payment));
-  $('repStudents').innerHTML = list.length ? `<table><thead><tr><th>زبان‌آموز</th><th>جلسات</th><th>غایب</th><th>بدهی</th><th>دریافتی</th><th>خالص</th></tr></thead><tbody>${list.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td class="n">${fa(x.sessions)}</td><td class="n">${x.absent ? fa(x.absent) : '—'}</td><td class="n neg">${fa(x.charge)}</td><td class="n pos">${fa(x.payment)}</td><td class="n ${x.charge-x.payment>0?'neg':'pos'}">${fa(Math.abs(x.charge-x.payment))} ${x.charge-x.payment>0?'بدهکار':x.charge-x.payment<0?'بستانکار':''}</td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
+  if($('repStudents')) $('repStudents').innerHTML = list.length ? `<table><thead><tr><th>زبان‌آموز</th><th>جلسات</th><th>غایب</th><th>بدهی</th><th>دریافتی</th><th>خالص</th></tr></thead><tbody>${list.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td class="n">${fa(x.sessions)}</td><td class="n">${x.absent ? fa(x.absent) : '—'}</td><td class="n neg">${fa(x.charge)}</td><td class="n pos">${fa(x.payment)}</td><td class="n ${x.charge-x.payment>0?'neg':'pos'}">${fa(Math.abs(x.charge-x.payment))} ${x.charge-x.payment>0?'بدهکار':x.charge-x.payment<0?'بستانکار':''}</td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
   const sortedRows = [...rows].sort((a,b)=>{ const da = a.is_session&&a.session_date ? a.session_date : a.date; const db_ = b.is_session&&b.session_date ? b.session_date : b.date; return db_.localeCompare(da) || b.ts - a.ts; });
-  $('repTx').innerHTML = sortedRows.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${sortedRows.slice(0,200).map(t=>{ const d = t.is_session && t.session_date ? t.session_date : t.date; return `<tr><td>${showDate(d)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b></td><td style="white-space:normal;min-width:160px">${esc(t.desc)}</td></tr>`; }).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
+  if($('repTx')) $('repTx').innerHTML = sortedRows.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${sortedRows.slice(0,200).map(t=>{ const d = t.is_session && t.session_date ? t.session_date : t.date; return `<tr><td>${showDate(d)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b></td><td style="white-space:normal;min-width:160px">${esc(t.desc)}</td></tr>`; }).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
 }
-$('repRun').onclick = runReport;
-$('repPrint').onclick = () => { runReport(); document.body.classList.add('pm'); setTimeout(() => { window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }, 100); };
+click('repRun', runReport);
+click('repPrint', () => { runReport(); document.body.classList.add('pm'); setTimeout(() => { window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }, 100); });
 document.querySelectorAll('[data-range]').forEach(b => {
-  b.onclick = () => {
+  b.addEventListener('click', () => {
     const t = todayJ(); const r = b.dataset.range; let from, to = t;
     if(r === 'month'){ from = [t[0], t[1], 1]; }
     else if(r === 'lastMonth'){ let y = t[0], m = t[1] - 1; if(m < 1){ m = 12; y--; } from = [y, m, 1]; to = [y, m, jMonthDays(y, m)]; }
@@ -1331,11 +2188,11 @@ document.querySelectorAll('[data-range]').forEach(b => {
     else if(r === '7'){ from = jAddDays(t[0], t[1], t[2], -6); }
     else if(r === 'year'){ from = [t[0], 1, 1]; to = [t[0], 12, jMonthDays(t[0], 12)]; }
     setDate('repFrom', from); setDate('repTo', to); runReport();
-  };
+  });
 });
 
 /* =====================================================================
-   STATEMENT & INVOICE
+   STATEMENT
    ===================================================================== */
 function openStatement(id){
   const s = db.students.find(x=>x.id===id); if(!s){ toast('یافت نشد', 'err'); return; }
@@ -1350,52 +2207,23 @@ function openStatement(id){
   }).join('');
   const sessionCount = rows.filter(t=>t.is_session).length;
   const pkgLeft = (s.package_size||0) - (s.package_used||0);
-  $('modalBox').innerHTML = `<h2 style="margin-bottom:8px;color:var(--ink)">صورت‌حساب: ${esc(s.name)}</h2>
+  const modalBox = $('modalBox'); if(!modalBox) return;
+  modalBox.innerHTML = `<h2 style="margin-bottom:8px;color:var(--ink)">صورت‌حساب: ${esc(s.name)}</h2>
     <p class="hint" style="margin-bottom:16px">${esc(s.course||'—')} ${s.phone?'— '+faDigits(esc(s.phone)):''} — شهریه: ${fa(s.fee||0)} — جلسات: ${faDigits(sessionCount)}${s.package_size ? ` — پکیج: ${faDigits(pkgLeft)}/${faDigits(s.package_size)}` : ''}${s.birthday ? ` — تولد: ${showDate(s.birthday)}` : ''}</p>
     <div class="table-wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:emptyState('تراکنشی نیست')}</div>
     <h3 style="margin-top:20px;font-size:15px;color:var(--ink)">${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'تسویه'}</h3>
     <div class="btn-row" style="margin-top:16px">
       <button class="btn" onclick="printModal()">چاپ</button>
-      <button class="btn ghost" onclick="openInvoice('${id}')">فاکتور</button>
       <button class="btn ghost" onclick="closeModal()">بستن</button>
     </div>`;
   $('modal').classList.add('on');
 }
-
-function openInvoice(id){
-  const s = db.students.find(x=>x.id===id); if(!s) return;
-  const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=>a.date.localeCompare(b.date));
-  let totalCharge = 0, totalPayment = 0;
-  rows.forEach(t => { if(t.type==='charge') totalCharge += t.amount; if(t.type==='payment') totalPayment += t.amount; });
-  const remaining = totalCharge - totalPayment;
-  const invNum = 'INV-' + Date.now().toString().slice(-8);
-  $('modalBox').innerHTML = `<div class="invoice" id="invoiceContent">
-    <div class="invoice-head"><div><h1>فاکتور مالی</h1><div class="inv-num">${invNum} — ${longDate(dateStr(todayJ()))}</div></div><div style="text-align:left"><div style="font-weight:800;font-size:18px;color:#b8862b">آموزشگاه زبان</div><div style="font-size:12px;color:#666">${esc(settings.smsAcademy)}</div></div></div>
-    <div class="invoice-meta">
-      <div><label>زبان‌آموز</label><b>${esc(s.name)}</b></div>
-      <div><label>دوره</label><b>${esc(s.course||'—')}</b></div>
-      <div><label>تلفن</label><b>${faDigits(esc(s.phone))||'—'}</b></div>
-      <div><label>شهریه</label><b>${fa(s.fee||0)} تومان</b></div>
-    </div>
-    <table class="invoice-table"><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهی</th><th>پرداخت</th></tr></thead><tbody>
-      ${rows.length ? rows.map(t => `<tr><td>${showDate(t.date)}</td><td>${esc(t.desc)}</td><td>${t.type==='charge' ? fa(t.amount) : '—'}</td><td>${t.type==='payment' ? fa(t.amount) : '—'}</td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center">تراکنشی نیست</td></tr>'}
-    </tbody></table>
-    <div class="invoice-total">بدهی: ${fa(totalCharge)} — پرداخت: ${fa(totalPayment)} — مانده: ${fa(Math.abs(remaining))} ${remaining>0?'(بدهکار)':remaining<0?'(بستانکار)':'(تسویه)'}</div>
-    <div class="invoice-footer">صادر شده توسط سیستم مدیریت آموزشگاه زبان</div>
-  </div>
-  <div class="btn-row" style="margin-top:16px"><button class="btn" onclick="printInvoice()">چاپ فاکتور</button><button class="btn ghost" onclick="closeModal()">بستن</button></div>`;
-  $('modal').classList.add('on');
-}
-window.printInvoice = () => {
-  const content = document.getElementById('invoiceContent').outerHTML;
-  const w = window.open('', '_blank');
-  w.document.write(`<html dir="rtl"><head><title>فاکتور</title><style>body{font-family:Vazirmatn,Tahoma,sans-serif;padding:20px}.invoice{background:#fff;color:#111;padding:32px;max-width:800px;margin:auto}.invoice-head{display:flex;justify-content:space-between;border-bottom:2px solid #b8862b;padding-bottom:16px;margin-bottom:24px}.invoice-head h1{font-size:22px;color:#b8862b;margin:0}.inv-num{font-size:13px;color:#666;margin-top:4px}.invoice-meta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;font-size:13px}.invoice-meta label{font-size:11px;color:#888;display:block}.invoice-table{width:100%;border-collapse:collapse;margin-bottom:20px}.invoice-table th{background:#f5f2ea;padding:10px;border:1px solid #ddd;text-align:right;font-size:12px}.invoice-table td{padding:10px;border:1px solid #ddd;font-size:13px}.invoice-total{text-align:left;font-size:16px;font-weight:800;color:#b8862b;padding:16px;background:#faf6ec;border-radius:8px;direction:rtl}.invoice-footer{margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#888;text-align:center}</style></head><body>${content}</body></html>`);
-  w.document.close();
-  setTimeout(() => { w.print(); }, 500);
-};
-function closeModal(){ $('modal').classList.remove('on'); }
+function closeModal(){ const m = $('modal'); if(m) m.classList.remove('on'); }
 function printModal(){ document.body.classList.add('pm'); window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }
-$('modal').onclick = e => { if(e.target.id==='modal') closeModal(); };
+window.closeModal = closeModal;
+window.printModal = printModal;
+window.openStatement = openStatement;
+on('modal', 'click', e => { if(e.target.id==='modal') closeModal(); });
 
 /* =====================================================================
    UNDO
@@ -1434,29 +2262,29 @@ async function download(name, text, type){
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100);
     toast('دانلود شد', 'success');
-  }catch(e){ toast('خطا در ذخیره', 'err'); }
+  }catch(e){ toast('خطا', 'err'); }
 }
 const csvCell = v => '"' + String(v??'').replace(/"/g,'""') + '"';
 
-$('btnCsvTx').onclick = () => {
+click('btnCsvTx', () => {
   const r = [['تاریخ','نوع','جلسه','غایب','زبان‌آموز','مبلغ','دسته','تگ','روش','شرح']];
   [...db.tx].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t => r.push([t.date, TYPE_NAME[t.type], t.is_session?'بله':'خیر', t.absent?'بله':'خیر', t.type==='expense'?'':stName(t.sid), t.amount, t.category ? EXPENSE_CATS[t.category] : '', t.tag||'', t.method, t.desc]));
   download('transactions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
-};
-$('btnCsvSe').onclick = () => {
-  const r = [['تاریخ جلسه','زبان‌آموز','مبلغ','وضعیت','شرح']];
+});
+click('btnCsvSe', () => {
+  const r = [['تاریخ','زبان‌آموز','مبلغ','وضعیت','شرح']];
   db.tx.filter(t=>t.is_session).forEach(t => r.push([t.session_date, stName(t.sid), t.amount, t.absent?'غایب':'حاضر', t.desc]));
   download('sessions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
-};
-$('btnCsvSt').onclick = () => {
+});
+click('btnCsvSt', () => {
   const b = balances();
   const r = [['نام','دوره','شهریه','تلفن','تولد','جلسات','پکیج','بدهی','پرداختی','مانده','وضعیت']];
   db.students.forEach(s => { const x = b[s.id]; r.push([s.name, s.course, s.fee, s.phone, s.birthday||'', x.sessions, s.package_size ? `${s.package_used||0}/${s.package_size}` : '', x.charge, x.pay, Math.abs(x.bal), x.bal>0?'بدهکار':x.bal<0?'بستانکار':'تسویه']); });
   download('students.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
-};
-$('btnBackup').onclick = () => download('backup-' + dateStr(todayJ()).replace(/\//g,'-') + '.json', JSON.stringify({ students: db.students, tx: db.tx, packages: db.packages, queue: syncQueue, settings, achievements }), 'application/json');
-$('btnRestore').onclick = () => $('fileRestore').click();
-$('fileRestore').onchange = e => {
+});
+click('btnBackup', () => download('backup-' + dateStr(todayJ()).replace(/\//g,'-') + '.json', JSON.stringify({ students: db.students, tx: db.tx, packages: db.packages, queue: syncQueue, settings, achievements }), 'application/json'));
+click('btnRestore', () => { const f = $('fileRestore'); if(f) f.click(); });
+on('fileRestore', 'change', e => {
   const f = e.target.files[0]; if(!f) return;
   const r = new FileReader();
   r.onload = () => {
@@ -1474,16 +2302,16 @@ $('fileRestore').onchange = e => {
     }catch(_){ toast('فایل معتبر نیست', 'err'); }
   };
   r.readAsText(f); e.target.value = '';
-};
-$('btnPrint').onclick = () => { document.querySelectorAll('section.tab').forEach(s=>s.classList.add('on')); setTimeout(()=>{ window.print(); setTimeout(()=>switchTab('dash'), 400); }, 100); };
-$('btnReset').onclick = () => {
+});
+click('btnPrint', () => { document.querySelectorAll('section.tab').forEach(s=>s.classList.add('on')); setTimeout(()=>{ window.print(); setTimeout(()=>switchTab('dash'), 400); }, 100); });
+click('btnReset', () => {
   if(confirm('همه‌ی اطلاعات محلی پاک شود؟') && confirm('قابل بازگشت نیست.')){
     db = { students:[], tx:[], packages:[] }; syncQueue = [];
     saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success');
   }
-};
-$('btnResetCloud').onclick = async () => {
-  if(!sb){ toast('Supabase در دسترس نیست', 'err'); return; }
+});
+click('btnResetCloud', async () => {
+  if(!sb){ toast('Supabase نیست', 'err'); return; }
   if(!confirm('همه‌ی داده‌های Supabase حذف شوند؟')) return;
   if(!confirm('قابل بازگشت نیست.')) return;
   setSync('syncing','حذف…');
@@ -1493,43 +2321,44 @@ $('btnResetCloud').onclick = async () => {
     db = { students:[], tx:[], packages:[] }; syncQueue = [];
     saveLocal(); saveQueue(); renderAll(); setSync('online','متصل'); toast('حذف شد', 'success');
   }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا', 'err'); }
-};
-$('chartYear').onchange = renderMonthlyChart;
+});
+on('chartYear', 'change', renderMonthlyChart);
 
-$('syncBtn').onclick = async () => {
+click('syncBtn', async () => {
   if(!sb){ toast('Supabase پیکربندی نشده', 'err'); return; }
   setSync('syncing','همگام‌سازی…');
   await flushQueue();
   const ok = await pullFromCloud();
   if(ok){ renderAll(); toast('همگام‌سازی شد', 'success'); }
-  else toast('اتصال برقرار نشد', 'err');
-};
+  else toast('اتصال نشد', 'err');
+});
 
-$('btnWipeTxLocal').onclick = () => {
-  if(!confirm(`همه ${faDigits(db.tx.length)} تراکنش محلی پاک شود؟`)) return;
+click('btnWipeTxLocal', () => {
+  if(!confirm(`${faDigits(db.tx.length)} تراکنش محلی پاک شود؟`)) return;
   db.tx = []; syncQueue = syncQueue.filter(op => op.table !== 'tx');
   saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success');
-};
-$('btnWipeTx').onclick = async () => {
-  if(!confirm(`همه ${faDigits(db.tx.length)} تراکنش پاک شود؟`)) return;
+});
+click('btnWipeTx', async () => {
+  if(!confirm(`${faDigits(db.tx.length)} تراکنش پاک شود؟`)) return;
   if(!confirm('قابل بازگشت نیست.')) return;
   db.tx = []; syncQueue = syncQueue.filter(op => op.table !== 'tx');
   saveLocal(); saveQueue(); renderAll();
-  if(sb){ setSync('syncing','حذف…'); try{ await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000'); setSync('online','متصل'); toast('پاک شد', 'success'); }catch(e){ setSync('offline','آفلاین'); toast('خطا در حذف ابری', 'err'); } }
+  if(sb){ setSync('syncing','حذف…'); try{ await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000'); setSync('online','متصل'); toast('پاک شد', 'success'); }catch(e){ setSync('offline','آفلاین'); toast('خطا', 'err'); } }
   else toast('محلی پاک شد', 'success');
-};
+});
 
-$('btnSnapshots').onclick = () => {
+click('btnSnapshots', () => {
   let snaps = [];
   try{ snaps = JSON.parse(localStorage.getItem(CONFIG.SNAPSHOT_KEY) || '[]'); }catch(e){}
   if(!snaps.length){ toast('نسخه‌ای نیست', 'info'); return; }
-  $('modalBox').innerHTML = `<h2 style="margin-bottom:16px">نسخه‌های قبلی</h2>
+  const mb = $('modalBox'); if(!mb) return;
+  mb.innerHTML = `<h2 style="margin-bottom:16px">نسخه‌های قبلی</h2>
     <div class="table-wrap"><table><thead><tr><th>#</th><th>تاریخ</th><th>حجم</th><th></th></tr></thead><tbody>
     ${snaps.map((s, i) => { const d = new Date(s.ts); return `<tr><td>${faDigits(i+1)}</td><td>${d.toLocaleDateString('fa-IR')} ${d.toLocaleTimeString('fa-IR')}</td><td>${faDigits(Math.round(s.data.length/1024))} KB</td><td><button class="btn xs" onclick="restoreSnapshot(${i})">بازگردانی</button></td></tr>`; }).join('')}
     </tbody></table></div>
     <div class="btn-row" style="margin-top:16px"><button class="btn ghost" onclick="closeModal()">بستن</button></div>`;
   $('modal').classList.add('on');
-};
+});
 window.restoreSnapshot = (i) => {
   let snaps = [];
   try{ snaps = JSON.parse(localStorage.getItem(CONFIG.SNAPSHOT_KEY) || '[]'); }catch(e){}
@@ -1546,54 +2375,49 @@ function applyPalette(pal){
   document.querySelectorAll('.palette-dot').forEach(d => d.classList.toggle('on', d.dataset.pal === pal));
 }
 document.querySelectorAll('.palette-dot').forEach(d => {
-  d.onclick = () => {
+  d.addEventListener('click', () => {
     settings.palette = d.dataset.pal;
     applyPalette(settings.palette);
     saveSettings();
-  };
+  });
 });
-$('compactToggle').onclick = () => {
+click('compactToggle', () => {
   settings.compact = !settings.compact;
   document.body.classList.toggle('compact', settings.compact);
-  $('compactToggle').textContent = settings.compact ? 'فعال' : 'غیرفعال';
+  if($('compactToggle')) $('compactToggle').textContent = settings.compact ? 'فعال' : 'غیرفعال';
   saveSettings();
-};
+});
 
-$('themeBtn').onclick = () => {
+click('themeBtn', () => {
   const r = document.documentElement;
   const isDark = r.dataset.theme === 'dark' || (r.dataset.theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   r.dataset.theme = isDark ? 'light' : 'dark';
   try{ localStorage.setItem(CONFIG.LOCAL_KEY + '_theme', r.dataset.theme); }catch(e){}
-};
+});
 
 /* =====================================================================
    NOTIFICATIONS
    ===================================================================== */
-$('notifBtn').onclick = async () => {
+click('notifBtn', async () => {
   if(!('Notification' in window)){ toast('مرورگر پشتیبانی نمی‌کند', 'err'); return; }
   if(Notification.permission === 'granted'){ showTestNotification(); return; }
   const perm = await Notification.requestPermission();
-  if(perm === 'granted'){ toast('اعلان‌ها فعال شد', 'success'); showTestNotification(); }
+  if(perm === 'granted'){ toast('فعال شد', 'success'); showTestNotification(); }
   else toast('رد شد', 'err');
-};
+});
 function showTestNotification(){
   const b = balances();
   const debtors = db.students.filter(s => b[s.id] && b[s.id].bal > 0);
   const todayBdays = db.students.filter(isBirthdayToday);
-  if(debtors.length){
-    new Notification('بدهکاران', { body: `${faDigits(debtors.length)} نفر بدهکار — مجموع ${fa(debtors.reduce((a,s)=>a+b[s.id].bal,0))} تومان` });
-  }
-  if(todayBdays.length){
-    setTimeout(() => new Notification('🎂 تولد امروز', { body: `${todayBdays.map(s=>s.name).join('، ')}` }), 500);
-  }
-  if(!debtors.length && !todayBdays.length){
-    new Notification('همه چیز مرتب', { body: 'بدهکاری و تولدی امروز نیست ✅' });
-  }
+  if(debtors.length) new Notification('بدهکاران', { body: `${faDigits(debtors.length)} نفر بدهکار — ${fa(debtors.reduce((a,s)=>a+b[s.id].bal,0))} تومان` });
+  if(todayBdays.length) setTimeout(() => new Notification('🎂 تولد امروز', { body: todayBdays.map(s=>s.name).join('، ') }), 500);
+  if(!debtors.length && !todayBdays.length) new Notification('همه چیز مرتب', { body: 'بدهکاری و تولدی نیست ✅' });
 }
 function updateNotifBadge(){
   const b = balances();
   const count = db.students.filter(s => b[s.id] && b[s.id].bal > 0).length + db.students.filter(isBirthdayToday).length;
   const badge = $('notifBadge');
+  if(!badge) return;
   if(count > 0){ badge.style.display = ''; badge.textContent = faDigits(count); }
   else badge.style.display = 'none';
 }
@@ -1607,6 +2431,19 @@ function checkDailyNotif(){
     localStorage.setItem('ali_notif_last', String(now));
   }catch(e){}
 }
+
+/* =====================================================================
+   QUICK ACTIONS
+   ===================================================================== */
+document.querySelectorAll('.qa-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const a = btn.dataset.action;
+    if(a === 'new-session') switchTab('session');
+    else if(a === 'new-payment') quickTx(null, 'payment');
+    else if(a === 'new-student') switchTab('students');
+    else if(a === 'send-sms') switchTab('sms');
+  });
+});
 
 /* =====================================================================
    AUTO SYNC
@@ -1625,8 +2462,6 @@ function startAutoSync(){
    RENDER ALL
    ===================================================================== */
 function renderAll(){
-  renderCourseChips();
-  renderSessionGrid();
   renderDash();
   renderStudents();
   renderSessions();
@@ -1647,14 +2482,12 @@ function renderAll(){
     if(th) document.documentElement.dataset.theme = th;
   }catch(e){}
   loadLocal();
-
-  // apply saved settings
   applyPalette(settings.palette || 'gold');
   document.body.classList.toggle('compact', settings.compact);
-  $('compactToggle').textContent = settings.compact ? 'فعال' : 'غیرفعال';
+  if($('compactToggle')) $('compactToggle').textContent = settings.compact ? 'فعال' : 'غیرفعال';
 
   const t = todayJ();
-  $('todayTxt').textContent = longDate(dateStr(t));
+  if($('todayTxt')) $('todayTxt').textContent = longDate(dateStr(t));
   buildDate('txDate'); txTypeUI();
   buildDate('seDate');
   buildDate('stBirthday', null, true);
@@ -1665,10 +2498,9 @@ function renderAll(){
   checkDailyNotif();
   startAutoSync();
 
-  // splash
-  const greeting = t[2] ? `امروز ${longDate(dateStr(t))}` : '';
-  $('splashMsg').textContent = greeting;
-  setTimeout(() => $('splash').classList.add('hide'), 1200);
+  const splash = $('splash'), splashMsg = $('splashMsg');
+  if(splashMsg) splashMsg.textContent = `امروز ${longDate(dateStr(t))}`;
+  setTimeout(() => { if(splash) splash.classList.add('hide'); }, 1200);
 
   if(sb){
     setSync('syncing','اتصال…');
@@ -1682,4 +2514,4 @@ function renderAll(){
 })();
 </script>
 </body>
-</html>
+</html>   
