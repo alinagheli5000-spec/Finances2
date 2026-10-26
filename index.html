@@ -2,7 +2,12 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f0e15">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="آموزشگاه علی ناقلی">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22%D8%A2%D9%85%D9%88%D8%B2%D8%B4%DA%AF%D8%A7%D9%87%20%D8%B2%D8%A8%D8%A7%D9%86%20%D8%B9%D9%84%DB%8C%20%D9%86%D8%A7%D9%82%D9%84%DB%8C%22%2C%22short_name%22%3A%22%D8%A2%D9%85%D9%88%D8%B2%D8%B4%DA%AF%D8%A7%D9%87%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f0e15%22%2C%22theme_color%22%3A%22%23e0b04a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2522http%253A%2F%2Fwww.w3.org%2F2000%2Fsvg%2522%2520viewBox%253D%25220%25200%2520100%2520100%2522%253E%253Crect%2520width%253D%2522100%2522%2520height%253D%2522100%2522%2520rx%253D%252220%2522%2520fill%253D%2522%2523e0b04a%2522%2F%253E%253Ctext%2520x%253D%252250%2522%2520y%253D%252265%2522%2520font-size%253D%252255%2522%2520font-weight%253D%2522bold%2522%2520text-anchor%253D%2522middle%2522%2520fill%253D%2522%25230f0e15%2522%253E%25D8%25B9%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <title>آموزشگاه زبان علی ناقلی</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -19,7 +24,7 @@
 :root[data-theme="light"]{--bg:#f8f6f1;--bg-2:#fdfcf9;--bg-3:#f0ece2;--card:rgba(255,255,255,.85);--card-2:#faf9f5;--surface:#f2efe6;--border:#e8e2d4;--border-strong:#d4cdba;--ink:#1a1720;--ink-2:#6b6578;--ink-3:#9a95a8;--rose-soft:rgba(201,82,106,.1);--emerald-soft:rgba(42,157,110,.1);--coral-soft:rgba(209,117,68,.1);--violet-soft:rgba(124,92,209,.1);--cyan-soft:rgba(58,156,181,.1);--shadow-sm:0 1px 3px rgba(26,23,32,.05);--shadow:0 4px 20px rgba(26,23,32,.08);--shadow-lg:0 12px 48px rgba(26,23,32,.12)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:"Vazirmatn","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.75;min-height:100vh;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse 800px 400px at 10% 0%,rgba(224,176,74,.06),transparent 50%),radial-gradient(ellipse 600px 300px at 90% 100%,rgba(157,124,240,.05),transparent 50%);background-attachment:fixed;transition:background-color .3s;overflow-x:hidden}
+body{font-family:"Vazirmatn","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.75;min-height:100vh;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse 800px 400px at 10% 0%,rgba(224,176,74,.06),transparent 50%),radial-gradient(ellipse 600px 300px at 90% 100%,rgba(157,124,240,.05),transparent 50%);background-attachment:fixed;transition:background-color .3s;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
 body.compact{font-size:13px}
 body.compact .card{padding:14px}
 body.compact th,body.compact td{padding:8px 10px;font-size:12px}
@@ -27,13 +32,12 @@ body.compact .stat{padding:12px}
 body.compact .stat-value{font-size:18px}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer;position:relative;overflow:hidden}
-button::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.3);transform:scale(0);opacity:0;pointer-events:none;animation:none}
+button::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.3);transform:scale(0);opacity:0;pointer-events:none}
 button.ripple::after{animation:rippleAnim .6s ease-out}
 @keyframes rippleAnim{0%{transform:scale(0);opacity:.6}100%{transform:scale(4);opacity:0}}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
-/* particles */
 #particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4}
 .particle{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--primary);opacity:.3;animation:float linear infinite}
 @keyframes float{0%{transform:translateY(0) translateX(0)}100%{transform:translateY(-100vh) translateX(50px)}}
@@ -81,7 +85,7 @@ button.ripple::after{animation:rippleAnim .6s ease-out}
 .tab-btn:hover{color:var(--ink)}
 .tab-btn.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
 .tab-btn.on svg{opacity:1;color:var(--primary)}
-.container{max-width:1280px;margin:0 auto;padding:24px 24px 80px;position:relative;z-index:1}
+.container{max-width:1280px;margin:0 auto;padding:24px 24px 100px;position:relative;z-index:1}
 section.tab{display:none;animation:tabSlideIn .35s ease}
 section.tab.on{display:block}
 @keyframes tabSlideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
@@ -105,8 +109,11 @@ section.tab.on{display:block}
 .qa-btn b{font-size:13.5px;font-weight:700;color:var(--ink);position:relative;z-index:1}
 .qa-btn small{font-size:11px;color:var(--ink-2);position:relative;z-index:1}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:var(--transition);display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(10px);transform-style:preserve-3d;perspective:600px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:var(--transition);display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(10px);transform-style:preserve-3d;perspective:600px;cursor:pointer}
 .stat:hover{border-color:var(--border-strong);transform:translateY(-2px) rotateX(2deg);box-shadow:var(--shadow)}
+.stat.stat-debt-card{background:linear-gradient(135deg,var(--card),var(--rose-soft));border-color:var(--rose)}
+.stat.stat-credit-card{background:linear-gradient(135deg,var(--card),var(--emerald-soft));border-color:var(--emerald)}
+.stat.stat-bday-card{background:linear-gradient(135deg,var(--card),rgba(224,122,143,.15));border-color:#e07a8f}
 .stat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--primary-glow);color:var(--primary);flex-shrink:0}
 .stat-icon svg{width:18px;height:18px}
 .stat-icon.green{background:var(--emerald-soft);color:var(--emerald)}
@@ -154,6 +161,7 @@ tbody tr:last-child{border-bottom:0}
 tbody tr:hover{background:var(--surface)}
 td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .avatar{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.avatar.lg{width:56px;height:56px;font-size:22px}
 .copy-btn{background:transparent;border:0;color:var(--ink-3);padding:0 4px;cursor:pointer;display:inline-flex;vertical-align:middle;opacity:.5;transition:opacity .15s}
 .copy-btn:hover{opacity:1;color:var(--primary)}
 .copy-btn svg{width:13px;height:13px}
@@ -169,8 +177,11 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .empty{padding:52px 24px;text-align:center;color:var(--ink-2);font-size:13.5px;background:var(--card-2);border-radius:var(--radius)}
 .empty svg{width:52px;height:52px;color:var(--ink-3);margin:0 auto 14px;display:block;opacity:.5}
 .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.adv-filter{background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;display:none}
+.adv-filter.on{display:block}
+.adv-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .bars-list{display:flex;flex-direction:column;gap:12px}
-.bar-row{display:grid;grid-template-columns:100px 1fr 100px;gap:12px;align-items:center;font-size:13px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 100px;gap:12px;align-items:center;font-size:13px}
 .bar-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:6px}
 .bar-track{background:var(--surface);height:10px;border-radius:5px;overflow:hidden}
 .bar-fill{height:100%;border-radius:5px;transition:width .8s cubic-bezier(.4,0,.2,1)}
@@ -208,6 +219,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
 .st-card:hover{border-color:var(--primary);transform:translateY(-2px) rotateX(2deg);box-shadow:var(--shadow-sm)}
 .st-card.on{border-color:var(--primary);background:linear-gradient(135deg,var(--card),var(--primary-glow));box-shadow:0 0 0 3px var(--primary-glow)}
 .st-card.absent-mode{border-color:var(--rose);background:linear-gradient(135deg,var(--card),var(--rose-soft))}
+.st-card.has-debt{border-color:var(--rose)}
 .st-card .st-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .st-card .st-name{font-weight:700;font-size:14.5px;color:var(--ink);display:flex;align-items:center;gap:8px}
 .st-card .st-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;transition:var(--transition)}
@@ -288,8 +300,8 @@ svg text{font-family:"Vazirmatn",sans-serif}
 .bday-card::before{content:"🎂";position:absolute;top:-10px;inset-inline-end:-10px;font-size:100px;opacity:.15;transform:rotate(-15deg)}
 .bday-card h3{font-size:16px;font-weight:800;margin:0 0 6px}
 .bday-card p{font-size:13px;margin:0 0 14px;opacity:.9}
-.bday-item{background:rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;backdrop-filter:blur(10px)}
-.bday-item b{font-size:14px}
+.bday-item{background:rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;backdrop-filter:blur(10px);flex-wrap:wrap}
+.bday-item b{font-size:14px;display:flex;align-items:center;gap:6px}
 .bday-item span{font-size:12px;opacity:.85}
 .bday-item button{background:#fff;color:#e07a8f;border:0;padding:6px 14px;border-radius:var(--radius-pill);font-weight:700;font-size:11.5px;cursor:pointer;transition:var(--transition)}
 .bday-item button:hover{background:#fafafa;transform:scale(1.05)}
@@ -318,6 +330,26 @@ svg text{font-family:"Vazirmatn",sans-serif}
 .recipient .rc-phone{font-size:11.5px;color:var(--ink-2);direction:ltr;text-align:right}
 .recipient .rc-amount{font-weight:700;color:var(--rose);font-variant-numeric:tabular-nums;font-size:12.5px}
 .sms-preview{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;line-height:1.8;color:var(--ink);white-space:pre-wrap;min-height:80px;font-family:inherit}
+.sms-group{padding:10px 14px;background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;cursor:pointer;transition:var(--transition)}
+.sms-group:hover{border-color:var(--primary);background:var(--surface)}
+.sms-group b{font-size:13.5px;color:var(--ink);display:block;margin-bottom:2px}
+.sms-group small{font-size:11.5px;color:var(--ink-2)}
+.wallet-card{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#1a1720;border-radius:var(--radius-lg);padding:24px;margin-bottom:20px;position:relative;overflow:hidden;box-shadow:0 10px 40px var(--primary-glow)}
+.wallet-card::before{content:"";position:absolute;top:-40px;inset-inline-end:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,255,255,.3),transparent 70%);border-radius:50%}
+.wallet-card h3{font-size:13px;font-weight:600;opacity:.85;margin:0 0 8px;position:relative;z-index:1}
+.wallet-card .card-num{font-size:22px;font-weight:900;letter-spacing:2px;direction:ltr;text-align:left;position:relative;z-index:1;font-family:monospace;margin-bottom:12px}
+.wallet-card .card-owner{font-size:13px;font-weight:700;opacity:.9;position:relative;z-index:1}
+.wallet-card .card-actions{display:flex;gap:8px;margin-top:16px;position:relative;z-index:1;flex-wrap:wrap}
+.wallet-card .card-actions button{background:rgba(26,23,32,.15);color:#1a1720;border:0;padding:6px 14px;border-radius:var(--radius-pill);font-weight:700;font-size:11.5px;cursor:pointer;transition:var(--transition)}
+.wallet-card .card-actions button:hover{background:rgba(26,23,32,.25)}
+.wallet-card .qr-box{background:#fff;border-radius:12px;padding:10px;display:inline-block;position:relative;z-index:1;margin-top:12px}
+.weekly-view{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;overflow-x:auto;padding:8px 0}
+.weekly-day{background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:8px;min-height:120px;min-width:100px}
+.weekly-day h4{font-size:11.5px;color:var(--ink-2);font-weight:700;margin:0 0 6px;text-align:center;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.weekly-day.today{background:var(--primary-glow);border-color:var(--primary)}
+.weekly-session{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:10.5px;margin-bottom:4px;cursor:pointer;transition:var(--transition);font-weight:600;display:flex;align-items:center;gap:4px}
+.weekly-session:hover{border-color:var(--primary);transform:translateX(-2px)}
+.weekly-session.absent{background:var(--rose-soft);color:var(--rose);border-color:var(--rose)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:var(--bg);padding:13px 22px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);z-index:9999;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px)}
 .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
 .toast svg{width:18px;height:18px;flex-shrink:0}
@@ -377,8 +409,147 @@ svg text{font-family:"Vazirmatn",sans-serif}
 .share-card .share-stat b{font-size:18px;color:var(--ink);font-weight:800;display:block}
 .share-card .share-brand{font-size:11px;color:var(--ink-3);margin-top:16px}
 .share-actions{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
-@media print{.topbar,.tabbar,.no-print,.toast,.quick-btns,.motivation,#particles{display:none!important}body{background:#fff;color:#000}.container{max-width:100%;padding:0}.card,.stat,.rep-card{box-shadow:none!important;border:1px solid #ddd;break-inside:avoid;backdrop-filter:none!important}section.tab{display:block!important}body:not(.pm) section.tab:not(.on){display:none!important}body.pm .container{display:none}body.pm .modal{position:static;display:block;background:none;padding:0}}
-@media (max-width:640px){.container{padding:20px 16px 60px}.topbar-inner{padding:12px 16px}.tabbar-inner{padding:0 12px}.page-title{font-size:21px}.stat-value{font-size:19px}.date-chip,.sync-chip{font-size:11px;padding:5px 10px}.quick-actions{grid-template-columns:repeat(2,1fr)}.focus-btn{padding:24px 32px;font-size:15px;min-width:160px}.focus-btn svg{width:32px;height:32px}.focus-overlay h1{font-size:24px}}
+.student-profile{display:flex;flex-direction:column;gap:16px}
+.profile-header{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.profile-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.profile-info h2{font-size:20px;font-weight:800;color:var(--ink);margin:0}
+.profile-info .meta{font-size:13px;color:var(--ink-2);margin-top:4px}
+.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0}
+.profile-stat{background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+.profile-stat small{font-size:11px;color:var(--ink-2);display:block}
+.profile-stat b{font-size:18px;color:var(--ink);font-weight:800;display:block;margin-top:4px}
+.import-drop{border:2px dashed var(--primary);border-radius:var(--radius-lg);padding:32px;text-align:center;background:var(--primary-glow);cursor:pointer;transition:var(--transition)}
+.import-drop:hover{background:var(--primary-glow);border-style:solid;transform:scale(1.01)}
+.import-drop.on{background:var(--emerald-soft);border-color:var(--emerald)}
+.qr-container{text-align:center;padding:16px}
+.fab-group{position:fixed;bottom:24px;inset-inline-end:24px;z-index:50;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.fab{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#1a1720;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 24px var(--primary-glow);transition:var(--transition);font-size:24px}
+.fab:hover{transform:scale(1.1) rotate(90deg);box-shadow:0 8px 30px var(--primary-glow)}
+.fab svg{width:26px;height:26px}
+@media print{
+  @page{size:A4;margin:10mm}
+  .topbar,.tabbar,.no-print,.toast,.quick-btns,.motivation,#particles,#splash,.sidebar,.focus-overlay,.share-preview,.icon-btn,.search-top,.sync-chip,.date-chip,.quick-actions,.fab-group,.adv-filter,.filters .noprint{display:none!important}
+  *{color:#000!important;background:transparent!important;box-shadow:none!important;text-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transition:none!important}
+  html,body{background:#fff!important;color:#000!important;font-size:11pt!important;line-height:1.4!important;padding:0!important;margin:0!important}
+  .container{max-width:100%!important;padding:0!important;margin:0!important}
+  section.tab{display:none!important;page-break-before:always}
+  section.tab.on,section.tab.print-show{display:block!important}
+  section.tab:first-of-type{page-break-before:avoid}
+  .card,.stat,.rep-card,.record-item,.st-card,.ach-card{border:2px solid #000!important;border-radius:4px!important;padding:8px!important;margin-bottom:8px!important;break-inside:avoid;page-break-inside:avoid;background:#fff!important}
+  .card-title{color:#000!important;font-weight:900!important;font-size:12pt!important;border-bottom:2.5px solid #000!important;padding-bottom:4px!important;margin-bottom:8px!important}
+  .card-title svg{display:none!important}
+  .stat-label,.rep-card small,.daily-summary .dsum small{color:#000!important;font-weight:800!important;font-size:10pt!important}
+  .stat-value,.rep-card b,.daily-summary .dsum b{color:#000!important;font-weight:900!important;font-size:13pt!important}
+  .stat-value small,.rep-card b small,.daily-summary .dsum b small{color:#333!important;font-size:8pt!important}
+  .stat-icon{display:none!important}
+  .stat{border-inline-start:5px solid #000!important;display:block!important;padding:6px 10px!important}
+  .stat.stat-debt-card,.stat.stat-credit-card,.stat.stat-bday-card{background:#fff!important;border-color:#000!important}
+  .stat.stat-debt-card{border-inline-start-color:#b00!important}
+  .stat.stat-credit-card{border-inline-start-color:#080!important}
+  .rep-card::before,.stat::before{background:#000!important;width:4px!important}
+  .rep-card.green::before{background:#080!important}
+  .rep-card.red::before{background:#b00!important}
+  .rep-card.orange::before{background:#c60!important}
+  .rep-card.purple::before{background:#606!important}
+  .table-wrap,.daily-table-wrap{border:2px solid #000!important;border-radius:4px!important;overflow:visible!important;background:#fff!important}
+  table{min-width:0!important;width:100%!important;font-size:9pt!important;border-collapse:collapse!important;background:#fff!important}
+  th{background:#ddd!important;color:#000!important;font-weight:900!important;font-size:9pt!important;padding:5px 6px!important;border:1.5px solid #000!important;text-transform:none!important;letter-spacing:0!important;position:static!important}
+  td{background:#fff!important;color:#000!important;border:1.5px solid #333!important;padding:4px 6px!important;font-size:9pt!important;white-space:normal!important}
+  tbody tr:nth-child(even) td{background:#f0f0f0!important}
+  td.n{font-weight:900!important;color:#000!important}
+  .neg{color:#a00!important;font-weight:900!important}
+  .pos{color:#060!important;font-weight:900!important}
+  .tag{border:1.5px solid #333!important;background:#fff!important;color:#000!important;font-weight:800!important;padding:1px 5px!important;font-size:8pt!important;border-radius:3px!important}
+  .tag.debt,.tag.absent{background:#fee!important;color:#a00!important;border-color:#a00!important}
+  .tag.credit,.tag.session{background:#efe!important;color:#060!important;border-color:#060!important}
+  .tag.exp{background:#fef!important;color:#c60!important;border-color:#c60!important}
+  .tag.zero,.tag.tutor-tag,.tag.birthday{background:#f0f0f0!important;color:#000!important;border-color:#333!important}
+  .avatar{background:#333!important;color:#fff!important;border:1.5px solid #000!important;width:22px!important;height:22px!important;font-size:10px!important;box-shadow:none!important}
+  .avatar.lg{width:40px!important;height:40px!important;font-size:16px!important}
+  .legend{color:#000!important;font-weight:800!important;margin-top:6px!important}
+  .legend span::before{border:1.5px solid #000!important}
+  .bars-list .bar-track{border:1.5px solid #333!important;background:#fff!important;height:10px!important}
+  .bars-list .bar-fill{background:#333!important}
+  .bars-list .bar-fill.debt{background:#a00!important}
+  .bars-list .bar-fill.credit{background:#060!important}
+  .bar-name,.bar-val{color:#000!important;font-weight:800!important}
+  .donut-wrap svg{max-width:130px!important;height:auto!important;filter:grayscale(1) contrast(3)}
+  .donut-legend .item{color:#000!important;font-weight:800!important}
+  .donut-legend b{color:#000!important}
+  .empty{border:2px dashed #333!important;background:#f5f5f5!important;color:#000!important;padding:12px!important;font-weight:700!important}
+  .empty svg{display:none!important}
+  .hint{color:#333!important;font-size:9.5pt!important}
+  .daily-summary{grid-template-columns:repeat(2,1fr)!important;gap:6px!important}
+  .daily-summary .dsum{border:2px solid #000!important;padding:6px!important;background:#fff!important}
+  .daily-summary .dsum.gold{background:#fff3cd!important;border-color:#8a6500!important}
+  .daily-summary .dsum.gold b{color:#000!important}
+  .daily-table-wrap tr.highlight td{background:#fff3cd!important}
+  svg text{fill:#000!important;font-weight:800!important}
+  .report-grid,.stats-grid{grid-template-columns:repeat(3,1fr)!important;gap:6px!important}
+  .records-grid{grid-template-columns:repeat(2,1fr)!important;gap:6px!important}
+  .record-item{border:2px solid #000!important;padding:6px!important}
+  .record-info b{color:#000!important;font-weight:900!important}
+  .record-icon{filter:grayscale(1) contrast(3)}
+  .page-head{display:none!important}
+  .btn,.btn-row,.icon-btn,.copy-btn,.st-amount,.st-check,.fab,.fab-group{display:none!important}
+  h1,h2,h3,h4{color:#000!important;font-weight:900!important;page-break-after:avoid}
+  .ach-card{border:2px solid #000!important}
+  .ach-card.locked{opacity:1!important;filter:grayscale(1)!important}
+  .ach-icon{filter:grayscale(1) contrast(3)}
+  .ach-card b{color:#000!important;font-weight:900!important}
+  .ach-card small{color:#333!important;font-weight:700!important}
+  .bday-card{border:2px solid #000!important;background:#fff3cd!important;color:#000!important}
+  .bday-card::before{display:none}
+  .bday-item{background:#fff!important;border:1.5px solid #000!important}
+  body.pm .container{display:none!important}
+  body.pm .modal{position:static!important;display:block!important;background:#fff!important;padding:0!important;backdrop-filter:none!important;max-width:100%!important;margin:0!important}
+  body.pm .modal-box{background:#fff!important;color:#000!important;border:2px solid #000!important;padding:16px!important;margin:0!important;max-width:100%!important;box-shadow:none!important}
+  body.pm .modal-box *{color:#000!important}
+}
+@media (max-width:900px){
+  .container{padding:20px 16px 100px}
+  .topbar-inner{padding:12px 16px}
+  .tabbar{top:auto;position:relative}
+  .tabbar-inner{padding:0 8px;gap:2px;justify-content:flex-start}
+  .tab-btn{padding:10px 12px;font-size:12px}
+  .page-title{font-size:19px}
+  .stat-value{font-size:18px}
+  .date-chip,.sync-chip{font-size:10.5px;padding:4px 8px}
+  .quick-actions{grid-template-columns:repeat(2,1fr);gap:10px}
+  .qa-btn{padding:12px;gap:6px}
+  .qa-icon{width:36px;height:36px}
+  .qa-icon svg{width:18px;height:18px}
+  .qa-btn b{font-size:12px}
+  .qa-btn small{display:none}
+  .grid-2{grid-template-columns:1fr}
+  .focus-btn{padding:24px 32px;font-size:15px;min-width:160px}
+  .focus-btn svg{width:32px;height:32px}
+  .focus-overlay h1{font-size:24px}
+  .modal{padding:0;align-items:flex-end}
+  .modal-box{border-radius:24px 24px 0 0;margin:0;max-height:90vh;overflow-y:auto}
+  .form-grid{grid-template-columns:1fr}
+  .filters{grid-template-columns:1fr 1fr}
+  .field{grid-column:1/-1}
+  .date-row{grid-template-columns:1fr 1fr 1fr}
+  .tab-btn svg{width:14px;height:14px}
+  .bar-row{grid-template-columns:90px 1fr 80px;gap:8px}
+  .stat{padding:14px}
+  .card{padding:16px}
+  .table-wrap{border-radius:10px}
+  table{font-size:12px}
+  th,td{padding:8px 10px}
+}
+@media (max-width:480px){
+  .container{padding:16px 12px 100px}
+  .quick-actions{grid-template-columns:repeat(2,1fr);gap:8px}
+  .stat-value{font-size:16px}
+  .rep-card b{font-size:18px}
+  .daily-summary{grid-template-columns:1fr 1fr}
+  .stat-value{font-size:16px}
+  .donut-wrap{padding:8px 0}
+  .bday-item{flex-direction:column;align-items:flex-start;gap:6px}
+  .overdue-item{flex-direction:column;align-items:flex-start}
+}
 </style>
 </head>
 <body>
@@ -400,6 +571,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
       <div class="sync-chip" id="syncChip"><span class="sync-dot"></span><span id="syncText">اتصال…</span></div>
       <button class="icon-btn" id="focusBtn" title="حالت تمرکز"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></button>
       <button class="icon-btn" id="shareBtn" title="اشتراک‌گذاری"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+      <button class="icon-btn" id="installBtn" title="نصب اپ" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
       <button class="icon-btn" id="notifBtn" title="اعلان"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="badge" id="notifBadge" style="display:none">0</span></button>
       <button class="icon-btn" id="syncBtn" title="همگام‌سازی"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
       <button class="icon-btn" id="themeBtn" title="تم"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
@@ -412,6 +584,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
   <button class="tab-btn" data-tab="students"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>زبان‌آموزان</button>
   <button class="tab-btn" data-tab="session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>ثبت جلسه</button>
   <button class="tab-btn" data-tab="tx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>مالی</button>
+  <button class="tab-btn" data-tab="weekly"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>هفته</button>
   <button class="tab-btn" data-tab="activity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>فعالیت</button>
   <button class="tab-btn" data-tab="sms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>پیامک</button>
   <button class="tab-btn" data-tab="birthdays"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>تولدها</button>
@@ -487,7 +660,20 @@ svg text{font-family:"Vazirmatn",sans-serif}
     </form>
   </div>
   <div class="card">
-    <div class="filters"><input id="stSearch" placeholder="جستجو…"><select id="stFilter"><option value="">همه</option><option value="debt">بدهکار</option><option value="credit">بستانکار</option><option value="zero">تسویه</option></select></div>
+    <div class="filters">
+      <input id="stSearch" placeholder="جستجو…">
+      <select id="stFilter"><option value="">همه</option><option value="debt">بدهکار</option><option value="credit">بستانکار</option><option value="zero">تسویه</option></select>
+      <button class="btn ghost sm" id="advFilterToggle">🔍 فیلتر پیشرفته</button>
+    </div>
+    <div class="adv-filter" id="advFilter">
+      <div class="adv-filter-grid">
+        <div class="field"><label>دوره</label><select id="advCourse"><option value="">همه</option></select></div>
+        <div class="field"><label>حداقل بدهی</label><input id="advMinDebt" class="money" placeholder="تومان"></div>
+        <div class="field"><label>حداقل جلسات</label><input id="advMinSessions" type="number" placeholder="—"></div>
+        <div class="field"><label>فقط بدهی بیش از</label><select id="advDebtDays"><option value="">—</option><option value="30">۳۰ روز</option><option value="60">۶۰ روز</option><option value="90">۹۰ روز</option></select></div>
+      </div>
+      <div class="btn-row" style="margin-top:12px"><button class="btn sm ghost" id="advReset">پاک کردن فیلترها</button></div>
+    </div>
     <div class="table-wrap" id="stTable"></div>
   </div>
 </section>
@@ -503,6 +689,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
         <div class="date-row" id="seDate"></div>
         <div class="quick-btns"><button type="button" data-off="0">امروز</button><button type="button" data-off="-1">دیروز</button><button type="button" data-off="-2">۲ روز پیش</button><button type="button" data-off="-7">هفته پیش</button></div>
         <label style="margin-top:12px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--ink-2)"><input type="checkbox" id="seAbsentMode" style="width:auto;padding:0;margin:0">حالت غیاب</label>
+        <label style="margin-top:12px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--ink-2);margin-inline-start:16px"><input type="checkbox" id="seAutoNotify" style="width:auto;padding:0;margin:0">ارسال پیام خودکار به والد</label>
       </div>
       <div class="field">
         <label>شرح (اختیاری)</label>
@@ -530,6 +717,19 @@ svg text{font-family:"Vazirmatn",sans-serif}
 
 <section class="tab" id="tab-tx">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>مالی</div><div class="page-sub">بدهی، دریافتی و هزینه</div></div></div>
+  <div class="card" id="walletCard">
+    <h3 class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>کارت بانکی من</h3>
+    <div class="wallet-card" id="walletDisplay">
+      <h3>شماره کارت</h3>
+      <div class="card-num" id="walletNumDisplay">— — — — — — — —</div>
+      <div class="card-owner" id="walletOwnerDisplay">علی ناقلی</div>
+      <div class="qr-box" id="walletQR"></div>
+      <div class="card-actions">
+        <button onclick="copyWallet()">📋 کپی شماره</button>
+        <button onclick="editWallet()">✏️ ویرایش</button>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <h3 class="card-title" id="txTitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>ثبت تراکنش</span></h3>
     <form class="form-grid" id="txForm">
@@ -551,6 +751,21 @@ svg text{font-family:"Vazirmatn",sans-serif}
   </div>
 </section>
 
+<section class="tab" id="tab-weekly">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>برنامه هفتگی</div><div class="page-sub">کلاس‌های این هفته</div></div></div>
+  <div class="card">
+    <div class="calendar-head">
+      <h3 id="weekTitle">—</h3>
+      <div class="cal-nav">
+        <button id="weekPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button id="weekToday" style="width:auto;padding:0 12px;font-size:12px">این هفته</button>
+        <button id="weekNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+      </div>
+    </div>
+    <div class="weekly-view" id="weeklyView"></div>
+  </div>
+</section>
+
 <section class="tab" id="tab-activity">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>فعالیت‌ها</div><div class="page-sub">تاریخچهٔ همهٔ کارها</div></div></div>
   <div class="card"><div id="activityList"></div></div>
@@ -567,16 +782,18 @@ svg text{font-family:"Vazirmatn",sans-serif}
   <div class="sms-panel on" id="sms-debt">
     <div class="grid-2">
       <div class="card">
-        <h3 class="card-title">گیرندگان</h3>
+        <h3 class="card-title">گروه‌های آماده</h3>
+        <div id="smsGroups"></div>
+        <h3 class="card-title" style="margin-top:16px">گیرندگان</h3>
         <div class="btn-row" style="margin-bottom:10px"><button class="btn xs ghost" onclick="smsSelectAll('debt')">همه</button><button class="btn xs ghost" onclick="smsSelectNone('debt')">هیچ‌کدام</button></div>
         <div class="recipient-list" id="smsDebtList"></div>
       </div>
       <div class="card">
         <h3 class="card-title">متن</h3>
         <textarea id="smsDebtText" rows="6"></textarea>
-        <p class="hint" style="margin-top:8px">متغیرها: <code>{name}</code>، <code>{amount}</code>، <code>{academy}</code></p>
+        <p class="hint" style="margin-top:8px">متغیرها: <code>{name}</code>، <code>{amount}</code>، <code>{academy}</code>، <code>{wallet}</code></p>
         <div class="sms-preview" id="smsDebtPreview" style="margin-top:12px"></div>
-        <div class="btn-row" style="margin-top:12px"><button class="btn success" onclick="sendSms('debt')">📤 ارسال</button><button class="btn ghost" onclick="openSmsFallback('debt')">📱 باز کردن در اپ</button></div>
+        <div class="btn-row" style="margin-top:12px"><button class="btn success" onclick="sendSms('debt')">📤 ارسال</button><button class="btn ghost" onclick="openSmsFallback('debt')">📱 باز کردن در اپ</button><button class="btn ghost" onclick="openWhatsApp('debt')">💬 واتساپ</button></div>
       </div>
     </div>
   </div>
@@ -587,14 +804,14 @@ svg text{font-family:"Vazirmatn",sans-serif}
         <h3 class="card-title">متن تبریک</h3>
         <textarea id="smsBdayText" rows="6">🎂 {name} عزیز، تولدت مبارک! — {academy}</textarea>
         <div class="sms-preview" id="smsBdayPreview" style="margin-top:12px"></div>
-        <div class="btn-row" style="margin-top:12px"><button class="btn success" onclick="sendSms('birthday')">📤 ارسال</button><button class="btn ghost" onclick="openSmsFallback('birthday')">📱 باز کردن در اپ</button></div>
+        <div class="btn-row" style="margin-top:12px"><button class="btn success" onclick="sendSms('birthday')">📤 ارسال</button><button class="btn ghost" onclick="openSmsFallback('birthday')">📱 باز کردن در اپ</button><button class="btn ghost" onclick="openWhatsApp('birthday')">💬 واتساپ</button></div>
       </div>
     </div>
   </div>
   <div class="sms-panel" id="sms-custom">
     <div class="grid-2">
       <div class="card"><h3 class="card-title">گیرندگان</h3><div class="btn-row" style="margin-bottom:10px"><button class="btn xs ghost" onclick="smsSelectAll('custom')">همه</button><button class="btn xs ghost" onclick="smsSelectNone('custom')">هیچ‌کدام</button></div><div class="recipient-list" id="smsCustomList"></div></div>
-      <div class="card"><h3 class="card-title">متن</h3><textarea id="smsCustomText" rows="8"></textarea><div class="sms-preview" id="smsCustomPreview" style="margin-top:12px"></div><div class="btn-row" style="margin-top:12px"><button class="btn success" onclick="sendSms('custom')">📤 ارسال</button><button class="btn ghost" onclick="openSmsFallback('custom')">📱 باز کردن در اپ</button></div></div>
+      <div class="card"><h3 class="card-title">متن</h3><textarea id="smsCustomText" rows="8"></textarea><div class="sms-preview" id="smsCustomPreview" style="margin-top:12px"></div><div class="btn-row" style="margin-top:12px"><button class="btn success" onclick="sendSms('custom')">📤 ارسال</button><button class="btn ghost" onclick="openSmsFallback('custom')">📱 باز کردن در اپ</button><button class="btn ghost" onclick="openWhatsApp('custom')">💬 واتساپ</button></div></div>
     </div>
   </div>
   <div class="sms-panel" id="sms-config">
@@ -639,7 +856,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
       <div class="field"><label>تا</label><div class="date-row" id="repTo"></div></div>
       <div class="field"><label>میان‌بر</label><div class="btn-row tight"><button class="btn ghost sm" data-range="month">ماه</button><button class="btn ghost sm" data-range="lastMonth">ماه قبل</button><button class="btn ghost sm" data-range="30">۳۰ روز</button><button class="btn ghost sm" data-range="7">۷ روز</button><button class="btn ghost sm" data-range="year">سال</button></div></div>
     </div>
-    <div class="btn-row" style="margin-top:16px"><button class="btn" id="repRun">نمایش</button><button class="btn ghost" id="repPrint">چاپ</button><span class="hint" style="align-self:center" id="repSummaryTxt"></span></div>
+    <div class="btn-row" style="margin-top:16px"><button class="btn" id="repRun">نمایش</button><button class="btn success" id="repPrint">🖨 چاپ حرفه‌ای</button><button class="btn ghost" id="repPDF">📄 PDF</button><span class="hint" style="align-self:center" id="repSummaryTxt"></span></div>
   </div>
   <div class="report-grid" id="repCards"></div>
   <div class="card"><h3 class="card-title">تفکیک زبان‌آموز</h3><div class="table-wrap" id="repStudents"></div></div>
@@ -658,10 +875,29 @@ svg text{font-family:"Vazirmatn",sans-serif}
       <div class="setting-item"><div class="si-info"><b>صداها</b><small>افکت صوتی</small></div><button class="btn sm ghost" id="soundToggle">فعال</button></div>
     </div>
   </div>
+  <div class="card">
+    <h3 class="card-title">💳 کیف پول</h3>
+    <div class="form-grid">
+      <div class="field"><label>شماره کارت</label><input id="walletNum" placeholder="6037-XXXX-XXXX-XXXX" maxlength="25"></div>
+      <div class="field"><label>نام صاحب کارت</label><input id="walletOwner" placeholder="علی ناقلی"></div>
+      <div class="btn-row"><button class="btn" id="btnSaveWallet">ذخیره</button></div>
+    </div>
+  </div>
   <div class="cleanup-box"><h2>🧹 پاک‌سازی مالی</h2><p>تراکنش‌ها پاک می‌شوند ولی زبان‌آموزان می‌مانند.</p><div class="btn-row"><button class="btn danger" id="btnWipeTx">پاک کردن همه (محلی + ابری)</button><button class="btn ghost" id="btnWipeTxLocal">فقط محلی</button></div></div>
   <div class="grid-2">
-    <div class="card"><h3 class="card-title">📥 خروجی</h3><div class="btn-row"><button class="btn ghost" id="btnCsvTx">CSV تراکنش‌ها</button><button class="btn ghost" id="btnCsvSt">CSV زبان‌آموزان</button><button class="btn ghost" id="btnCsvSe">CSV جلسات</button><button class="btn" id="btnPrint">چاپ</button></div></div>
+    <div class="card"><h3 class="card-title">📥 خروجی</h3><div class="btn-row"><button class="btn ghost" id="btnCsvTx">CSV تراکنش‌ها</button><button class="btn ghost" id="btnCsvSt">CSV زبان‌آموزان</button><button class="btn ghost" id="btnCsvSe">CSV جلسات</button><button class="btn" id="btnPrint">🖨 چاپ حرفه‌ای</button></div></div>
     <div class="card"><h3 class="card-title">💾 پشتیبان</h3><div class="btn-row"><button class="btn" id="btnBackup">دانلود پشتیبان</button><button class="btn ghost" id="btnRestore">بازیابی</button><input type="file" id="fileRestore" accept=".json" style="display:none"></div></div>
+  </div>
+  <div class="card">
+    <h3 class="card-title">📥 ورود از اکسل</h3>
+    <p class="hint" style="margin-bottom:12px">فایل CSV یا Excel با ستون‌های: نام، دوره، شهریه، تلفن، تلفن منزل، تولد، شغل پدر، شغل مادر، آدرس</p>
+    <div class="import-drop" id="importDrop">
+      <div style="font-size:36px;margin-bottom:8px">📊</div>
+      <b>فایل رو بکش و رها کن</b>
+      <div class="hint" style="margin-top:4px">یا کلیک کن</div>
+      <input type="file" id="importFile" accept=".csv,.xlsx,.xls" style="display:none">
+    </div>
+    <div class="table-wrap" id="importPreview" style="margin-top:16px;display:none"></div>
   </div>
   <div class="card">
     <h3 class="card-title">📦 پکیج جلسات</h3>
@@ -677,6 +913,11 @@ svg text{font-family:"Vazirmatn",sans-serif}
 </section>
 
 </main>
+
+<div class="fab-group no-print">
+  <button class="fab" id="fabFocus" title="تمرکز"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></button>
+  <button class="fab" id="fabQuick" title="ثبت سریع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+</div>
 
 <div class="focus-overlay" id="focusOverlay">
   <div class="focus-close" id="focusClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
@@ -706,17 +947,18 @@ svg text{font-family:"Vazirmatn",sans-serif}
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 'use strict';
 
 const CONFIG = {
   SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',
   SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
-  LOCAL_KEY:    'ali_academy_v11',
-  QUEUE_KEY:    'ali_academy_v11_queue',
-  SETTINGS_KEY: 'ali_academy_v11_settings',
-  ACH_KEY:      'ali_academy_v11_achievements',
-  OLD_KEYS:     ['ali_academy_v10','ali_academy_v9','ali_academy_v8','ali_english_academy_v7','ali_naghli_finance_v6','ali_naghli_finance_v5']
+  LOCAL_KEY: 'ali_academy_v12',
+  QUEUE_KEY: 'ali_academy_v12_queue',
+  SETTINGS_KEY: 'ali_academy_v12_settings',
+  ACH_KEY: 'ali_academy_v12_achievements',
+  OLD_KEYS: ['ali_academy_v11','ali_academy_v10','ali_academy_v9','ali_academy_v8','ali_english_academy_v7','ali_naghli_finance_v6','ali_naghli_finance_v5']
 };
 
 const $ = id => document.getElementById(id);
@@ -725,15 +967,7 @@ function click(id, handler){ return on(id, 'click', handler); }
 
 const MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const WEEKDAYS = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
-const MOTIVATIONS = [
-  'امروز روز خوبیه برای یه قدم مثبت! 💪',
-  'کارت عالیه، ادامه بده! 🌟',
-  'هر جلسه یه سرمایه‌گذاری روی آینده‌ست ✨',
-  'دانش‌آموزات بهت افتخار می‌کنن 🎓',
-  'یه لبخند بزن، امروز روز موفقیته 😊',
-  'کسب‌وکارت داره رشد می‌کنه، حواست باشه! 📈',
-  'تفاوت بین خوب و عالی، تو تلاشه 🔥'
-];
+const MOTIVATIONS = ['امروز روز خوبیه برای یه قدم مثبت! 💪','کارت عالیه، ادامه بده! 🌟','هر جلسه یه سرمایه‌گذاری روی آینده‌ست ✨','دانش‌آموزات بهت افتخار می‌کنن 🎓','یه لبخند بزن، امروز روز موفقیته 😊','کسب‌وکارت داره رشد می‌کنه، حواست باشه! 📈','تفاوت بین خوب و عالی، تو تلاشه 🔥','وقتت رو با ارزش‌ترین کارها پر کن ⏰','هر پرداختی که ثبت می‌کنی، یه نفس راحت‌تره 💰'];
 const FA = '۰۱۲۳۴۵۶۷۸۹';
 const faDigits = s => String(s).replace(/\d/g, d => FA[d]);
 const fa = n => Math.round(n).toLocaleString('fa-IR');
@@ -779,11 +1013,7 @@ function playSound(type){
 let _toastH;
 function toast(msg, type, action){
   const t = $('toast'); if(!t) return;
-  const icons = {
-    err: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
-    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
-  };
+  const icons = { err: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>', info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' };
   t.innerHTML = (icons[type] || icons.info) + '<span>' + msg + '</span>' + (action ? `<button class="toast-action">${action.label}</button>` : '');
   t.className = 'toast on' + (type === 'err' ? ' err' : type === 'success' ? ' success' : '');
   if(action) t.querySelector('.toast-action').onclick = () => { action.fn(); t.classList.remove('on'); };
@@ -860,8 +1090,10 @@ const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY) ? win
 let db = { students: [], tx: [], packages: [], activities: [] };
 let syncQueue = [];
 let undoBuffer = [];
-let settings = { smsProvider:'none', smsApiKey:'', smsSender:'', smsAcademy:'آموزشگاه زبان علی ناقلی', palette:'gold', compact:false, sound:true, particles:true, seasonAuto:true };
+let settings = { smsProvider:'none', smsApiKey:'', smsSender:'', smsAcademy:'آموزشگاه زبان علی ناقلی', palette:'gold', compact:false, sound:true, particles:true, seasonAuto:true, walletNum:'', walletOwner:'علی ناقلی' };
 let achievements = {};
+let deferredPrompt = null;
+let currentWeekStart = null;
 
 function getSeason(){
   const m = todayJ()[1];
@@ -878,10 +1110,7 @@ function migrateOldData(){
     if(!old) continue;
     try{
       const oldDb = JSON.parse(old);
-      oldDb.students = (oldDb.students || []).map(s => ({ 
-        ...s, birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0,
-        father_job: s.father_job || '', mother_job: s.mother_job || '', address: s.address || '', home_phone: s.home_phone || ''
-      }));
+      oldDb.students = (oldDb.students || []).map(s => ({ ...s, birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0, father_job: s.father_job || '', mother_job: s.mother_job || '', address: s.address || '', home_phone: s.home_phone || '' }));
       oldDb.tx = (oldDb.tx || []).map(t => ({ ...t, category: t.category || null, tag: t.tag || null, absent: !!t.absent }));
       oldDb.packages = oldDb.packages || [];
       oldDb.activities = oldDb.activities || [];
@@ -895,59 +1124,30 @@ function migrateOldData(){
 function loadLocal(){
   migrateOldData();
   try{
-    const r = localStorage.getItem(CONFIG.LOCAL_KEY);
-    if(r) db = JSON.parse(r);
-    const q = localStorage.getItem(CONFIG.QUEUE_KEY);
-    if(q) syncQueue = JSON.parse(q);
-    const s = localStorage.getItem(CONFIG.SETTINGS_KEY);
-    if(s) settings = { ...settings, ...JSON.parse(s) };
-    const a = localStorage.getItem(CONFIG.ACH_KEY);
-    if(a) achievements = JSON.parse(a);
+    const r = localStorage.getItem(CONFIG.LOCAL_KEY); if(r) db = JSON.parse(r);
+    const q = localStorage.getItem(CONFIG.QUEUE_KEY); if(q) syncQueue = JSON.parse(q);
+    const s = localStorage.getItem(CONFIG.SETTINGS_KEY); if(s) settings = { ...settings, ...JSON.parse(s) };
+    const a = localStorage.getItem(CONFIG.ACH_KEY); if(a) achievements = JSON.parse(a);
   }catch(e){}
-  db.students = db.students || [];
-  db.tx = db.tx || [];
-  db.packages = db.packages || [];
-  db.activities = db.activities || [];
-  db.students.forEach(s => { 
-    if(s.package_size === undefined) s.package_size = 0; 
-    if(s.package_used === undefined) s.package_used = 0; 
-    if(s.birthday === undefined) s.birthday = null;
-    if(s.father_job === undefined) s.father_job = '';
-    if(s.mother_job === undefined) s.mother_job = '';
-    if(s.address === undefined) s.address = '';
-    if(s.home_phone === undefined) s.home_phone = '';
-  });
+  db.students = db.students || []; db.tx = db.tx || []; db.packages = db.packages || []; db.activities = db.activities || [];
+  db.students.forEach(s => { if(s.package_size === undefined) s.package_size = 0; if(s.package_used === undefined) s.package_used = 0; if(s.birthday === undefined) s.birthday = null; if(s.father_job === undefined) s.father_job = ''; if(s.mother_job === undefined) s.mother_job = ''; if(s.address === undefined) s.address = ''; if(s.home_phone === undefined) s.home_phone = ''; });
   db.tx.forEach(t => { if(t.category === undefined) t.category = null; if(t.tag === undefined) t.tag = null; if(t.absent === undefined) t.absent = false; });
   syncQueue = Array.isArray(syncQueue) ? syncQueue : [];
 }
 
-function saveLocal(){
-  try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }
-  catch(e){ console.error('saveLocal error:', e); try{ localStorage.removeItem(CONFIG.QUEUE_KEY); localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }catch(e2){} }
-}
+function saveLocal(){ try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); } catch(e){ console.error('save error', e); try{ localStorage.removeItem(CONFIG.QUEUE_KEY); localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }catch(e2){} } }
 function saveQueue(){ try{ localStorage.setItem(CONFIG.QUEUE_KEY, JSON.stringify(syncQueue)); }catch(e){} }
 function saveSettings(){ try{ localStorage.setItem(CONFIG.SETTINGS_KEY, JSON.stringify(settings)); }catch(e){} }
 function saveAch(){ try{ localStorage.setItem(CONFIG.ACH_KEY, JSON.stringify(achievements)); }catch(e){} }
 function enqueue(op){ syncQueue.push(op); saveQueue(); }
 function setSync(state, label){ const c = $('syncChip'), t = $('syncText'); if(c) c.className = 'sync-chip ' + state; if(t) t.textContent = label; }
 
-function logActivity(type, desc, data){
-  db.activities.unshift({ id: uid(), ts: Date.now(), type, desc, data });
-  if(db.activities.length > 200) db.activities = db.activities.slice(0, 200);
-}
+function logActivity(type, desc){ db.activities.unshift({ id: uid(), ts: Date.now(), type, desc }); if(db.activities.length > 200) db.activities = db.activities.slice(0, 200); }
 
-function rowToStudent(s){ return { 
-  id: s.id, name: s.name, course: s.course || '', fee: s.fee || 0, phone: s.phone || '', note: s.note || '', 
-  birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0,
-  father_job: s.father_job || '', mother_job: s.mother_job || '', address: s.address || '', home_phone: s.home_phone || ''
-}; }
+function rowToStudent(s){ return { id: s.id, name: s.name, course: s.course || '', fee: s.fee || 0, phone: s.phone || '', note: s.note || '', birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0, father_job: s.father_job || '', mother_job: s.mother_job || '', address: s.address || '', home_phone: s.home_phone || '' }; }
 function rowToTx(t){ return { id: t.id, type: t.type, sid: t.sid, amount: t.amount, date: t.date, method: t.method || '', desc: t.descr || '', session_date: t.session_date || null, is_session: !!t.is_session, category: t.category || null, tag: t.tag || null, absent: !!t.absent, ts: t.created_at ? new Date(t.created_at).getTime() : Date.now() }; }
 function txToRow(t){ return { type: t.type, sid: t.sid, amount: t.amount, date: t.date, method: t.method, descr: t.desc, session_date: t.session_date || null, is_session: !!t.is_session, category: t.category || null, tag: t.tag || null, absent: !!t.absent }; }
-function studentToRow(s){ return { 
-  name: s.name, course: s.course, fee: s.fee, phone: s.phone, note: s.note, birthday: s.birthday || null, 
-  package_size: s.package_size || 0, package_used: s.package_used || 0,
-  father_job: s.father_job || null, mother_job: s.mother_job || null, address: s.address || null, home_phone: s.home_phone || null
-}; }
+function studentToRow(s){ return { name: s.name, course: s.course, fee: s.fee, phone: s.phone, note: s.note, birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0, father_job: s.father_job || null, mother_job: s.mother_job || null, address: s.address || null, home_phone: s.home_phone || null }; }
 
 async function pullFromCloud(){
   if(!sb) return false;
@@ -960,13 +1160,9 @@ async function pullFromCloud(){
     const cloudTx = (txRes.data||[]).map(rowToTx);
     const cloudSIds = new Set(cloudStudents.map(s=>s.id));
     const cloudTxIds = new Set(cloudTx.map(t=>t.id));
-    const localOnlyStudents = db.students.filter(s => !cloudSIds.has(s.id));
-    const localOnlyTx = db.tx.filter(t => !cloudTxIds.has(t.id));
-    db.students = [...cloudStudents, ...localOnlyStudents];
-    db.tx = [...cloudTx, ...localOnlyTx];
-    saveLocal();
-    setSync('online','متصل');
-    return true;
+    db.students = [...cloudStudents, ...db.students.filter(s => !cloudSIds.has(s.id))];
+    db.tx = [...cloudTx, ...db.tx.filter(t => !cloudTxIds.has(t.id))];
+    saveLocal(); setSync('online','متصل'); return true;
   }catch(e){ console.warn('pull error', e); setSync('offline','آفلاین'); return false; }
 }
 
@@ -986,16 +1182,13 @@ async function flushQueue(){
           saveLocal();
         }
       } else if(op.action === 'update'){
-        const { error } = await sb.from(op.table).update(op.payload).eq('id', op.id);
-        if(error) throw error;
+        const { error } = await sb.from(op.table).update(op.payload).eq('id', op.id); if(error) throw error;
       } else if(op.action === 'delete'){
-        const { error } = await sb.from(op.table).delete().eq('id', op.id);
-        if(error) throw error;
+        const { error } = await sb.from(op.table).delete().eq('id', op.id); if(error) throw error;
       }
     }catch(e){ console.warn('queue op failed', op, e); remaining.push(op); }
   }
-  syncQueue = remaining;
-  saveQueue();
+  syncQueue = remaining; saveQueue();
   if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`);
   else setSync('online','متصل');
 }
@@ -1039,42 +1232,22 @@ const stName = id => (db.students.find(s=>s.id===id)||{}).name || '—';
 const moneyVal = id => { const el = $(id); return el ? (Number(toEn(el.value)) || 0) : 0; };
 
 document.addEventListener('input', e => { if(e.target.classList.contains('money')){ const v = toEn(e.target.value).replace(/[^\d]/g,''); e.target.value = v ? Number(v).toLocaleString('en-US') : ''; } });
-
 document.addEventListener('click', e => {
-  const btn = e.target.closest('button');
-  if(!btn) return;
+  const btn = e.target.closest('button'); if(!btn) return;
   const rect = btn.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  btn.style.setProperty('--ripple-x', x + 'px');
-  btn.style.setProperty('--ripple-y', y + 'px');
+  btn.style.setProperty('--ripple-x', (e.clientX - rect.left) + 'px');
+  btn.style.setProperty('--ripple-y', (e.clientY - rect.top) + 'px');
   btn.classList.add('ripple');
   setTimeout(() => btn.classList.remove('ripple'), 600);
 });
 
-const ICON = {
-  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
-  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-  income: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
-  debt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
-  credit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
-  expense: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-  net: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
-  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
-  empty: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>'
-};
+const ICON = { users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>', calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', income: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>', debt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>', credit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>', expense: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>', net: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>', check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>', empty: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>' };
 function emptyState(msg){ return `<div class="empty">${ICON.empty}<div>${msg}</div></div>`; }
 
 function animateValue(el, from, to, duration = 800){
   if(!el) return;
   const start = performance.now();
-  const step = now => {
-    const progress = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.round(from + (to - from) * eased);
-    el.textContent = fa(current);
-    if(progress < 1) requestAnimationFrame(step);
-  };
+  const step = now => { const progress = Math.min((now - start) / duration, 1); const eased = 1 - Math.pow(1 - progress, 3); el.textContent = fa(Math.round(from + (to - from) * eased)); if(progress < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
 }
 
@@ -1086,20 +1259,17 @@ function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
   document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
   renderAll();
-  if(t !== 'calendar') window.scrollTo({top:0, behavior:'smooth'});
+  if(t !== 'calendar' && t !== 'weekly') window.scrollTo({top:0, behavior:'smooth'});
 }
 document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
 on('globalSearch', 'input', debounce(e => {
-  const q = e.target.value.trim();
-  if(q.length < 2) return;
+  const q = e.target.value.trim(); if(q.length < 2) return;
   const st = db.students.find(s => s.name.includes(q));
   if(st){ switchTab('students'); const el = $('stSearch'); if(el) el.value = q; renderStudents(); return; }
   switchTab('tx'); const f = $('fSearch'); if(f) f.value = q; renderTx();
 }, 300));
-document.addEventListener('keydown', e => {
-  if((e.metaKey || e.ctrlKey) && e.key === 'k'){ e.preventDefault(); const el = $('globalSearch'); if(el) el.focus(); }
-});
+document.addEventListener('keydown', e => { if((e.metaKey || e.ctrlKey) && e.key === 'k'){ e.preventDefault(); const el = $('globalSearch'); if(el) el.focus(); } });
 
 function renderDash(){
   const hour = new Date().getHours();
@@ -1107,68 +1277,54 @@ function renderDash(){
   const b = balances();
   let debt = 0, nd = 0;
   db.students.forEach(s => { if(b[s.id].bal > 0){ debt += b[s.id].bal; nd++; } });
-  const gr = $('dashGreeting');
-  if(gr) gr.textContent = `${greet} — ${faDigits(nd)} بدهکار، ${fa(debt)} تومان`;
-
-  const mot = $('motivation');
-  if(mot) mot.textContent = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
-
+  const gr = $('dashGreeting'); if(gr) gr.textContent = `${greet} — ${faDigits(nd)} بدهکار، ${fa(debt)} تومان`;
+  const mot = $('motivation'); if(mot) mot.textContent = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
+  
   let credit = 0, nc = 0, nz = 0;
   db.students.forEach(s => { const v = b[s.id].bal; if(v > 0){} else if(v < 0){ credit += -v; nc++; } else nz++; });
   const income = db.tx.filter(t => t.type==='payment').reduce((a,t)=>a+t.amount,0);
   const exp = db.tx.filter(t => t.type==='expense').reduce((a,t)=>a+t.amount,0);
   const sessionsCount = db.tx.filter(t => t.is_session).length;
-
   const t = todayJ();
   const thisMonthIncome = db.tx.filter(x => x.type==='payment' && x.date.startsWith(`${t[0]}/${pad(t[1])}`)).reduce((a,x)=>a+x.amount,0);
   let ly = t[0], lm = t[1] - 1; if(lm < 1){ lm = 12; ly--; }
   const lastMonthIncome = db.tx.filter(x => x.type==='payment' && x.date.startsWith(`${ly}/${pad(lm)}`)).reduce((a,x)=>a+x.amount,0);
   const monthDelta = lastMonthIncome > 0 ? Math.round((thisMonthIncome - lastMonthIncome) / lastMonthIncome * 100) : 0;
-
+  const bdays = db.students.filter(isBirthdayToday).length;
+  
   const stats = [
     { label:'زبان‌آموزان', value:db.students.length, unit:'نفر', icon:ICON.users, color:'' },
     { label:'کل جلسات', value:sessionsCount, unit:'جلسه', icon:ICON.calendar, color:'purple' },
     { label:'کل درآمد', value:income, unit:'تومان', icon:ICON.income, color:'green' },
-    { label:'مجموع بدهی', value:debt, unit:'تومان', icon:ICON.debt, color:'red' },
-    { label:'بستانکاری', value:credit, unit:'تومان', icon:ICON.credit, color:'green' },
+    { label:'مجموع بدهی', value:debt, unit:'تومان', icon:ICON.debt, color:'red', cls:'stat-debt-card' },
+    { label:'بستانکاری', value:credit, unit:'تومان', icon:ICON.credit, color:'green', cls:'stat-credit-card' },
     { label:'هزینه‌ها', value:exp, unit:'تومان', icon:ICON.expense, color:'orange' },
     { label:'سود خالص', value:income-exp, unit:'تومان', icon:ICON.net, color:'' },
     { label:'درآمد این ماه', value:thisMonthIncome, unit:'تومان', icon:ICON.income, color:'green', delta: monthDelta }
   ];
+  if(bdays > 0) stats.push({ label:'🎂 تولد امروز', value:bdays, unit:'نفر', icon:ICON.users, color:'', cls:'stat-bday-card' });
+  
   const statsEl = $('stats');
   if(statsEl) statsEl.innerHTML = stats.map(s => `
-    <div class="stat">
+    <div class="stat ${s.cls || ''}">
       <div class="stat-icon ${s.color}">${s.icon}</div>
       <div class="stat-label">${s.label}</div>
       <div class="stat-value"><span class="count-up" data-target="${s.value}">${fa(s.value)}</span><small>${s.unit}</small></div>
       ${s.delta !== undefined && s.delta !== 0 ? `<div class="stat-delta ${s.delta>0?'up':'down'}">${s.delta>0?'▲':'▼'} ${faDigits(Math.abs(s.delta))}٪</div>` : ''}
     </div>
   `).join('');
-  document.querySelectorAll('.count-up').forEach(el => {
-    const target = Number(el.dataset.target) || 0;
-    if(target > 0) animateValue(el, 0, target, 1000);
-  });
-
-  renderRecords();
-  renderBirthdayCard();
-  renderOverdue();
-  renderDonut(nd, nc, nz);
-  renderBars(b);
-  renderMonthlyChart();
-  renderDaily();
-  renderExpenseChart();
-  renderAdvancedStats();
-  renderRecent();
+  document.querySelectorAll('.count-up').forEach(el => { const target = Number(el.dataset.target) || 0; if(target > 0) animateValue(el, 0, target, 1000); });
+  
+  renderRecords(); renderBirthdayCard(); renderOverdue(); renderDonut(nd, nc, nz); renderBars(b);
+  renderMonthlyChart(); renderDaily(); renderExpenseChart(); renderAdvancedStats(); renderRecent();
 }
 
 function renderRecords(){
   const el = $('recordsGrid'); if(!el) return;
   const payments = db.tx.filter(t => t.type==='payment');
-  const byDay = {};
-  payments.forEach(t => { byDay[t.date] = (byDay[t.date] || 0) + t.amount; });
+  const byDay = {}; payments.forEach(t => { byDay[t.date] = (byDay[t.date] || 0) + t.amount; });
   const bestIncomeDay = Object.entries(byDay).sort((a,b) => b[1] - a[1])[0];
-  const sessionsByDay = {};
-  db.tx.filter(t => t.is_session).forEach(t => { sessionsByDay[t.date] = (sessionsByDay[t.date] || 0) + 1; });
+  const sessionsByDay = {}; db.tx.filter(t => t.is_session).forEach(t => { sessionsByDay[t.date] = (sessionsByDay[t.date] || 0) + 1; });
   const bestSessionDay = Object.entries(sessionsByDay).sort((a,b) => b[1] - a[1])[0];
   const biggestPayment = payments.reduce((max, t) => t.amount > (max?.amount || 0) ? t : max, null);
   const records = [];
@@ -1177,28 +1333,14 @@ function renderRecords(){
   if(biggestPayment) records.push({ icon:'💎', label:'بزرگترین پرداخت', value:`${fa(biggestPayment.amount)} تومان`, date: biggestPayment.date, name: stName(biggestPayment.sid) });
   records.push({ icon:'🎓', label:'کل زبان‌آموزان', value:`${faDigits(db.students.length)} نفر` });
   records.push({ icon:'📊', label:'کل جلسات', value:`${faDigits(db.tx.filter(t => t.is_session).length)} جلسه` });
-  el.innerHTML = records.map(r => `
-    <div class="record-item">
-      <div class="record-icon">${r.icon}</div>
-      <div class="record-info">
-        <small>${r.label}</small>
-        <b>${r.value}</b>
-        ${r.date ? `<small style="margin-top:2px">${showDate(r.date)}${r.name ? ' — ' + esc(r.name) : ''}</small>` : ''}
-      </div>
-    </div>
-  `).join('');
+  el.innerHTML = records.map(r => `<div class="record-item"><div class="record-icon">${r.icon}</div><div class="record-info"><small>${r.label}</small><b>${r.value}</b>${r.date ? `<small style="margin-top:2px">${showDate(r.date)}${r.name ? ' — ' + esc(r.name) : ''}</small>` : ''}</div></div>`).join('');
 }
 
 function renderBirthdayCard(){
   const el = $('bdayTodayCard'); if(!el) return;
   const today = db.students.filter(isBirthdayToday);
   if(!today.length){ el.innerHTML = ''; return; }
-  el.innerHTML = `
-    <div class="bday-card">
-      <h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3>
-      <p>با یه پیام قشنگ، روزشون رو خاص کن</p>
-      ${today.map(s => `<div class="bday-item"><b>${avatarHTML(s.name, 24)} ${esc(s.name)}</b><span>${esc(s.course||'')}</span><button onclick="sendBirthdayTo('${s.id}')">پیام تبریک</button></div>`).join('')}
-    </div>`;
+  el.innerHTML = `<div class="bday-card"><h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3><p>با یه پیام قشنگ، روزشون رو خاص کن</p>${today.map(s => `<div class="bday-item"><b>${avatarHTML(s.name, 24)} ${esc(s.name)}</b><span>${esc(s.course||'')}</span><button onclick="sendBirthdayTo('${s.id}')">پیام تبریک</button></div>`).join('')}</div>`;
 }
 
 function renderOverdue(){
@@ -1206,15 +1348,11 @@ function renderOverdue(){
   const now = todayJ();
   const overdue = [];
   db.students.forEach(s => {
-    const bal = b[s.id].bal;
-    if(bal <= 0) return;
+    const bal = b[s.id].bal; if(bal <= 0) return;
     const lastPay = db.tx.filter(t => t.sid===s.id && t.type==='payment').sort((a,b)=>b.date.localeCompare(a.date))[0];
     let daysSince = 999;
     if(lastPay){ const [py,pm,pd] = lastPay.date.split('/').map(Number); daysSince = daysBetween([py,pm,pd], now); }
-    else {
-      const fc = db.tx.filter(t => t.sid===s.id && t.type==='charge').sort((a,b)=>a.date.localeCompare(b.date))[0];
-      if(fc){ const [cy,cm,cd] = fc.date.split('/').map(Number); daysSince = daysBetween([cy,cm,cd], now); }
-    }
+    else { const fc = db.tx.filter(t => t.sid===s.id && t.type==='charge').sort((a,b)=>a.date.localeCompare(b.date))[0]; if(fc){ const [cy,cm,cd] = fc.date.split('/').map(Number); daysSince = daysBetween([cy,cm,cd], now); } }
     if(daysSince >= 30) overdue.push({ student:s, bal, days:daysSince });
   });
   overdue.sort((a,b)=>b.bal - a.bal);
@@ -1225,18 +1363,7 @@ function renderOverdue(){
   if(countEl) countEl.textContent = `(${faDigits(overdue.length)} نفر)`;
   listEl.innerHTML = overdue.map(o => {
     const msg = `سلام ${o.student.name} عزیز، مبلغ ${fa(o.bal)} تومان بدهی کلاس زبان دارید. لطفاً تسویه کنید. — ${settings.smsAcademy}`;
-    return `<div class="overdue-item">
-      <div class="oi-info">
-        <div class="oi-name">${avatarHTML(o.student.name, 28)} ${esc(o.student.name)}</div>
-        <div class="oi-meta">${o.days === 999 ? 'بدون پرداخت' : `${faDigits(o.days)} روز از آخرین پرداخت`} — ${esc(o.student.course||'—')}</div>
-      </div>
-      <div class="oi-amount">${fa(o.bal)} تومان</div>
-      <div class="oi-actions">
-        <button class="btn xs ghost" onclick="copyText('${msg.replace(/'/g,"\\'")}')">📋 کپی</button>
-        ${o.student.phone ? `<button class="btn xs ghost" onclick="openSmsFor('${o.student.phone}','${msg.replace(/'/g,"\\'")}')">📱 SMS</button>` : ''}
-        <button class="btn xs" onclick="quickTx('${o.student.id}','payment')">ثبت پرداخت</button>
-      </div>
-    </div>`;
+    return `<div class="overdue-item"><div class="oi-info"><div class="oi-name">${avatarHTML(o.student.name, 28)} ${esc(o.student.name)}</div><div class="oi-meta">${o.days === 999 ? 'بدون پرداخت' : `${faDigits(o.days)} روز از آخرین پرداخت`} — ${esc(o.student.course||'—')}</div></div><div class="oi-amount">${fa(o.bal)} تومان</div><div class="oi-actions"><button class="btn xs ghost" onclick="copyText('${msg.replace(/'/g,"\\'")}')">📋 کپی</button>${o.student.phone ? `<button class="btn xs ghost" onclick="openSmsFor('${o.student.phone}','${msg.replace(/'/g,"\\'")}')">📱 SMS</button>` : ''}<button class="btn xs ghost" onclick="openWhatsAppFor('${o.student.phone}','${msg.replace(/'/g,"\\'")}')">💬 واتساپ</button><button class="btn xs" onclick="quickTx('${o.student.id}','payment')">ثبت پرداخت</button></div></div>`;
   }).join('');
 }
 
@@ -1259,8 +1386,7 @@ function renderBars(b){
 
 function renderMonthlyChart(){
   const sel = $('chartYear'); if(!sel) return;
-  const years = new Set([todayJ()[0]]);
-  db.tx.forEach(t => years.add(+t.date.slice(0,4)));
+  const years = new Set([todayJ()[0]]); db.tx.forEach(t => years.add(+t.date.slice(0,4)));
   const cur = sel.value || todayJ()[0];
   sel.innerHTML = [...years].sort((a,b)=>b-a).map(y=>`<option value="${y}">${faDigits(y)}</option>`).join('');
   sel.value = years.has(+cur) ? cur : todayJ()[0];
@@ -1270,27 +1396,16 @@ function renderMonthlyChart(){
   const max = Math.max(1, ...inc, ...ex);
   let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%">`;
   for(let i=0;i<=4;i++){ const y = pt+(H-pt-pb)*i/4; svg += `<line x1="${pl}" x2="${W-pl}" y1="${y}" y2="${y}" stroke="var(--border)" stroke-dasharray="3 3"/>`; }
-  for(let m=0;m<12;m++){
-    const cx = W-pl-cw*(m+.5), bw = cw*.32, ch = H-pt-pb;
-    const h1 = inc[m]/max*ch, h2 = ex[m]/max*ch;
-    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="4" fill="var(--emerald)"><title>${MONTHS[m]} - دریافتی: ${fa(inc[m])}</title></rect>`;
-    svg += `<rect x="${cx+1}" y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="4" fill="var(--coral)"><title>${MONTHS[m]} - هزینه: ${fa(ex[m])}</title></rect>`;
-    svg += `<text x="${cx}" y="${H-14}" text-anchor="middle" font-size="10" style="fill:var(--ink-2)">${MONTHS[m]}</text>`;
-    if(inc[m]) svg += `<text x="${cx-bw/2-1}" y="${pt+ch-h1-3}" text-anchor="middle" font-size="8" style="fill:var(--ink)">${fa(inc[m]/1000)}</text>`;
-  }
+  for(let m=0;m<12;m++){ const cx = W-pl-cw*(m+.5), bw = cw*.32, ch = H-pt-pb; const h1 = inc[m]/max*ch, h2 = ex[m]/max*ch; svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="4" fill="var(--emerald)"><title>${MONTHS[m]} - دریافتی: ${fa(inc[m])}</title></rect>`; svg += `<rect x="${cx+1}" y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="4" fill="var(--coral)"><title>${MONTHS[m]} - هزینه: ${fa(ex[m])}</title></rect>`; svg += `<text x="${cx}" y="${H-14}" text-anchor="middle" font-size="10" style="fill:var(--ink-2)">${MONTHS[m]}</text>`; if(inc[m]) svg += `<text x="${cx-bw/2-1}" y="${pt+ch-h1-3}" text-anchor="middle" font-size="8" style="fill:var(--ink)">${fa(inc[m]/1000)}</text>`; }
   svg += '</svg>';
-  const monthlyEl = $('monthly');
-  if(monthlyEl) monthlyEl.innerHTML = svg;
+  const monthlyEl = $('monthly'); if(monthlyEl) monthlyEl.innerHTML = svg;
   const ti = inc.reduce((a,b)=>a+b,0), te = ex.reduce((a,b)=>a+b,0);
-  const ys = $('yearSum');
-  if(ys) ys.textContent = `سال ${faDigits(Y)}: درآمد ${fa(ti)} | هزینه ${fa(te)} | سود ${fa(ti-te)} تومان`;
+  const ys = $('yearSum'); if(ys) ys.textContent = `سال ${faDigits(Y)}: درآمد ${fa(ti)} | هزینه ${fa(te)} | سود ${fa(ti-te)} تومان`;
 }
 
 function renderDaily(){
-  const yearSel = $('dailyYear'), monthSel = $('dailyMonth');
-  if(!yearSel || !monthSel) return;
-  const years = new Set([todayJ()[0]]);
-  db.tx.forEach(t => { if(t.date) years.add(+t.date.slice(0,4)); });
+  const yearSel = $('dailyYear'), monthSel = $('dailyMonth'); if(!yearSel || !monthSel) return;
+  const years = new Set([todayJ()[0]]); db.tx.forEach(t => { if(t.date) years.add(+t.date.slice(0,4)); });
   const curYear = yearSel.value || todayJ()[0];
   yearSel.innerHTML = [...years].sort((a,b)=>b-a).map(y => `<option value="${y}">${faDigits(y)}</option>`).join('');
   yearSel.value = years.has(+curYear) ? curYear : todayJ()[0];
@@ -1309,47 +1424,25 @@ function renderDaily(){
   const bestDay = days.reduce((best, d) => d.income > best.income ? d : best, days[0]);
   const bestDayLabel = bestDay && bestDay.income > 0 ? `${faDigits(bestDay.d)} ${MONTHS[M-1]}` : '—';
   const sumEl = $('dailySummary');
-  if(sumEl) sumEl.innerHTML = `
-    <div class="dsum gold"><small>کل درآمد ماه</small><b>${fa(totalIncome)}<small>تومان</small></b></div>
-    <div class="dsum"><small>هزینه</small><b>${fa(totalExpense)}<small>تومان</small></b></div>
-    <div class="dsum"><small>خالص</small><b class="${netIncome >= 0 ? 'pos' : 'neg'}">${fa(netIncome)}<small>تومان</small></b></div>
-    <div class="dsum"><small>پردرآمدترین روز</small><b style="font-size:15px">${bestDayLabel}${bestDay && bestDay.income > 0 ? ` <small style="font-size:10px;color:var(--primary)">(${fa(bestDay.income)})</small>` : ''}</b></div>
-    <div class="dsum"><small>میانگین روزهای فعال</small><b>${fa(avgPerActive)}<small>تومان</small></b></div>
-  `;
+  if(sumEl) sumEl.innerHTML = `<div class="dsum gold"><small>کل درآمد ماه</small><b>${fa(totalIncome)}<small>تومان</small></b></div><div class="dsum"><small>هزینه</small><b>${fa(totalExpense)}<small>تومان</small></b></div><div class="dsum"><small>خالص</small><b class="${netIncome >= 0 ? 'pos' : 'neg'}">${fa(netIncome)}<small>تومان</small></b></div><div class="dsum"><small>پردرآمدترین روز</small><b style="font-size:15px">${bestDayLabel}${bestDay && bestDay.income > 0 ? ` <small style="font-size:10px;color:var(--primary)">(${fa(bestDay.income)})</small>` : ''}</b></div><div class="dsum"><small>میانگین روزهای فعال</small><b>${fa(avgPerActive)}<small>تومان</small></b></div>`;
   const W = Math.max(640, daysInMonth * 26), H = 240, pl = 10, pt = 20, pb = 30;
   const cw = (W - pl*2) / daysInMonth;
   const maxVal = Math.max(1, ...days.map(d => Math.max(d.income, d.expense)));
   let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:${W}px">`;
   for(let i=0;i<=4;i++){ const y = pt + (H-pt-pb) * i/4; svg += `<line x1="${pl}" x2="${W-pl}" y1="${y}" y2="${y}" stroke="var(--border)" stroke-dasharray="3 3"/>`; }
-  for(let i=0;i<days.length;i++){
-    const d = days[i];
-    const cx = W - pl - cw*(i+.5), bw = cw*0.34, ch = H - pt - pb;
-    const h1 = d.income / maxVal * ch, h2 = d.expense / maxVal * ch;
-    svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="2" fill="var(--emerald)"><title>${faDigits(d.d)} ${MONTHS[M-1]} — درآمد: ${fa(d.income)}</title></rect>`;
-    svg += `<rect x="${cx+1}" y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="2" fill="var(--coral)"><title>${faDigits(d.d)} ${MONTHS[M-1]} — هزینه: ${fa(d.expense)}</title></rect>`;
-    if(daysInMonth <= 15 || d.d === 1 || d.d % 5 === 0 || d.d === daysInMonth) svg += `<text x="${cx}" y="${H-12}" text-anchor="middle" font-size="9" style="fill:var(--ink-2)">${faDigits(d.d)}</text>`;
-  }
+  for(let i=0;i<days.length;i++){ const d = days[i]; const cx = W - pl - cw*(i+.5), bw = cw*0.34, ch = H - pt - pb; const h1 = d.income / maxVal * ch, h2 = d.expense / maxVal * ch; svg += `<rect x="${cx-bw-1}" y="${pt+ch-h1}" width="${bw}" height="${h1}" rx="2" fill="var(--emerald)"><title>${faDigits(d.d)} ${MONTHS[M-1]} — درآمد: ${fa(d.income)}</title></rect>`; svg += `<rect x="${cx+1}" y="${pt+ch-h2}" width="${bw}" height="${h2}" rx="2" fill="var(--coral)"><title>${faDigits(d.d)} ${MONTHS[M-1]} — هزینه: ${fa(d.expense)}</title></rect>`; if(daysInMonth <= 15 || d.d === 1 || d.d % 5 === 0 || d.d === daysInMonth) svg += `<text x="${cx}" y="${H-12}" text-anchor="middle" font-size="9" style="fill:var(--ink-2)">${faDigits(d.d)}</text>`; }
   svg += '</svg>';
-  const chartEl = $('dailyChart');
-  if(chartEl) chartEl.innerHTML = svg;
-  const rows = days.map(d => {
-    const isHighlight = bestDay && d.d === bestDay.d && d.income > 0;
-    const isZero = d.income === 0 && d.expense === 0 && d.count === 0;
-    const net = d.income - d.expense;
-    return `<tr class="${isZero ? 'zero' : ''} ${isHighlight ? 'highlight' : ''}"><td class="day">${faDigits(d.d)} ${MONTHS[M-1]}</td><td class="n ${d.income > 0 ? 'pos' : ''}">${d.income ? fa(d.income) : '—'}</td><td class="n ${d.expense > 0 ? 'neg' : ''}">${d.expense ? fa(d.expense) : '—'}</td><td class="n ${net > 0 ? 'pos' : net < 0 ? 'neg' : ''}">${net !== 0 ? fa(Math.abs(net)) + (net > 0 ? ' +' : ' −') : '—'}</td><td class="n">${d.txCount ? faDigits(d.txCount) : '—'}</td><td>${d.count ? `<span class="tag debt">${fa(d.count)}</span>` : '—'}</td></tr>`;
-  }).join('');
-  const dailyTableEl = $('dailyTable');
-  if(dailyTableEl) dailyTableEl.innerHTML = `<table><thead><tr><th>روز</th><th>درآمد</th><th>هزینه</th><th>خالص</th><th>تراکنش</th><th>بدهی</th></tr></thead><tbody>${rows}</tbody></table>`;
+  const chartEl = $('dailyChart'); if(chartEl) chartEl.innerHTML = svg;
+  const rows = days.map(d => { const isHighlight = bestDay && d.d === bestDay.d && d.income > 0; const isZero = d.income === 0 && d.expense === 0 && d.count === 0; const net = d.income - d.expense; return `<tr class="${isZero ? 'zero' : ''} ${isHighlight ? 'highlight' : ''}"><td class="day">${faDigits(d.d)} ${MONTHS[M-1]}</td><td class="n ${d.income > 0 ? 'pos' : ''}">${d.income ? fa(d.income) : '—'}</td><td class="n ${d.expense > 0 ? 'neg' : ''}">${d.expense ? fa(d.expense) : '—'}</td><td class="n ${net > 0 ? 'pos' : net < 0 ? 'neg' : ''}">${net !== 0 ? fa(Math.abs(net)) + (net > 0 ? ' +' : ' −') : '—'}</td><td class="n">${d.txCount ? faDigits(d.txCount) : '—'}</td><td>${d.count ? `<span class="tag debt">${fa(d.count)}</span>` : '—'}</td></tr>`; }).join('');
+  const dailyTableEl = $('dailyTable'); if(dailyTableEl) dailyTableEl.innerHTML = `<table><thead><tr><th>روز</th><th>درآمد</th><th>هزینه</th><th>خالص</th><th>تراکنش</th><th>بدهی</th></tr></thead><tbody>${rows}</tbody></table>`;
   if(!yearSel._bound){ yearSel._bound = true; yearSel.addEventListener('change', renderDaily); monthSel.addEventListener('change', renderDaily); }
 }
 
 function renderExpenseChart(){
   const el = $('expenseChart'); if(!el) return;
-  const t = todayJ();
-  const prefix = `${t[0]}/${pad(t[1])}`;
+  const t = todayJ(); const prefix = `${t[0]}/${pad(t[1])}`;
   const expenses = db.tx.filter(x => x.type==='expense' && x.date.startsWith(prefix));
-  const byCat = {};
-  expenses.forEach(e => { const c = e.category || 'other'; byCat[c] = (byCat[c] || 0) + e.amount; });
+  const byCat = {}; expenses.forEach(e => { const c = e.category || 'other'; byCat[c] = (byCat[c] || 0) + e.amount; });
   const entries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
   if(!entries.length){ el.innerHTML = emptyState('این ماه هزینه‌ای نیست'); return; }
   const total = entries.reduce((a,[k,v])=>a+v, 0);
@@ -1361,28 +1454,18 @@ function renderExpenseChart(){
 
 function renderAdvancedStats(){
   const el = $('advancedStats'); if(!el) return;
-  const t = todayJ();
-  const b = balances();
+  const t = todayJ(); const b = balances();
   const paidCount = db.students.filter(s => b[s.id] && b[s.id].bal <= 0).length;
   const payRate = db.students.length ? Math.round(paidCount / db.students.length * 100) : 0;
   const totalIncome = db.tx.filter(x=>x.type==='payment').reduce((a,x)=>a+x.amount,0);
   const avgPerStudent = db.students.length ? Math.round(totalIncome / db.students.length) : 0;
   let total3 = 0;
-  for(let i = 1; i <= 3; i++){
-    let y = t[0], m = t[1] - i;
-    while(m < 1){ m += 12; y--; }
-    total3 += db.tx.filter(x => x.type==='payment' && x.date.startsWith(`${y}/${pad(m)}`)).reduce((a,x)=>a+x.amount,0);
-  }
+  for(let i = 1; i <= 3; i++){ let y = t[0], m = t[1] - i; while(m < 1){ m += 12; y--; } total3 += db.tx.filter(x => x.type==='payment' && x.date.startsWith(`${y}/${pad(m)}`)).reduce((a,x)=>a+x.amount,0); }
   const prediction = Math.round(total3 / 3);
   const totalSessions = db.tx.filter(x=>x.is_session).length;
   const absentCount = db.tx.filter(x=>x.is_session && x.absent).length;
   const attendance = totalSessions ? Math.round((totalSessions - absentCount) / totalSessions * 100) : 0;
-  el.innerHTML = `<div class="daily-summary" style="margin-bottom:0">
-    <div class="dsum"><small>نرخ تسویه</small><b>${faDigits(payRate)}٪</b><div class="hint" style="font-size:10.5px;margin-top:2px">${faDigits(paidCount)} از ${faDigits(db.students.length)}</div></div>
-    <div class="dsum"><small>میانگین درآمد</small><b>${fa(avgPerStudent)}<small>تومان</small></b></div>
-    <div class="dsum"><small>پیش‌بینی ماه بعد</small><b>${fa(prediction)}<small>تومان</small></b></div>
-    <div class="dsum"><small>نرخ حضور</small><b>${faDigits(attendance)}٪</b><div class="hint" style="font-size:10.5px;margin-top:2px">${faDigits(absentCount)} غایب</div></div>
-  </div>`;
+  el.innerHTML = `<div class="daily-summary" style="margin-bottom:0"><div class="dsum"><small>نرخ تسویه</small><b>${faDigits(payRate)}٪</b><div class="hint" style="font-size:10.5px;margin-top:2px">${faDigits(paidCount)} از ${faDigits(db.students.length)}</div></div><div class="dsum"><small>میانگین درآمد</small><b>${fa(avgPerStudent)}<small>تومان</small></b></div><div class="dsum"><small>پیش‌بینی ماه بعد</small><b>${fa(prediction)}<small>تومان</small></b></div><div class="dsum"><small>نرخ حضور</small><b>${faDigits(attendance)}٪</b><div class="hint" style="font-size:10.5px;margin-top:2px">${faDigits(absentCount)} غایب</div></div></div>`;
 }
 
 function renderRecent(){
@@ -1395,54 +1478,48 @@ let editSt = null;
 function renderStudents(){
   const table = $('stTable'); if(!table) return;
   const b = balances(), q = ($('stSearch')?.value || '').trim(), f = ($('stFilter')?.value || '');
-  const rows = db.students.filter(s => { if(q && !(s.name+' '+s.course+' '+s.phone+' '+(s.father_job||'')+' '+(s.mother_job||'')).includes(q)) return false; if(f && statusOf(b[s.id].bal) !== f) return false; return true; });
-  table.innerHTML = rows.length
-    ? `<table><thead><tr><th>نام</th><th>دوره</th><th>تلفن همراه</th><th>تلفن منزل</th><th>تولد</th><th>شغل پدر</th><th>شغل مادر</th><th>جلسات</th><th>بدهی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s=>{
-      const x = b[s.id];
-      const bdayTag = s.birthday ? (isBirthdayToday(s) ? `<span class="tag birthday">🎂</span>` : `<span style="font-size:11.5px;color:var(--ink-2)">${showDate(s.birthday)}</span>`) : '—';
-      return `<tr>
-        <td><div style="display:flex;align-items:center;gap:10px"><b>${avatarHTML(s.name, 32)} ${esc(s.name)}</b></div></td><td>${esc(s.course)}</td>
-        <td>${faDigits(esc(s.phone||'—'))}</td>
-        <td>${faDigits(esc(s.home_phone||'—'))}</td>
-        <td>${bdayTag}</td>
-        <td>${esc(s.father_job||'—')}</td>
-        <td>${esc(s.mother_job||'—')}</td>
-        <td class="n">${fa(x.sessions)}</td>
-        <td class="n">${fa(x.charge)}</td>
-        <td class="n ${x.bal>0?'neg':x.bal<0?'pos':''}"><b>${fa(Math.abs(x.bal))}</b></td>
-        <td>${statusTag(x.bal)}</td>
-        <td><div class="btn-row tight">
-          <button class="btn xs ghost" onclick="openStatement('${s.id}')">صورت‌حساب</button>
-          <button class="btn xs ghost" onclick="quickSession('${s.id}')">جلسه</button>
-          <button class="btn xs ghost" onclick="quickTx('${s.id}','payment')">دریافت</button>
-          <button class="btn xs ghost" onclick="editStudent('${s.id}')">ویرایش</button>
-          <button class="btn xs danger" onclick="delStudent('${s.id}')">حذف</button>
-        </div></td></tr>`;
-    }).join('')}</tbody></table>`
-    : emptyState('زبان‌آموزی یافت نشد.');
+  const advCourse = ($('advCourse')?.value || '');
+  const advMinDebt = moneyVal('advMinDebt');
+  const advMinSessions = Number($('advMinSessions')?.value) || 0;
+  const advDebtDays = Number($('advDebtDays')?.value) || 0;
+  const now = todayJ();
+  const rows = db.students.filter(s => {
+    if(q && !(s.name+' '+s.course+' '+s.phone+' '+(s.father_job||'')+' '+(s.mother_job||'')).includes(q)) return false;
+    if(f && statusOf(b[s.id].bal) !== f) return false;
+    if(advCourse && s.course !== advCourse) return false;
+    if(advMinDebt && b[s.id].bal < advMinDebt) return false;
+    if(advMinSessions && b[s.id].sessions < advMinSessions) return false;
+    if(advDebtDays && b[s.id].bal > 0){
+      const lastPay = db.tx.filter(t => t.sid===s.id && t.type==='payment').sort((a,b)=>b.date.localeCompare(a.date))[0];
+      let daysSince = 999;
+      if(lastPay){ const [py,pm,pd] = lastPay.date.split('/').map(Number); daysSince = daysBetween([py,pm,pd], now); }
+      if(daysSince < advDebtDays) return false;
+    }
+    return true;
+  });
+  table.innerHTML = rows.length ? `<table><thead><tr><th>نام</th><th>دوره</th><th>تلفن همراه</th><th>تلفن منزل</th><th>تولد</th><th>شغل پدر</th><th>شغل مادر</th><th>جلسات</th><th>بدهی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s=>{
+    const x = b[s.id];
+    const bdayTag = s.birthday ? (isBirthdayToday(s) ? `<span class="tag birthday">🎂</span>` : `<span style="font-size:11.5px;color:var(--ink-2)">${showDate(s.birthday)}</span>`) : '—';
+    return `<tr><td><div style="display:flex;align-items:center;gap:10px"><b>${avatarHTML(s.name, 32)} ${esc(s.name)}</b></div></td><td>${esc(s.course)}</td><td>${faDigits(esc(s.phone||'—'))}</td><td>${faDigits(esc(s.home_phone||'—'))}</td><td>${bdayTag}</td><td>${esc(s.father_job||'—')}</td><td>${esc(s.mother_job||'—')}</td><td class="n">${fa(x.sessions)}</td><td class="n">${fa(x.charge)}</td><td class="n ${x.bal>0?'neg':x.bal<0?'pos':''}"><b>${fa(Math.abs(x.bal))}</b></td><td>${statusTag(x.bal)}</td><td><div class="btn-row tight"><button class="btn xs ghost" onclick="openStudentProfile('${s.id}')">پروفایل</button><button class="btn xs ghost" onclick="openStatement('${s.id}')">صورت‌حساب</button><button class="btn xs ghost" onclick="quickSession('${s.id}')">جلسه</button><button class="btn xs ghost" onclick="quickTx('${s.id}','payment')">دریافت</button><button class="btn xs ghost" onclick="editStudent('${s.id}')">ویرایش</button><button class="btn xs danger" onclick="delStudent('${s.id}')">حذف</button></div></td></tr>`;
+  }).join('')}</tbody></table>` : emptyState('زبان‌آموزی یافت نشد.');
 }
 on('stForm', 'submit', async e => {
   e.preventDefault();
   const birthday = getDate('stBirthday');
-  const o = { 
-    name: $('stName').value.trim(), course: $('stCourse').value.trim(), fee: moneyVal('stFee'), 
-    phone: toEn($('stPhone').value), home_phone: toEn($('stHomePhone').value),
-    note: $('stNote').value.trim(), birthday,
-    father_job: $('stFatherJob').value.trim(), mother_job: $('stMotherJob').value.trim(), address: $('stAddress').value.trim()
-  };
+  const o = { name: $('stName').value.trim(), course: $('stCourse').value.trim(), fee: moneyVal('stFee'), phone: toEn($('stPhone').value), home_phone: toEn($('stHomePhone').value), note: $('stNote').value.trim(), birthday, father_job: $('stFatherJob').value.trim(), mother_job: $('stMotherJob').value.trim(), address: $('stAddress').value.trim() };
   if(!o.name) return;
   if(editSt){
-    const s = db.students.find(x=>x.id===editSt);
-    Object.assign(s, o);
+    const s = db.students.find(x=>x.id===editSt); Object.assign(s, o);
     await cloudUpdate('students', studentToRow(s), s.id);
-    logActivity('student_edit', `ویرایش زبان‌آموز: ${o.name}`, { sid: s.id });
+    logActivity('student_edit', `ویرایش زبان‌آموز: ${o.name}`);
     toast('ذخیره شد', 'success');
   } else {
     const s = { id: uid(), ...o, package_size: 0, package_used: 0 };
     db.students.push(s);
     await cloudInsert('students', studentToRow(s), s.id);
-    logActivity('student_add', `زبان‌آموز جدید: ${o.name}`, { sid: s.id });
+    logActivity('student_add', `زبان‌آموز جدید: ${o.name}`);
     toast('اضافه شد', 'success');
+    launchConfetti();
   }
   cancelStudent(); saveLocal(); renderAll(); checkAchievements();
 });
@@ -1459,14 +1536,7 @@ function editStudent(id){
   $('stSave').textContent = 'ذخیره'; $('stCancel').style.display = '';
   window.scrollTo({top:0, behavior:'smooth'});
 }
-function cancelStudent(){
-  editSt = null;
-  const f = $('stForm'); if(f) f.reset();
-  setDate('stBirthday', null);
-  const t = $('stTitle'); if(t) t.querySelector('span').textContent = 'افزودن زبان‌آموز';
-  const b = $('stSave'); if(b) b.textContent = 'افزودن';
-  const c = $('stCancel'); if(c) c.style.display = 'none';
-}
+function cancelStudent(){ editSt = null; const f = $('stForm'); if(f) f.reset(); setDate('stBirthday', null); const t = $('stTitle'); if(t) t.querySelector('span').textContent = 'افزودن زبان‌آموز'; const b = $('stSave'); if(b) b.textContent = 'افزودن'; const c = $('stCancel'); if(c) c.style.display = 'none'; }
 click('stCancel', cancelStudent);
 async function delStudent(id){
   const n = db.tx.filter(t=>t.sid===id).length;
@@ -1475,14 +1545,56 @@ async function delStudent(id){
   const txs = db.tx.filter(t=>t.sid===id);
   for(const t of txs) await cloudDelete('tx', t.id);
   await cloudDelete('students', id);
-  db.students = db.students.filter(s=>s.id!==id);
-  db.tx = db.tx.filter(t=>t.sid!==id);
+  db.students = db.students.filter(s=>s.id!==id); db.tx = db.tx.filter(t=>t.sid!==id);
   saveLocal(); renderAll();
-  logActivity('student_delete', `حذف زبان‌آموز: ${s.name}`, {});
+  logActivity('student_delete', `حذف زبان‌آموز: ${s.name}`);
   pushUndo('st-delete', { student: s, txs }, 'زبان‌آموز حذف شد');
 }
 on('stSearch', 'input', debounce(renderStudents));
 on('stFilter', 'change', renderStudents);
+click('advFilterToggle', () => { const f = $('advFilter'); if(f) f.classList.toggle('on'); });
+click('advReset', () => { ['advCourse','advMinDebt','advMinSessions','advDebtDays'].forEach(id => { const el = $(id); if(el) el.value = ''; }); renderStudents(); });
+['advCourse','advMinDebt','advMinSessions','advDebtDays'].forEach(id => on(id, 'change', renderStudents));
+on('advMinDebt', 'input', debounce(renderStudents));
+
+function openStudentProfile(id){
+  const s = db.students.find(x=>x.id===id); if(!s) return;
+  const b = balances()[id] || {};
+  const txs = db.tx.filter(t=>t.sid===id).sort((a,b)=>b.date.localeCompare(a.date)).slice(0, 10);
+  const sessions = txs.filter(t=>t.is_session);
+  const payments = db.tx.filter(t=>t.sid===id && t.type==='payment');
+  const totalPay = payments.reduce((a,t)=>a+t.amount,0);
+  const modalBox = $('modalBox'); if(!modalBox) return;
+  modalBox.innerHTML = `
+    <div class="student-profile">
+      <div class="profile-header">
+        <div class="profile-avatar" style="background:${getAvatarColor(s.name)}">${s.name.charAt(0)}</div>
+        <div class="profile-info">
+          <h2>${esc(s.name)}</h2>
+          <div class="meta">${esc(s.course||'—')} ${s.phone ? `— ${faDigits(s.phone)}` : ''}</div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><small>جلسات</small><b>${faDigits(b.sessions||0)}</b></div>
+        <div class="profile-stat"><small>کل بدهی</small><b>${fa(b.charge||0)}</b></div>
+        <div class="profile-stat"><small>کل پرداختی</small><b>${fa(totalPay)}</b></div>
+        <div class="profile-stat"><small>مانده</small><b style="color:${b.bal>0?'var(--rose)':b.bal<0?'var(--emerald)':'var(--ink-2)'}">${fa(Math.abs(b.bal||0))}</b></div>
+      </div>
+      ${s.birthday ? `<p class="hint"><b>تولد:</b> ${showDate(s.birthday)}${s.father_job ? ` | <b>شغل پدر:</b> ${esc(s.father_job)}` : ''}${s.mother_job ? ` | <b>شغل مادر:</b> ${esc(s.mother_job)}` : ''}${s.home_phone ? `<br><b>تلفن منزل:</b> ${faDigits(s.home_phone)}` : ''}${s.address ? `<br><b>آدرس:</b> ${esc(s.address)}` : ''}</p>` : ''}
+      <h3 style="font-size:14px;margin-top:12px;color:var(--ink)">آخرین تراکنش‌ها</h3>
+      <div class="table-wrap">
+        ${txs.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${txs.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست')}
+      </div>
+    </div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn" onclick="closeModal()">بستن</button>
+      <button class="btn ghost" onclick="closeModal();quickTx('${id}','payment')">ثبت پرداخت</button>
+      <button class="btn ghost" onclick="closeModal();quickSession('${id}')">ثبت جلسه</button>
+      <button class="btn ghost" onclick="closeModal();openStatement('${id}')">صورت‌حساب</button>
+    </div>`;
+  $('modal').classList.add('on');
+}
+window.openStudentProfile = openStudentProfile;
 
 let seSelected = {}, seCourseFilter = '', seSearchQuery = '', seAbsentMode = false;
 on('seAbsentMode', 'change', e => { seAbsentMode = e.target.checked; renderSessionGrid(); });
@@ -1490,6 +1602,8 @@ on('seAbsentMode', 'change', e => { seAbsentMode = e.target.checked; renderSessi
 function renderCourseChips(){
   const box = $('seCourseChips'); if(!box) return;
   const courses = [...new Set(db.students.map(s => (s.course||'').trim()).filter(Boolean))].sort();
+  const advSelect = $('advCourse');
+  if(advSelect){ const currentVal = advSelect.value; advSelect.innerHTML = '<option value="">همه</option>' + courses.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join(''); advSelect.value = currentVal; }
   if(!courses.length){ box.innerHTML = ''; return; }
   box.innerHTML = `<div class="chip ${seCourseFilter===''?'on':''}" data-c="">همه</div>` + courses.map(c => `<div class="chip ${seCourseFilter===c?'on':''}" data-c="${esc(c)}">${esc(c)}</div>`).join('');
 }
@@ -1507,70 +1621,45 @@ function renderSessionGrid(){
     const b = bAll[s.id] || { bal:0, sessions:0 };
     const pkgLeft = (s.package_size||0) - (s.package_used||0);
     const badge = s.package_size ? `<div class="st-badge ${pkgLeft <= 0 ? 'low' : ''}">${pkgLeft > 0 ? `${faDigits(pkgLeft)} جلسه` : 'تمام'}</div>` : (isBirthdayToday(s) ? `<div class="st-badge birthday">🎂</div>` : '');
-    return `<div class="st-card ${on?'on':''} ${seAbsentMode ? 'absent-mode' : ''}" data-id="${s.id}">
-      ${badge}
-      <div class="st-head"><span class="st-name">${avatarHTML(s.name, 28)} ${esc(s.name)}</span><span class="st-check">${ICON.check}</span></div>
-      <div class="st-meta">
-        <div class="row"><span>دوره</span><span>${esc(s.course||'—')}</span></div>
-        <div class="row"><span>شهریه</span><b>${fa(s.fee||0)}</b></div>
-        <div class="row"><span>مانده</span><b class="${b.bal>0?'neg':b.bal<0?'pos':''}">${fa(Math.abs(b.bal))} ${b.bal>0?'بدهکار':b.bal<0?'بستانکار':''}</b></div>
-      </div>
-      <div class="st-amount" onclick="event.stopPropagation()">
-        <input class="money" data-amount="${s.id}" inputmode="numeric" value="${val?Number(val).toLocaleString('en-US'):''}" placeholder="${seAbsentMode ? 'غایب' : 'مبلغ'}" ${on?'':'disabled'}>
-      </div>
-    </div>`;
+    return `<div class="st-card ${on?'on':''} ${seAbsentMode ? 'absent-mode' : ''} ${b.bal > 0 ? 'has-debt' : ''}" data-id="${s.id}">${badge}<div class="st-head"><span class="st-name">${avatarHTML(s.name, 28)} ${esc(s.name)}</span><span class="st-check">${ICON.check}</span></div><div class="st-meta"><div class="row"><span>دوره</span><span>${esc(s.course||'—')}</span></div><div class="row"><span>شهریه</span><b>${fa(s.fee||0)}</b></div><div class="row"><span>مانده</span><b class="${b.bal>0?'neg':b.bal<0?'pos':''}">${fa(Math.abs(b.bal))} ${b.bal>0?'بدهکار':b.bal<0?'بستانکار':''}</b></div></div><div class="st-amount" onclick="event.stopPropagation()"><input class="money" data-amount="${s.id}" inputmode="numeric" value="${val?Number(val).toLocaleString('en-US'):''}" placeholder="${seAbsentMode ? 'غایب' : 'مبلغ'}" ${on?'':'disabled'}></div></div>`;
   }).join('');
   updateSelectionBar();
 }
-
 on('seGrid', 'click', e => { if(e.target.closest('.st-amount')) return; const card = e.target.closest('.st-card'); if(!card) return; const id = card.dataset.id; if(id in seSelected) delete seSelected[id]; else { const s = db.students.find(x=>x.id===id); seSelected[id] = seAbsentMode ? 0 : (s ? (s.fee||0) : 0); } renderSessionGrid(); });
 on('seGrid', 'input', e => { const inp = e.target.closest('input[data-amount]'); if(!inp) return; const id = inp.dataset.amount; const v = Number(toEn(inp.value)) || 0; seSelected[id] = v; inp.value = v ? v.toLocaleString('en-US') : ''; updateSelectionBar(); });
 
-function updateSelectionBar(){
-  const ids = Object.keys(seSelected);
-  const total = ids.reduce((a,id)=> a + (+seSelected[id]||0), 0);
-  const c = $('seCount'), t = $('seTotal'), s = $('seSave');
-  if(c) c.textContent = faDigits(ids.length);
-  if(t) t.textContent = fa(total);
-  if(s) s.disabled = ids.length === 0;
-}
+function updateSelectionBar(){ const ids = Object.keys(seSelected); const total = ids.reduce((a,id)=> a + (+seSelected[id]||0), 0); const c = $('seCount'), t = $('seTotal'), s = $('seSave'); if(c) c.textContent = faDigits(ids.length); if(t) t.textContent = fa(total); if(s) s.disabled = ids.length === 0; }
 click('seClear', () => { seSelected = {}; renderSessionGrid(); });
 on('seSearch', 'input', debounce(e => { seSearchQuery = e.target.value; renderSessionGrid(); }));
-
-document.querySelectorAll('.quick-btns button').forEach(b => {
-  b.addEventListener('click', () => { const off = +b.dataset.off; const t = todayJ(); const target = off === 0 ? t : jAddDays(t[0], t[1], t[2], off); setDate('seDate', target); });
-});
+document.querySelectorAll('.quick-btns button').forEach(b => { b.addEventListener('click', () => { const off = +b.dataset.off; const t = todayJ(); const target = off === 0 ? t : jAddDays(t[0], t[1], t[2], off); setDate('seDate', target); }); });
 
 click('seSave', async () => {
   const ids = Object.keys(seSelected);
   if(!ids.length){ toast('حداقل یکی انتخاب کن', 'err'); return; }
-  const date = getDate('seDate');
-  if(!date){ toast('تاریخ را انتخاب کن', 'err'); return; }
+  const date = getDate('seDate'); if(!date){ toast('تاریخ را انتخاب کن', 'err'); return; }
   const baseDesc = ($('seDesc')?.value || '').trim();
   const method = ($('seMethod')?.value === '—') ? '' : ($('seMethod')?.value || '');
   const tag = ($('seTag')?.value || '').trim().replace(/^#/, '') || null;
+  const autoNotify = $('seAutoNotify')?.checked;
   const created = [];
   for(const id of ids){
     const amount = +seSelected[id] || 0;
     const s = db.students.find(x=>x.id===id);
     if(amount <= 0 && !seAbsentMode){ toast(`مبلغ برای «${stName(id)}» صفر است`, 'err'); return; }
     let pkgUsed = s.package_used || 0;
-    if(!seAbsentMode && (s.package_size||0) > 0 && pkgUsed < s.package_size){
-      pkgUsed += 1;
-      s.package_used = pkgUsed;
-      await cloudUpdate('students', studentToRow(s), s.id);
-    }
+    if(!seAbsentMode && (s.package_size||0) > 0 && pkgUsed < s.package_size){ pkgUsed += 1; s.package_used = pkgUsed; await cloudUpdate('students', studentToRow(s), s.id); }
     const t = { id: uid(), ts: Date.now(), type: 'charge', sid: id, amount, date, method, desc: baseDesc ? `${baseDesc} — ${stName(id)}` : (seAbsentMode ? `غیبت ${showDate(date)}` : `جلسه ${showDate(date)}`), session_date: date, is_session: true, absent: seAbsentMode, tag, category: null };
-    db.tx.push(t);
-    created.push(t);
+    db.tx.push(t); created.push(t);
+    if(seAbsentMode && autoNotify && s.phone){
+      const msg = `سلام، ${s.name} امروز در کلاس حاضر نبود. — ${settings.smsAcademy}`;
+      setTimeout(() => openSmsFor(s.phone, msg), 500);
+    }
   }
   saveLocal(); renderAll();
   await Promise.all(created.map(t => cloudInsert('tx', txToRow(t), t.id)));
-  logActivity('session_add', `${faDigits(created.length)} جلسه ثبت شد`, { count: created.length });
+  logActivity('session_add', `${faDigits(created.length)} جلسه ثبت شد`);
   saveLocal(); renderAll();
-  seSelected = {};
-  if($('seDesc')) $('seDesc').value = '';
-  if($('seTag')) $('seTag').value = '';
+  seSelected = {}; if($('seDesc')) $('seDesc').value = ''; if($('seTag')) $('seTag').value = '';
   renderSessionGrid();
   toast(`${faDigits(created.length)} جلسه ثبت شد`, 'success');
   launchConfetti();
@@ -1581,13 +1670,9 @@ function renderSessions(){
   const stEl = $('seFilterStudent'), mEl = $('seFilterMonth'), table = $('seTable');
   if(!stEl || !mEl || !table) return;
   const stOpts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
-  const v1 = stEl.value;
-  stEl.innerHTML = '<option value="">همه</option>' + stOpts;
-  if(db.students.some(s=>s.id===v1)) stEl.value = v1;
+  const v1 = stEl.value; stEl.innerHTML = '<option value="">همه</option>' + stOpts; if(db.students.some(s=>s.id===v1)) stEl.value = v1;
   const ms = [...new Set(db.tx.filter(t=>t.is_session && t.session_date).map(t=>t.session_date.slice(0,7)))].sort().reverse();
-  const v2 = mEl.value;
-  mEl.innerHTML = '<option value="">همه ماه‌ها</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
-  mEl.value = ms.includes(v2) ? v2 : '';
+  const v2 = mEl.value; mEl.innerHTML = '<option value="">همه ماه‌ها</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join(''); mEl.value = ms.includes(v2) ? v2 : '';
   const sFilter = stEl.value, mFilter = mEl.value;
   const rows = db.tx.filter(t => t.is_session && (!sFilter || t.sid === sFilter) && (!mFilter || (t.session_date||'').startsWith(mFilter))).sort((a,b)=> (b.session_date||b.date).localeCompare(a.session_date||a.date) || b.ts-a.ts);
   table.innerHTML = rows.length ? `<table><thead><tr><th>تاریخ</th><th>زبان‌آموز</th><th>مبلغ</th><th>وضعیت</th><th>شرح</th><th>عملیات</th></tr></thead><tbody>${rows.slice(0,50).map(t=>`<tr><td>${showDate(t.session_date||t.date)}</td><td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(stName(t.sid), 24)}<span>${esc(stName(t.sid))}</span></div></td><td class="n"><b>${fa(t.amount)}</b> ${copyBtn(t.amount)}</td><td>${t.absent ? '<span class="tag absent">غایب</span>' : '<span class="tag session">حاضر</span>'}</td><td style="white-space:normal;min-width:140px">${esc(t.desc)}</td><td><div class="btn-row tight"><button class="btn xs danger" onclick="delTx('${t.id}')">حذف</button></div></td></tr>`).join('')}</tbody></table>` : emptyState('هنوز جلسه‌ای نیست');
@@ -1606,17 +1691,9 @@ function fillStudentSelects(){
   if(ps && db.students.some(s=>s.id===v3)) ps.value = v3;
   const ms = [...new Set(db.tx.map(t=>t.date.slice(0,7)))].sort().reverse();
   const fm = $('fMonth'), v4 = fm?.value;
-  if(fm){
-    fm.innerHTML = '<option value="">همه</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join('');
-    fm.value = ms.includes(v4) ? v4 : '';
-  }
+  if(fm){ fm.innerHTML = '<option value="">همه</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join(''); fm.value = ms.includes(v4) ? v4 : ''; }
 }
-function txTypeUI(){
-  const type = $('txType')?.value;
-  if($('txStWrap')) $('txStWrap').style.display = type === 'expense' ? 'none' : '';
-  if($('txCategoryWrap')) $('txCategoryWrap').style.display = type === 'expense' ? '' : 'none';
-  if($('txDateLbl')) $('txDateLbl').textContent = type==='payment' ? 'تاریخ دریافت' : 'تاریخ';
-}
+function txTypeUI(){ const type = $('txType')?.value; if($('txStWrap')) $('txStWrap').style.display = type === 'expense' ? 'none' : ''; if($('txCategoryWrap')) $('txCategoryWrap').style.display = type === 'expense' ? '' : 'none'; if($('txDateLbl')) $('txDateLbl').textContent = type==='payment' ? 'تاریخ دریافت' : 'تاریخ'; }
 on('txType', 'change', txTypeUI);
 
 on('txForm', 'submit', async e => {
@@ -1625,33 +1702,15 @@ on('txForm', 'submit', async e => {
   if(amount <= 0){ toast('مبلغ را وارد کن', 'err'); return; }
   if(type !== 'expense' && !$('txStudent').value){ toast('زبان‌آموز را انتخاب کن', 'err'); return; }
   const o = { type, sid: type==='expense' ? null : $('txStudent').value, amount, date: getDate('txDate'), method: $('txMethod').value, desc: $('txDesc').value.trim(), session_date: null, is_session: false, category: type==='expense' ? $('txCategory').value : null, tag: ($('txTag')?.value||'').trim().replace(/^#/, '') || null, absent: false };
-  if(editTx){
-    const t = db.tx.find(x=>x.id===editTx);
-    Object.assign(t, o);
-    await cloudUpdate('tx', txToRow(t), t.id);
-    toast('ویرایش شد', 'success');
-  } else {
-    const t = { id: uid(), ts: Date.now(), ...o };
-    db.tx.push(t);
-    await cloudInsert('tx', txToRow(t), t.id);
-    logActivity('tx_add', `${TYPE_NAME[type]} - ${type === 'expense' ? '' : stName(t.sid) + ' - '}${fa(amount)} تومان`, { tid: t.id });
-    toast('ثبت شد', 'success');
-    if(type==='payment') launchConfetti();
-  }
+  if(editTx){ const t = db.tx.find(x=>x.id===editTx); Object.assign(t, o); await cloudUpdate('tx', txToRow(t), t.id); toast('ویرایش شد', 'success'); }
+  else { const t = { id: uid(), ts: Date.now(), ...o }; db.tx.push(t); await cloudInsert('tx', txToRow(t), t.id); logActivity('tx_add', `${TYPE_NAME[type]} - ${type === 'expense' ? '' : stName(t.sid) + ' - '}${fa(amount)} تومان`); toast('ثبت شد', 'success'); if(type==='payment') launchConfetti(); }
   const keepType = $('txType').value, keepSt = keepType === 'expense' ? '' : $('txStudent').value;
   cancelTx();
   $('txType').value = keepType; txTypeUI();
   $('txStudent').value = keepSt;
   saveLocal(); renderAll(); checkAchievements();
 });
-function cancelTx(){
-  editTx = null;
-  const f = $('txForm'); if(f) f.reset();
-  setDate('txDate', todayJ()); txTypeUI();
-  const t = $('txTitle'); if(t) t.querySelector('span').textContent = 'ثبت تراکنش';
-  if($('txSave')) $('txSave').textContent = 'ثبت';
-  if($('txCancel')) $('txCancel').style.display = 'none';
-}
+function cancelTx(){ editTx = null; const f = $('txForm'); if(f) f.reset(); setDate('txDate', todayJ()); txTypeUI(); const t = $('txTitle'); if(t) t.querySelector('span').textContent = 'ثبت تراکنش'; if($('txSave')) $('txSave').textContent = 'ثبت'; if($('txCancel')) $('txCancel').style.display = 'none'; }
 click('txCancel', cancelTx);
 function editTransaction(id){
   const t = db.tx.find(x=>x.id===id); if(!t) return;
@@ -1671,10 +1730,7 @@ function editTransaction(id){
 async function delTx(id){
   if(!confirm('این تراکنش حذف شود؟')) return;
   const t = db.tx.find(x=>x.id===id); if(!t) return;
-  if(t.is_session && !t.absent && t.sid){
-    const s = db.students.find(x=>x.id===t.sid);
-    if(s && (s.package_used||0) > 0){ s.package_used = Math.max(0, (s.package_used||0) - 1); await cloudUpdate('students', studentToRow(s), s.id); }
-  }
+  if(t.is_session && !t.absent && t.sid){ const s = db.students.find(x=>x.id===t.sid); if(s && (s.package_used||0) > 0){ s.package_used = Math.max(0, (s.package_used||0) - 1); await cloudUpdate('students', studentToRow(s), s.id); } }
   await cloudDelete('tx', id);
   db.tx = db.tx.filter(x=>x.id!==id);
   saveLocal(); renderAll();
@@ -1689,21 +1745,13 @@ function quickTx(sid, type){
   if(type==='payment' && sid){ const bl = balances()[sid].bal; if(bl>0) $('txAmount').value = bl.toLocaleString('en-US'); }
   $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'});
 }
-function quickSession(sid){
-  seCourseFilter = ''; seSearchQuery = ''; if($('seSearch')) $('seSearch').value = '';
-  switchTab('session');
-  seSelected = {};
-  seSelected[sid] = (db.students.find(x=>x.id===sid)||{}).fee || 0;
-  renderCourseChips(); renderSessionGrid();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+function quickSession(sid){ seCourseFilter = ''; seSearchQuery = ''; if($('seSearch')) $('seSearch').value = ''; switchTab('session'); seSelected = {}; seSelected[sid] = (db.students.find(x=>x.id===sid)||{}).fee || 0; renderCourseChips(); renderSessionGrid(); window.scrollTo({top:0, behavior:'smooth'}); }
 function filteredTx(){
   const q = ($('fSearch')?.value || '').trim(), s = $('fStudent')?.value, t = $('fType')?.value, m = $('fMonth')?.value;
   return db.tx.filter(x => (!s||x.sid===s) && (!t||x.type===t) && (!m||x.date.startsWith(m)) && (!q||(x.desc||'').includes(q)||(x.tag||'').includes(q)||stName(x.sid).includes(q))).sort((a,b)=> b.date.localeCompare(a.date) || b.ts-a.ts);
 }
 function renderTx(){
-  const table = $('txTable'), sumEl = $('txSum');
-  if(!table) return;
+  const table = $('txTable'), sumEl = $('txSum'); if(!table) return;
   fillStudentSelects();
   const rows = filteredTx();
   const sum = t => rows.filter(x=>x.type===t).reduce((a,x)=>a+x.amount,0);
@@ -1713,20 +1761,31 @@ function renderTx(){
 on('fSearch', 'input', debounce(renderTx));
 ['fStudent','fType','fMonth'].forEach(id => on(id, 'change', renderTx));
 
+function renderWeekly(){
+  const view = $('weeklyView'); if(!view) return;
+  if(!currentWeekStart){ const t = todayJ(); const dayIdx = dayOfWeek(t[0], t[1], t[2]); currentWeekStart = jAddDays(t[0], t[1], t[2], -dayIdx); }
+  const [wy, wm, wd] = currentWeekStart;
+  if($('weekTitle')) $('weekTitle').textContent = `هفتهٔ ${faDigits(wd)} ${MONTHS[wm-1]} تا ${faDigits(jAddDays(wy, wm, wd, 6)[2])} ${MONTHS[jAddDays(wy, wm, wd, 6)[1]-1]}`;
+  const days = [];
+  for(let i = 0; i < 7; i++) days.push(jAddDays(wy, wm, wd, i));
+  const today = todayJ();
+  view.innerHTML = days.map((d, idx) => {
+    const ds = `${d[0]}/${pad(d[1])}/${pad(d[2])}`;
+    const isToday = d[0]===today[0] && d[1]===today[1] && d[2]===today[2];
+    const daySessions = db.tx.filter(t => t.is_session && (t.session_date === ds || t.date === ds));
+    return `<div class="weekly-day ${isToday ? 'today' : ''}"><h4>${WEEKDAYS[idx]}<br><small style="font-size:10px">${faDigits(d[2])} ${MONTHS[d[1]-1]}</small></h4>${daySessions.map(t => `<div class="weekly-session ${t.absent ? 'absent' : ''}" onclick="openStudentProfile('${t.sid}')">${avatarHTML(stName(t.sid), 16)} ${esc(stName(t.sid))}</div>`).join('') || `<div class="hint" style="font-size:10px;text-align:center">—</div>`}</div>`;
+  }).join('');
+}
+click('weekPrev', () => { if(!currentWeekStart) renderWeekly(); currentWeekStart = jAddDays(currentWeekStart[0], currentWeekStart[1], currentWeekStart[2], -7); renderWeekly(); });
+click('weekNext', () => { if(!currentWeekStart) renderWeekly(); currentWeekStart = jAddDays(currentWeekStart[0], currentWeekStart[1], currentWeekStart[2], 7); renderWeekly(); });
+click('weekToday', () => { const t = todayJ(); const dayIdx = dayOfWeek(t[0], t[1], t[2]); currentWeekStart = jAddDays(t[0], t[1], t[2], -dayIdx); renderWeekly(); });
+
 function renderActivity(){
   const el = $('activityList'); if(!el) return;
   const acts = db.activities.slice(0, 100);
   if(!acts.length){ el.innerHTML = emptyState('هنوز فعالیتی نیست'); return; }
   const icons = { student_add:'👤', student_edit:'✏️', student_delete:'🗑️', tx_add:'💰', session_add:'📅' };
-  el.innerHTML = acts.map(a => `
-    <div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border)">
-      <div style="font-size:24px">${icons[a.type] || '📌'}</div>
-      <div style="flex:1">
-        <div style="font-weight:600;color:var(--ink);font-size:13.5px">${esc(a.desc)}</div>
-        <div style="font-size:11.5px;color:var(--ink-2);margin-top:2px">${new Date(a.ts).toLocaleString('fa-IR')}</div>
-      </div>
-    </div>
-  `).join('');
+  el.innerHTML = acts.map(a => `<div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border)"><div style="font-size:24px">${icons[a.type] || '📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--ink);font-size:13.5px">${esc(a.desc)}</div><div style="font-size:11.5px;color:var(--ink-2);margin-top:2px">${new Date(a.ts).toLocaleString('fa-IR')}</div></div></div>`).join('');
 }
 
 click('btnAddPkg', async () => {
@@ -1735,8 +1794,7 @@ click('btnAddPkg', async () => {
   if(!sid){ toast('زبان‌آموز را انتخاب کن', 'err'); return; }
   if(size <= 0){ toast('تعداد را وارد کن', 'err'); return; }
   const s = db.students.find(x=>x.id===sid); if(!s) return;
-  s.package_size = (s.package_size || 0) + size;
-  s.package_used = s.package_used || 0;
+  s.package_size = (s.package_size || 0) + size; s.package_used = s.package_used || 0;
   await cloudUpdate('students', studentToRow(s), s.id);
   saveLocal(); renderPkgs(); renderStudents();
   toast(`پکیج ${faDigits(size)} جلسه اضافه شد`, 'success');
@@ -1745,53 +1803,44 @@ click('btnAddPkg', async () => {
 function renderPkgs(){
   const table = $('pkgTable'); if(!table) return;
   const tbody = db.students.map(s => {
-    const total = s.package_size || 0, used = s.package_used || 0;
-    const left = total - used;
+    const total = s.package_size || 0, used = s.package_used || 0; const left = total - used;
     if(!total) return '';
     const pct = total ? Math.round(left / total * 100) : 0;
     return `<tr><td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(s.name, 24)}<b>${esc(s.name)}</b></div></td><td class="n">${faDigits(total)}</td><td class="n">${faDigits(used)}</td><td class="n ${left > 0 ? 'pos' : 'neg'}"><b>${faDigits(left)}</b></td><td style="min-width:120px"><div class="bar-track" style="height:8px"><div class="bar-fill ${left > 0 ? 'credit' : 'debt'}" style="width:${pct}%"></div></div></td><td><button class="btn xs ghost" onclick="resetPkg('${s.id}')">ریست</button></td></tr>`;
   }).filter(Boolean).join('');
   table.innerHTML = tbody ? `<table><thead><tr><th>زبان‌آموز</th><th>کل</th><th>استفاده</th><th>باقی</th><th>پیشرفت</th><th></th></tr></thead><tbody>${tbody}</tbody></table>` : emptyState('پکیجی نیست');
 }
-window.resetPkg = async (id) => {
-  const s = db.students.find(x=>x.id===id); if(!s) return;
-  if(!confirm('پکیج ریست شود؟')) return;
-  s.package_size = 0; s.package_used = 0;
-  await cloudUpdate('students', studentToRow(s), s.id);
-  saveLocal(); renderPkgs(); renderStudents();
-  toast('ریست شد', 'success');
-};
+window.resetPkg = async (id) => { const s = db.students.find(x=>x.id===id); if(!s) return; if(!confirm('پکیج ریست شود؟')) return; s.package_size = 0; s.package_used = 0; await cloudUpdate('students', studentToRow(s), s.id); saveLocal(); renderPkgs(); renderStudents(); toast('ریست شد', 'success'); };
 
-document.querySelectorAll('.sms-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    const t = tab.dataset.sms;
-    document.querySelectorAll('.sms-tab').forEach(x => x.classList.toggle('on', x === tab));
-    document.querySelectorAll('.sms-panel').forEach(p => p.classList.toggle('on', p.id === 'sms-' + t));
-    if(t === 'debt') renderSmsDebt();
-    if(t === 'birthday') renderSmsBday();
-    if(t === 'custom') renderSmsCustom();
-    if(t === 'config') loadSmsConfig();
-  });
-});
+document.querySelectorAll('.sms-tab').forEach(tab => { tab.addEventListener('click', () => { const t = tab.dataset.sms; document.querySelectorAll('.sms-tab').forEach(x => x.classList.toggle('on', x === tab)); document.querySelectorAll('.sms-panel').forEach(p => p.classList.toggle('on', p.id === 'sms-' + t)); if(t === 'debt') renderSmsDebt(); if(t === 'birthday') renderSmsBday(); if(t === 'custom') renderSmsCustom(); if(t === 'config') loadSmsConfig(); }); });
 
 let smsSelectedDebt = new Set(), smsSelectedCustom = new Set(), smsSelectedBday = new Set();
 
 function renderSmsDebt(){
-  const el = $('smsDebtList'); if(!el) return;
+  const el = $('smsDebtList'), groupsEl = $('smsGroups'); if(!el) return;
   const b = balances();
   const debtors = db.students.filter(s => b[s.id].bal > 0).sort((a,b2) => b[b2.id].bal - b[a.id].bal);
   el.innerHTML = debtors.length ? debtors.map(s => {
     const checked = smsSelectedDebt.has(s.id) ? 'checked' : '';
     return `<label class="recipient"><input type="checkbox" ${checked} onchange="toggleSmsRecipient('debt','${s.id}',this.checked)">${avatarHTML(s.name, 28)}<div class="rc-info"><div class="rc-name">${esc(s.name)}</div><div class="rc-phone">${faDigits(s.phone||'—')}</div></div><div class="rc-amount">${fa(b[s.id].bal)}</div></label>`;
   }).join('') : emptyState('بدهکاری نیست');
-  if($('smsDebtText') && !$('smsDebtText').value){ $('smsDebtText').value = `{name} عزیز، مبلغ {amount} تومان بدهی کلاس زبان دارید. لطفاً تسویه کنید.\n— {academy}`; }
+  if(groupsEl){
+    const groups = [
+      { name:'همه بدهکاران', filter: () => debtors.map(s=>s.id) },
+      { name:'بدهی بیش از ۵۰۰ هزار', filter: () => debtors.filter(s => b[s.id].bal > 500000).map(s=>s.id) },
+      { name:'بدهی بیش از ۱ میلیون', filter: () => debtors.filter(s => b[s.id].bal > 1000000).map(s=>s.id) },
+      { name:'بیش از ۶۰ روز بدهکار', filter: () => { const now = todayJ(); return debtors.filter(s => { const lp = db.tx.filter(t=>t.sid===s.id && t.type==='payment').sort((a,b)=>b.date.localeCompare(a.date))[0]; if(!lp) return true; const [py,pm,pd]=lp.date.split('/').map(Number); return daysBetween([py,pm,pd], now) > 60; }).map(s=>s.id); } }
+    ];
+    groupsEl.innerHTML = groups.map((g, i) => {
+      const ids = g.filter();
+      return `<div class="sms-group" onclick="selectGroup('debt', [${ids.map(id=>`'${id}'`).join(',')}])"><b>${g.name}</b><small>${faDigits(ids.length)} نفر</small></div>`;
+    }).join('');
+  }
+  if($('smsDebtText') && !$('smsDebtText').value){ $('smsDebtText').value = `{name} عزیز، مبلغ {amount} تومان بدهی کلاس زبان دارید. لطفاً تسویه کنید.\nشماره کارت: {wallet}\n— {academy}`; }
   updateSmsPreview('debt');
 }
-window.toggleSmsRecipient = (type, id, checked) => {
-  const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom;
-  if(checked) set.add(id); else set.delete(id);
-  updateSmsPreview(type);
-};
+window.selectGroup = (type, ids) => { const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom; set.clear(); ids.forEach(id => set.add(id)); if(type === 'debt') renderSmsDebt(); else renderSmsCustom(); };
+window.toggleSmsRecipient = (type, id, checked) => { const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom; if(checked) set.add(id); else set.delete(id); updateSmsPreview(type); };
 
 function renderSmsBday(){
   const el = $('smsBdayList'); if(!el) return;
@@ -1812,47 +1861,25 @@ function renderSmsCustom(){
   }).join('') || emptyState('هیچ زبان‌آموزی با شماره نیست');
   updateSmsPreview('custom');
 }
-window.smsSelectAll = (type) => {
-  const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom;
-  if(type === 'debt'){ const b = balances(); db.students.filter(s => b[s.id].bal > 0).forEach(s => set.add(s.id)); }
-  else { db.students.filter(s => s.phone).forEach(s => set.add(s.id)); }
-  if(type === 'debt') renderSmsDebt(); else renderSmsCustom();
-};
-window.smsSelectNone = (type) => {
-  if(type === 'debt') smsSelectedDebt.clear(); else smsSelectedCustom.clear();
-  if(type === 'debt') renderSmsDebt(); else renderSmsCustom();
-};
+window.smsSelectAll = (type) => { const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom; if(type === 'debt'){ const b = balances(); db.students.filter(s => b[s.id].bal > 0).forEach(s => set.add(s.id)); } else { db.students.filter(s => s.phone).forEach(s => set.add(s.id)); } if(type === 'debt') renderSmsDebt(); else renderSmsCustom(); };
+window.smsSelectNone = (type) => { if(type === 'debt') smsSelectedDebt.clear(); else smsSelectedCustom.clear(); if(type === 'debt') renderSmsDebt(); else renderSmsCustom(); };
 
 function updateSmsPreview(type){
   const b = balances();
   let text = '', targets = [];
-  if(type === 'debt'){
-    text = $('smsDebtText')?.value || '';
-    targets = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s);
-  } else if(type === 'birthday'){
-    if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id));
-    text = $('smsBdayText')?.value || '';
-    targets = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s);
-  } else {
-    text = $('smsCustomText')?.value || '';
-    targets = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s);
-  }
+  if(type === 'debt'){ text = $('smsDebtText')?.value || ''; targets = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s); }
+  else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText')?.value || ''; targets = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s); }
+  else { text = $('smsCustomText')?.value || ''; targets = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s); }
   const sample = targets[0] ? applySmsVars(text, targets[0].s, targets[0].amount) : text;
   const previewId = 'sms' + type[0].toUpperCase() + type.slice(1) + 'Preview';
-  const preview = $(previewId);
-  if(preview) preview.textContent = sample || '—';
+  const preview = $(previewId); if(preview) preview.textContent = sample || '—';
 }
 
 function applySmsVars(text, s, amount){
-  return text.replace(/{name}/g, s ? s.name : '').replace(/{amount}/g, fa(amount)).replace(/{academy}/g, settings.smsAcademy || 'آموزشگاه');
+  const wallet = settings.walletNum ? `\n${settings.walletNum}` : '';
+  return text.replace(/{name}/g, s ? s.name : '').replace(/{amount}/g, fa(amount)).replace(/{academy}/g, settings.smsAcademy || 'آموزشگاه').replace(/{wallet}/g, settings.walletNum || '—');
 }
-['smsDebtText','smsBdayText','smsCustomText'].forEach(id => {
-  on(id, 'input', debounce(() => {
-    if(id === 'smsDebtText') updateSmsPreview('debt');
-    if(id === 'smsBdayText') updateSmsPreview('birthday');
-    if(id === 'smsCustomText') updateSmsPreview('custom');
-  }));
-});
+['smsDebtText','smsBdayText','smsCustomText'].forEach(id => on(id, 'input', debounce(() => { if(id === 'smsDebtText') updateSmsPreview('debt'); if(id === 'smsBdayText') updateSmsPreview('birthday'); if(id === 'smsCustomText') updateSmsPreview('custom'); })));
 
 async function sendSms(type){
   const b = balances();
@@ -1866,16 +1893,8 @@ async function sendSms(type){
   if(!sb){ toast('Supabase در دسترس نیست', 'err'); return; }
   let sent = 0, failed = 0;
   toast('در حال ارسال…', 'info');
-  for(const r of recipients){
-    const msg = applySmsVars(text, r.s, r.amount);
-    try{
-      const { data, error } = await sb.functions.invoke('send-sms', { body: { provider: settings.smsProvider, apiKey: settings.smsApiKey, sender: settings.smsSender, phone: r.s.phone, message: msg } });
-      if(error || (data && data.error)) throw (error || new Error(data.error));
-      sent++;
-    }catch(e){ console.warn('send failed', e); failed++; }
-  }
-  achievements._sms_sent = (achievements._sms_sent || 0) + sent;
-  saveAch(); checkAchievements();
+  for(const r of recipients){ const msg = applySmsVars(text, r.s, r.amount); try{ const { data, error } = await sb.functions.invoke('send-sms', { body: { provider: settings.smsProvider, apiKey: settings.smsApiKey, sender: settings.smsSender, phone: r.s.phone, message: msg } }); if(error || (data && data.error)) throw (error || new Error(data.error)); sent++; }catch(e){ console.warn('send failed', e); failed++; } }
+  achievements._sms_sent = (achievements._sms_sent || 0) + sent; saveAch(); checkAchievements();
   toast(`ارسال شد: ${faDigits(sent)} موفق، ${faDigits(failed)} ناموفق`, sent ? 'success' : 'err');
 }
 
@@ -1886,34 +1905,30 @@ window.openSmsFallback = (type) => {
   else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText').value; recipients = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s && x.s.phone); }
   else { text = $('smsCustomText').value; recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
   if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; }
-  const r = recipients[0];
-  const msg = applySmsVars(text, r.s, r.amount);
+  const r = recipients[0]; const msg = applySmsVars(text, r.s, r.amount);
   window.location.href = `sms:${r.s.phone}?&body=${encodeURIComponent(msg)}`;
   if(recipients.length > 1){ toast(`بقیه: ${recipients.slice(1).map(x=>x.s.name).join(', ')}`, 'info'); }
 };
 
-function loadSmsConfig(){
-  if($('smsProvider')) $('smsProvider').value = settings.smsProvider || 'none';
-  if($('smsApiKey')) $('smsApiKey').value = settings.smsApiKey || '';
-  if($('smsSender')) $('smsSender').value = settings.smsSender || '';
-  if($('smsAcademy')) $('smsAcademy').value = settings.smsAcademy || 'آموزشگاه زبان علی ناقلی';
-}
-window.saveSmsConfig = () => {
-  settings.smsProvider = $('smsProvider').value;
-  settings.smsApiKey = $('smsApiKey').value.trim();
-  settings.smsSender = $('smsSender').value.trim();
-  settings.smsAcademy = $('smsAcademy').value.trim() || 'آموزشگاه';
-  saveSettings();
-  toast('ذخیره شد', 'success');
+window.openWhatsApp = (type) => {
+  const b = balances();
+  let text = '', recipients = [];
+  if(type === 'debt'){ text = $('smsDebtText').value; recipients = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
+  else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText').value; recipients = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s && x.s.phone); }
+  else { text = $('smsCustomText').value; recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
+  if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; }
+  const r = recipients[0]; const msg = applySmsVars(text, r.s, r.amount);
+  const phone = r.s.phone.replace(/^0/, '98');
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  if(recipients.length > 1){ toast(`بقیه: ${recipients.slice(1).map(x=>x.s.name).join(', ')}`, 'info'); }
 };
-window.sendBirthdayTo = (id) => {
-  const s = db.students.find(x=>x.id===id); if(!s) return;
-  const text = `🎂 ${s.name} عزیز، تولدت مبارک! — ${settings.smsAcademy}`;
-  if(s.phone) openSmsFor(s.phone, text);
-  else copyText(text);
-};
+window.openWhatsAppFor = (phone, text) => { if(!phone) return; const p = phone.replace(/^0/, '98'); window.open(`https://wa.me/${p}?text=${encodeURIComponent(text)}`, '_blank'); };
 window.openSmsFor = (phone, text) => { window.location.href = `sms:${phone}?&body=${encodeURIComponent(text)}`; };
 window.copyText = (text) => { navigator.clipboard.writeText(text).then(()=>toast('کپی شد', 'success')); };
+
+function loadSmsConfig(){ if($('smsProvider')) $('smsProvider').value = settings.smsProvider || 'none'; if($('smsApiKey')) $('smsApiKey').value = settings.smsApiKey || ''; if($('smsSender')) $('smsSender').value = settings.smsSender || ''; if($('smsAcademy')) $('smsAcademy').value = settings.smsAcademy || 'آموزشگاه زبان علی ناقلی'; }
+window.saveSmsConfig = () => { settings.smsProvider = $('smsProvider').value; settings.smsApiKey = $('smsApiKey').value.trim(); settings.smsSender = $('smsSender').value.trim(); settings.smsAcademy = $('smsAcademy').value.trim() || 'آموزشگاه'; saveSettings(); toast('ذخیره شد', 'success'); };
+window.sendBirthdayTo = (id) => { const s = db.students.find(x=>x.id===id); if(!s) return; const text = `🎂 ${s.name} عزیز، تولدت مبارک! — ${settings.smsAcademy}`; if(s.phone) openSmsFor(s.phone, text); else copyText(text); };
 
 function renderBirthdaysTab(){
   const el = $('bdayContent'); if(!el) return;
@@ -1921,19 +1936,9 @@ function renderBirthdaysTab(){
   const thisMonth = db.students.filter(birthdayThisMonth).filter(s => !isBirthdayToday(s));
   const upcoming = db.students.filter(s => { if(!s.birthday) return false; const d = birthdayInDays(s); return d !== null && d <= 30 && d > 0 && !birthdayThisMonth(s); }).sort((a,b) => birthdayInDays(a) - birthdayInDays(b));
   const content = [];
-  if(today.length){
-    content.push(`<div class="bday-card" style="margin-bottom:20px">
-      <h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3>
-      <p>پیام تبریک بفرست</p>
-      ${today.map(s => `<div class="bday-item"><b>${avatarHTML(s.name, 24)} ${esc(s.name)}</b><span>${esc(s.phone||'—')}</span><button onclick="sendBirthdayTo('${s.id}')">${s.phone?'پیام':'کپی'}</button></div>`).join('')}
-    </div>`);
-  }
-  if(thisMonth.length){
-    content.push(`<div class="card"><h3 class="card-title">🎉 تولدهای این ماه (${faDigits(thisMonth.length)})</h3><div class="table-wrap"><table><thead><tr><th>نام</th><th>تاریخ</th><th>تلفن</th><th>عملیات</th></tr></thead><tbody>${thisMonth.map(s => `<tr><td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(s.name, 24)}<b>${esc(s.name)}</b></div></td><td>${showDate(s.birthday)}</td><td>${faDigits(esc(s.phone))}</td><td><button class="btn xs ghost" onclick="sendBirthdayTo('${s.id}')">پیام</button></td></tr>`).join('')}</tbody></table></div></div>`);
-  }
-  if(upcoming.length){
-    content.push(`<div class="card"><h3 class="card-title">📅 تولدهای ماه بعد (${faDigits(upcoming.length)})</h3><div class="table-wrap"><table><thead><tr><th>نام</th><th>تاریخ</th><th>تا تولد</th><th>تلفن</th></tr></thead><tbody>${upcoming.map(s => `<tr><td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(s.name, 24)}<b>${esc(s.name)}</b></div></td><td>${showDate(s.birthday)}</td><td><span class="tag credit">${faDigits(birthdayInDays(s))} روز</span></td><td>${faDigits(esc(s.phone))}</td></tr>`).join('')}</tbody></table></div></div>`);
-  }
+  if(today.length){ content.push(`<div class="bday-card" style="margin-bottom:20px"><h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3><p>پیام تبریک بفرست</p>${today.map(s => `<div class="bday-item"><b>${avatarHTML(s.name, 24)} ${esc(s.name)}</b><span>${esc(s.phone||'—')}</span><button onclick="sendBirthdayTo('${s.id}')">${s.phone?'پیام':'کپی'}</button></div>`).join('')}</div>`); }
+  if(thisMonth.length){ content.push(`<div class="card"><h3 class="card-title">🎉 تولدهای این ماه (${faDigits(thisMonth.length)})</h3><div class="table-wrap"><table><thead><tr><th>نام</th><th>تاریخ</th><th>تلفن</th><th>عملیات</th></tr></thead><tbody>${thisMonth.map(s => `<tr><td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(s.name, 24)}<b>${esc(s.name)}</b></div></td><td>${showDate(s.birthday)}</td><td>${faDigits(esc(s.phone))}</td><td><button class="btn xs ghost" onclick="sendBirthdayTo('${s.id}')">پیام</button></td></tr>`).join('')}</tbody></table></div></div>`); }
+  if(upcoming.length){ content.push(`<div class="card"><h3 class="card-title">📅 تولدهای ماه بعد (${faDigits(upcoming.length)})</h3><div class="table-wrap"><table><thead><tr><th>نام</th><th>تاریخ</th><th>تا تولد</th><th>تلفن</th></tr></thead><tbody>${upcoming.map(s => `<tr><td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(s.name, 24)}<b>${esc(s.name)}</b></div></td><td>${showDate(s.birthday)}</td><td><span class="tag credit">${faDigits(birthdayInDays(s))} روز</span></td><td>${faDigits(esc(s.phone))}</td></tr>`).join('')}</tbody></table></div></div>`); }
   if(!content.length) content.push(emptyState('هیچ تولدی ثبت نشده.'));
   el.innerHTML = content.join('');
 }
@@ -1950,44 +1955,19 @@ const ACH_DEFS = [
   { id:'birthday_collector', icon:'🎂', title:'تولدها', desc:'۵ تولد ثبت شده', check: () => db.students.filter(s => s.birthday).length >= 5 },
   { id:'package_seller', icon:'📦', title:'فروشنده پکیج', desc:'اولین پکیج', check: () => db.students.some(s => s.package_size > 0) },
   { id:'first_sms', icon:'📱', title:'پیامک', desc:'اولین پیامک', check: () => (achievements._sms_sent || 0) > 0 },
-  { id:'tag_master', icon:'🏷️', title:'سازمان‌دهنده', desc:'۵ تگ', check: () => new Set(db.tx.filter(t=>t.tag).map(t=>t.tag)).size >= 5 }
+  { id:'tag_master', icon:'🏷️', title:'سازمان‌دهنده', desc:'۵ تگ', check: () => new Set(db.tx.filter(t=>t.tag).map(t=>t.tag)).size >= 5 },
+  { id:'whatsapp_user', icon:'💬', title:'واتساپ‌باز', desc:'اولین پیام واتساپ', check: () => (achievements._wa_sent || 0) > 0 }
 ];
 
-function checkAchievements(){
-  let changed = false;
-  ACH_DEFS.forEach(a => {
-    if(!achievements[a.id] && a.check()){
-      achievements[a.id] = Date.now();
-      changed = true;
-      launchConfetti();
-      playSound('success');
-      toast(`🏆 دستاورد جدید: ${a.title}`, 'success');
-    }
-  });
-  if(changed){ saveAch(); renderAchievements(); }
-}
+function checkAchievements(){ let changed = false; ACH_DEFS.forEach(a => { if(!achievements[a.id] && a.check()){ achievements[a.id] = Date.now(); changed = true; launchConfetti(); playSound('success'); toast(`🏆 دستاورد جدید: ${a.title}`, 'success'); } }); if(changed){ saveAch(); renderAchievements(); } }
 
 function renderAchievements(){
   const el = $('achGrid'); if(!el) return;
-  el.innerHTML = ACH_DEFS.map(a => {
-    const unlocked = achievements[a.id];
-    return `<div class="ach-card ${unlocked ? '' : 'locked'}">
-      <span class="ach-icon">${a.icon}</span>
-      <b>${a.title}</b>
-      <small>${a.desc}</small>
-      ${unlocked ? `<span class="ach-date">✅ ${new Date(unlocked).toLocaleDateString('fa-IR')}</span>` : ''}
-    </div>`;
-  }).join('');
+  el.innerHTML = ACH_DEFS.map(a => { const unlocked = achievements[a.id]; return `<div class="ach-card ${unlocked ? '' : 'locked'}"><span class="ach-icon">${a.icon}</span><b>${a.title}</b><small>${a.desc}</small>${unlocked ? `<span class="ach-date">✅ ${new Date(unlocked).toLocaleDateString('fa-IR')}</span>` : ''}</div>`; }).join('');
 }
 
 let calYear, calMonth;
-function initCalendar(){
-  const t = todayJ();
-  calYear = t[0]; calMonth = t[1];
-  click('calPrev', () => { calMonth--; if(calMonth < 1){ calMonth = 12; calYear--; } renderCalendar(); });
-  click('calNext', () => { calMonth++; if(calMonth > 12){ calMonth = 1; calYear++; } renderCalendar(); });
-  click('calToday', () => { calYear = t[0]; calMonth = t[1]; renderCalendar(); });
-}
+function initCalendar(){ const t = todayJ(); calYear = t[0]; calMonth = t[1]; click('calPrev', () => { calMonth--; if(calMonth < 1){ calMonth = 12; calYear--; } renderCalendar(); }); click('calNext', () => { calMonth++; if(calMonth > 12){ calMonth = 1; calYear++; } renderCalendar(); }); click('calToday', () => { calYear = t[0]; calMonth = t[1]; renderCalendar(); }); }
 function renderCalendar(){
   const grid = $('calGrid'); if(!grid) return;
   const daysInMonth = jMonthDays(calYear, calMonth);
@@ -1995,38 +1975,18 @@ function renderCalendar(){
   if($('calTitle')) $('calTitle').textContent = `${MONTHS[calMonth-1]} ${faDigits(calYear)}`;
   const t = todayJ();
   const days = Array.from({length: daysInMonth}, (_,i) => ({ d: i+1, income:0, expense:0, sessions:0, birthday:false }));
-  db.tx.forEach(tx => {
-    if(!tx.date) return;
-    const [y,m,d] = tx.date.split('/').map(Number);
-    if(y !== calYear || m !== calMonth) return;
-    const day = days[d-1];
-    if(!day) return;
-    if(tx.type==='payment') day.income += tx.amount;
-    if(tx.type==='expense') day.expense += tx.amount;
-    if(tx.is_session) day.sessions += 1;
-  });
+  db.tx.forEach(tx => { if(!tx.date) return; const [y,m,d] = tx.date.split('/').map(Number); if(y !== calYear || m !== calMonth) return; const day = days[d-1]; if(!day) return; if(tx.type==='payment') day.income += tx.amount; if(tx.type==='expense') day.expense += tx.amount; if(tx.is_session) day.sessions += 1; });
   db.students.forEach(s => { if(!s.birthday) return; const [, bm, bd] = s.birthday.split('/').map(Number); if(bm === calMonth && days[bd-1]) days[bd-1].birthday = true; });
   const cells = [];
   for(let i = 0; i < firstDay; i++) cells.push(`<div class="cal-cell empty"></div>`);
-  days.forEach(d => {
-    const isToday = t[0]===calYear && t[1]===calMonth && t[2]===d.d;
-    const hasIncome = d.income > 0;
-    cells.push(`<div class="cal-cell ${isToday ? 'today' : ''} ${hasIncome ? 'has-income' : ''} ${d.birthday ? 'birthday' : ''}" onclick="showCalDay(${d.d})">
-      <div class="cal-date">${faDigits(d.d)}</div>
-      ${d.birthday ? `<div class="cal-bday">🎂</div>` : ''}
-      ${d.income ? `<div class="cal-inc">▲ ${fa(d.income)}</div>` : ''}
-      ${d.expense ? `<div class="cal-exp">▼ ${fa(d.expense)}</div>` : ''}
-      ${d.sessions ? `<div class="cal-sessions">${faDigits(d.sessions)} جلسه</div>` : ''}
-    </div>`);
-  });
+  days.forEach(d => { const isToday = t[0]===calYear && t[1]===calMonth && t[2]===d.d; const hasIncome = d.income > 0; cells.push(`<div class="cal-cell ${isToday ? 'today' : ''} ${hasIncome ? 'has-income' : ''} ${d.birthday ? 'birthday' : ''}" onclick="showCalDay(${d.d})"><div class="cal-date">${faDigits(d.d)}</div>${d.birthday ? `<div class="cal-bday">🎂</div>` : ''}${d.income ? `<div class="cal-inc">▲ ${fa(d.income)}</div>` : ''}${d.expense ? `<div class="cal-exp">▼ ${fa(d.expense)}</div>` : ''}${d.sessions ? `<div class="cal-sessions">${faDigits(d.sessions)} جلسه</div>` : ''}</div>`); });
   const remainder = (7 - (cells.length % 7)) % 7;
   for(let i = 0; i < remainder; i++) cells.push(`<div class="cal-cell empty"></div>`);
   const header = WEEKDAYS.map(d => `<div class="cal-dayname">${d}</div>`).join('');
   grid.innerHTML = header + cells.join('');
 }
 window.showCalDay = (d) => {
-  const detail = $('calDayDetail'), title = $('calDayTitle'), table = $('calDayTable');
-  if(!detail || !table) return;
+  const detail = $('calDayDetail'), title = $('calDayTitle'), table = $('calDayTable'); if(!detail || !table) return;
   const dateStr_ = `${calYear}/${pad(calMonth)}/${pad(d)}`;
   const rows = db.tx.filter(t => t.date === dateStr_).sort((a,b)=>b.ts-a.ts);
   const bdays = db.students.filter(s => { if(!s.birthday) return false; const [,m,dd] = s.birthday.split('/').map(Number); return m === calMonth && dd === d; });
@@ -2040,8 +2000,7 @@ window.showCalDay = (d) => {
 };
 
 function runReport(){
-  const from = getDate('repFrom'), to = getDate('repTo');
-  if(!from || !to) return;
+  const from = getDate('repFrom'), to = getDate('repTo'); if(!from || !to) return;
   if(from > to){ toast('تاریخ شروع بعد از پایان است', 'err'); return; }
   const rows = db.tx.filter(t => { const d = t.is_session && t.session_date ? t.session_date : t.date; return d >= from && d <= to; });
   const income = rows.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
@@ -2053,13 +2012,7 @@ function runReport(){
   let overdue = 0;
   db.tx.forEach(t => { const d = t.is_session && t.session_date ? t.session_date : t.date; if(d > to) return; if(t.type==='charge') overdue += t.amount; if(t.type==='payment') overdue -= t.amount; });
   const cards = $('repCards');
-  if(cards) cards.innerHTML = `
-    <div class="rep-card green"><small>درآمد</small><b>${fa(income)}<small>تومان</small></b></div>
-    <div class="rep-card red"><small>بدهی</small><b>${fa(charge)}<small>تومان</small></b></div>
-    <div class="rep-card purple"><small>جلسات (${faDigits(absentCount)} غایب)</small><b>${fa(sessions)}<small>جلسه</small></b></div>
-    <div class="rep-card orange"><small>هزینه</small><b>${fa(expense)}<small>تومان</small></b></div>
-    <div class="rep-card green"><small>سود خالص</small><b>${fa(net)}<small>تومان</small></b></div>
-    <div class="rep-card red"><small>بدهی معوق</small><b>${fa(Math.max(0,overdue))}<small>تومان</small></b></div>`;
+  if(cards) cards.innerHTML = `<div class="rep-card green"><small>درآمد</small><b>${fa(income)}<small>تومان</small></b></div><div class="rep-card red"><small>بدهی</small><b>${fa(charge)}<small>تومان</small></b></div><div class="rep-card purple"><small>جلسات (${faDigits(absentCount)} غایب)</small><b>${fa(sessions)}<small>جلسه</small></b></div><div class="rep-card orange"><small>هزینه</small><b>${fa(expense)}<small>تومان</small></b></div><div class="rep-card green"><small>سود خالص</small><b>${fa(net)}<small>تومان</small></b></div><div class="rep-card red"><small>بدهی معوق</small><b>${fa(Math.max(0,overdue))}<small>تومان</small></b></div>`;
   if($('repSummaryTxt')) $('repSummaryTxt').textContent = `از ${showDate(from)} تا ${showDate(to)} — ${faDigits(rows.length)} تراکنش`;
   const byStudent = {};
   db.students.forEach(s => byStudent[s.id] = { name:s.name, sessions:0, absent:0, charge:0, payment:0 });
@@ -2071,367 +2024,147 @@ function runReport(){
 }
 click('repRun', runReport);
 click('repPrint', () => { runReport(); document.body.classList.add('pm'); setTimeout(() => { window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }, 100); });
-document.querySelectorAll('[data-range]').forEach(b => {
-  b.addEventListener('click', () => {
-    const t = todayJ(); const r = b.dataset.range; let from, to = t;
-    if(r === 'month'){ from = [t[0], t[1], 1]; }
-    else if(r === 'lastMonth'){ let y = t[0], m = t[1] - 1; if(m < 1){ m = 12; y--; } from = [y, m, 1]; to = [y, m, jMonthDays(y, m)]; }
-    else if(r === '30'){ from = jAddDays(t[0], t[1], t[2], -29); }
-    else if(r === '7'){ from = jAddDays(t[0], t[1], t[2], -6); }
-    else if(r === 'year'){ from = [t[0], 1, 1]; to = [t[0], 12, jMonthDays(t[0], 12)]; }
-    setDate('repFrom', from); setDate('repTo', to); runReport();
-  });
-});
+click('repPDF', () => { runReport(); toast('از دکمه چاپ استفاده کن و مقصد رو PDF انتخاب کن', 'info'); });
+document.querySelectorAll('[data-range]').forEach(b => { b.addEventListener('click', () => { const t = todayJ(); const r = b.dataset.range; let from, to = t; if(r === 'month'){ from = [t[0], t[1], 1]; } else if(r === 'lastMonth'){ let y = t[0], m = t[1] - 1; if(m < 1){ m = 12; y--; } from = [y, m, 1]; to = [y, m, jMonthDays(y, m)]; } else if(r === '30'){ from = jAddDays(t[0], t[1], t[2], -29); } else if(r === '7'){ from = jAddDays(t[0], t[1], t[2], -6); } else if(r === 'year'){ from = [t[0], 1, 1]; to = [t[0], 12, jMonthDays(t[0], 12)]; } setDate('repFrom', from); setDate('repTo', to); runReport(); }); });
 
 function openStatement(id){
   const s = db.students.find(x=>x.id===id); if(!s){ toast('یافت نشد', 'err'); return; }
   const rows = db.tx.filter(t=>t.sid===id).sort((a,b)=>{ const da = a.is_session && a.session_date ? a.session_date : a.date; const db_ = b.is_session && b.session_date ? b.session_date : a.date; return da.localeCompare(db_) || a.ts-b.ts; });
   let run = 0;
-  const body = rows.map(t => {
-    const d = t.type==='charge' ? t.amount : 0, c = t.type==='payment' ? t.amount : 0;
-    run += d - c;
-    const label = (t.is_session ? (t.absent ? '🚫 ' : '📅 ') : '') + (esc(t.desc)||TYPE_NAME[t.type]);
-    const dShow = t.is_session && t.session_date ? t.session_date : t.date;
-    return `<tr><td>${showDate(dShow)}</td><td>${label}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`;
-  }).join('');
+  const body = rows.map(t => { const d = t.type==='charge' ? t.amount : 0, c = t.type==='payment' ? t.amount : 0; run += d - c; const label = (t.is_session ? (t.absent ? '🚫 ' : '📅 ') : '') + (esc(t.desc)||TYPE_NAME[t.type]); const dShow = t.is_session && t.session_date ? t.session_date : t.date; return `<tr><td>${showDate(dShow)}</td><td>${label}</td><td class="n neg">${d?fa(d):''}</td><td class="n pos">${c?fa(c):''}</td><td class="n ${run>0?'neg':run<0?'pos':''}">${fa(Math.abs(run))} ${run>0?'بدهکار':run<0?'بستانکار':''}</td></tr>`; }).join('');
   const sessionCount = rows.filter(t=>t.is_session).length;
   const pkgLeft = (s.package_size||0) - (s.package_used||0);
   const modalBox = $('modalBox'); if(!modalBox) return;
-  const info = `
-    ${s.course ? `<b>دوره:</b> ${esc(s.course)}` : ''}
-    ${s.phone ? ` | <b>همراه:</b> ${faDigits(esc(s.phone))}` : ''}
-    ${s.home_phone ? ` | <b>منزل:</b> ${faDigits(esc(s.home_phone))}` : ''}
-    ${s.birthday ? ` | <b>تولد:</b> ${showDate(s.birthday)}` : ''}
-    <br><b>شهریه:</b> ${fa(s.fee||0)} تومان | <b>جلسات:</b> ${faDigits(sessionCount)}
-    ${s.package_size ? ` | <b>پکیج:</b> ${faDigits(pkgLeft)}/${faDigits(s.package_size)}` : ''}
-    ${s.father_job ? `<br><b>شغل پدر:</b> ${esc(s.father_job)}` : ''}
-    ${s.mother_job ? ` | <b>شغل مادر:</b> ${esc(s.mother_job)}` : ''}
-    ${s.address ? `<br><b>آدرس:</b> ${esc(s.address)}` : ''}
-    ${s.note ? `<br><b>توضیحات:</b> ${esc(s.note)}` : ''}
-  `;
-  modalBox.innerHTML = `<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">${avatarHTML(s.name, 56)}<h2 style="margin:0;color:var(--ink)">${esc(s.name)}</h2></div>
-    <p class="hint" style="margin-bottom:16px;line-height:2">${info}</p>
-    <div class="table-wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:emptyState('تراکنشی نیست')}</div>
-    <h3 style="margin-top:20px;font-size:15px;color:var(--ink)">${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'تسویه'}</h3>
-    <div class="btn-row" style="margin-top:16px"><button class="btn" onclick="printModal()">چاپ</button><button class="btn ghost" onclick="closeModal()">بستن</button></div>`;
+  const info = `${s.course ? `<b>دوره:</b> ${esc(s.course)}` : ''}${s.phone ? ` | <b>همراه:</b> ${faDigits(esc(s.phone))}` : ''}${s.home_phone ? ` | <b>منزل:</b> ${faDigits(esc(s.home_phone))}` : ''}${s.birthday ? ` | <b>تولد:</b> ${showDate(s.birthday)}` : ''}<br><b>شهریه:</b> ${fa(s.fee||0)} تومان | <b>جلسات:</b> ${faDigits(sessionCount)}${s.package_size ? ` | <b>پکیج:</b> ${faDigits(pkgLeft)}/${faDigits(s.package_size)}` : ''}${s.father_job ? `<br><b>شغل پدر:</b> ${esc(s.father_job)}` : ''}${s.mother_job ? ` | <b>شغل مادر:</b> ${esc(s.mother_job)}` : ''}${s.address ? `<br><b>آدرس:</b> ${esc(s.address)}` : ''}${s.note ? `<br><b>توضیحات:</b> ${esc(s.note)}` : ''}`;
+  modalBox.innerHTML = `<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">${avatarHTML(s.name, 56)}<h2 style="margin:0;color:var(--ink)">${esc(s.name)}</h2></div><p class="hint" style="margin-bottom:16px;line-height:2">${info}</p><div class="table-wrap">${rows.length?`<table><thead><tr><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th><th>مانده</th></tr></thead><tbody>${body}</tbody></table>`:emptyState('تراکنشی نیست')}</div><h3 style="margin-top:20px;font-size:15px;color:var(--ink)">${run>0?`مانده بدهی: <span class="neg">${fa(run)} تومان</span>`:run<0?`مانده بستانکاری: <span class="pos">${fa(-run)} تومان</span>`:'تسویه'}</h3><div class="btn-row" style="margin-top:16px"><button class="btn" onclick="printModal()">چاپ</button><button class="btn ghost" onclick="closeModal()">بستن</button></div>`;
   $('modal').classList.add('on');
 }
 function closeModal(){ const m = $('modal'); if(m) m.classList.remove('on'); }
 function printModal(){ document.body.classList.add('pm'); window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }
-window.closeModal = closeModal;
-window.printModal = printModal;
-window.openStatement = openStatement;
+window.closeModal = closeModal; window.printModal = printModal; window.openStatement = openStatement;
 on('modal', 'click', e => { if(e.target.id==='modal') closeModal(); });
 
-function pushUndo(type, data, message){
-  undoBuffer.push({ ts: Date.now(), type, data });
-  if(undoBuffer.length > 20) undoBuffer.shift();
-  toast(message, 'info', { label: '↶ بازگردانی', fn: () => { if(!undoBuffer.length) return; restoreUndo(undoBuffer.pop()); } });
-}
+function pushUndo(type, data, message){ undoBuffer.push({ ts: Date.now(), type, data }); if(undoBuffer.length > 20) undoBuffer.shift(); toast(message, 'info', { label: '↶ بازگردانی', fn: () => { if(!undoBuffer.length) return; restoreUndo(undoBuffer.pop()); } }); }
 async function restoreUndo(undo){
   if(Date.now() - undo.ts > 60000){ toast('زمان گذشته', 'err'); return; }
-  if(undo.type === 'tx-delete'){
-    const t = undo.data;
-    db.tx.push(t);
-    await cloudInsert('tx', txToRow(t), t.id);
-    saveLocal(); renderAll(); toast('بازگردانی شد', 'success');
-  } else if(undo.type === 'st-delete'){
-    const s = undo.data.student;
-    const txs = undo.data.txs;
-    db.students.push(s); txs.forEach(t => db.tx.push(t));
-    await cloudInsert('students', studentToRow(s), s.id);
-    for(const t of txs) await cloudInsert('tx', txToRow(t), t.id);
-    saveLocal(); renderAll(); toast('بازگردانی شد', 'success');
-  }
+  if(undo.type === 'tx-delete'){ const t = undo.data; db.tx.push(t); await cloudInsert('tx', txToRow(t), t.id); saveLocal(); renderAll(); toast('بازگردانی شد', 'success'); }
+  else if(undo.type === 'st-delete'){ const s = undo.data.student; const txs = undo.data.txs; db.students.push(s); txs.forEach(t => db.tx.push(t)); await cloudInsert('students', studentToRow(s), s.id); for(const t of txs) await cloudInsert('tx', txToRow(t), t.id); saveLocal(); renderAll(); toast('بازگردانی شد', 'success'); }
 }
 
-async function download(name, text, type){
-  try{
-    const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = name;
-    document.body.appendChild(a); a.click();
-    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100);
-    toast('دانلود شد', 'success');
-  }catch(e){ toast('خطا', 'err'); }
-}
+async function download(name, text, type){ try{ const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100); toast('دانلود شد', 'success'); }catch(e){ toast('خطا', 'err'); } }
 const csvCell = v => '"' + String(v??'').replace(/"/g,'""') + '"';
-
-click('btnCsvTx', () => {
-  const r = [['تاریخ','نوع','جلسه','غایب','زبان‌آموز','مبلغ','دسته','تگ','روش','شرح']];
-  [...db.tx].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t => r.push([t.date, TYPE_NAME[t.type], t.is_session?'بله':'خیر', t.absent?'بله':'خیر', t.type==='expense'?'':stName(t.sid), t.amount, t.category ? EXPENSE_CATS[t.category] : '', t.tag||'', t.method, t.desc]));
-  download('transactions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
-});
-click('btnCsvSe', () => {
-  const r = [['تاریخ','زبان‌آموز','مبلغ','وضعیت','شرح']];
-  db.tx.filter(t=>t.is_session).forEach(t => r.push([t.session_date, stName(t.sid), t.amount, t.absent?'غایب':'حاضر', t.desc]));
-  download('sessions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
-});
-click('btnCsvSt', () => {
-  const b = balances();
-  const r = [['نام','دوره','شهریه','تلفن همراه','تلفن منزل','تولد','شغل پدر','شغل مادر','آدرس','جلسات','پکیج','بدهی','پرداختی','مانده','وضعیت']];
-  db.students.forEach(s => { const x = b[s.id]; r.push([s.name, s.course, s.fee, s.phone, s.home_phone||'', s.birthday||'', s.father_job||'', s.mother_job||'', s.address||'', x.sessions, s.package_size ? `${s.package_used||0}/${s.package_size}` : '', x.charge, x.pay, Math.abs(x.bal), x.bal>0?'بدهکار':x.bal<0?'بستانکار':'تسویه']); });
-  download('students.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8');
-});
+click('btnCsvTx', () => { const r = [['تاریخ','نوع','جلسه','غایب','زبان‌آموز','مبلغ','دسته','تگ','روش','شرح']]; [...db.tx].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t => r.push([t.date, TYPE_NAME[t.type], t.is_session?'بله':'خیر', t.absent?'بله':'خیر', t.type==='expense'?'':stName(t.sid), t.amount, t.category ? EXPENSE_CATS[t.category] : '', t.tag||'', t.method, t.desc])); download('transactions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8'); });
+click('btnCsvSe', () => { const r = [['تاریخ','زبان‌آموز','مبلغ','وضعیت','شرح']]; db.tx.filter(t=>t.is_session).forEach(t => r.push([t.session_date, stName(t.sid), t.amount, t.absent?'غایب':'حاضر', t.desc])); download('sessions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8'); });
+click('btnCsvSt', () => { const b = balances(); const r = [['نام','دوره','شهریه','تلفن همراه','تلفن منزل','تولد','شغل پدر','شغل مادر','آدرس','جلسات','پکیج','بدهی','پرداختی','مانده','وضعیت']]; db.students.forEach(s => { const x = b[s.id]; r.push([s.name, s.course, s.fee, s.phone, s.home_phone||'', s.birthday||'', s.father_job||'', s.mother_job||'', s.address||'', x.sessions, s.package_size ? `${s.package_used||0}/${s.package_size}` : '', x.charge, x.pay, Math.abs(x.bal), x.bal>0?'بدهکار':x.bal<0?'بستانکار':'تسویه']); }); download('students.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8'); });
 click('btnBackup', () => download('backup-' + dateStr(todayJ()).replace(/\//g,'-') + '.json', JSON.stringify({ students: db.students, tx: db.tx, packages: db.packages, queue: syncQueue, settings, achievements, activities: db.activities }), 'application/json'));
 click('btnRestore', () => { const f = $('fileRestore'); if(f) f.click(); });
 on('fileRestore', 'change', e => {
   const f = e.target.files[0]; if(!f) return;
   const r = new FileReader();
-  r.onload = () => {
-    try{
-      const d = JSON.parse(r.result);
-      const st = Array.isArray(d.students) ? d.students : (Array.isArray(d) ? d : null);
-      if(!st) throw 0;
-      if(!confirm('اطلاعات فعلی جایگزین شود؟')) return;
-      db = { students: st, tx: d.tx || [], packages: d.packages || [], activities: d.activities || [] };
-      db.students.forEach(s => { 
-        if(s.package_size===undefined) s.package_size=0; if(s.package_used===undefined) s.package_used=0; 
-        if(s.birthday===undefined) s.birthday=null;
-        if(s.father_job===undefined) s.father_job=''; if(s.mother_job===undefined) s.mother_job='';
-        if(s.address===undefined) s.address=''; if(s.home_phone===undefined) s.home_phone='';
-      });
-      db.tx.forEach(t => { if(t.category===undefined) t.category=null; if(t.tag===undefined) t.tag=null; if(t.absent===undefined) t.absent=false; });
-      if(d.settings) settings = { ...settings, ...d.settings };
-      if(d.achievements) achievements = { ...achievements, ...d.achievements };
-      saveLocal(); saveSettings(); saveAch(); renderAll(); toast('بازیابی شد', 'success');
-    }catch(_){ toast('فایل معتبر نیست', 'err'); }
-  };
+  r.onload = () => { try{ const d = JSON.parse(r.result); const st = Array.isArray(d.students) ? d.students : (Array.isArray(d) ? d : null); if(!st) throw 0; if(!confirm('اطلاعات فعلی جایگزین شود؟')) return; db = { students: st, tx: d.tx || [], packages: d.packages || [], activities: d.activities || [] }; db.students.forEach(s => { if(s.package_size===undefined) s.package_size=0; if(s.package_used===undefined) s.package_used=0; if(s.birthday===undefined) s.birthday=null; if(s.father_job===undefined) s.father_job=''; if(s.mother_job===undefined) s.mother_job=''; if(s.address===undefined) s.address=''; if(s.home_phone===undefined) s.home_phone=''; }); db.tx.forEach(t => { if(t.category===undefined) t.category=null; if(t.tag===undefined) t.tag=null; if(t.absent===undefined) t.absent=false; }); if(d.settings) settings = { ...settings, ...d.settings }; if(d.achievements) achievements = { ...achievements, ...d.achievements }; saveLocal(); saveSettings(); saveAch(); renderAll(); toast('بازیابی شد', 'success'); }catch(_){ toast('فایل معتبر نیست', 'err'); } };
   r.readAsText(f); e.target.value = '';
 });
 click('btnPrint', () => { document.querySelectorAll('section.tab').forEach(s=>s.classList.add('on')); setTimeout(()=>{ window.print(); setTimeout(()=>switchTab('dash'), 400); }, 100); });
-click('btnReset', () => {
-  if(confirm('همه‌ی اطلاعات محلی پاک شود؟') && confirm('قابل بازگشت نیست.')){
-    db = { students:[], tx:[], packages:[], activities:[] }; syncQueue = [];
-    saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success');
-  }
-});
-click('btnResetCloud', async () => {
-  if(!sb){ toast('Supabase نیست', 'err'); return; }
-  if(!confirm('همه‌ی داده‌های Supabase حذف شوند؟')) return;
-  if(!confirm('قابل بازگشت نیست.')) return;
-  setSync('syncing','حذف…');
-  try{
-    await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await sb.from('students').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    db = { students:[], tx:[], packages:[], activities:[] }; syncQueue = [];
-    saveLocal(); saveQueue(); renderAll(); setSync('online','متصل'); toast('حذف شد', 'success');
-  }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا', 'err'); }
-});
+click('btnReset', () => { if(confirm('همه‌ی اطلاعات محلی پاک شود؟') && confirm('قابل بازگشت نیست.')){ db = { students:[], tx:[], packages:[], activities:[] }; syncQueue = []; saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success'); } });
+click('btnResetCloud', async () => { if(!sb){ toast('Supabase نیست', 'err'); return; } if(!confirm('همه‌ی داده‌های Supabase حذف شوند؟')) return; if(!confirm('قابل بازگشت نیست.')) return; setSync('syncing','حذف…'); try{ await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000'); await sb.from('students').delete().neq('id','00000000-0000-0000-0000-000000000000'); db = { students:[], tx:[], packages:[], activities:[] }; syncQueue = []; saveLocal(); saveQueue(); renderAll(); setSync('online','متصل'); toast('حذف شد', 'success'); }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا', 'err'); } });
 on('chartYear', 'change', renderMonthlyChart);
+click('syncBtn', async () => { if(!sb){ toast('Supabase پیکربندی نشده', 'err'); return; } setSync('syncing','همگام‌سازی…'); await flushQueue(); const ok = await pullFromCloud(); if(ok){ renderAll(); toast('همگام‌سازی شد', 'success'); } else toast('اتصال نشد', 'err'); });
+click('btnWipeTxLocal', () => { if(!confirm(`${faDigits(db.tx.length)} تراکنش محلی پاک شود؟`)) return; db.tx = []; syncQueue = syncQueue.filter(op => op.table !== 'tx'); saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success'); });
+click('btnWipeTx', async () => { if(!confirm(`${faDigits(db.tx.length)} تراکنش پاک شود؟`)) return; if(!confirm('قابل بازگشت نیست.')) return; db.tx = []; syncQueue = syncQueue.filter(op => op.table !== 'tx'); saveLocal(); saveQueue(); renderAll(); if(sb){ setSync('syncing','حذف…'); try{ await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000'); setSync('online','متصل'); toast('پاک شد', 'success'); }catch(e){ setSync('offline','آفلاین'); toast('خطا', 'err'); } } else toast('محلی پاک شد', 'success'); });
 
-click('syncBtn', async () => {
-  if(!sb){ toast('Supabase پیکربندی نشده', 'err'); return; }
-  setSync('syncing','همگام‌سازی…');
-  await flushQueue();
-  const ok = await pullFromCloud();
-  if(ok){ renderAll(); toast('همگام‌سازی شد', 'success'); }
-  else toast('اتصال نشد', 'err');
-});
-
-click('btnWipeTxLocal', () => {
-  if(!confirm(`${faDigits(db.tx.length)} تراکنش محلی پاک شود؟`)) return;
-  db.tx = []; syncQueue = syncQueue.filter(op => op.table !== 'tx');
-  saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success');
-});
-click('btnWipeTx', async () => {
-  if(!confirm(`${faDigits(db.tx.length)} تراکنش پاک شود؟`)) return;
-  if(!confirm('قابل بازگشت نیست.')) return;
-  db.tx = []; syncQueue = syncQueue.filter(op => op.table !== 'tx');
-  saveLocal(); saveQueue(); renderAll();
-  if(sb){ setSync('syncing','حذف…'); try{ await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000'); setSync('online','متصل'); toast('پاک شد', 'success'); }catch(e){ setSync('offline','آفلاین'); toast('خطا', 'err'); } }
-  else toast('محلی پاک شد', 'success');
-});
-
-function applyPalette(pal){
-  document.documentElement.dataset.palette = pal === 'gold' ? '' : pal;
-  document.querySelectorAll('.palette-dot').forEach(d => d.classList.toggle('on', d.dataset.pal === pal));
-}
-document.querySelectorAll('.palette-dot').forEach(d => {
-  d.addEventListener('click', () => {
-    settings.palette = d.dataset.pal;
-    applyPalette(settings.palette);
-    saveSettings();
-  });
-});
-click('seasonToggle', () => {
-  settings.seasonAuto = !settings.seasonAuto;
-  if(settings.seasonAuto){
-    document.documentElement.dataset.season = getSeason();
-    $('seasonToggle').textContent = 'خودکار';
-  } else {
-    document.documentElement.dataset.season = '';
-    $('seasonToggle').textContent = 'خاموش';
-  }
-  saveSettings();
-});
-click('compactToggle', () => {
-  settings.compact = !settings.compact;
-  document.body.classList.toggle('compact', settings.compact);
-  if($('compactToggle')) $('compactToggle').textContent = settings.compact ? 'فعال' : 'غیرفعال';
-  saveSettings();
-});
-click('particlesToggle', () => {
-  settings.particles = !settings.particles;
-  if(settings.particles) startParticles(); else stopParticles();
-  if($('particlesToggle')) $('particlesToggle').textContent = settings.particles ? 'فعال' : 'غیرفعال';
-  saveSettings();
-});
-click('soundToggle', () => {
-  settings.sound = !settings.sound;
-  if($('soundToggle')) $('soundToggle').textContent = settings.sound ? 'فعال' : 'غیرفعال';
-  saveSettings();
-  if(settings.sound) playSound('success');
-});
-
-click('themeBtn', () => {
-  const r = document.documentElement;
-  const isDark = r.dataset.theme === 'dark' || (r.dataset.theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  r.dataset.theme = isDark ? 'light' : 'dark';
-  try{ localStorage.setItem(CONFIG.LOCAL_KEY + '_theme', r.dataset.theme); }catch(e){}
-});
+function applyPalette(pal){ document.documentElement.dataset.palette = pal === 'gold' ? '' : pal; document.querySelectorAll('.palette-dot').forEach(d => d.classList.toggle('on', d.dataset.pal === pal)); }
+document.querySelectorAll('.palette-dot').forEach(d => { d.addEventListener('click', () => { settings.palette = d.dataset.pal; applyPalette(settings.palette); saveSettings(); }); });
+click('seasonToggle', () => { settings.seasonAuto = !settings.seasonAuto; if(settings.seasonAuto){ document.documentElement.dataset.season = getSeason(); $('seasonToggle').textContent = 'خودکار'; } else { document.documentElement.dataset.season = ''; $('seasonToggle').textContent = 'خاموش'; } saveSettings(); });
+click('compactToggle', () => { settings.compact = !settings.compact; document.body.classList.toggle('compact', settings.compact); if($('compactToggle')) $('compactToggle').textContent = settings.compact ? 'فعال' : 'غیرفعال'; saveSettings(); });
+click('particlesToggle', () => { settings.particles = !settings.particles; if(settings.particles) startParticles(); else stopParticles(); if($('particlesToggle')) $('particlesToggle').textContent = settings.particles ? 'فعال' : 'غیرفعال'; saveSettings(); });
+click('soundToggle', () => { settings.sound = !settings.sound; if($('soundToggle')) $('soundToggle').textContent = settings.sound ? 'فعال' : 'غیرفعال'; saveSettings(); if(settings.sound) playSound('success'); });
+click('themeBtn', () => { const r = document.documentElement; const isDark = r.dataset.theme === 'dark' || (r.dataset.theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches); r.dataset.theme = isDark ? 'light' : 'dark'; try{ localStorage.setItem(CONFIG.LOCAL_KEY + '_theme', r.dataset.theme); }catch(e){} });
 
 let particleTimer = null;
-function startParticles(){
-  stopParticles();
-  const container = $('particles'); if(!container) return;
-  const colors = ['#e0b04a','#f2c76a','#4ec5a0','#9d7cf0','#e07a8f','#5ac8e0'];
-  for(let i = 0; i < 15; i++){
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.bottom = '-10px';
-    p.style.background = colors[Math.floor(Math.random() * colors.length)];
-    p.style.animationDuration = (10 + Math.random() * 20) + 's';
-    p.style.animationDelay = (Math.random() * 20) + 's';
-    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
-    container.appendChild(p);
-  }
-}
-function stopParticles(){
-  const c = $('particles'); if(c) c.innerHTML = '';
-}
+function startParticles(){ stopParticles(); const container = $('particles'); if(!container) return; const colors = ['#e0b04a','#f2c76a','#4ec5a0','#9d7cf0','#e07a8f','#5ac8e0']; for(let i = 0; i < 15; i++){ const p = document.createElement('div'); p.className = 'particle'; p.style.left = Math.random() * 100 + 'vw'; p.style.bottom = '-10px'; p.style.background = colors[Math.floor(Math.random() * colors.length)]; p.style.animationDuration = (10 + Math.random() * 20) + 's'; p.style.animationDelay = (Math.random() * 20) + 's'; p.style.width = p.style.height = (2 + Math.random() * 3) + 'px'; container.appendChild(p); } }
+function stopParticles(){ const c = $('particles'); if(c) c.innerHTML = ''; }
 
-click('notifBtn', async () => {
-  if(!('Notification' in window)){ toast('مرورگر پشتیبانی نمی‌کند', 'err'); return; }
-  if(Notification.permission === 'granted'){ showTestNotification(); return; }
-  const perm = await Notification.requestPermission();
-  if(perm === 'granted'){ toast('فعال شد', 'success'); showTestNotification(); }
-  else toast('رد شد', 'err');
-});
-function showTestNotification(){
-  const b = balances();
-  const debtors = db.students.filter(s => b[s.id] && b[s.id].bal > 0);
-  const todayBdays = db.students.filter(isBirthdayToday);
-  if(debtors.length) new Notification('بدهکاران', { body: `${faDigits(debtors.length)} نفر بدهکار — ${fa(debtors.reduce((a,s)=>a+b[s.id].bal,0))} تومان` });
-  if(todayBdays.length) setTimeout(() => new Notification('🎂 تولد امروز', { body: todayBdays.map(s=>s.name).join('، ') }), 500);
-  if(!debtors.length && !todayBdays.length) new Notification('همه چیز مرتب', { body: 'بدهکاری و تولدی نیست ✅' });
-}
-function updateNotifBadge(){
-  const b = balances();
-  const count = db.students.filter(s => b[s.id] && b[s.id].bal > 0).length + db.students.filter(isBirthdayToday).length;
-  const badge = $('notifBadge');
-  if(!badge) return;
-  if(count > 0){ badge.style.display = ''; badge.textContent = faDigits(count); }
-  else badge.style.display = 'none';
-}
-function checkDailyNotif(){
-  try{
-    const last = +localStorage.getItem('ali_notif_last') || 0;
-    const now = Date.now();
-    if(now - last < 24 * 60 * 60 * 1000) return;
-    if(Notification.permission !== 'granted') return;
-    showTestNotification();
-    localStorage.setItem('ali_notif_last', String(now));
-  }catch(e){}
-}
+click('notifBtn', async () => { if(!('Notification' in window)){ toast('مرورگر پشتیبانی نمی‌کند', 'err'); return; } if(Notification.permission === 'granted'){ showTestNotification(); return; } const perm = await Notification.requestPermission(); if(perm === 'granted'){ toast('فعال شد', 'success'); showTestNotification(); } else toast('رد شد', 'err'); });
+function showTestNotification(){ const b = balances(); const debtors = db.students.filter(s => b[s.id] && b[s.id].bal > 0); const todayBdays = db.students.filter(isBirthdayToday); if(debtors.length) new Notification('بدهکاران', { body: `${faDigits(debtors.length)} نفر بدهکار — ${fa(debtors.reduce((a,s)=>a+b[s.id].bal,0))} تومان` }); if(todayBdays.length) setTimeout(() => new Notification('🎂 تولد امروز', { body: todayBdays.map(s=>s.name).join('، ') }), 500); if(!debtors.length && !todayBdays.length) new Notification('همه چیز مرتب', { body: 'بدهکاری و تولدی نیست ✅' }); }
+function updateNotifBadge(){ const b = balances(); const count = db.students.filter(s => b[s.id] && b[s.id].bal > 0).length + db.students.filter(isBirthdayToday).length; const badge = $('notifBadge'); if(!badge) return; if(count > 0){ badge.style.display = ''; badge.textContent = faDigits(count); } else badge.style.display = 'none'; }
+function checkDailyNotif(){ try{ const last = +localStorage.getItem('ali_notif_last') || 0; const now = Date.now(); if(now - last < 24 * 60 * 60 * 1000) return; if(Notification.permission !== 'granted') return; showTestNotification(); localStorage.setItem('ali_notif_last', String(now)); }catch(e){} }
 
 click('focusBtn', () => { $('focusOverlay').classList.add('on'); });
 click('focusClose', () => { $('focusOverlay').classList.remove('on'); });
+click('fabFocus', () => { $('focusOverlay').classList.add('on'); });
+click('fabQuick', () => { quickTx(null, 'payment'); });
 
-click('shareBtn', () => {
-  const t = todayJ();
-  const todayTx = db.tx.filter(x => x.date === dateStr(t));
-  const income = todayTx.filter(x => x.type==='payment').reduce((a,x)=>a+x.amount,0);
-  const sessions = todayTx.filter(x => x.is_session).length;
-  const exp = todayTx.filter(x => x.type==='expense').reduce((a,x)=>a+x.amount,0);
-  const newStudents = db.students.filter(s => s.created_at && s.created_at.startsWith(dateStr(t))).length;
-  const b = balances();
-  const debtors = db.students.filter(s => b[s.id].bal > 0).length;
-  $('shareDate').textContent = longDate(dateStr(t));
-  $('shareStats').innerHTML = `
-    <div class="share-stat"><small>درآمد</small><b>${fa(income)}</b></div>
-    <div class="share-stat"><small>جلسات</small><b>${faDigits(sessions)}</b></div>
-    <div class="share-stat"><small>هزینه</small><b>${fa(exp)}</b></div>
-    <div class="share-stat"><small>بدهکار</small><b>${faDigits(debtors)}</b></div>
-  `;
-  $('sharePreview').classList.add('on');
-});
+click('shareBtn', () => { const t = todayJ(); const todayTx = db.tx.filter(x => x.date === dateStr(t)); const income = todayTx.filter(x => x.type==='payment').reduce((a,x)=>a+x.amount,0); const sessions = todayTx.filter(x => x.is_session).length; const exp = todayTx.filter(x => x.type==='expense').reduce((a,x)=>a+x.amount,0); const b = balances(); const debtors = db.students.filter(s => b[s.id].bal > 0).length; $('shareDate').textContent = longDate(dateStr(t)); $('shareStats').innerHTML = `<div class="share-stat"><small>درآمد</small><b>${fa(income)}</b></div><div class="share-stat"><small>جلسات</small><b>${faDigits(sessions)}</b></div><div class="share-stat"><small>هزینه</small><b>${fa(exp)}</b></div><div class="share-stat"><small>بدهکار</small><b>${faDigits(debtors)}</b></div>`; $('sharePreview').classList.add('on'); });
+window.downloadShare = async () => { const card = document.getElementById('shareCard'); if(!card) return; const html2canvas = window.html2canvas; if(!html2canvas){ toast('در حال آماده‌سازی…', 'info'); const script = document.createElement('script'); script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'; script.onload = () => downloadShare(); document.head.appendChild(script); return; } try{ const canvas = await html2canvas(card, { backgroundColor: null, scale: 2 }); canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'report-' + dateStr(todayJ()).replace(/\//g,'-') + '.png'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); toast('ذخیره شد', 'success'); }); }catch(e){ toast('خطا در ذخیره', 'err'); } };
 
-window.downloadShare = async () => {
-  const card = document.getElementById('shareCard');
-  if(!card) return;
-  const html2canvas = window.html2canvas;
-  if(!html2canvas){
-    toast('در حال آماده‌سازی…', 'info');
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-    script.onload = () => downloadShare();
-    document.head.appendChild(script);
-    return;
-  }
+// Wallet
+function renderWallet(){
+  const w = $('walletDisplay'); if(!w) return;
+  const num = settings.walletNum || '— — — — — — — —';
+  if($('walletNumDisplay')) $('walletNumDisplay').textContent = num;
+  if($('walletOwnerDisplay')) $('walletOwnerDisplay').textContent = settings.walletOwner || 'علی ناقلی';
+  const qr = $('walletQR');
+  if(qr && settings.walletNum){
+    if(!window.QRCode){ qr.innerHTML = ''; const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js'; s.onload = () => renderWallet(); document.head.appendChild(s); return; }
+    qr.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    QRCode.toCanvas(canvas, settings.walletNum.replace(/\D/g,''), { width: 100, margin: 1, color: { dark: '#000000', light: '#ffffff' } }, (err) => { if(!err) qr.appendChild(canvas); });
+  } else if(qr) qr.innerHTML = '';
+}
+window.copyWallet = () => { if(!settings.walletNum){ toast('شماره کارت تنظیم نشده', 'err'); return; } copyText(settings.walletNum); };
+window.editWallet = () => { $('walletNum').focus(); $('walletNum').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+click('btnSaveWallet', () => { settings.walletNum = $('walletNum').value.trim(); settings.walletOwner = $('walletOwner').value.trim() || 'علی ناقلی'; saveSettings(); renderWallet(); toast('ذخیره شد', 'success'); });
+
+// Import from Excel
+on('importDrop', 'click', () => { const f = $('importFile'); if(f) f.click(); });
+['dragenter','dragover'].forEach(ev => on('importDrop', ev, e => { e.preventDefault(); e.currentTarget.classList.add('on'); }));
+['dragleave','drop'].forEach(ev => on('importDrop', ev, e => { e.preventDefault(); e.currentTarget.classList.remove('on'); }));
+on('importDrop', 'drop', e => { const f = e.dataTransfer.files[0]; if(f) handleImportFile(f); });
+on('importFile', 'change', e => { const f = e.target.files[0]; if(f) handleImportFile(f); });
+async function handleImportFile(file){
   try{
-    const canvas = await html2canvas(card, { backgroundColor: null, scale: 2 });
-    canvas.toBlob(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'report-' + dateStr(todayJ()).replace(/\//g,'-') + '.png';
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      toast('ذخیره شد', 'success');
-    });
-  }catch(e){ toast('خطا در ذخیره', 'err'); }
-};
-
-document.querySelectorAll('.qa-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const a = btn.dataset.action;
-    if(a === 'new-session') switchTab('session');
-    else if(a === 'new-payment') quickTx(null, 'payment');
-    else if(a === 'new-student') switchTab('students');
-    else if(a === 'send-sms') switchTab('sms');
-  });
-});
-
-let autoSyncTimer = null;
-function startAutoSync(){
-  if(autoSyncTimer) clearInterval(autoSyncTimer);
-  autoSyncTimer = setInterval(async () => {
-    if(!sb) return;
-    if(syncQueue.length){ await flushQueue(); }
-    if(Math.random() < 0.17){ const ok = await pullFromCloud(); if(ok) renderAll(); }
-  }, 30000);
+    const data = await file.arrayBuffer();
+    const wb = XLSX.read(data, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet);
+    if(!json.length){ toast('فایل خالی است', 'err'); return; }
+    const preview = $('importPreview'); if(!preview) return;
+    const rows = json.slice(0, 10);
+    preview.style.display = 'block';
+    preview.innerHTML = `<table><thead><tr>${Object.keys(rows[0]).map(k=>`<th>${esc(k)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${Object.values(r).map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    if(!confirm(`${json.length} ردیف پیدا شد. اضافه شود؟`)) return;
+    let added = 0;
+    for(const r of json){
+      const name = r['نام'] || r['name'] || r['Name'];
+      if(!name) continue;
+      const s = { id: uid(), name: String(name).trim(), course: r['دوره'] || r['course'] || '', fee: Number(r['شهریه'] || r['fee'] || 0), phone: String(r['تلفن'] || r['phone'] || '').trim(), home_phone: String(r['تلفن منزل'] || r['home_phone'] || '').trim(), birthday: r['تولد'] || r['birthday'] || null, father_job: String(r['شغل پدر'] || r['father_job'] || '').trim(), mother_job: String(r['شغل مادر'] || r['mother_job'] || '').trim(), address: String(r['آدرس'] || r['address'] || '').trim(), note: '', package_size: 0, package_used: 0 };
+      db.students.push(s);
+      await cloudInsert('students', studentToRow(s), s.id);
+      added++;
+    }
+    saveLocal(); renderAll();
+    toast(`${faDigits(added)} زبان‌آموز اضافه شد`, 'success');
+    preview.style.display = 'none';
+  }catch(e){ console.warn(e); toast('خطا در خواندن فایل', 'err'); }
 }
 
+document.querySelectorAll('.qa-btn').forEach(btn => { btn.addEventListener('click', () => { const a = btn.dataset.action; if(a === 'new-session') switchTab('session'); else if(a === 'new-payment') quickTx(null, 'payment'); else if(a === 'new-student') switchTab('students'); else if(a === 'send-sms') switchTab('sms'); }); });
+
+let autoSyncTimer = null;
+function startAutoSync(){ if(autoSyncTimer) clearInterval(autoSyncTimer); autoSyncTimer = setInterval(async () => { if(!sb) return; if(syncQueue.length){ await flushQueue(); } if(Math.random() < 0.17){ const ok = await pullFromCloud(); if(ok) renderAll(); } }, 30000); }
+
+// PWA install
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; const btn = $('installBtn'); if(btn) btn.style.display = ''; });
+click('installBtn', async () => { if(!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if(outcome === 'accepted') toast('نصب شد', 'success'); deferredPrompt = null; const btn = $('installBtn'); if(btn) btn.style.display = 'none'; });
+
 function renderAll(){
-  renderDash();
-  renderStudents();
-  renderSessions();
-  renderTx();
-  renderActivity();
-  renderPkgs();
-  renderCalendar();
-  renderBirthdaysTab();
-  renderAchievements();
-  updateNotifBadge();
+  renderDash(); renderStudents(); renderSessions(); renderTx(); renderWeekly();
+  renderActivity(); renderPkgs(); renderCalendar(); renderBirthdaysTab(); renderAchievements();
+  renderWallet(); updateNotifBadge();
 }
 
 (async function init(){
-  try{
-    const th = localStorage.getItem(CONFIG.LOCAL_KEY + '_theme');
-    if(th) document.documentElement.dataset.theme = th;
-  }catch(e){}
+  try{ const th = localStorage.getItem(CONFIG.LOCAL_KEY + '_theme'); if(th) document.documentElement.dataset.theme = th; }catch(e){}
   loadLocal();
   applyPalette(settings.palette || 'gold');
   if(settings.seasonAuto) document.documentElement.dataset.season = getSeason();
@@ -2441,6 +2174,8 @@ function renderAll(){
   if($('particlesToggle')) $('particlesToggle').textContent = settings.particles ? 'فعال' : 'غیرفعال';
   if($('seasonToggle')) $('seasonToggle').textContent = settings.seasonAuto ? 'خودکار' : 'خاموش';
   if(settings.particles) startParticles();
+  if($('walletNum')) $('walletNum').value = settings.walletNum || '';
+  if($('walletOwner')) $('walletOwner').value = settings.walletOwner || '';
 
   const t = todayJ();
   if($('todayTxt')) $('todayTxt').textContent = longDate(dateStr(t));
@@ -2458,15 +2193,8 @@ function renderAll(){
   if(splashMsg) splashMsg.textContent = `امروز ${longDate(dateStr(t))}`;
   setTimeout(() => { if(splash) splash.classList.add('hide'); }, 1800);
 
-  if(sb){
-    setSync('syncing','اتصال…');
-    await flushQueue();
-    const ok = await pullFromCloud();
-    if(ok) renderAll();
-    if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`);
-  } else {
-    setSync('offline','آفلاین');
-  }
+  if(sb){ setSync('syncing','اتصال…'); await flushQueue(); const ok = await pullFromCloud(); if(ok) renderAll(); if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`); }
+  else { setSync('offline','آفلاین'); }
 })();
 </script>
 </body>
