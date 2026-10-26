@@ -1620,8 +1620,18 @@ function checkLogin(){
   return false;
 }
 function showLogin(){
-  $('loginScreen').classList.remove('hide');
-  setTimeout(() => $('loginInput')?.focus(), 100);
+  // اول از همه Splash رو مخفی کن
+  const sp = document.getElementById('splash');
+  if(sp){ 
+    sp.classList.add('hide'); 
+    sp.style.display = 'none';
+    sp.style.opacity = '0';
+    sp.style.visibility = 'hidden';
+  }
+  // بعد لاگین رو نشون بده
+  const lg = document.getElementById('loginScreen');
+  if(lg){ lg.classList.remove('hide'); lg.style.display = 'flex'; }
+  setTimeout(() => { const inp = document.getElementById('loginInput'); if(inp) inp.focus(); }, 100);
 }
 function hideLogin(){
   $('loginScreen').classList.add('hide');
@@ -1638,7 +1648,11 @@ function doLogin(){
     errEl.classList.remove('on');
     toast('🎉 خوش آمدید!', 'success');
     // بعد از لاگین، سیستم رو بوت کن
-    setTimeout(() => bootSystem(), 100);
+    setTimeout(() => {
+  const sp = document.getElementById('splash');
+  if(sp){ sp.classList.add('hide'); sp.style.display = 'none'; }
+  bootSystem();
+}, 100);
   } else {
     errEl.classList.add('on');
     input.value = '';
