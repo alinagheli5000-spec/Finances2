@@ -1653,10 +1653,11 @@ click('logoutBtn', () => {
   if(!confirm('از سیستم خارج می‌شوید؟')) return;
   try{ localStorage.removeItem(CONFIG.LOCAL_KEY + '_session'); }catch(e){}
   isLoggedIn = false;
+  const splash = document.getElementById('splash');
+  if(splash){ splash.classList.add('hide'); splash.style.display = 'none'; }
   showLogin();
   toast('خارج شدید', 'info');
 });
-
 window.changePassword = () => {
   const p1 = $('newPassword').value.trim();
   const p2 = $('newPassword2').value.trim();
