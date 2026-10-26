@@ -108,6 +108,13 @@ section.tab.on{display:block}
 .qa-icon svg{width:22px;height:22px}
 .qa-btn b{font-size:13.5px;font-weight:700;color:var(--ink);position:relative;z-index:1}
 .qa-btn small{font-size:11px;color:var(--ink-2);position:relative;z-index:1}
+.daily-tip{background:linear-gradient(135deg,var(--primary-glow),var(--violet-soft));border:1px solid var(--primary);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:none}
+.daily-tip.on{display:block}
+.daily-tip h3{font-size:14px;font-weight:800;margin:0 0 10px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.daily-tip .tip-item{background:var(--card-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.daily-tip .tip-item:last-child{margin-bottom:0}
+.daily-tip .tip-item b{font-size:13px}
+.daily-tip .tip-item small{font-size:11.5px;color:var(--ink-2)}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
 .stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:var(--transition);display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(10px);transform-style:preserve-3d;perspective:600px;cursor:pointer}
 .stat:hover{border-color:var(--border-strong);transform:translateY(-2px) rotateX(2deg);box-shadow:var(--shadow)}
@@ -347,9 +354,34 @@ svg text{font-family:"Vazirmatn",sans-serif}
 .weekly-day{background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:8px;min-height:120px;min-width:100px}
 .weekly-day h4{font-size:11.5px;color:var(--ink-2);font-weight:700;margin:0 0 6px;text-align:center;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .weekly-day.today{background:var(--primary-glow);border-color:var(--primary)}
-.weekly-session{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:10.5px;margin-bottom:4px;cursor:pointer;transition:var(--transition);font-weight:600;display:flex;align-items:center;gap:4px}
+.weekly-session{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:10.5px;margin-bottom:4px;cursor:pointer;transition:var(--transition);font-weight:600;display:flex;align-items:center;gap:4px;justify-content:space-between}
 .weekly-session:hover{border-color:var(--primary);transform:translateX(-2px)}
 .weekly-session.absent{background:var(--rose-soft);color:var(--rose);border-color:var(--rose)}
+.weekly-session .ws-actions{display:flex;gap:2px}
+.weekly-session .ws-btn{background:transparent;border:0;padding:1px 4px;cursor:pointer;font-size:11px;opacity:.7;border-radius:4px}
+.weekly-session .ws-btn:hover{opacity:1;background:rgba(255,255,255,.1)}
+.waitlist-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;flex-wrap:wrap}
+.waitlist-item .wl-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.waitlist-item .wl-name{font-weight:700;color:var(--ink)}
+.waitlist-item .wl-meta{font-size:11.5px;color:var(--ink-2)}
+.contact-log{padding:10px 14px;background:var(--card-2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:12.5px}
+.contact-log .cl-date{font-size:11px;color:var(--ink-3);font-weight:600;margin-bottom:2px}
+.branch-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.branch-tab{background:var(--card-2);border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:6px 16px;font-size:12.5px;color:var(--ink-2);cursor:pointer;transition:var(--transition);font-weight:500;white-space:nowrap}
+.branch-tab.on{background:var(--primary);border-color:var(--primary);color:#1a1720;font-weight:700}
+.branch-tab:hover:not(.on){border-color:var(--primary);color:var(--primary)}
+.coupon-card{background:linear-gradient(135deg,var(--violet-soft),var(--primary-glow));border:1.5px dashed var(--violet);border-radius:var(--radius);padding:14px;margin-bottom:10px;position:relative}
+.coupon-card b{font-size:18px;font-family:monospace;letter-spacing:2px;color:var(--violet);display:block}
+.coupon-card small{font-size:11.5px;color:var(--ink-2)}
+.coupon-card .cp-discount{font-size:20px;font-weight:900;color:var(--ink);position:absolute;top:12px;inset-inline-end:14px}
+.id-card{background:linear-gradient(135deg,var(--card),var(--surface));border:2px solid var(--primary);border-radius:16px;padding:20px;width:340px;max-width:100%;margin:0 auto;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.id-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,var(--primary-glow),transparent 60%);border-radius:14px;pointer-events:none}
+.id-card .id-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:relative;z-index:1}
+.id-card .id-name{font-size:16px;font-weight:800;color:var(--ink)}
+.id-card .id-course{font-size:11.5px;color:var(--ink-2)}
+.id-card .id-info{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-2);position:relative;z-index:1}
+.id-card .id-info b{color:var(--ink);font-weight:700}
+.id-card .id-qr{position:absolute;bottom:14px;inset-inline-end:14px;background:#fff;padding:6px;border-radius:8px;z-index:1}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:var(--bg);padding:13px 22px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);z-index:9999;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px)}
 .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
 .toast svg{width:18px;height:18px;flex-shrink:0}
@@ -426,9 +458,24 @@ svg text{font-family:"Vazirmatn",sans-serif}
 .fab{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#1a1720;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 24px var(--primary-glow);transition:var(--transition);font-size:24px}
 .fab:hover{transform:scale(1.1) rotate(90deg);box-shadow:0 8px 30px var(--primary-glow)}
 .fab svg{width:26px;height:26px}
+.invoice-a4{background:#fff;color:#111;padding:40px;max-width:800px;margin:0 auto;font-family:"Vazirmatn",sans-serif}
+.invoice-a4 .inv-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:30px;padding-bottom:20px;border-bottom:3px solid #b8862b;flex-wrap:wrap}
+.invoice-a4 .inv-header h1{font-size:26px;font-weight:900;color:#b8862b;margin:0}
+.invoice-a4 .inv-header .academy{text-align:left;font-size:12px;color:#666;line-height:1.6}
+.invoice-a4 .inv-header .academy b{font-size:16px;color:#b8862b;display:block;margin-bottom:4px}
+.invoice-a4 .inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;font-size:13px}
+.invoice-a4 .inv-meta > div{display:flex;flex-direction:column;gap:4px}
+.invoice-a4 .inv-meta label{font-size:10.5px;color:#888;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.invoice-a4 .inv-meta b{color:#111;font-size:13.5px}
+.invoice-a4 table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.invoice-a4 th{background:#f5f2ea;padding:10px 12px;text-align:right;font-size:11.5px;color:#555;border:1px solid #ddd;font-weight:700}
+.invoice-a4 td{padding:10px 12px;border:1px solid #ddd;font-size:12.5px}
+.invoice-a4 .inv-total{text-align:left;font-size:15px;font-weight:800;color:#b8862b;padding:16px;background:#faf6ec;border-radius:8px;margin-top:16px;direction:rtl}
+.invoice-a4 .inv-footer{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;color:#888;flex-wrap:wrap;gap:20px}
+.invoice-a4 .inv-footer .stamp{border:2px dashed #b8862b;border-radius:50%;width:80px;height:80px;display:flex;align-items:center;justify-content:center;color:#b8862b;font-weight:700;font-size:11px;text-align:center;line-height:1.3}
 @media print{
   @page{size:A4;margin:10mm}
-  .topbar,.tabbar,.no-print,.toast,.quick-btns,.motivation,#particles,#splash,.sidebar,.focus-overlay,.share-preview,.icon-btn,.search-top,.sync-chip,.date-chip,.quick-actions,.fab-group,.adv-filter,.filters .noprint{display:none!important}
+  .topbar,.tabbar,.no-print,.toast,.quick-btns,.motivation,#particles,#splash,.sidebar,.focus-overlay,.share-preview,.icon-btn,.search-top,.sync-chip,.date-chip,.quick-actions,.fab-group,.adv-filter,.filters .noprint,.daily-tip{display:none!important}
   *{color:#000!important;background:transparent!important;box-shadow:none!important;text-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transition:none!important}
   html,body{background:#fff!important;color:#000!important;font-size:11pt!important;line-height:1.4!important;padding:0!important;margin:0!important}
   .container{max-width:100%!important;padding:0!important;margin:0!important}
@@ -505,6 +552,9 @@ svg text{font-family:"Vazirmatn",sans-serif}
   body.pm .modal{position:static!important;display:block!important;background:#fff!important;padding:0!important;backdrop-filter:none!important;max-width:100%!important;margin:0!important}
   body.pm .modal-box{background:#fff!important;color:#000!important;border:2px solid #000!important;padding:16px!important;margin:0!important;max-width:100%!important;box-shadow:none!important}
   body.pm .modal-box *{color:#000!important}
+  body.invoice-print .container{display:none!important}
+  body.invoice-print #invoiceModal{position:static!important;display:block!important;background:#fff!important;padding:0!important}
+  body.invoice-print #invoiceModal .modal-box{max-width:100%!important;padding:0!important;box-shadow:none!important;border:none!important}
 }
 @media (max-width:900px){
   .container{padding:20px 16px 100px}
@@ -538,6 +588,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
   .table-wrap{border-radius:10px}
   table{font-size:12px}
   th,td{padding:8px 10px}
+  .id-card{width:100%}
 }
 @media (max-width:480px){
   .container{padding:16px 12px 100px}
@@ -545,10 +596,10 @@ svg text{font-family:"Vazirmatn",sans-serif}
   .stat-value{font-size:16px}
   .rep-card b{font-size:18px}
   .daily-summary{grid-template-columns:1fr 1fr}
-  .stat-value{font-size:16px}
   .donut-wrap{padding:8px 0}
   .bday-item{flex-direction:column;align-items:flex-start;gap:6px}
   .overdue-item{flex-direction:column;align-items:flex-start}
+  .wallet-card .card-num{font-size:16px}
 }
 </style>
 </head>
@@ -586,6 +637,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
   <button class="tab-btn" data-tab="tx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>مالی</button>
   <button class="tab-btn" data-tab="weekly"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>هفته</button>
   <button class="tab-btn" data-tab="activity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>فعالیت</button>
+  <button class="tab-btn" data-tab="waitlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>انتظار</button>
   <button class="tab-btn" data-tab="sms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>پیامک</button>
   <button class="tab-btn" data-tab="birthdays"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>تولدها</button>
   <button class="tab-btn" data-tab="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>تقویم</button>
@@ -598,6 +650,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
 
 <section class="tab on" id="tab-dash">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></div>داشبورد</div><div class="page-sub" id="dashGreeting">—</div></div></div>
+  <div class="daily-tip" id="dailyTip"></div>
   <div class="motivation" id="motivation"></div>
   <div class="quick-actions">
     <div class="qa-btn" data-action="new-session"><div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><b>ثبت جلسه</b><small>سریع</small></div>
@@ -771,6 +824,24 @@ svg text{font-family:"Vazirmatn",sans-serif}
   <div class="card"><div id="activityList"></div></div>
 </section>
 
+<section class="tab" id="tab-waitlist">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></div>لیست انتظار</div><div class="page-sub">ثبت‌نام‌های در انتظار</div></div></div>
+  <div class="card">
+    <h3 class="card-title">افزودن به لیست انتظار</h3>
+    <form class="form-grid" id="waitlistForm">
+      <div class="field"><label>نام</label><input id="wlName" required></div>
+      <div class="field"><label>دوره موردنظر</label><input id="wlCourse" placeholder="Elementary"></div>
+      <div class="field"><label>تلفن</label><input id="wlPhone" inputmode="tel"></div>
+      <div class="field"><label>یادداشت</label><input id="wlNote" placeholder="—"></div>
+      <div class="btn-row"><button class="btn" type="submit">افزودن</button></div>
+    </form>
+  </div>
+  <div class="card">
+    <h3 class="card-title">لیست</h3>
+    <div id="waitlistContent"></div>
+  </div>
+</section>
+
 <section class="tab" id="tab-sms">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>پیامک</div><div class="page-sub">یادآوری، تبریک، دلخواه</div></div></div>
   <div class="sms-tabs">
@@ -856,7 +927,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
       <div class="field"><label>تا</label><div class="date-row" id="repTo"></div></div>
       <div class="field"><label>میان‌بر</label><div class="btn-row tight"><button class="btn ghost sm" data-range="month">ماه</button><button class="btn ghost sm" data-range="lastMonth">ماه قبل</button><button class="btn ghost sm" data-range="30">۳۰ روز</button><button class="btn ghost sm" data-range="7">۷ روز</button><button class="btn ghost sm" data-range="year">سال</button></div></div>
     </div>
-    <div class="btn-row" style="margin-top:16px"><button class="btn" id="repRun">نمایش</button><button class="btn success" id="repPrint">🖨 چاپ حرفه‌ای</button><button class="btn ghost" id="repPDF">📄 PDF</button><span class="hint" style="align-self:center" id="repSummaryTxt"></span></div>
+    <div class="btn-row" style="margin-top:16px"><button class="btn" id="repRun">نمایش</button><button class="btn success" id="repPrint">🖨 چاپ حرفه‌ای</button><button class="btn" id="repInvoice">🧾 فاکتور A4</button><span class="hint" style="align-self:center" id="repSummaryTxt"></span></div>
   </div>
   <div class="report-grid" id="repCards"></div>
   <div class="card"><h3 class="card-title">تفکیک زبان‌آموز</h3><div class="table-wrap" id="repStudents"></div></div>
@@ -883,6 +954,24 @@ svg text{font-family:"Vazirmatn",sans-serif}
       <div class="btn-row"><button class="btn" id="btnSaveWallet">ذخیره</button></div>
     </div>
   </div>
+  <div class="card">
+    <h3 class="card-title">🏢 شعبه‌ها / کلاس‌ها</h3>
+    <p class="hint" style="margin-bottom:10px">اگه چند شعبه یا کلاس داری، اینجا تعریف کن</p>
+    <div id="branchesList"></div>
+    <div class="form-grid" style="margin-top:12px">
+      <div class="field"><label>نام شعبه جدید</label><input id="newBranchName" placeholder="مثلاً شعبه ۲"></div>
+      <div class="btn-row"><button class="btn" id="btnAddBranch">افزودن</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3 class="card-title">🎁 کدهای تخفیف</h3>
+    <div id="couponsList"></div>
+    <div class="form-grid" style="margin-top:12px">
+      <div class="field"><label>کد</label><input id="newCouponCode" placeholder="SUMMER10"></div>
+      <div class="field"><label>درصد تخفیف</label><input id="newCouponPct" type="number" min="0" max="100" placeholder="10"></div>
+      <div class="btn-row"><button class="btn" id="btnAddCoupon">افزودن</button></div>
+    </div>
+  </div>
   <div class="cleanup-box"><h2>🧹 پاک‌سازی مالی</h2><p>تراکنش‌ها پاک می‌شوند ولی زبان‌آموزان می‌مانند.</p><div class="btn-row"><button class="btn danger" id="btnWipeTx">پاک کردن همه (محلی + ابری)</button><button class="btn ghost" id="btnWipeTxLocal">فقط محلی</button></div></div>
   <div class="grid-2">
     <div class="card"><h3 class="card-title">📥 خروجی</h3><div class="btn-row"><button class="btn ghost" id="btnCsvTx">CSV تراکنش‌ها</button><button class="btn ghost" id="btnCsvSt">CSV زبان‌آموزان</button><button class="btn ghost" id="btnCsvSe">CSV جلسات</button><button class="btn" id="btnPrint">🖨 چاپ حرفه‌ای</button></div></div>
@@ -891,12 +980,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
   <div class="card">
     <h3 class="card-title">📥 ورود از اکسل</h3>
     <p class="hint" style="margin-bottom:12px">فایل CSV یا Excel با ستون‌های: نام، دوره، شهریه، تلفن، تلفن منزل، تولد، شغل پدر، شغل مادر، آدرس</p>
-    <div class="import-drop" id="importDrop">
-      <div style="font-size:36px;margin-bottom:8px">📊</div>
-      <b>فایل رو بکش و رها کن</b>
-      <div class="hint" style="margin-top:4px">یا کلیک کن</div>
-      <input type="file" id="importFile" accept=".csv,.xlsx,.xls" style="display:none">
-    </div>
+    <div class="import-drop" id="importDrop"><div style="font-size:36px;margin-bottom:8px">📊</div><b>فایل رو بکش و رها کن</b><div class="hint" style="margin-top:4px">یا کلیک کن</div><input type="file" id="importFile" accept=".csv,.xlsx,.xls" style="display:none"></div>
     <div class="table-wrap" id="importPreview" style="margin-top:16px;display:none"></div>
   </div>
   <div class="card">
@@ -908,6 +992,14 @@ svg text{font-family:"Vazirmatn",sans-serif}
       <div class="btn-row"><button class="btn success" id="btnAddPkg">افزودن</button></div>
     </div>
     <div class="table-wrap" id="pkgTable" style="margin-top:16px"></div>
+  </div>
+  <div class="card">
+    <h3 class="card-title">🖨 چاپ کارت زبان‌آموز</h3>
+    <p class="hint" style="margin-bottom:12px">کارت شناسایی برای هر زبان‌آموز</p>
+    <div class="form-grid">
+      <div class="field"><label>زبان‌آموز</label><select id="idCardStudent"></select></div>
+      <div class="btn-row"><button class="btn" id="btnPrintIdCard">پیش‌نمایش و چاپ</button></div>
+    </div>
   </div>
   <div class="danger-box"><h2>⚠️ حذف کامل</h2><p>زبان‌آموزان هم پاک می‌شوند.</p><div class="btn-row"><button class="btn danger" id="btnReset">حذف محلی</button><button class="btn danger" id="btnResetCloud">حذف ابری</button></div></div>
 </section>
@@ -944,6 +1036,7 @@ svg text{font-family:"Vazirmatn",sans-serif}
 </div>
 
 <div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
+<div class="modal" id="invoiceModal"><div class="modal-box" id="invoiceBox"></div></div>
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -954,11 +1047,11 @@ svg text{font-family:"Vazirmatn",sans-serif}
 const CONFIG = {
   SUPABASE_URL: 'https://lswenudbsrpecfnisgtq.supabase.co',
   SUPABASE_KEY: 'sb_publishable_E72lZ7cHirdczP4gdn4t5Q__Eh0F2n7',
-  LOCAL_KEY: 'ali_academy_v12',
-  QUEUE_KEY: 'ali_academy_v12_queue',
-  SETTINGS_KEY: 'ali_academy_v12_settings',
-  ACH_KEY: 'ali_academy_v12_achievements',
-  OLD_KEYS: ['ali_academy_v11','ali_academy_v10','ali_academy_v9','ali_academy_v8','ali_english_academy_v7','ali_naghli_finance_v6','ali_naghli_finance_v5']
+  LOCAL_KEY: 'ali_academy_v13',
+  QUEUE_KEY: 'ali_academy_v13_queue',
+  SETTINGS_KEY: 'ali_academy_v13_settings',
+  ACH_KEY: 'ali_academy_v13_achievements',
+  OLD_KEYS: ['ali_academy_v12','ali_academy_v11','ali_academy_v10','ali_academy_v9','ali_academy_v8','ali_english_academy_v7','ali_naghli_finance_v6','ali_naghli_finance_v5']
 };
 
 const $ = id => document.getElementById(id);
@@ -981,34 +1074,10 @@ const EXPENSE_CATS = { rent:'اجاره', books:'کتاب', salary:'حقوق', i
 const CAT_COLORS = { rent:'#e07a8f', books:'#4ec5a0', salary:'#9d7cf0', internet:'#5ac8e0', ads:'#e89b6c', transport:'#e0b04a', food:'#f2c76a', other:'#6e6985' };
 const AVATAR_COLORS = ['#e0b04a','#4a90e2','#4ec5a0','#9d7cf0','#e07a8f','#e89b6c','#5ac8e0','#f2c76a','#c9526a','#6e6985'];
 
-function getAvatarColor(name){
-  let hash = 0;
-  for(let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
-}
-function avatarHTML(name, size=32){
-  if(!name) return '';
-  const initial = name.trim().charAt(0);
-  const color = getAvatarColor(name);
-  return `<div class="avatar" style="width:${size}px;height:${size}px;background:${color};font-size:${Math.round(size*0.45)}px">${initial}</div>`;
-}
+function getAvatarColor(name){ let hash = 0; for(let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash); return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]; }
+function avatarHTML(name, size=32){ if(!name) return ''; const initial = name.trim().charAt(0); const color = getAvatarColor(name); return `<div class="avatar" style="width:${size}px;height:${size}px;background:${color};font-size:${Math.round(size*0.45)}px">${initial}</div>`; }
 
-function playSound(type){
-  if(!settings.sound) return;
-  try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain); gain.connect(ctx.destination);
-    if(type === 'success'){ osc.frequency.setValueAtTime(523, ctx.currentTime); osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1); osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2); }
-    else if(type === 'error'){ osc.frequency.setValueAtTime(300, ctx.currentTime); osc.frequency.setValueAtTime(200, ctx.currentTime + 0.1); }
-    else { osc.frequency.setValueAtTime(440, ctx.currentTime); }
-    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.3);
-  }catch(e){}
-}
+function playSound(type){ if(!settings.sound) return; try{ const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); if(type === 'success'){ osc.frequency.setValueAtTime(523, ctx.currentTime); osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1); osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2); } else if(type === 'error'){ osc.frequency.setValueAtTime(300, ctx.currentTime); osc.frequency.setValueAtTime(200, ctx.currentTime + 0.1); } else { osc.frequency.setValueAtTime(440, ctx.currentTime); } gain.gain.setValueAtTime(0.1, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3); osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.3); }catch(e){} }
 
 let _toastH;
 function toast(msg, type, action){
@@ -1026,21 +1095,7 @@ function toast(msg, type, action){
 const COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
 function copyBtn(text){ return `<button class="copy-btn" title="کپی" onclick="event.stopPropagation();copyText('${String(text).replace(/'/g,"\\'")}')">${COPY_ICON}</button>`; }
 
-function launchConfetti(){
-  const colors = ['#e0b04a','#f2c76a','#4ec5a0','#9d7cf0','#e07a8f','#5ac8e0'];
-  for(let i = 0; i < 60; i++){
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random() * 100 + 'vw';
-    c.style.top = '-20px';
-    c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    c.style.animationDelay = (Math.random() * 0.5) + 's';
-    c.style.animationDuration = (2 + Math.random() * 1) + 's';
-    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 3500);
-  }
-}
+function launchConfetti(){ const colors = ['#e0b04a','#f2c76a','#4ec5a0','#9d7cf0','#e07a8f','#5ac8e0']; for(let i = 0; i < 60; i++){ const c = document.createElement('div'); c.className = 'confetti'; c.style.left = Math.random() * 100 + 'vw'; c.style.top = '-20px'; c.style.background = colors[Math.floor(Math.random() * colors.length)]; c.style.animationDelay = (Math.random() * 0.5) + 's'; c.style.animationDuration = (2 + Math.random() * 1) + 's'; c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0'; document.body.appendChild(c); setTimeout(() => c.remove(), 3500); } }
 
 const _persianFmt = new Intl.DateTimeFormat('en-u-ca-persian-nu-latn', { year:'numeric', month:'numeric', day:'numeric' });
 function todayJ(){ const parts = _persianFmt.formatToParts(new Date()); const g = t => +parts.find(p=>p.type===t).value; return [g('year'), g('month'), g('day')]; }
@@ -1087,33 +1142,26 @@ function getDate(boxId){
 
 const sb = (window.supabase && CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY) ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY) : null;
 
-let db = { students: [], tx: [], packages: [], activities: [] };
+let db = { students: [], tx: [], packages: [], activities: [], waitlist: [], branches: [], coupons: [], contacts: [] };
 let syncQueue = [];
 let undoBuffer = [];
-let settings = { smsProvider:'none', smsApiKey:'', smsSender:'', smsAcademy:'آموزشگاه زبان علی ناقلی', palette:'gold', compact:false, sound:true, particles:true, seasonAuto:true, walletNum:'', walletOwner:'علی ناقلی' };
+let settings = { smsProvider:'none', smsApiKey:'', smsSender:'', smsAcademy:'آموزشگاه زبان علی ناقلی', palette:'gold', compact:false, sound:true, particles:true, seasonAuto:true, walletNum:'', walletOwner:'علی ناقلی', currentBranch:'main' };
 let achievements = {};
 let deferredPrompt = null;
 let currentWeekStart = null;
 
-function getSeason(){
-  const m = todayJ()[1];
-  if(m >= 1 && m <= 3) return 'spring';
-  if(m >= 4 && m <= 6) return 'summer';
-  if(m >= 7 && m <= 9) return 'autumn';
-  return 'winter';
-}
+function getSeason(){ const m = todayJ()[1]; if(m >= 1 && m <= 3) return 'spring'; if(m >= 4 && m <= 6) return 'summer'; if(m >= 7 && m <= 9) return 'autumn'; return 'winter'; }
 
 function migrateOldData(){
   if(localStorage.getItem(CONFIG.LOCAL_KEY)) return;
   for(const oldKey of CONFIG.OLD_KEYS){
-    const old = localStorage.getItem(oldKey);
-    if(!old) continue;
+    const old = localStorage.getItem(oldKey); if(!old) continue;
     try{
       const oldDb = JSON.parse(old);
       oldDb.students = (oldDb.students || []).map(s => ({ ...s, birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0, father_job: s.father_job || '', mother_job: s.mother_job || '', address: s.address || '', home_phone: s.home_phone || '' }));
       oldDb.tx = (oldDb.tx || []).map(t => ({ ...t, category: t.category || null, tag: t.tag || null, absent: !!t.absent }));
-      oldDb.packages = oldDb.packages || [];
-      oldDb.activities = oldDb.activities || [];
+      oldDb.packages = oldDb.packages || []; oldDb.activities = oldDb.activities || [];
+      oldDb.waitlist = oldDb.waitlist || []; oldDb.branches = oldDb.branches || []; oldDb.coupons = oldDb.coupons || []; oldDb.contacts = oldDb.contacts || [];
       localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(oldDb));
       console.log('✅ مهاجرت از', oldKey);
       return;
@@ -1129,8 +1177,8 @@ function loadLocal(){
     const s = localStorage.getItem(CONFIG.SETTINGS_KEY); if(s) settings = { ...settings, ...JSON.parse(s) };
     const a = localStorage.getItem(CONFIG.ACH_KEY); if(a) achievements = JSON.parse(a);
   }catch(e){}
-  db.students = db.students || []; db.tx = db.tx || []; db.packages = db.packages || []; db.activities = db.activities || [];
-  db.students.forEach(s => { if(s.package_size === undefined) s.package_size = 0; if(s.package_used === undefined) s.package_used = 0; if(s.birthday === undefined) s.birthday = null; if(s.father_job === undefined) s.father_job = ''; if(s.mother_job === undefined) s.mother_job = ''; if(s.address === undefined) s.address = ''; if(s.home_phone === undefined) s.home_phone = ''; });
+  ['students','tx','packages','activities','waitlist','branches','coupons','contacts'].forEach(k => { db[k] = db[k] || []; });
+  db.students.forEach(s => { if(s.package_size === undefined) s.package_size = 0; if(s.package_used === undefined) s.package_used = 0; if(s.birthday === undefined) s.birthday = null; if(s.father_job === undefined) s.father_job = ''; if(s.mother_job === undefined) s.mother_job = ''; if(s.address === undefined) s.address = ''; if(s.home_phone === undefined) s.home_phone = ''; if(s.branch === undefined) s.branch = 'main'; if(s.balance === undefined) s.balance = 0; if(s.points === undefined) s.points = 0; if(s.contact_log === undefined) s.contact_log = []; });
   db.tx.forEach(t => { if(t.category === undefined) t.category = null; if(t.tag === undefined) t.tag = null; if(t.absent === undefined) t.absent = false; });
   syncQueue = Array.isArray(syncQueue) ? syncQueue : [];
 }
@@ -1141,10 +1189,9 @@ function saveSettings(){ try{ localStorage.setItem(CONFIG.SETTINGS_KEY, JSON.str
 function saveAch(){ try{ localStorage.setItem(CONFIG.ACH_KEY, JSON.stringify(achievements)); }catch(e){} }
 function enqueue(op){ syncQueue.push(op); saveQueue(); }
 function setSync(state, label){ const c = $('syncChip'), t = $('syncText'); if(c) c.className = 'sync-chip ' + state; if(t) t.textContent = label; }
-
 function logActivity(type, desc){ db.activities.unshift({ id: uid(), ts: Date.now(), type, desc }); if(db.activities.length > 200) db.activities = db.activities.slice(0, 200); }
 
-function rowToStudent(s){ return { id: s.id, name: s.name, course: s.course || '', fee: s.fee || 0, phone: s.phone || '', note: s.note || '', birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0, father_job: s.father_job || '', mother_job: s.mother_job || '', address: s.address || '', home_phone: s.home_phone || '' }; }
+function rowToStudent(s){ return { id: s.id, name: s.name, course: s.course || '', fee: s.fee || 0, phone: s.phone || '', note: s.note || '', birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0, father_job: s.father_job || '', mother_job: s.mother_job || '', address: s.address || '', home_phone: s.home_phone || '', branch: s.branch || 'main', points: s.points || 0, contact_log: s.contact_log || [] }; }
 function rowToTx(t){ return { id: t.id, type: t.type, sid: t.sid, amount: t.amount, date: t.date, method: t.method || '', desc: t.descr || '', session_date: t.session_date || null, is_session: !!t.is_session, category: t.category || null, tag: t.tag || null, absent: !!t.absent, ts: t.created_at ? new Date(t.created_at).getTime() : Date.now() }; }
 function txToRow(t){ return { type: t.type, sid: t.sid, amount: t.amount, date: t.date, method: t.method, descr: t.desc, session_date: t.session_date || null, is_session: !!t.is_session, category: t.category || null, tag: t.tag || null, absent: !!t.absent }; }
 function studentToRow(s){ return { name: s.name, course: s.course, fee: s.fee, phone: s.phone, note: s.note, birthday: s.birthday || null, package_size: s.package_size || 0, package_used: s.package_used || 0, father_job: s.father_job || null, mother_job: s.mother_job || null, address: s.address || null, home_phone: s.home_phone || null }; }
@@ -1154,12 +1201,10 @@ async function pullFromCloud(){
   setSync('syncing','همگام‌سازی…');
   try{
     const [stRes, txRes] = await Promise.all([ sb.from('students').select('*').order('created_at',{ascending:true}), sb.from('tx').select('*').order('date',{ascending:true}) ]);
-    if(stRes.error) throw stRes.error;
-    if(txRes.error) throw txRes.error;
+    if(stRes.error) throw stRes.error; if(txRes.error) throw txRes.error;
     const cloudStudents = (stRes.data||[]).map(rowToStudent);
     const cloudTx = (txRes.data||[]).map(rowToTx);
-    const cloudSIds = new Set(cloudStudents.map(s=>s.id));
-    const cloudTxIds = new Set(cloudTx.map(t=>t.id));
+    const cloudSIds = new Set(cloudStudents.map(s=>s.id)); const cloudTxIds = new Set(cloudTx.map(t=>t.id));
     db.students = [...cloudStudents, ...db.students.filter(s => !cloudSIds.has(s.id))];
     db.tx = [...cloudTx, ...db.tx.filter(t => !cloudTxIds.has(t.id))];
     saveLocal(); setSync('online','متصل'); return true;
@@ -1175,22 +1220,13 @@ async function flushQueue(){
       if(op.action === 'insert'){
         const { data, error } = await sb.from(op.table).insert([op.payload]).select().single();
         if(error) throw error;
-        if(op.localId && data.id !== op.localId){
-          const item = db[op.table].find(x=>x.id===op.localId);
-          if(item) item.id = data.id;
-          if(op.table === 'students') db.tx.forEach(t => { if(t.sid === op.localId) t.sid = data.id; });
-          saveLocal();
-        }
-      } else if(op.action === 'update'){
-        const { error } = await sb.from(op.table).update(op.payload).eq('id', op.id); if(error) throw error;
-      } else if(op.action === 'delete'){
-        const { error } = await sb.from(op.table).delete().eq('id', op.id); if(error) throw error;
-      }
+        if(op.localId && data.id !== op.localId){ const item = db[op.table].find(x=>x.id===op.localId); if(item) item.id = data.id; if(op.table === 'students') db.tx.forEach(t => { if(t.sid === op.localId) t.sid = data.id; }); saveLocal(); }
+      } else if(op.action === 'update'){ const { error } = await sb.from(op.table).update(op.payload).eq('id', op.id); if(error) throw error; }
+      else if(op.action === 'delete'){ const { error } = await sb.from(op.table).delete().eq('id', op.id); if(error) throw error; }
     }catch(e){ console.warn('queue op failed', op, e); remaining.push(op); }
   }
   syncQueue = remaining; saveQueue();
-  if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`);
-  else setSync('online','متصل');
+  if(syncQueue.length) setSync('offline', `صف: ${syncQueue.length}`); else setSync('online','متصل');
 }
 
 async function cloudInsert(table, payload, localId){
@@ -1198,11 +1234,7 @@ async function cloudInsert(table, payload, localId){
   try{
     const { data, error } = await sb.from(table).insert([payload]).select().single();
     if(error){ console.error('insert error:', error); throw error; }
-    if(localId && data.id !== localId){
-      const item = db[table].find(x=>x.id===localId);
-      if(item) item.id = data.id;
-      if(table === 'students') db.tx.forEach(t => { if(t.sid === localId) t.sid = data.id; });
-    }
+    if(localId && data.id !== localId){ const item = db[table].find(x=>x.id===localId); if(item) item.id = data.id; if(table === 'students') db.tx.forEach(t => { if(t.sid === localId) t.sid = data.id; }); }
     setSync('online','متصل');
   }catch(e){ console.warn(e); enqueue({action:'insert', table, payload, localId}); setSync('offline','آفلاین'); }
 }
@@ -1232,14 +1264,7 @@ const stName = id => (db.students.find(s=>s.id===id)||{}).name || '—';
 const moneyVal = id => { const el = $(id); return el ? (Number(toEn(el.value)) || 0) : 0; };
 
 document.addEventListener('input', e => { if(e.target.classList.contains('money')){ const v = toEn(e.target.value).replace(/[^\d]/g,''); e.target.value = v ? Number(v).toLocaleString('en-US') : ''; } });
-document.addEventListener('click', e => {
-  const btn = e.target.closest('button'); if(!btn) return;
-  const rect = btn.getBoundingClientRect();
-  btn.style.setProperty('--ripple-x', (e.clientX - rect.left) + 'px');
-  btn.style.setProperty('--ripple-y', (e.clientY - rect.top) + 'px');
-  btn.classList.add('ripple');
-  setTimeout(() => btn.classList.remove('ripple'), 600);
-});
+document.addEventListener('click', e => { const btn = e.target.closest('button'); if(!btn) return; const rect = btn.getBoundingClientRect(); btn.style.setProperty('--ripple-x', (e.clientX - rect.left) + 'px'); btn.style.setProperty('--ripple-y', (e.clientY - rect.top) + 'px'); btn.classList.add('ripple'); setTimeout(() => btn.classList.remove('ripple'), 600); });
 
 const ICON = { users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>', calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', income: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>', debt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>', credit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>', expense: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>', net: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>', check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>', empty: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>' };
 function emptyState(msg){ return `<div class="empty">${ICON.empty}<div>${msg}</div></div>`; }
@@ -1279,6 +1304,7 @@ function renderDash(){
   db.students.forEach(s => { if(b[s.id].bal > 0){ debt += b[s.id].bal; nd++; } });
   const gr = $('dashGreeting'); if(gr) gr.textContent = `${greet} — ${faDigits(nd)} بدهکار، ${fa(debt)} تومان`;
   const mot = $('motivation'); if(mot) mot.textContent = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
+  renderDailyTip();
   
   let credit = 0, nc = 0, nz = 0;
   db.students.forEach(s => { const v = b[s.id].bal; if(v > 0){} else if(v < 0){ credit += -v; nc++; } else nz++; });
@@ -1305,19 +1331,33 @@ function renderDash(){
   if(bdays > 0) stats.push({ label:'🎂 تولد امروز', value:bdays, unit:'نفر', icon:ICON.users, color:'', cls:'stat-bday-card' });
   
   const statsEl = $('stats');
-  if(statsEl) statsEl.innerHTML = stats.map(s => `
-    <div class="stat ${s.cls || ''}">
-      <div class="stat-icon ${s.color}">${s.icon}</div>
-      <div class="stat-label">${s.label}</div>
-      <div class="stat-value"><span class="count-up" data-target="${s.value}">${fa(s.value)}</span><small>${s.unit}</small></div>
-      ${s.delta !== undefined && s.delta !== 0 ? `<div class="stat-delta ${s.delta>0?'up':'down'}">${s.delta>0?'▲':'▼'} ${faDigits(Math.abs(s.delta))}٪</div>` : ''}
-    </div>
-  `).join('');
+  if(statsEl) statsEl.innerHTML = stats.map(s => `<div class="stat ${s.cls || ''}"><div class="stat-icon ${s.color}">${s.icon}</div><div class="stat-label">${s.label}</div><div class="stat-value"><span class="count-up" data-target="${s.value}">${fa(s.value)}</span><small>${s.unit}</small></div>${s.delta !== undefined && s.delta !== 0 ? `<div class="stat-delta ${s.delta>0?'up':'down'}">${s.delta>0?'▲':'▼'} ${faDigits(Math.abs(s.delta))}٪</div>` : ''}</div>`).join('');
   document.querySelectorAll('.count-up').forEach(el => { const target = Number(el.dataset.target) || 0; if(target > 0) animateValue(el, 0, target, 1000); });
   
   renderRecords(); renderBirthdayCard(); renderOverdue(); renderDonut(nd, nc, nz); renderBars(b);
   renderMonthlyChart(); renderDaily(); renderExpenseChart(); renderAdvancedStats(); renderRecent();
 }
+
+function renderDailyTip(){
+  const el = $('dailyTip'); if(!el) return;
+  const t = todayJ();
+  const tips = [];
+  const bdays = db.students.filter(isBirthdayToday);
+  if(bdays.length) tips.push({ icon:'🎂', title:`${faDigits(bdays.length)} نفر امروز تولد دارن`, action:() => switchTab('birthdays'), label:'مشاهده' });
+  const b = balances();
+  const overdue = db.students.filter(s => { const bal = b[s.id].bal; if(bal <= 0) return false; const lp = db.tx.filter(t=>t.sid===s.id && t.type==='payment').sort((a,b)=>b.date.localeCompare(a.date))[0]; if(!lp) return true; const [py,pm,pd] = lp.date.split('/').map(Number); return daysBetween([py,pm,pd], t) > 30; });
+  if(overdue.length) tips.push({ icon:'⚠️', title:`${faDigits(overdue.length)} نفر بیش از ۳۰ روز بدهکارن`, action:() => switchTab('sms'), label:'پیامک' });
+  const todaySessions = db.tx.filter(x => x.is_session && (x.session_date === dateStr(t) || x.date === dateStr(t))).length;
+  const todayDate = dateStr(t);
+  const waitlist = db.waitlist.filter(w => w.status === 'waiting').length;
+  if(waitlist) tips.push({ icon:'📝', title:`${faDigits(waitlist)} نفر در لیست انتظار`, action:() => switchTab('waitlist'), label:'مشاهده' });
+  if(todaySessions > 0) tips.push({ icon:'📅', title:`امروز ${faDigits(todaySessions)} جلسه ثبت شده`, action:() => switchTab('session'), label:'مشاهده' });
+  if(!tips.length){ el.classList.remove('on'); return; }
+  el.classList.add('on');
+  el.innerHTML = `<h3>🔔 امروز چه خبره؟</h3>${tips.map((tip, i) => `<div class="tip-item"><div><b>${tip.icon} ${tip.title}</b></div><button class="btn xs" onclick="handleTipAction(${i})">${tip.label}</button></div>`).join('')}`;
+  window._tips = tips;
+}
+window.handleTipAction = (i) => { if(window._tips && window._tips[i]) window._tips[i].action(); };
 
 function renderRecords(){
   const el = $('recordsGrid'); if(!el) return;
@@ -1508,48 +1548,14 @@ on('stForm', 'submit', async e => {
   const birthday = getDate('stBirthday');
   const o = { name: $('stName').value.trim(), course: $('stCourse').value.trim(), fee: moneyVal('stFee'), phone: toEn($('stPhone').value), home_phone: toEn($('stHomePhone').value), note: $('stNote').value.trim(), birthday, father_job: $('stFatherJob').value.trim(), mother_job: $('stMotherJob').value.trim(), address: $('stAddress').value.trim() };
   if(!o.name) return;
-  if(editSt){
-    const s = db.students.find(x=>x.id===editSt); Object.assign(s, o);
-    await cloudUpdate('students', studentToRow(s), s.id);
-    logActivity('student_edit', `ویرایش زبان‌آموز: ${o.name}`);
-    toast('ذخیره شد', 'success');
-  } else {
-    const s = { id: uid(), ...o, package_size: 0, package_used: 0 };
-    db.students.push(s);
-    await cloudInsert('students', studentToRow(s), s.id);
-    logActivity('student_add', `زبان‌آموز جدید: ${o.name}`);
-    toast('اضافه شد', 'success');
-    launchConfetti();
-  }
+  if(editSt){ const s = db.students.find(x=>x.id===editSt); Object.assign(s, o); await cloudUpdate('students', studentToRow(s), s.id); logActivity('student_edit', `ویرایش زبان‌آموز: ${o.name}`); toast('ذخیره شد', 'success'); }
+  else { const s = { id: uid(), ...o, package_size: 0, package_used: 0 }; db.students.push(s); await cloudInsert('students', studentToRow(s), s.id); logActivity('student_add', `زبان‌آموز جدید: ${o.name}`); toast('اضافه شد', 'success'); launchConfetti(); }
   cancelStudent(); saveLocal(); renderAll(); checkAchievements();
 });
-function editStudent(id){
-  const s = db.students.find(x=>x.id===id); if(!s) return;
-  editSt = id;
-  $('stName').value = s.name; $('stCourse').value = s.course||'';
-  $('stFee').value = s.fee ? s.fee.toLocaleString('en-US') : '';
-  $('stPhone').value = s.phone||''; $('stHomePhone').value = s.home_phone||'';
-  $('stFatherJob').value = s.father_job||''; $('stMotherJob').value = s.mother_job||'';
-  $('stAddress').value = s.address||''; $('stNote').value = s.note||'';
-  if(s.birthday) setDate('stBirthday', s.birthday.split('/').map(Number)); else setDate('stBirthday', null);
-  const t = $('stTitle'); if(t) t.querySelector('span').textContent = 'ویرایش زبان‌آموز';
-  $('stSave').textContent = 'ذخیره'; $('stCancel').style.display = '';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+function editStudent(id){ const s = db.students.find(x=>x.id===id); if(!s) return; editSt = id; $('stName').value = s.name; $('stCourse').value = s.course||''; $('stFee').value = s.fee ? s.fee.toLocaleString('en-US') : ''; $('stPhone').value = s.phone||''; $('stHomePhone').value = s.home_phone||''; $('stFatherJob').value = s.father_job||''; $('stMotherJob').value = s.mother_job||''; $('stAddress').value = s.address||''; $('stNote').value = s.note||''; if(s.birthday) setDate('stBirthday', s.birthday.split('/').map(Number)); else setDate('stBirthday', null); const t = $('stTitle'); if(t) t.querySelector('span').textContent = 'ویرایش زبان‌آموز'; $('stSave').textContent = 'ذخیره'; $('stCancel').style.display = ''; window.scrollTo({top:0, behavior:'smooth'}); }
 function cancelStudent(){ editSt = null; const f = $('stForm'); if(f) f.reset(); setDate('stBirthday', null); const t = $('stTitle'); if(t) t.querySelector('span').textContent = 'افزودن زبان‌آموز'; const b = $('stSave'); if(b) b.textContent = 'افزودن'; const c = $('stCancel'); if(c) c.style.display = 'none'; }
 click('stCancel', cancelStudent);
-async function delStudent(id){
-  const n = db.tx.filter(t=>t.sid===id).length;
-  if(!confirm(`«${stName(id)}» و ${faDigits(n)} تراکنش حذف شود؟`)) return;
-  const s = db.students.find(x=>x.id===id);
-  const txs = db.tx.filter(t=>t.sid===id);
-  for(const t of txs) await cloudDelete('tx', t.id);
-  await cloudDelete('students', id);
-  db.students = db.students.filter(s=>s.id!==id); db.tx = db.tx.filter(t=>t.sid!==id);
-  saveLocal(); renderAll();
-  logActivity('student_delete', `حذف زبان‌آموز: ${s.name}`);
-  pushUndo('st-delete', { student: s, txs }, 'زبان‌آموز حذف شد');
-}
+async function delStudent(id){ const n = db.tx.filter(t=>t.sid===id).length; if(!confirm(`«${stName(id)}» و ${faDigits(n)} تراکنش حذف شود؟`)) return; const s = db.students.find(x=>x.id===id); const txs = db.tx.filter(t=>t.sid===id); for(const t of txs) await cloudDelete('tx', t.id); await cloudDelete('students', id); db.students = db.students.filter(s=>s.id!==id); db.tx = db.tx.filter(t=>t.sid!==id); saveLocal(); renderAll(); logActivity('student_delete', `حذف زبان‌آموز: ${s.name}`); pushUndo('st-delete', { student: s, txs }, 'زبان‌آموز حذف شد'); }
 on('stSearch', 'input', debounce(renderStudents));
 on('stFilter', 'change', renderStudents);
 click('advFilterToggle', () => { const f = $('advFilter'); if(f) f.classList.toggle('on'); });
@@ -1561,39 +1567,40 @@ function openStudentProfile(id){
   const s = db.students.find(x=>x.id===id); if(!s) return;
   const b = balances()[id] || {};
   const txs = db.tx.filter(t=>t.sid===id).sort((a,b)=>b.date.localeCompare(a.date)).slice(0, 10);
-  const sessions = txs.filter(t=>t.is_session);
   const payments = db.tx.filter(t=>t.sid===id && t.type==='payment');
   const totalPay = payments.reduce((a,t)=>a+t.amount,0);
+  const contacts = s.contact_log || [];
   const modalBox = $('modalBox'); if(!modalBox) return;
   modalBox.innerHTML = `
     <div class="student-profile">
-      <div class="profile-header">
-        <div class="profile-avatar" style="background:${getAvatarColor(s.name)}">${s.name.charAt(0)}</div>
-        <div class="profile-info">
-          <h2>${esc(s.name)}</h2>
-          <div class="meta">${esc(s.course||'—')} ${s.phone ? `— ${faDigits(s.phone)}` : ''}</div>
-        </div>
-      </div>
+      <div class="profile-header"><div class="profile-avatar" style="background:${getAvatarColor(s.name)}">${s.name.charAt(0)}</div><div class="profile-info"><h2>${esc(s.name)}</h2><div class="meta">${esc(s.course||'—')} ${s.phone ? `— ${faDigits(s.phone)}` : ''}</div></div></div>
       <div class="profile-stats">
         <div class="profile-stat"><small>جلسات</small><b>${faDigits(b.sessions||0)}</b></div>
         <div class="profile-stat"><small>کل بدهی</small><b>${fa(b.charge||0)}</b></div>
         <div class="profile-stat"><small>کل پرداختی</small><b>${fa(totalPay)}</b></div>
         <div class="profile-stat"><small>مانده</small><b style="color:${b.bal>0?'var(--rose)':b.bal<0?'var(--emerald)':'var(--ink-2)'}">${fa(Math.abs(b.bal||0))}</b></div>
       </div>
-      ${s.birthday ? `<p class="hint"><b>تولد:</b> ${showDate(s.birthday)}${s.father_job ? ` | <b>شغل پدر:</b> ${esc(s.father_job)}` : ''}${s.mother_job ? ` | <b>شغل مادر:</b> ${esc(s.mother_job)}` : ''}${s.home_phone ? `<br><b>تلفن منزل:</b> ${faDigits(s.home_phone)}` : ''}${s.address ? `<br><b>آدرس:</b> ${esc(s.address)}` : ''}</p>` : ''}
+      <p class="hint">${s.birthday ? `<b>تولد:</b> ${showDate(s.birthday)}` : ''}${s.father_job ? ` | <b>پدر:</b> ${esc(s.father_job)}` : ''}${s.mother_job ? ` | <b>مادر:</b> ${esc(s.mother_job)}` : ''}${s.home_phone ? `<br><b>منزل:</b> ${faDigits(s.home_phone)}` : ''}${s.address ? `<br><b>آدرس:</b> ${esc(s.address)}` : ''}</p>
       <h3 style="font-size:14px;margin-top:12px;color:var(--ink)">آخرین تراکنش‌ها</h3>
-      <div class="table-wrap">
-        ${txs.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${txs.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست')}
-      </div>
+      <div class="table-wrap">${txs.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${txs.map(t=>`<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type,t.is_session,t.absent)}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست')}</div>
+      <h3 style="font-size:14px;margin-top:12px;color:var(--ink)">تاریخچه تماس</h3>
+      <div id="contactLog">${contacts.length ? contacts.slice(0,5).map(c => `<div class="contact-log"><div class="cl-date">${new Date(c.ts).toLocaleString('fa-IR')}</div>${esc(c.note)}</div>`).join('') : '<p class="hint">هنوز تماسی ثبت نشده</p>'}</div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><input id="newContactNote" placeholder="یادداشت تماس..." style="flex:1;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:8px;color:var(--ink)"><button class="btn sm" onclick="addContactLog('${id}')">ثبت تماس</button></div>
     </div>
-    <div class="btn-row" style="margin-top:16px">
-      <button class="btn" onclick="closeModal()">بستن</button>
-      <button class="btn ghost" onclick="closeModal();quickTx('${id}','payment')">ثبت پرداخت</button>
-      <button class="btn ghost" onclick="closeModal();quickSession('${id}')">ثبت جلسه</button>
-      <button class="btn ghost" onclick="closeModal();openStatement('${id}')">صورت‌حساب</button>
-    </div>`;
+    <div class="btn-row" style="margin-top:16px"><button class="btn" onclick="closeModal()">بستن</button><button class="btn ghost" onclick="closeModal();quickTx('${id}','payment')">ثبت پرداخت</button><button class="btn ghost" onclick="closeModal();quickSession('${id}')">ثبت جلسه</button><button class="btn ghost" onclick="closeModal();openStatement('${id}')">صورت‌حساب</button></div>`;
   $('modal').classList.add('on');
 }
+window.addContactLog = async (id) => {
+  const note = $('newContactNote')?.value.trim();
+  if(!note) return;
+  const s = db.students.find(x=>x.id===id); if(!s) return;
+  s.contact_log = s.contact_log || [];
+  s.contact_log.unshift({ ts: Date.now(), note });
+  await cloudUpdate('students', studentToRow(s), s.id);
+  saveLocal();
+  closeModal(); openStudentProfile(id);
+  toast('تماس ثبت شد', 'success');
+};
 window.openStudentProfile = openStudentProfile;
 
 let seSelected = {}, seCourseFilter = '', seSearchQuery = '', seAbsentMode = false;
@@ -1650,10 +1657,7 @@ click('seSave', async () => {
     if(!seAbsentMode && (s.package_size||0) > 0 && pkgUsed < s.package_size){ pkgUsed += 1; s.package_used = pkgUsed; await cloudUpdate('students', studentToRow(s), s.id); }
     const t = { id: uid(), ts: Date.now(), type: 'charge', sid: id, amount, date, method, desc: baseDesc ? `${baseDesc} — ${stName(id)}` : (seAbsentMode ? `غیبت ${showDate(date)}` : `جلسه ${showDate(date)}`), session_date: date, is_session: true, absent: seAbsentMode, tag, category: null };
     db.tx.push(t); created.push(t);
-    if(seAbsentMode && autoNotify && s.phone){
-      const msg = `سلام، ${s.name} امروز در کلاس حاضر نبود. — ${settings.smsAcademy}`;
-      setTimeout(() => openSmsFor(s.phone, msg), 500);
-    }
+    if(seAbsentMode && autoNotify && s.phone){ const msg = `سلام، ${s.name} امروز در کلاس حاضر نبود. — ${settings.smsAcademy}`; setTimeout(() => openSmsFor(s.phone, msg), 500); }
   }
   saveLocal(); renderAll();
   await Promise.all(created.map(t => cloudInsert('tx', txToRow(t), t.id)));
@@ -1681,17 +1685,19 @@ function renderSessions(){
 let editTx = null;
 function fillStudentSelects(){
   const opts = db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
-  const ts = $('txStudent'), fs = $('fStudent'), ps = $('pkgStudent');
-  const v1 = ts?.value, v2 = fs?.value, v3 = ps?.value;
+  const ts = $('txStudent'), fs = $('fStudent'), ps = $('pkgStudent'), ids = $('idCardStudent');
+  const v1 = ts?.value, v2 = fs?.value, v3 = ps?.value, v4 = ids?.value;
   if(ts) ts.innerHTML = opts || '<option value="">—</option>';
   if(fs) fs.innerHTML = '<option value="">همه</option>' + opts;
   if(ps) ps.innerHTML = opts || '<option value="">—</option>';
+  if(ids) ids.innerHTML = opts || '<option value="">—</option>';
   if(ts && db.students.some(s=>s.id===v1)) ts.value = v1;
   if(fs && db.students.some(s=>s.id===v2)) fs.value = v2;
   if(ps && db.students.some(s=>s.id===v3)) ps.value = v3;
+  if(ids && db.students.some(s=>s.id===v4)) ids.value = v4;
   const ms = [...new Set(db.tx.map(t=>t.date.slice(0,7)))].sort().reverse();
-  const fm = $('fMonth'), v4 = fm?.value;
-  if(fm){ fm.innerHTML = '<option value="">همه</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join(''); fm.value = ms.includes(v4) ? v4 : ''; }
+  const fm = $('fMonth'), v5 = fm?.value;
+  if(fm){ fm.innerHTML = '<option value="">همه</option>' + ms.map(m=>`<option value="${m}">${MONTHS[+m.slice(5)-1]} ${faDigits(m.slice(0,4))}</option>`).join(''); fm.value = ms.includes(v5) ? v5 : ''; }
 }
 function txTypeUI(){ const type = $('txType')?.value; if($('txStWrap')) $('txStWrap').style.display = type === 'expense' ? 'none' : ''; if($('txCategoryWrap')) $('txCategoryWrap').style.display = type === 'expense' ? '' : 'none'; if($('txDateLbl')) $('txDateLbl').textContent = type==='payment' ? 'تاریخ دریافت' : 'تاریخ'; }
 on('txType', 'change', txTypeUI);
@@ -1712,44 +1718,11 @@ on('txForm', 'submit', async e => {
 });
 function cancelTx(){ editTx = null; const f = $('txForm'); if(f) f.reset(); setDate('txDate', todayJ()); txTypeUI(); const t = $('txTitle'); if(t) t.querySelector('span').textContent = 'ثبت تراکنش'; if($('txSave')) $('txSave').textContent = 'ثبت'; if($('txCancel')) $('txCancel').style.display = 'none'; }
 click('txCancel', cancelTx);
-function editTransaction(id){
-  const t = db.tx.find(x=>x.id===id); if(!t) return;
-  editTx = id; switchTab('tx');
-  $('txType').value = t.type; txTypeUI();
-  if(t.sid) $('txStudent').value = t.sid;
-  $('txAmount').value = t.amount.toLocaleString('en-US');
-  setDate('txDate', t.date.split('/').map(Number));
-  $('txMethod').value = t.method; $('txDesc').value = t.desc||'';
-  if(t.category) $('txCategory').value = t.category;
-  if($('txTag')) $('txTag').value = t.tag || '';
-  const ti = $('txTitle'); if(ti) ti.querySelector('span').textContent = 'ویرایش تراکنش';
-  if($('txSave')) $('txSave').textContent = 'ذخیره';
-  if($('txCancel')) $('txCancel').style.display = '';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-async function delTx(id){
-  if(!confirm('این تراکنش حذف شود؟')) return;
-  const t = db.tx.find(x=>x.id===id); if(!t) return;
-  if(t.is_session && !t.absent && t.sid){ const s = db.students.find(x=>x.id===t.sid); if(s && (s.package_used||0) > 0){ s.package_used = Math.max(0, (s.package_used||0) - 1); await cloudUpdate('students', studentToRow(s), s.id); } }
-  await cloudDelete('tx', id);
-  db.tx = db.tx.filter(x=>x.id!==id);
-  saveLocal(); renderAll();
-  pushUndo('tx-delete', t, 'تراکنش حذف شد');
-}
-function quickTx(sid, type){
-  switchTab('tx'); cancelTx();
-  $('txType').value = type; txTypeUI();
-  if(sid) $('txStudent').value = sid;
-  const s = sid ? db.students.find(x=>x.id===sid) : null;
-  if(type==='charge' && s && s.fee) $('txAmount').value = s.fee.toLocaleString('en-US');
-  if(type==='payment' && sid){ const bl = balances()[sid].bal; if(bl>0) $('txAmount').value = bl.toLocaleString('en-US'); }
-  $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'});
-}
+function editTransaction(id){ const t = db.tx.find(x=>x.id===id); if(!t) return; editTx = id; switchTab('tx'); $('txType').value = t.type; txTypeUI(); if(t.sid) $('txStudent').value = t.sid; $('txAmount').value = t.amount.toLocaleString('en-US'); setDate('txDate', t.date.split('/').map(Number)); $('txMethod').value = t.method; $('txDesc').value = t.desc||''; if(t.category) $('txCategory').value = t.category; if($('txTag')) $('txTag').value = t.tag || ''; const ti = $('txTitle'); if(ti) ti.querySelector('span').textContent = 'ویرایش تراکنش'; if($('txSave')) $('txSave').textContent = 'ذخیره'; if($('txCancel')) $('txCancel').style.display = ''; window.scrollTo({top:0, behavior:'smooth'}); }
+async function delTx(id){ if(!confirm('این تراکنش حذف شود؟')) return; const t = db.tx.find(x=>x.id===id); if(!t) return; if(t.is_session && !t.absent && t.sid){ const s = db.students.find(x=>x.id===t.sid); if(s && (s.package_used||0) > 0){ s.package_used = Math.max(0, (s.package_used||0) - 1); await cloudUpdate('students', studentToRow(s), s.id); } } await cloudDelete('tx', id); db.tx = db.tx.filter(x=>x.id!==id); saveLocal(); renderAll(); pushUndo('tx-delete', t, 'تراکنش حذف شد'); }
+function quickTx(sid, type){ switchTab('tx'); cancelTx(); $('txType').value = type; txTypeUI(); if(sid) $('txStudent').value = sid; const s = sid ? db.students.find(x=>x.id===sid) : null; if(type==='charge' && s && s.fee) $('txAmount').value = s.fee.toLocaleString('en-US'); if(type==='payment' && sid){ const bl = balances()[sid].bal; if(bl>0) $('txAmount').value = bl.toLocaleString('en-US'); } $('txAmount').focus(); window.scrollTo({top:0, behavior:'smooth'}); }
 function quickSession(sid){ seCourseFilter = ''; seSearchQuery = ''; if($('seSearch')) $('seSearch').value = ''; switchTab('session'); seSelected = {}; seSelected[sid] = (db.students.find(x=>x.id===sid)||{}).fee || 0; renderCourseChips(); renderSessionGrid(); window.scrollTo({top:0, behavior:'smooth'}); }
-function filteredTx(){
-  const q = ($('fSearch')?.value || '').trim(), s = $('fStudent')?.value, t = $('fType')?.value, m = $('fMonth')?.value;
-  return db.tx.filter(x => (!s||x.sid===s) && (!t||x.type===t) && (!m||x.date.startsWith(m)) && (!q||(x.desc||'').includes(q)||(x.tag||'').includes(q)||stName(x.sid).includes(q))).sort((a,b)=> b.date.localeCompare(a.date) || b.ts-a.ts);
-}
+function filteredTx(){ const q = ($('fSearch')?.value || '').trim(), s = $('fStudent')?.value, t = $('fType')?.value, m = $('fMonth')?.value; return db.tx.filter(x => (!s||x.sid===s) && (!t||x.type===t) && (!m||x.date.startsWith(m)) && (!q||(x.desc||'').includes(q)||(x.tag||'').includes(q)||stName(x.sid).includes(q))).sort((a,b)=> b.date.localeCompare(a.date) || b.ts-a.ts); }
 function renderTx(){
   const table = $('txTable'), sumEl = $('txSum'); if(!table) return;
   fillStudentSelects();
@@ -1765,17 +1738,24 @@ function renderWeekly(){
   const view = $('weeklyView'); if(!view) return;
   if(!currentWeekStart){ const t = todayJ(); const dayIdx = dayOfWeek(t[0], t[1], t[2]); currentWeekStart = jAddDays(t[0], t[1], t[2], -dayIdx); }
   const [wy, wm, wd] = currentWeekStart;
-  if($('weekTitle')) $('weekTitle').textContent = `هفتهٔ ${faDigits(wd)} ${MONTHS[wm-1]} تا ${faDigits(jAddDays(wy, wm, wd, 6)[2])} ${MONTHS[jAddDays(wy, wm, wd, 6)[1]-1]}`;
-  const days = [];
-  for(let i = 0; i < 7; i++) days.push(jAddDays(wy, wm, wd, i));
+  const wEnd = jAddDays(wy, wm, wd, 6);
+  if($('weekTitle')) $('weekTitle').textContent = `هفتهٔ ${faDigits(wd)} ${MONTHS[wm-1]} تا ${faDigits(wEnd[2])} ${MONTHS[wEnd[1]-1]}`;
+  const days = []; for(let i = 0; i < 7; i++) days.push(jAddDays(wy, wm, wd, i));
   const today = todayJ();
   view.innerHTML = days.map((d, idx) => {
     const ds = `${d[0]}/${pad(d[1])}/${pad(d[2])}`;
     const isToday = d[0]===today[0] && d[1]===today[1] && d[2]===today[2];
     const daySessions = db.tx.filter(t => t.is_session && (t.session_date === ds || t.date === ds));
-    return `<div class="weekly-day ${isToday ? 'today' : ''}"><h4>${WEEKDAYS[idx]}<br><small style="font-size:10px">${faDigits(d[2])} ${MONTHS[d[1]-1]}</small></h4>${daySessions.map(t => `<div class="weekly-session ${t.absent ? 'absent' : ''}" onclick="openStudentProfile('${t.sid}')">${avatarHTML(stName(t.sid), 16)} ${esc(stName(t.sid))}</div>`).join('') || `<div class="hint" style="font-size:10px;text-align:center">—</div>`}</div>`;
+    return `<div class="weekly-day ${isToday ? 'today' : ''}"><h4>${WEEKDAYS[idx]}<br><small style="font-size:10px">${faDigits(d[2])} ${MONTHS[d[1]-1]}</small></h4>${daySessions.map(t => `<div class="weekly-session ${t.absent ? 'absent' : ''}"><span onclick="openStudentProfile('${t.sid}')" style="flex:1;cursor:pointer">${avatarHTML(stName(t.sid), 16)} ${esc(stName(t.sid))}</span><div class="ws-actions"><button class="ws-btn" onclick="toggleSessionAbsence('${t.id}')" title="${t.absent?'حاضر':'غایب'}">${t.absent ? '✅' : '❌'}</button></div></div>`).join('') || `<div class="hint" style="font-size:10px;text-align:center">—</div>`}</div>`;
   }).join('');
 }
+window.toggleSessionAbsence = async (id) => {
+  const t = db.tx.find(x=>x.id===id); if(!t) return;
+  t.absent = !t.absent;
+  await cloudUpdate('tx', txToRow(t), t.id);
+  saveLocal(); renderWeekly();
+  toast(t.absent ? 'غایب شد' : 'حاضر شد', 'success');
+};
 click('weekPrev', () => { if(!currentWeekStart) renderWeekly(); currentWeekStart = jAddDays(currentWeekStart[0], currentWeekStart[1], currentWeekStart[2], -7); renderWeekly(); });
 click('weekNext', () => { if(!currentWeekStart) renderWeekly(); currentWeekStart = jAddDays(currentWeekStart[0], currentWeekStart[1], currentWeekStart[2], 7); renderWeekly(); });
 click('weekToday', () => { const t = todayJ(); const dayIdx = dayOfWeek(t[0], t[1], t[2]); currentWeekStart = jAddDays(t[0], t[1], t[2], -dayIdx); renderWeekly(); });
@@ -1787,6 +1767,69 @@ function renderActivity(){
   const icons = { student_add:'👤', student_edit:'✏️', student_delete:'🗑️', tx_add:'💰', session_add:'📅' };
   el.innerHTML = acts.map(a => `<div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border)"><div style="font-size:24px">${icons[a.type] || '📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--ink);font-size:13.5px">${esc(a.desc)}</div><div style="font-size:11.5px;color:var(--ink-2);margin-top:2px">${new Date(a.ts).toLocaleString('fa-IR')}</div></div></div>`).join('');
 }
+
+function renderWaitlist(){
+  const el = $('waitlistContent'); if(!el) return;
+  const list = db.waitlist.filter(w => w.status === 'waiting').sort((a,b) => b.ts - a.ts);
+  if(!list.length){ el.innerHTML = emptyState('لیست انتظار خالی است'); return; }
+  el.innerHTML = list.map(w => `<div class="waitlist-item"><div class="wl-info"><div class="wl-name">${avatarHTML(w.name, 28)} ${esc(w.name)}</div><div class="wl-meta">${esc(w.course||'—')} ${w.phone ? `— ${faDigits(w.phone)}` : ''} ${w.note ? `— ${esc(w.note)}` : ''}</div><div class="wl-meta" style="font-size:10.5px">${new Date(w.ts).toLocaleDateString('fa-IR')}</div></div><div class="btn-row tight"><button class="btn xs success" onclick="convertWaitlist('${w.id}')">ثبت‌نام</button><button class="btn xs ghost" onclick="removeWaitlist('${w.id}')">حذف</button></div></div>`).join('');
+}
+on('waitlistForm', 'submit', async e => {
+  e.preventDefault();
+  const o = { id: uid(), name: $('wlName').value.trim(), course: $('wlCourse').value.trim(), phone: toEn($('wlPhone').value), note: $('wlNote').value.trim(), status: 'waiting', ts: Date.now() };
+  if(!o.name) return;
+  db.waitlist.push(o);
+  saveLocal(); renderWaitlist();
+  $('waitlistForm').reset();
+  toast('به لیست انتظار اضافه شد', 'success');
+});
+window.convertWaitlist = async (id) => {
+  const w = db.waitlist.find(x=>x.id===id); if(!w) return;
+  if(!confirm(`«${w.name}» به لیست زبان‌آموزان اضافه شود؟`)) return;
+  const s = { id: uid(), name: w.name, course: w.course || '', fee: 0, phone: w.phone || '', home_phone: '', birthday: null, father_job: '', mother_job: '', address: '', note: w.note || '', package_size: 0, package_used: 0 };
+  db.students.push(s);
+  await cloudInsert('students', studentToRow(s), s.id);
+  w.status = 'converted';
+  saveLocal(); renderAll();
+  toast('زبان‌آموز اضافه شد', 'success');
+};
+window.removeWaitlist = (id) => { if(!confirm('حذف شود؟')) return; db.waitlist = db.waitlist.filter(x=>x.id!==id); saveLocal(); renderWaitlist(); toast('حذف شد', 'success'); };
+
+function renderBranches(){
+  const el = $('branchesList'); if(!el) return;
+  const branches = [{ id: 'main', name: 'شعبه اصلی' }, ...db.branches];
+  el.innerHTML = branches.map(b => `<div class="waitlist-item"><div class="wl-info"><div class="wl-name">${b.id === 'main' ? '🏠' : '🏢'} ${esc(b.name)}</div><div class="wl-meta">${faDigits(db.students.filter(s => (s.branch || 'main') === b.id).length)} زبان‌آموز</div></div>${b.id !== 'main' ? `<button class="btn xs danger" onclick="removeBranch('${b.id}')">حذف</button>` : ''}</div>`).join('');
+}
+click('btnAddBranch', () => {
+  const name = $('newBranchName').value.trim(); if(!name) return;
+  db.branches.push({ id: uid(), name });
+  saveLocal(); renderBranches();
+  $('newBranchName').value = '';
+  toast('شعبه اضافه شد', 'success');
+});
+window.removeBranch = (id) => {
+  if(!confirm('حذف شود؟ زبان‌آموزان این شعبه به شعبه اصلی منتقل می‌شوند.')) return;
+  db.students.forEach(s => { if(s.branch === id) s.branch = 'main'; });
+  db.branches = db.branches.filter(b => b.id !== id);
+  saveLocal(); renderAll();
+  toast('حذف شد', 'success');
+};
+
+function renderCoupons(){
+  const el = $('couponsList'); if(!el) return;
+  if(!db.coupons.length){ el.innerHTML = '<p class="hint" style="margin-bottom:12px">هنوز کدی نداری</p>'; return; }
+  el.innerHTML = db.coupons.map(c => `<div class="coupon-card"><b>${esc(c.code)}</b><small>${new Date(c.ts).toLocaleDateString('fa-IR')}</small><div class="cp-discount">${faDigits(c.pct)}٪</div><button class="btn xs danger" style="position:absolute;bottom:10px;inset-inline-end:10px" onclick="removeCoupon('${c.id}')">حذف</button></div>`).join('');
+}
+click('btnAddCoupon', () => {
+  const code = $('newCouponCode').value.trim().toUpperCase(); const pct = Number($('newCouponPct').value) || 0;
+  if(!code){ toast('کد را وارد کن', 'err'); return; }
+  if(pct <= 0 || pct > 100){ toast('درصد نامعتبر', 'err'); return; }
+  db.coupons.push({ id: uid(), code, pct, ts: Date.now() });
+  saveLocal(); renderCoupons();
+  $('newCouponCode').value = ''; $('newCouponPct').value = '';
+  toast('کد اضافه شد', 'success');
+});
+window.removeCoupon = (id) => { db.coupons = db.coupons.filter(c => c.id !== id); saveLocal(); renderCoupons(); toast('حذف شد', 'success'); };
 
 click('btnAddPkg', async () => {
   const sid = $('pkgStudent').value;
@@ -1812,6 +1855,31 @@ function renderPkgs(){
 }
 window.resetPkg = async (id) => { const s = db.students.find(x=>x.id===id); if(!s) return; if(!confirm('پکیج ریست شود؟')) return; s.package_size = 0; s.package_used = 0; await cloudUpdate('students', studentToRow(s), s.id); saveLocal(); renderPkgs(); renderStudents(); toast('ریست شد', 'success'); };
 
+click('btnPrintIdCard', () => {
+  const id = $('idCardStudent').value; if(!id){ toast('زبان‌آموز را انتخاب کن', 'err'); return; }
+  const s = db.students.find(x=>x.id===id); if(!s) return;
+  const modalBox = $('modalBox'); if(!modalBox) return;
+  modalBox.innerHTML = `<h2 style="margin-bottom:16px">کارت شناسایی</h2>
+    <div class="id-card" id="idCardPreview">
+      <div class="id-head"><div class="profile-avatar" style="background:${getAvatarColor(s.name)};width:44px;height:44px;font-size:18px">${s.name.charAt(0)}</div><div><div class="id-name">${esc(s.name)}</div><div class="id-course">${esc(s.course||'—')}</div></div></div>
+      <div class="id-info">${s.phone ? `<div><b>همراه:</b> ${faDigits(s.phone)}</div>` : ''}${s.birthday ? `<div><b>تولد:</b> ${showDate(s.birthday)}</div>` : ''}<div><b>شهریه:</b> ${fa(s.fee||0)} تومان</div></div>
+      <div class="id-qr" id="idCardQR"></div>
+    </div>
+    <div class="btn-row" style="margin-top:16px"><button class="btn" onclick="printIdCard()">چاپ</button><button class="btn ghost" onclick="closeModal()">بستن</button></div>`;
+  $('modal').classList.add('on');
+  setTimeout(() => {
+    const qrEl = $('idCardQR'); if(!qrEl) return;
+    if(!window.QRCode){ qrEl.innerHTML = ''; const script = document.createElement('script'); script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js'; script.onload = () => click('btnPrintIdCard'); document.head.appendChild(script); return; }
+    const canvas = document.createElement('canvas');
+    const qrData = JSON.stringify({ n: s.name, c: s.course, p: s.phone });
+    QRCode.toCanvas(canvas, qrData, { width: 80, margin: 1 }, (err) => { if(!err) qrEl.appendChild(canvas); });
+  }, 200);
+});
+window.printIdCard = () => {
+  document.body.classList.add('pm');
+  setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove('pm'), 400); }, 100);
+};
+
 document.querySelectorAll('.sms-tab').forEach(tab => { tab.addEventListener('click', () => { const t = tab.dataset.sms; document.querySelectorAll('.sms-tab').forEach(x => x.classList.toggle('on', x === tab)); document.querySelectorAll('.sms-panel').forEach(p => p.classList.toggle('on', p.id === 'sms-' + t)); if(t === 'debt') renderSmsDebt(); if(t === 'birthday') renderSmsBday(); if(t === 'custom') renderSmsCustom(); if(t === 'config') loadSmsConfig(); }); });
 
 let smsSelectedDebt = new Set(), smsSelectedCustom = new Set(), smsSelectedBday = new Set();
@@ -1826,64 +1894,28 @@ function renderSmsDebt(){
   }).join('') : emptyState('بدهکاری نیست');
   if(groupsEl){
     const groups = [
-      { name:'همه بدهکاران', filter: () => debtors.map(s=>s.id) },
-      { name:'بدهی بیش از ۵۰۰ هزار', filter: () => debtors.filter(s => b[s.id].bal > 500000).map(s=>s.id) },
-      { name:'بدهی بیش از ۱ میلیون', filter: () => debtors.filter(s => b[s.id].bal > 1000000).map(s=>s.id) },
-      { name:'بیش از ۶۰ روز بدهکار', filter: () => { const now = todayJ(); return debtors.filter(s => { const lp = db.tx.filter(t=>t.sid===s.id && t.type==='payment').sort((a,b)=>b.date.localeCompare(a.date))[0]; if(!lp) return true; const [py,pm,pd]=lp.date.split('/').map(Number); return daysBetween([py,pm,pd], now) > 60; }).map(s=>s.id); } }
+      { name:'همه بدهکاران', ids: debtors.map(s=>s.id) },
+      { name:'بدهی بیش از ۵۰۰ هزار', ids: debtors.filter(s => b[s.id].bal > 500000).map(s=>s.id) },
+      { name:'بدهی بیش از ۱ میلیون', ids: debtors.filter(s => b[s.id].bal > 1000000).map(s=>s.id) },
+      { name:'بیش از ۶۰ روز بدهکار', ids: debtors.filter(s => { const now = todayJ(); const lp = db.tx.filter(t=>t.sid===s.id && t.type==='payment').sort((a,b)=>b.date.localeCompare(a.date))[0]; if(!lp) return true; const [py,pm,pd]=lp.date.split('/').map(Number); return daysBetween([py,pm,pd], now) > 60; }).map(s=>s.id) }
     ];
-    groupsEl.innerHTML = groups.map((g, i) => {
-      const ids = g.filter();
-      return `<div class="sms-group" onclick="selectGroup('debt', [${ids.map(id=>`'${id}'`).join(',')}])"><b>${g.name}</b><small>${faDigits(ids.length)} نفر</small></div>`;
-    }).join('');
+    groupsEl.innerHTML = groups.map(g => `<div class="sms-group" onclick="selectGroup('debt', [${g.ids.map(id=>`'${id}'`).join(',')}])"><b>${g.name}</b><small>${faDigits(g.ids.length)} نفر</small></div>`).join('');
   }
   if($('smsDebtText') && !$('smsDebtText').value){ $('smsDebtText').value = `{name} عزیز، مبلغ {amount} تومان بدهی کلاس زبان دارید. لطفاً تسویه کنید.\nشماره کارت: {wallet}\n— {academy}`; }
   updateSmsPreview('debt');
 }
 window.selectGroup = (type, ids) => { const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom; set.clear(); ids.forEach(id => set.add(id)); if(type === 'debt') renderSmsDebt(); else renderSmsCustom(); };
 window.toggleSmsRecipient = (type, id, checked) => { const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom; if(checked) set.add(id); else set.delete(id); updateSmsPreview(type); };
-
-function renderSmsBday(){
-  const el = $('smsBdayList'); if(!el) return;
-  const today = db.students.filter(isBirthdayToday);
-  if(!today.length){ el.innerHTML = emptyState('امروز تولدی نیست'); return; }
-  today.forEach(s => smsSelectedBday.add(s.id));
-  el.innerHTML = today.map(s => `<label class="recipient"><input type="checkbox" checked onchange="toggleSmsBday('${s.id}',this.checked)">${avatarHTML(s.name, 28)}<div class="rc-info"><div class="rc-name">${esc(s.name)} 🎂</div><div class="rc-phone">${faDigits(s.phone||'—')}</div></div></label>`).join('');
-  updateSmsPreview('birthday');
-}
+function renderSmsBday(){ const el = $('smsBdayList'); if(!el) return; const today = db.students.filter(isBirthdayToday); if(!today.length){ el.innerHTML = emptyState('امروز تولدی نیست'); return; } today.forEach(s => smsSelectedBday.add(s.id)); el.innerHTML = today.map(s => `<label class="recipient"><input type="checkbox" checked onchange="toggleSmsBday('${s.id}',this.checked)">${avatarHTML(s.name, 28)}<div class="rc-info"><div class="rc-name">${esc(s.name)} 🎂</div><div class="rc-phone">${faDigits(s.phone||'—')}</div></div></label>`).join(''); updateSmsPreview('birthday'); }
 window.toggleSmsBday = (id, checked) => { if(checked) smsSelectedBday.add(id); else smsSelectedBday.delete(id); updateSmsPreview('birthday'); };
-
-function renderSmsCustom(){
-  const el = $('smsCustomList'); if(!el) return;
-  if(!smsSelectedCustom.size){ db.students.forEach(s => { if(s.phone) smsSelectedCustom.add(s.id); }); }
-  el.innerHTML = db.students.filter(s => s.phone).map(s => {
-    const checked = smsSelectedCustom.has(s.id) ? 'checked' : '';
-    return `<label class="recipient"><input type="checkbox" ${checked} onchange="toggleSmsRecipient('custom','${s.id}',this.checked)">${avatarHTML(s.name, 28)}<div class="rc-info"><div class="rc-name">${esc(s.name)}</div><div class="rc-phone">${faDigits(s.phone)}</div></div></label>`;
-  }).join('') || emptyState('هیچ زبان‌آموزی با شماره نیست');
-  updateSmsPreview('custom');
-}
+function renderSmsCustom(){ const el = $('smsCustomList'); if(!el) return; if(!smsSelectedCustom.size){ db.students.forEach(s => { if(s.phone) smsSelectedCustom.add(s.id); }); } el.innerHTML = db.students.filter(s => s.phone).map(s => { const checked = smsSelectedCustom.has(s.id) ? 'checked' : ''; return `<label class="recipient"><input type="checkbox" ${checked} onchange="toggleSmsRecipient('custom','${s.id}',this.checked)">${avatarHTML(s.name, 28)}<div class="rc-info"><div class="rc-name">${esc(s.name)}</div><div class="rc-phone">${faDigits(s.phone)}</div></div></label>`; }).join('') || emptyState('هیچ زبان‌آموزی با شماره نیست'); updateSmsPreview('custom'); }
 window.smsSelectAll = (type) => { const set = type === 'debt' ? smsSelectedDebt : smsSelectedCustom; if(type === 'debt'){ const b = balances(); db.students.filter(s => b[s.id].bal > 0).forEach(s => set.add(s.id)); } else { db.students.filter(s => s.phone).forEach(s => set.add(s.id)); } if(type === 'debt') renderSmsDebt(); else renderSmsCustom(); };
 window.smsSelectNone = (type) => { if(type === 'debt') smsSelectedDebt.clear(); else smsSelectedCustom.clear(); if(type === 'debt') renderSmsDebt(); else renderSmsCustom(); };
-
-function updateSmsPreview(type){
-  const b = balances();
-  let text = '', targets = [];
-  if(type === 'debt'){ text = $('smsDebtText')?.value || ''; targets = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s); }
-  else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText')?.value || ''; targets = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s); }
-  else { text = $('smsCustomText')?.value || ''; targets = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s); }
-  const sample = targets[0] ? applySmsVars(text, targets[0].s, targets[0].amount) : text;
-  const previewId = 'sms' + type[0].toUpperCase() + type.slice(1) + 'Preview';
-  const preview = $(previewId); if(preview) preview.textContent = sample || '—';
-}
-
-function applySmsVars(text, s, amount){
-  const wallet = settings.walletNum ? `\n${settings.walletNum}` : '';
-  return text.replace(/{name}/g, s ? s.name : '').replace(/{amount}/g, fa(amount)).replace(/{academy}/g, settings.smsAcademy || 'آموزشگاه').replace(/{wallet}/g, settings.walletNum || '—');
-}
+function updateSmsPreview(type){ const b = balances(); let text = '', targets = []; if(type === 'debt'){ text = $('smsDebtText')?.value || ''; targets = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s); } else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText')?.value || ''; targets = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s); } else { text = $('smsCustomText')?.value || ''; targets = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s); } const sample = targets[0] ? applySmsVars(text, targets[0].s, targets[0].amount) : text; const previewId = 'sms' + type[0].toUpperCase() + type.slice(1) + 'Preview'; const preview = $(previewId); if(preview) preview.textContent = sample || '—'; }
+function applySmsVars(text, s, amount){ return text.replace(/{name}/g, s ? s.name : '').replace(/{amount}/g, fa(amount)).replace(/{academy}/g, settings.smsAcademy || 'آموزشگاه').replace(/{wallet}/g, settings.walletNum || '—'); }
 ['smsDebtText','smsBdayText','smsCustomText'].forEach(id => on(id, 'input', debounce(() => { if(id === 'smsDebtText') updateSmsPreview('debt'); if(id === 'smsBdayText') updateSmsPreview('birthday'); if(id === 'smsCustomText') updateSmsPreview('custom'); })));
-
 async function sendSms(type){
-  const b = balances();
-  let text = '', recipients = [];
+  const b = balances(); let text = '', recipients = [];
   if(type === 'debt'){ text = $('smsDebtText').value; recipients = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
   else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText').value; recipients = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s && x.s.phone); }
   else { text = $('smsCustomText').value; recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
@@ -1897,35 +1929,11 @@ async function sendSms(type){
   achievements._sms_sent = (achievements._sms_sent || 0) + sent; saveAch(); checkAchievements();
   toast(`ارسال شد: ${faDigits(sent)} موفق، ${faDigits(failed)} ناموفق`, sent ? 'success' : 'err');
 }
-
-window.openSmsFallback = (type) => {
-  const b = balances();
-  let text = '', recipients = [];
-  if(type === 'debt'){ text = $('smsDebtText').value; recipients = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
-  else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText').value; recipients = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s && x.s.phone); }
-  else { text = $('smsCustomText').value; recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
-  if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; }
-  const r = recipients[0]; const msg = applySmsVars(text, r.s, r.amount);
-  window.location.href = `sms:${r.s.phone}?&body=${encodeURIComponent(msg)}`;
-  if(recipients.length > 1){ toast(`بقیه: ${recipients.slice(1).map(x=>x.s.name).join(', ')}`, 'info'); }
-};
-
-window.openWhatsApp = (type) => {
-  const b = balances();
-  let text = '', recipients = [];
-  if(type === 'debt'){ text = $('smsDebtText').value; recipients = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
-  else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText').value; recipients = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s && x.s.phone); }
-  else { text = $('smsCustomText').value; recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); }
-  if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; }
-  const r = recipients[0]; const msg = applySmsVars(text, r.s, r.amount);
-  const phone = r.s.phone.replace(/^0/, '98');
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-  if(recipients.length > 1){ toast(`بقیه: ${recipients.slice(1).map(x=>x.s.name).join(', ')}`, 'info'); }
-};
+window.openSmsFallback = (type) => { const b = balances(); let text = '', recipients = []; if(type === 'debt'){ text = $('smsDebtText').value; recipients = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); } else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText').value; recipients = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s && x.s.phone); } else { text = $('smsCustomText').value; recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); } if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; } const r = recipients[0]; const msg = applySmsVars(text, r.s, r.amount); window.location.href = `sms:${r.s.phone}?&body=${encodeURIComponent(msg)}`; if(recipients.length > 1){ toast(`بقیه: ${recipients.slice(1).map(x=>x.s.name).join(', ')}`, 'info'); } };
+window.openWhatsApp = (type) => { const b = balances(); let text = '', recipients = []; if(type === 'debt'){ text = $('smsDebtText').value; recipients = [...smsSelectedDebt].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); } else if(type === 'birthday'){ if(!smsSelectedBday.size) db.students.filter(isBirthdayToday).forEach(s => smsSelectedBday.add(s.id)); text = $('smsBdayText').value; recipients = [...smsSelectedBday].map(id => ({ s: db.students.find(x=>x.id===id), amount: 0 })).filter(x => x.s && x.s.phone); } else { text = $('smsCustomText').value; recipients = [...smsSelectedCustom].map(id => ({ s: db.students.find(x=>x.id===id), amount: b[id]?.bal || 0 })).filter(x => x.s && x.s.phone); } if(!recipients.length){ toast('گیرنده‌ای انتخاب نشده', 'err'); return; } const r = recipients[0]; const msg = applySmsVars(text, r.s, r.amount); const phone = r.s.phone.replace(/^0/, '98'); window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank'); if(recipients.length > 1){ toast(`بقیه: ${recipients.slice(1).map(x=>x.s.name).join(', ')}`, 'info'); } achievements._wa_sent = (achievements._wa_sent || 0) + 1; saveAch(); checkAchievements(); };
 window.openWhatsAppFor = (phone, text) => { if(!phone) return; const p = phone.replace(/^0/, '98'); window.open(`https://wa.me/${p}?text=${encodeURIComponent(text)}`, '_blank'); };
 window.openSmsFor = (phone, text) => { window.location.href = `sms:${phone}?&body=${encodeURIComponent(text)}`; };
 window.copyText = (text) => { navigator.clipboard.writeText(text).then(()=>toast('کپی شد', 'success')); };
-
 function loadSmsConfig(){ if($('smsProvider')) $('smsProvider').value = settings.smsProvider || 'none'; if($('smsApiKey')) $('smsApiKey').value = settings.smsApiKey || ''; if($('smsSender')) $('smsSender').value = settings.smsSender || ''; if($('smsAcademy')) $('smsAcademy').value = settings.smsAcademy || 'آموزشگاه زبان علی ناقلی'; }
 window.saveSmsConfig = () => { settings.smsProvider = $('smsProvider').value; settings.smsApiKey = $('smsApiKey').value.trim(); settings.smsSender = $('smsSender').value.trim(); settings.smsAcademy = $('smsAcademy').value.trim() || 'آموزشگاه'; saveSettings(); toast('ذخیره شد', 'success'); };
 window.sendBirthdayTo = (id) => { const s = db.students.find(x=>x.id===id); if(!s) return; const text = `🎂 ${s.name} عزیز، تولدت مبارک! — ${settings.smsAcademy}`; if(s.phone) openSmsFor(s.phone, text); else copyText(text); };
@@ -1958,13 +1966,8 @@ const ACH_DEFS = [
   { id:'tag_master', icon:'🏷️', title:'سازمان‌دهنده', desc:'۵ تگ', check: () => new Set(db.tx.filter(t=>t.tag).map(t=>t.tag)).size >= 5 },
   { id:'whatsapp_user', icon:'💬', title:'واتساپ‌باز', desc:'اولین پیام واتساپ', check: () => (achievements._wa_sent || 0) > 0 }
 ];
-
 function checkAchievements(){ let changed = false; ACH_DEFS.forEach(a => { if(!achievements[a.id] && a.check()){ achievements[a.id] = Date.now(); changed = true; launchConfetti(); playSound('success'); toast(`🏆 دستاورد جدید: ${a.title}`, 'success'); } }); if(changed){ saveAch(); renderAchievements(); } }
-
-function renderAchievements(){
-  const el = $('achGrid'); if(!el) return;
-  el.innerHTML = ACH_DEFS.map(a => { const unlocked = achievements[a.id]; return `<div class="ach-card ${unlocked ? '' : 'locked'}"><span class="ach-icon">${a.icon}</span><b>${a.title}</b><small>${a.desc}</small>${unlocked ? `<span class="ach-date">✅ ${new Date(unlocked).toLocaleDateString('fa-IR')}</span>` : ''}</div>`; }).join('');
-}
+function renderAchievements(){ const el = $('achGrid'); if(!el) return; el.innerHTML = ACH_DEFS.map(a => { const unlocked = achievements[a.id]; return `<div class="ach-card ${unlocked ? '' : 'locked'}"><span class="ach-icon">${a.icon}</span><b>${a.title}</b><small>${a.desc}</small>${unlocked ? `<span class="ach-date">✅ ${new Date(unlocked).toLocaleDateString('fa-IR')}</span>` : ''}</div>`; }).join(''); }
 
 let calYear, calMonth;
 function initCalendar(){ const t = todayJ(); calYear = t[0]; calMonth = t[1]; click('calPrev', () => { calMonth--; if(calMonth < 1){ calMonth = 12; calYear--; } renderCalendar(); }); click('calNext', () => { calMonth++; if(calMonth > 12){ calMonth = 1; calYear++; } renderCalendar(); }); click('calToday', () => { calYear = t[0]; calMonth = t[1]; renderCalendar(); }); }
@@ -2024,7 +2027,32 @@ function runReport(){
 }
 click('repRun', runReport);
 click('repPrint', () => { runReport(); document.body.classList.add('pm'); setTimeout(() => { window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }, 100); });
-click('repPDF', () => { runReport(); toast('از دکمه چاپ استفاده کن و مقصد رو PDF انتخاب کن', 'info'); });
+click('repInvoice', () => {
+  const from = getDate('repFrom'), to = getDate('repTo');
+  if(!from || !to){ toast('تاریخ را انتخاب کن', 'err'); return; }
+  const rows = db.tx.filter(t => { const d = t.is_session && t.session_date ? t.session_date : t.date; return d >= from && d <= to; });
+  const income = rows.filter(t=>t.type==='payment').reduce((a,t)=>a+t.amount,0);
+  const charge = rows.filter(t=>t.type==='charge').reduce((a,t)=>a+t.amount,0);
+  const expense = rows.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
+  const modalBox = $('invoiceBox'); if(!modalBox) return;
+  const invNum = 'INV-' + Date.now().toString().slice(-8);
+  modalBox.innerHTML = `<div class="invoice-a4" id="invoiceA4">
+    <div class="inv-header"><div><h1>فاکتور مالی</h1><div style="font-size:12px;color:#666;margin-top:4px">${invNum} — ${longDate(dateStr(todayJ()))}</div></div><div class="academy"><b>${esc(settings.smsAcademy)}</b>علی ناقلی<br>${settings.walletNum ? `کارت: ${faDigits(settings.walletNum)}` : ''}</div></div>
+    <div class="inv-meta"><div><label>بازه</label><b>از ${showDate(from)} تا ${showDate(to)}</b></div><div><label>تعداد تراکنش</label><b>${faDigits(rows.length)} مورد</b></div></div>
+    <table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>شرح</th><th>مبلغ</th></tr></thead><tbody>
+    ${rows.slice(0, 50).map(t => { const d = t.is_session && t.session_date ? t.session_date : t.date; return `<tr><td>${showDate(d)}</td><td>${TYPE_NAME[t.type]}</td><td>${t.type==='expense'?'—':esc(stName(t.sid))}</td><td>${esc(t.desc)}</td><td>${fa(t.amount)}</td></tr>`; }).join('')}
+    ${rows.length > 50 ? `<tr><td colspan="5" style="text-align:center;color:#888">... و ${faDigits(rows.length - 50)} مورد دیگر</td></tr>` : ''}
+    </tbody></table>
+    <div class="inv-total">درآمد: ${fa(income)} تومان | بدهی: ${fa(charge)} تومان | هزینه: ${fa(expense)} تومان | خالص: ${fa(income - expense)} تومان</div>
+    <div class="inv-footer"><div>این فاکتور توسط سیستم مدیریت آموزشگاه صادر شده است.</div><div class="stamp">مهر<br>آموزشگاه</div></div>
+  </div>
+  <div class="btn-row" style="margin-top:16px"><button class="btn" onclick="printInvoice()">🖨 چاپ</button><button class="btn ghost" onclick="$('invoiceModal').classList.remove('on')">بستن</button></div>`;
+  $('invoiceModal').classList.add('on');
+});
+window.printInvoice = () => {
+  document.body.classList.add('invoice-print');
+  setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove('invoice-print'), 400); }, 100);
+};
 document.querySelectorAll('[data-range]').forEach(b => { b.addEventListener('click', () => { const t = todayJ(); const r = b.dataset.range; let from, to = t; if(r === 'month'){ from = [t[0], t[1], 1]; } else if(r === 'lastMonth'){ let y = t[0], m = t[1] - 1; if(m < 1){ m = 12; y--; } from = [y, m, 1]; to = [y, m, jMonthDays(y, m)]; } else if(r === '30'){ from = jAddDays(t[0], t[1], t[2], -29); } else if(r === '7'){ from = jAddDays(t[0], t[1], t[2], -6); } else if(r === 'year'){ from = [t[0], 1, 1]; to = [t[0], 12, jMonthDays(t[0], 12)]; } setDate('repFrom', from); setDate('repTo', to); runReport(); }); });
 
 function openStatement(id){
@@ -2044,30 +2072,22 @@ function closeModal(){ const m = $('modal'); if(m) m.classList.remove('on'); }
 function printModal(){ document.body.classList.add('pm'); window.print(); setTimeout(()=>document.body.classList.remove('pm'), 400); }
 window.closeModal = closeModal; window.printModal = printModal; window.openStatement = openStatement;
 on('modal', 'click', e => { if(e.target.id==='modal') closeModal(); });
+on('invoiceModal', 'click', e => { if(e.target.id==='invoiceModal') e.currentTarget.classList.remove('on'); });
 
 function pushUndo(type, data, message){ undoBuffer.push({ ts: Date.now(), type, data }); if(undoBuffer.length > 20) undoBuffer.shift(); toast(message, 'info', { label: '↶ بازگردانی', fn: () => { if(!undoBuffer.length) return; restoreUndo(undoBuffer.pop()); } }); }
-async function restoreUndo(undo){
-  if(Date.now() - undo.ts > 60000){ toast('زمان گذشته', 'err'); return; }
-  if(undo.type === 'tx-delete'){ const t = undo.data; db.tx.push(t); await cloudInsert('tx', txToRow(t), t.id); saveLocal(); renderAll(); toast('بازگردانی شد', 'success'); }
-  else if(undo.type === 'st-delete'){ const s = undo.data.student; const txs = undo.data.txs; db.students.push(s); txs.forEach(t => db.tx.push(t)); await cloudInsert('students', studentToRow(s), s.id); for(const t of txs) await cloudInsert('tx', txToRow(t), t.id); saveLocal(); renderAll(); toast('بازگردانی شد', 'success'); }
-}
+async function restoreUndo(undo){ if(Date.now() - undo.ts > 60000){ toast('زمان گذشته', 'err'); return; } if(undo.type === 'tx-delete'){ const t = undo.data; db.tx.push(t); await cloudInsert('tx', txToRow(t), t.id); saveLocal(); renderAll(); toast('بازگردانی شد', 'success'); } else if(undo.type === 'st-delete'){ const s = undo.data.student; const txs = undo.data.txs; db.students.push(s); txs.forEach(t => db.tx.push(t)); await cloudInsert('students', studentToRow(s), s.id); for(const t of txs) await cloudInsert('tx', txToRow(t), t.id); saveLocal(); renderAll(); toast('بازگردانی شد', 'success'); } }
 
 async function download(name, text, type){ try{ const blob = new Blob([text], { type: type || 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100); toast('دانلود شد', 'success'); }catch(e){ toast('خطا', 'err'); } }
 const csvCell = v => '"' + String(v??'').replace(/"/g,'""') + '"';
 click('btnCsvTx', () => { const r = [['تاریخ','نوع','جلسه','غایب','زبان‌آموز','مبلغ','دسته','تگ','روش','شرح']]; [...db.tx].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t => r.push([t.date, TYPE_NAME[t.type], t.is_session?'بله':'خیر', t.absent?'بله':'خیر', t.type==='expense'?'':stName(t.sid), t.amount, t.category ? EXPENSE_CATS[t.category] : '', t.tag||'', t.method, t.desc])); download('transactions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8'); });
 click('btnCsvSe', () => { const r = [['تاریخ','زبان‌آموز','مبلغ','وضعیت','شرح']]; db.tx.filter(t=>t.is_session).forEach(t => r.push([t.session_date, stName(t.sid), t.amount, t.absent?'غایب':'حاضر', t.desc])); download('sessions.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8'); });
 click('btnCsvSt', () => { const b = balances(); const r = [['نام','دوره','شهریه','تلفن همراه','تلفن منزل','تولد','شغل پدر','شغل مادر','آدرس','جلسات','پکیج','بدهی','پرداختی','مانده','وضعیت']]; db.students.forEach(s => { const x = b[s.id]; r.push([s.name, s.course, s.fee, s.phone, s.home_phone||'', s.birthday||'', s.father_job||'', s.mother_job||'', s.address||'', x.sessions, s.package_size ? `${s.package_used||0}/${s.package_size}` : '', x.charge, x.pay, Math.abs(x.bal), x.bal>0?'بدهکار':x.bal<0?'بستانکار':'تسویه']); }); download('students.csv', '\uFEFF' + r.map(x=>x.map(csvCell).join(',')).join('\n'), 'text/csv;charset=utf-8'); });
-click('btnBackup', () => download('backup-' + dateStr(todayJ()).replace(/\//g,'-') + '.json', JSON.stringify({ students: db.students, tx: db.tx, packages: db.packages, queue: syncQueue, settings, achievements, activities: db.activities }), 'application/json'));
+click('btnBackup', () => download('backup-' + dateStr(todayJ()).replace(/\//g,'-') + '.json', JSON.stringify({ students: db.students, tx: db.tx, packages: db.packages, queue: syncQueue, settings, achievements, activities: db.activities, waitlist: db.waitlist, branches: db.branches, coupons: db.coupons }), 'application/json'));
 click('btnRestore', () => { const f = $('fileRestore'); if(f) f.click(); });
-on('fileRestore', 'change', e => {
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = () => { try{ const d = JSON.parse(r.result); const st = Array.isArray(d.students) ? d.students : (Array.isArray(d) ? d : null); if(!st) throw 0; if(!confirm('اطلاعات فعلی جایگزین شود؟')) return; db = { students: st, tx: d.tx || [], packages: d.packages || [], activities: d.activities || [] }; db.students.forEach(s => { if(s.package_size===undefined) s.package_size=0; if(s.package_used===undefined) s.package_used=0; if(s.birthday===undefined) s.birthday=null; if(s.father_job===undefined) s.father_job=''; if(s.mother_job===undefined) s.mother_job=''; if(s.address===undefined) s.address=''; if(s.home_phone===undefined) s.home_phone=''; }); db.tx.forEach(t => { if(t.category===undefined) t.category=null; if(t.tag===undefined) t.tag=null; if(t.absent===undefined) t.absent=false; }); if(d.settings) settings = { ...settings, ...d.settings }; if(d.achievements) achievements = { ...achievements, ...d.achievements }; saveLocal(); saveSettings(); saveAch(); renderAll(); toast('بازیابی شد', 'success'); }catch(_){ toast('فایل معتبر نیست', 'err'); } };
-  r.readAsText(f); e.target.value = '';
-});
+on('fileRestore', 'change', e => { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = () => { try{ const d = JSON.parse(r.result); const st = Array.isArray(d.students) ? d.students : (Array.isArray(d) ? d : null); if(!st) throw 0; if(!confirm('اطلاعات فعلی جایگزین شود؟')) return; db = { students: st, tx: d.tx || [], packages: d.packages || [], activities: d.activities || [], waitlist: d.waitlist || [], branches: d.branches || [], coupons: d.coupons || [], contacts: d.contacts || [] }; db.students.forEach(s => { if(s.package_size===undefined) s.package_size=0; if(s.package_used===undefined) s.package_used=0; if(s.birthday===undefined) s.birthday=null; if(s.father_job===undefined) s.father_job=''; if(s.mother_job===undefined) s.mother_job=''; if(s.address===undefined) s.address=''; if(s.home_phone===undefined) s.home_phone=''; if(s.branch===undefined) s.branch='main'; if(s.contact_log===undefined) s.contact_log=[]; }); db.tx.forEach(t => { if(t.category===undefined) t.category=null; if(t.tag===undefined) t.tag=null; if(t.absent===undefined) t.absent=false; }); if(d.settings) settings = { ...settings, ...d.settings }; if(d.achievements) achievements = { ...achievements, ...d.achievements }; saveLocal(); saveSettings(); saveAch(); renderAll(); toast('بازیابی شد', 'success'); }catch(_){ toast('فایل معتبر نیست', 'err'); } }; r.readAsText(f); e.target.value = ''; });
 click('btnPrint', () => { document.querySelectorAll('section.tab').forEach(s=>s.classList.add('on')); setTimeout(()=>{ window.print(); setTimeout(()=>switchTab('dash'), 400); }, 100); });
-click('btnReset', () => { if(confirm('همه‌ی اطلاعات محلی پاک شود؟') && confirm('قابل بازگشت نیست.')){ db = { students:[], tx:[], packages:[], activities:[] }; syncQueue = []; saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success'); } });
-click('btnResetCloud', async () => { if(!sb){ toast('Supabase نیست', 'err'); return; } if(!confirm('همه‌ی داده‌های Supabase حذف شوند؟')) return; if(!confirm('قابل بازگشت نیست.')) return; setSync('syncing','حذف…'); try{ await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000'); await sb.from('students').delete().neq('id','00000000-0000-0000-0000-000000000000'); db = { students:[], tx:[], packages:[], activities:[] }; syncQueue = []; saveLocal(); saveQueue(); renderAll(); setSync('online','متصل'); toast('حذف شد', 'success'); }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا', 'err'); } });
+click('btnReset', () => { if(confirm('همه‌ی اطلاعات محلی پاک شود؟') && confirm('قابل بازگشت نیست.')){ db = { students:[], tx:[], packages:[], activities:[], waitlist:[], branches:[], coupons:[], contacts:[] }; syncQueue = []; saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success'); } });
+click('btnResetCloud', async () => { if(!sb){ toast('Supabase نیست', 'err'); return; } if(!confirm('همه‌ی داده‌های Supabase حذف شوند؟')) return; if(!confirm('قابل بازگشت نیست.')) return; setSync('syncing','حذف…'); try{ await sb.from('tx').delete().neq('id','00000000-0000-0000-0000-000000000000'); await sb.from('students').delete().neq('id','00000000-0000-0000-0000-000000000000'); db = { students:[], tx:[], packages:[], activities:[], waitlist:[], branches:[], coupons:[], contacts:[] }; syncQueue = []; saveLocal(); saveQueue(); renderAll(); setSync('online','متصل'); toast('حذف شد', 'success'); }catch(e){ console.warn(e); setSync('offline','آفلاین'); toast('خطا', 'err'); } });
 on('chartYear', 'change', renderMonthlyChart);
 click('syncBtn', async () => { if(!sb){ toast('Supabase پیکربندی نشده', 'err'); return; } setSync('syncing','همگام‌سازی…'); await flushQueue(); const ok = await pullFromCloud(); if(ok){ renderAll(); toast('همگام‌سازی شد', 'success'); } else toast('اتصال نشد', 'err'); });
 click('btnWipeTxLocal', () => { if(!confirm(`${faDigits(db.tx.length)} تراکنش محلی پاک شود؟`)) return; db.tx = []; syncQueue = syncQueue.filter(op => op.table !== 'tx'); saveLocal(); saveQueue(); renderAll(); toast('پاک شد', 'success'); });
@@ -2098,25 +2118,11 @@ click('fabQuick', () => { quickTx(null, 'payment'); });
 click('shareBtn', () => { const t = todayJ(); const todayTx = db.tx.filter(x => x.date === dateStr(t)); const income = todayTx.filter(x => x.type==='payment').reduce((a,x)=>a+x.amount,0); const sessions = todayTx.filter(x => x.is_session).length; const exp = todayTx.filter(x => x.type==='expense').reduce((a,x)=>a+x.amount,0); const b = balances(); const debtors = db.students.filter(s => b[s.id].bal > 0).length; $('shareDate').textContent = longDate(dateStr(t)); $('shareStats').innerHTML = `<div class="share-stat"><small>درآمد</small><b>${fa(income)}</b></div><div class="share-stat"><small>جلسات</small><b>${faDigits(sessions)}</b></div><div class="share-stat"><small>هزینه</small><b>${fa(exp)}</b></div><div class="share-stat"><small>بدهکار</small><b>${faDigits(debtors)}</b></div>`; $('sharePreview').classList.add('on'); });
 window.downloadShare = async () => { const card = document.getElementById('shareCard'); if(!card) return; const html2canvas = window.html2canvas; if(!html2canvas){ toast('در حال آماده‌سازی…', 'info'); const script = document.createElement('script'); script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'; script.onload = () => downloadShare(); document.head.appendChild(script); return; } try{ const canvas = await html2canvas(card, { backgroundColor: null, scale: 2 }); canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'report-' + dateStr(todayJ()).replace(/\//g,'-') + '.png'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); toast('ذخیره شد', 'success'); }); }catch(e){ toast('خطا در ذخیره', 'err'); } };
 
-// Wallet
-function renderWallet(){
-  const w = $('walletDisplay'); if(!w) return;
-  const num = settings.walletNum || '— — — — — — — —';
-  if($('walletNumDisplay')) $('walletNumDisplay').textContent = num;
-  if($('walletOwnerDisplay')) $('walletOwnerDisplay').textContent = settings.walletOwner || 'علی ناقلی';
-  const qr = $('walletQR');
-  if(qr && settings.walletNum){
-    if(!window.QRCode){ qr.innerHTML = ''; const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js'; s.onload = () => renderWallet(); document.head.appendChild(s); return; }
-    qr.innerHTML = '';
-    const canvas = document.createElement('canvas');
-    QRCode.toCanvas(canvas, settings.walletNum.replace(/\D/g,''), { width: 100, margin: 1, color: { dark: '#000000', light: '#ffffff' } }, (err) => { if(!err) qr.appendChild(canvas); });
-  } else if(qr) qr.innerHTML = '';
-}
+function renderWallet(){ const w = $('walletDisplay'); if(!w) return; const num = settings.walletNum || '— — — — — — — —'; if($('walletNumDisplay')) $('walletNumDisplay').textContent = num; if($('walletOwnerDisplay')) $('walletOwnerDisplay').textContent = settings.walletOwner || 'علی ناقلی'; const qr = $('walletQR'); if(qr && settings.walletNum){ if(!window.QRCode){ qr.innerHTML = ''; const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js'; s.onload = () => renderWallet(); document.head.appendChild(s); return; } qr.innerHTML = ''; const canvas = document.createElement('canvas'); QRCode.toCanvas(canvas, settings.walletNum.replace(/\D/g,''), { width: 100, margin: 1, color: { dark: '#000000', light: '#ffffff' } }, (err) => { if(!err) qr.appendChild(canvas); }); } else if(qr) qr.innerHTML = ''; }
 window.copyWallet = () => { if(!settings.walletNum){ toast('شماره کارت تنظیم نشده', 'err'); return; } copyText(settings.walletNum); };
 window.editWallet = () => { $('walletNum').focus(); $('walletNum').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
 click('btnSaveWallet', () => { settings.walletNum = $('walletNum').value.trim(); settings.walletOwner = $('walletOwner').value.trim() || 'علی ناقلی'; saveSettings(); renderWallet(); toast('ذخیره شد', 'success'); });
 
-// Import from Excel
 on('importDrop', 'click', () => { const f = $('importFile'); if(f) f.click(); });
 ['dragenter','dragover'].forEach(ev => on('importDrop', ev, e => { e.preventDefault(); e.currentTarget.classList.add('on'); }));
 ['dragleave','drop'].forEach(ev => on('importDrop', ev, e => { e.preventDefault(); e.currentTarget.classList.remove('on'); }));
@@ -2136,12 +2142,9 @@ async function handleImportFile(file){
     if(!confirm(`${json.length} ردیف پیدا شد. اضافه شود؟`)) return;
     let added = 0;
     for(const r of json){
-      const name = r['نام'] || r['name'] || r['Name'];
-      if(!name) continue;
+      const name = r['نام'] || r['name'] || r['Name']; if(!name) continue;
       const s = { id: uid(), name: String(name).trim(), course: r['دوره'] || r['course'] || '', fee: Number(r['شهریه'] || r['fee'] || 0), phone: String(r['تلفن'] || r['phone'] || '').trim(), home_phone: String(r['تلفن منزل'] || r['home_phone'] || '').trim(), birthday: r['تولد'] || r['birthday'] || null, father_job: String(r['شغل پدر'] || r['father_job'] || '').trim(), mother_job: String(r['شغل مادر'] || r['mother_job'] || '').trim(), address: String(r['آدرس'] || r['address'] || '').trim(), note: '', package_size: 0, package_used: 0 };
-      db.students.push(s);
-      await cloudInsert('students', studentToRow(s), s.id);
-      added++;
+      db.students.push(s); await cloudInsert('students', studentToRow(s), s.id); added++;
     }
     saveLocal(); renderAll();
     toast(`${faDigits(added)} زبان‌آموز اضافه شد`, 'success');
@@ -2154,14 +2157,13 @@ document.querySelectorAll('.qa-btn').forEach(btn => { btn.addEventListener('clic
 let autoSyncTimer = null;
 function startAutoSync(){ if(autoSyncTimer) clearInterval(autoSyncTimer); autoSyncTimer = setInterval(async () => { if(!sb) return; if(syncQueue.length){ await flushQueue(); } if(Math.random() < 0.17){ const ok = await pullFromCloud(); if(ok) renderAll(); } }, 30000); }
 
-// PWA install
 window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; const btn = $('installBtn'); if(btn) btn.style.display = ''; });
 click('installBtn', async () => { if(!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if(outcome === 'accepted') toast('نصب شد', 'success'); deferredPrompt = null; const btn = $('installBtn'); if(btn) btn.style.display = 'none'; });
 
 function renderAll(){
   renderDash(); renderStudents(); renderSessions(); renderTx(); renderWeekly();
   renderActivity(); renderPkgs(); renderCalendar(); renderBirthdaysTab(); renderAchievements();
-  renderWallet(); updateNotifBadge();
+  renderWallet(); renderWaitlist(); renderBranches(); renderCoupons(); updateNotifBadge();
 }
 
 (async function init(){
