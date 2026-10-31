@@ -424,6 +424,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn on" data-tab="dash">📊 داشبورد</button>
   <button class="tab-btn" data-tab="students">👥 زبان‌آموزان</button>
   <button class="tab-btn" data-tab="session">📅 ثبت جلسه</button>
+  <button class="tab-btn" data-tab="weekly">📆 برنامه هفتگی</button>
   <button class="tab-btn" data-tab="tx">💰 مالی</button>
   <button class="tab-btn" data-tab="calendar">🗓 تقویم</button>
   <button class="tab-btn" data-tab="weekly">📅 هفته</button>
@@ -576,7 +577,22 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;overflow-x:auto;padding:8px 0" id="weeklyView"></div>
   </div>
 </section>
-
+<section class="tab" id="tab-weekly">
+  <div class="page-head"><div><div class="page-title"><div class="page-title-icon">📆</div>برنامه هفتگی</div><div class="page-sub">انتخاب ساعت کلاس و ثبت‌نام زبان‌آموز</div></div></div>
+  <div class="card">
+    <h3 class="card-title">➕ افزودن زبان‌آموز به برنامه</h3>
+    <form class="form-grid" id="wkForm">
+      <div class="field"><label>زبان‌آموز <span class="req">*</span></label><select id="wkStudent"></select></div>
+      <div class="field"><label>روز هفته <span class="req">*</span></label><select id="wkDay"></select></div>
+      <div class="field"><label>ساعت کلاس <span class="req">*</span></label><select id="wkSlot"></select></div>
+      <div class="btn-row" style="grid-column:1/-1"><button class="btn" type="submit" id="wkSave">افزودن به برنامه</button><button class="btn ghost" type="button" id="wkCancel" style="display:none">انصراف</button></div>
+    </form>
+  </div>
+  <div class="card">
+    <h3 class="card-title">📋 جدول برنامه هفتگی</h3>
+    <div class="table-wrap" id="wkTable"></div>
+  </div>
+</section>
 <section class="tab" id="tab-calendar">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon">🗓</div>تقویم</div></div></div>
   <div class="card">
@@ -861,6 +877,7 @@ function loadLocal(){
   db.tx = db.tx || [];
   db.waitlist = db.waitlist || [];
   db.packages = db.packages || [];
+  db.schedule = db.schedule || [];
   db.students.forEach(s => {
     if(s.package_size === undefined) s.package_size = 0;
     if(s.package_used === undefined) s.package_used = 0;
@@ -2398,7 +2415,100 @@ function boot(){
     setSync('offline', 'آفلاین');
   }
 }
+/* ============ WEEKLY SCHEDULE (برنامه هفتگی) ============ */
+const WK_DAYS = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
+const WK_SLOTS = (() => {
+  const out = [];
+  let h = 6, m = 15;
+  while (h < 22 || (h === 22 && m <= 30)) {
+    out.push({ h, m, label: String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') });
+    m += 15;
+    h += Math.floor(m / 60);
+    m = m % 60;
+    if (h === 22 && m > 30) break;
+  }
+  return out;
+})();
 
+let wkEdit = null; // { day, slot, studentId }
+
+function initWeeklyUI(){
+  const daySel = $('wkDay'), slotSel = $('wkSlot');
+  if(daySel) daySel.innerHTML = WK_DAYS.map((d,i) => `<option value="${i}">${d}</option>`).join('');
+  if(slotSel) slotSel.innerHTML = WK_SLOTS.map((s,i) => `<option value="${i}">${faDigits(s.label)}</option>`).join('');
+}
+
+function fillWeeklyStudents(){
+  const sel = $('wkStudent'); if(!sel) return;
+  sel.innerHTML = db.students.length
+    ? db.students.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')
+    : '<option value="">— هیچ زبان‌آموزی ثبت نشده —</option>';
+}
+
+function renderWeekly(){
+  fillWeeklyStudents();
+  initWeeklyUI();
+  const table = $('wkTable'); if(!table) return;
+
+  if(!db.schedule) db.schedule = [];
+  const map = {};
+  db.schedule.forEach(w => { map[w.day + '|' + w.slot] = w; });
+
+  let head = '<tr><th style="position:sticky;right:0;background:var(--surface);z-index:2">ساعت</th>';
+  WK_DAYS.forEach(d => head += `<th>${d}</th>`);
+  head += '</tr>';
+
+  let body = '';
+  WK_SLOTS.forEach((s, si) => {
+    body += '<tr>';
+    body += `<td class="n" style="position:sticky;right:0;background:var(--card-2);font-weight:800">${faDigits(s.label)}</td>`;
+    for (let di = 0; di < 7; di++) {
+      const w = map[di + '|' + si];
+      if (w) {
+        const name = stName(w.studentId);
+        body += `<td><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${avatarHTML(name, 22)}<b>${esc(name)}</b><button class="btn xs danger" onclick="removeWk('${w.studentId}',${di},${si})" title="حذف" style="margin-inline-start:auto">✕</button></div></td>`;
+      } else {
+        body += `<td style="text-align:center"><button class="btn xs ghost" onclick="quickAddWk(${di},${si})" title="افزودن">＋</button></td>`;
+      }
+    }
+    body += '</tr>';
+  });
+
+  table.innerHTML = `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+  if (!table._bound) {
+    table._bound = true;
+  }
+}
+
+function quickAddWk(day, slot){
+  const daySel = $('wkDay'), slotSel = $('wkSlot');
+  if(daySel) daySel.value = day;
+  if(slotSel) slotSel.value = slot;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => $('wkStudent')?.focus(), 300);
+}
+
+on('wkForm', 'submit', e => {
+  e.preventDefault();
+  const sid = $('wkStudent')?.value;
+  const day = +($('wkDay')?.value ?? 0);
+  const slot = +($('wkSlot')?.value ?? 0);
+  if (!sid) { toast('زبان‌آموز انتخاب کن', 'err'); return; }
+  if (!db.schedule) db.schedule = [];
+  // فقط یک زبان‌آموز در هر خانه
+  db.schedule = db.schedule.filter(w => !(w.day === day && w.slot === slot));
+  db.schedule.push({ day, slot, studentId: sid, ts: Date.now() });
+  saveLocal();
+  renderWeekly();
+  toast('به برنامه اضافه شد', 'success');
+});
+
+window.removeWk = (studentId, day, slot) => {
+  if (!confirm('از برنامه حذف شود؟')) return;
+  db.schedule = (db.schedule || []).filter(w => !(w.day === day && w.slot === slot));
+  saveLocal(); renderWeekly();
+  toast('حذف شد', 'success');
+};
 /* ============ START ============ */
 try {
   loadLocal();
