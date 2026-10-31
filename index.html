@@ -426,6 +426,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="session">📅 ثبت جلسه</button>
   <button class="tab-btn" data-tab="tx">💰 مالی</button>
   <button class="tab-btn" data-tab="calendar">🗓 تقویم</button>
+  <button class="tab-btn" data-tab="weekly">📅 هفته</button>
   <button class="tab-btn" data-tab="birthdays">🎂 تولدها</button>
   <button class="tab-btn" data-tab="sms">📱 پیامک</button>
   <button class="tab-btn" data-tab="waitlist">📝 لیست انتظار</button>
@@ -557,6 +558,22 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <div class="filters"><input id="fSearch" placeholder="جستجو…"><select id="fStudent"></select><select id="fType"><option value="">همه</option><option value="charge">بدهی</option><option value="payment">دریافتی</option><option value="expense">هزینه</option></select><select id="fMonth"></select></div>
     <p class="hint" id="txSum"></p>
     <div class="table-wrap" id="txTable"></div>
+  </div>
+</section>
+<section class="tab" id="tab-weekly">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">📅</div>برنامه هفتگی</div>
+      <div class="page-sub" id="weekTitle">—</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" id="weekPrev">→ هفته قبل</button>
+      <button class="btn" id="weekToday">این هفته</button>
+      <button class="btn ghost" id="weekNext">هفته بعد ←</button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;overflow-x:auto;padding:8px 0" id="weeklyView"></div>
   </div>
 </section>
 
@@ -1751,6 +1768,69 @@ on('modal', 'click', e => { if(e.target.id === 'modal') closeModal(); });
 /* ============ CALENDAR ============ */
 let calYear, calMonth;
 function initCalendar(){ const t = todayJ(); calYear = t[0]; calMonth = t[1]; }
+  /* ============ WEEKLY VIEW ============ */
+var currentWeekStart = null;
+
+function renderWeekly(){
+  var view = $('weeklyView'); if(!view) return;
+  
+  if(!currentWeekStart){
+    var t = todayJ();
+    var dayIdx = dayOfWeek(t[0], t[1], t[2]);
+    currentWeekStart = jAddDays(t[0], t[1], t[2], -dayIdx);
+  }
+  
+  var wy = currentWeekStart[0], wm = currentWeekStart[1], wd = currentWeekStart[2];
+  var wEnd = jAddDays(wy, wm, wd, 6);
+  
+  if($('weekTitle')){
+    $('weekTitle').textContent = 'هفتهٔ ' + faDigits(wd) + ' ' + MONTHS[wm-1] + ' تا ' + faDigits(wEnd[2]) + ' ' + MONTHS[wEnd[1]-1];
+  }
+  
+  var days = [];
+  for(var i=0; i<7; i++) days.push(jAddDays(wy, wm, wd, i));
+  var today = todayJ();
+  
+  var html = '';
+  for(var j=0; j<7; j++){
+    var d = days[j];
+    var ds = d[0] + '/' + pad(d[1]) + '/' + pad(d[2]);
+    var isToday = (d[0] === today[0] && d[1] === today[1] && d[2] === today[2]);
+    
+    var daySessions = [];
+    for(var k=0; k<db.tx.length; k++){
+      var tx = db.tx[k];
+      if(tx.is_session && (tx.session_date === ds || tx.date === ds)){
+        daySessions.push(tx);
+      }
+    }
+    
+    var sessionHtml = '';
+    if(daySessions.length){
+      for(var m=0; m<daySessions.length; m++){
+        var s = daySessions[m];
+        var bgColor = s.absent ? 'rgba(224,122,143,.2)' : 'var(--surface)';
+        var borderColor = s.absent ? 'var(--rose)' : 'var(--border)';
+        sessionHtml += '<div style="background:' + bgColor + ';border:1px solid ' + borderColor + ';border-radius:6px;padding:4px 8px;font-size:10.5px;margin-bottom:4px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px;justify-content:space-between" onclick="openProfile(\'' + s.sid + '\')">'
+                     + '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (s.absent ? '❌ ' : '') + esc(stName(s.sid)) + '</span>'
+                     + '<span style="font-size:9px;color:var(--ink-2)">' + fa(s.amount) + '</span>'
+                     + '</div>';
+      }
+    } else {
+      sessionHtml = '<div class="hint" style="font-size:10px;text-align:center;padding:8px 0">—</div>';
+    }
+    
+    html += '<div style="background:' + (isToday ? 'var(--primary-glow)' : 'var(--card-2)') + ';border:1px solid ' + (isToday ? 'var(--primary)' : 'var(--border)') + ';border-radius:10px;padding:8px;min-height:140px;min-width:100px">'
+          + '<h4 style="font-size:11.5px;color:var(--ink-2);font-weight:700;margin:0 0 6px;text-align:center;padding-bottom:6px;border-bottom:1px solid var(--border)">'
+          + WEEKDAYS[j] + '<br><small>' + faDigits(d[2]) + ' ' + MONTHS[d[1]-1] + '</small>'
+          + '</h4>'
+          + sessionHtml
+          + '</div>';
+  }
+  
+  view.innerHTML = html;
+}
+
 function renderCalendar(){
   const grid = $('calGrid'); if(!grid) return;
   const daysInMonth = jMonthDays(calYear, calMonth);
@@ -1794,6 +1874,23 @@ function showCalDay(d){
   if(!rows.length && !bdays.length) html = emptyState('تراکنشی نیست');
   table.innerHTML = html;
 }
+  click('weekPrev', function(){
+  if(!currentWeekStart) renderWeekly();
+  currentWeekStart = jAddDays(currentWeekStart[0], currentWeekStart[1], currentWeekStart[2], -7);
+  renderWeekly();
+});
+click('weekNext', function(){
+  if(!currentWeekStart) renderWeekly();
+  currentWeekStart = jAddDays(currentWeekStart[0], currentWeekStart[1], currentWeekStart[2], 7);
+  renderWeekly();
+});
+click('weekToday', function(){
+  var t = todayJ();
+  var dayIdx = dayOfWeek(t[0], t[1], t[2]);
+  currentWeekStart = jAddDays(t[0], t[1], t[2], -dayIdx);
+  renderWeekly();
+});
+
 click('calPrev', () => { calMonth--; if(calMonth < 1){ calMonth = 12; calYear--; } renderCalendar(); });
 click('calNext', () => { calMonth++; if(calMonth > 12){ calMonth = 1; calYear++; } renderCalendar(); });
 click('calToday', () => { const t = todayJ(); calYear = t[0]; calMonth = t[1]; renderCalendar(); });
@@ -2266,6 +2363,7 @@ function renderAll(){
   renderSessions();
   renderTx();
   renderCalendar();
+  renderWeekly();
   renderBirthdaysTab();
   renderWallet();
   renderWaitlist();
