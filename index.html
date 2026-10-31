@@ -2315,8 +2315,21 @@ function openSchedulePicker(day, slot){
       <button class="btn ghost sm" onclick="closeModal()">بستن</button>
     </div>
     <p class="hint" style="margin-bottom:12px">روی نام کلیک کن تا اضافه/حذف بشه.</p>
-    <div class="sch-pick-list">${listHtml}</div>
+    <input id="schPickSearch" type="text" placeholder="🔍 جستجوی نام…" autocomplete="off" style="margin-bottom:12px;width:100%">
+    <div class="sch-pick-list" id="schPickList">${listHtml}</div>
   `;
+  // جستجوی زنده در لیست
+  const searchEl = $('schPickSearch');
+  if(searchEl){
+    searchEl.addEventListener('input', () => {
+      const q = searchEl.value.trim().toLowerCase();
+      box.querySelectorAll('.sch-pick-item').forEach(item => {
+        const name = (item.dataset.name || '').toLowerCase();
+        item.style.display = name.includes(q) ? '' : 'none';
+      });
+    });
+    setTimeout(() => searchEl.focus(), 100);
+  }
 
   box.querySelectorAll('.sch-pick-item').forEach(el => {
     el.addEventListener('click', () => {
