@@ -355,7 +355,26 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .receive-tuition-box h4{font-size:13px;font-weight:800;color:var(--ink);margin:0 0 8px}
 .contact-log{padding:10px 14px;background:var(--card-2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:12.5px}
 .contact-log .cl-date{font-size:11px;color:var(--ink-3);font-weight:600;margin-bottom:2px}
-
+/* ===== برنامه هفتگی ===== */
+.sch-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-2)}
+.sch-table{border-collapse:collapse;width:100%;min-width:900px;table-layout:fixed}
+.sch-table th,.sch-table td{border:1px solid var(--border);padding:6px;vertical-align:top;text-align:center}
+.sch-table thead th{background:var(--surface);color:var(--ink-2);font-weight:700;font-size:12px;position:sticky;top:0;z-index:2}
+.sch-table thead th.sch-time-col{width:90px;background:var(--primary-glow);color:var(--primary);font-size:11px}
+.sch-time{background:var(--bg-3);font-weight:700;font-size:12px;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;vertical-align:middle!important}
+.sch-cell{min-height:52px;cursor:pointer;transition:background .15s;position:relative;display:flex;flex-direction:column;gap:4px;align-items:stretch}
+.sch-cell:hover{background:var(--primary-glow)}
+.sch-cell.empty::after{content:"+";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:18px;font-weight:300;opacity:0;transition:opacity .15s}
+.sch-cell.empty:hover::after{opacity:1}
+.sch-name{background:var(--primary-glow);border:1px solid var(--primary);color:var(--ink);border-radius:8px;padding:4px 8px;font-size:11.5px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:4px;cursor:pointer;transition:var(--transition)}
+.sch-name:hover{background:var(--rose-soft);border-color:var(--rose)}
+.sch-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+.sch-name .sch-x{color:var(--ink-3);font-size:13px;font-weight:700;flex-shrink:0}
+.sch-name:hover .sch-x{color:var(--rose)}
+.sch-today{background:var(--primary-glow)!important}
+.sch-today th{color:var(--primary)!important}
+@media(max-width:900px){.sch-table{min-width:760px}.sch-table thead th{font-size:10.5px}.sch-time{font-size:10.5px}}
+/* ===== پایان برنامه هفتگی ===== */
 @media print{
   @page{size:A4;margin:10mm}
   .topbar,.tabbar,.no-print,.toast,.fab-group,#splash,#loginScreen,.icon-btn,.search-top,.sync-chip,.date-chip,.quick-actions,.adv-filter,.daily-tip{display:none!important}
@@ -429,6 +448,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="birthdays">🎂 تولدها</button>
   <button class="tab-btn" data-tab="sms">📱 پیامک</button>
   <button class="tab-btn" data-tab="waitlist">📝 لیست انتظار</button>
+  <button class="tab-btn" data-tab="schedule">🗓 برنامه هفتگی</button>
   <button class="tab-btn" data-tab="report">📄 گزارش</button>
   <button class="tab-btn" data-tab="settings">⚙️ تنظیمات</button>
 </div></nav>
@@ -600,7 +620,24 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     </div>
   </div>
 </section>
-
+<section class="tab" id="tab-schedule">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🗓</div>برنامه هفتگی</div>
+      <div class="page-sub">نام زبان‌آموزان به تفکیک ساعت کلاس</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="daily-toolbar">
+      <h3 class="card-title" style="margin:0">📅 جدول هفتگی</h3>
+      <div class="month-picker">
+        <button class="btn ghost sm" id="schClearAll">🗑 پاک کردن همه</button>
+      </div>
+    </div>
+    <div id="scheduleContainer"></div>
+    <p class="hint" style="margin-top:12px">برای افزودن نام: روی خانه خالی کلیک کن. برای حذف: روی نام کلیک کن.</p>
+  </div>
+</section>
 <section class="tab" id="tab-waitlist">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon">📝</div>لیست انتظار</div></div></div>
   <div class="card">
@@ -2204,12 +2241,119 @@ click('changePasswordBtn', () => {
   $('newPassword2').value = '';
   toast('رمز تغییر کرد', 'success');
 });
+/* ============ SCHEDULE (برنامه هفتگی) ============ */
+const SCHEDULE_KEY = 'ali_academy_schedule_v1';
+const SCHEDULE_SLOTS = [
+  '06:15','07:30','08:45','10:00','11:15','12:30','13:45',
+  '15:00','16:15','17:30','18:45','20:00','21:15'
+];
+const SCHEDULE_DAYS = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
 
+// داده: { "شنبه|06:15": ["علی رضایی", "مریم احمدی"], ... }
+let scheduleData = {};
+
+function loadSchedule(){
+  try{
+    const raw = localStorage.getItem(SCHEDULE_KEY);
+    if(raw) scheduleData = JSON.parse(raw) || {};
+  }catch(e){ console.warn('schedule load error', e); scheduleData = {}; }
+}
+function saveSchedule(){
+  try{ localStorage.setItem(SCHEDULE_KEY, JSON.stringify(scheduleData)); }
+  catch(e){ console.warn('schedule save error', e); }
+}
+function schKey(day, slot){ return day + '|' + slot; }
+function schGet(day, slot){ return scheduleData[schKey(day, slot)] || []; }
+function schSet(day, slot, arr){
+  const k = schKey(day, slot);
+  if(arr && arr.length) scheduleData[k] = arr;
+  else delete scheduleData[k];
+  saveSchedule();
+}
+function schTodayName(){
+  // dayOfWeek: 0=شنبه ... 6=جمعه (طبق کد فعلی برنامه)
+  const t = todayJ();
+  const idx = dayOfWeek(t[0], t[1], t[2]);
+  return SCHEDULE_DAYS[idx] || null;
+}
+
+function renderSchedule(){
+  const box = $('scheduleContainer');
+  if(!box) return;
+  const todayName = schTodayName();
+  let html = '<div class="sch-wrap"><table class="sch-table"><thead><tr><th class="sch-time-col">ساعت</th>';
+  SCHEDULE_DAYS.forEach(d => {
+    html += `<th class="${d === todayName ? 'sch-today' : ''}">${d}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  SCHEDULE_SLOTS.forEach(slot => {
+    html += `<tr><td class="sch-time">${faDigits(slot)}</td>`;
+    SCHEDULE_DAYS.forEach(day => {
+      const names = schGet(day, slot);
+      html += `<td><div class="sch-cell ${names.length ? '' : 'empty'}" data-day="${esc(day)}" data-slot="${esc(slot)}">`;
+      names.forEach((n, i) => {
+        html += `<div class="sch-name" data-day="${esc(day)}" data-slot="${esc(slot)}" data-idx="${i}"><span>${esc(n)}</span><span class="sch-x">×</span></div>`;
+      });
+      html += `</div></td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  box.innerHTML = html;
+
+  // رویدادها (یک بار بایند می‌شن چون innerHTML عوض شده)
+  box.querySelectorAll('.sch-name').forEach(el => {
+    el.addEventListener('click', ev => {
+      ev.stopPropagation();
+      const day = el.dataset.day, slot = el.dataset.slot, idx = +el.dataset.idx;
+      const arr = schGet(day, slot);
+      const name = arr[idx];
+      if(!name) return;
+      if(confirm(`«${name}» از ${day} ساعت ${faDigits(slot)} حذف شود؟`)){
+        arr.splice(idx, 1);
+        schSet(day, slot, arr);
+        renderSchedule();
+        toast('حذف شد', 'success');
+      }
+    });
+  });
+  box.querySelectorAll('.sch-cell').forEach(el => {
+    el.addEventListener('click', ev => {
+      if(ev.target.closest('.sch-name')) return;
+      const day = el.dataset.day, slot = el.dataset.slot;
+      const name = prompt(`نام زبان‌آموز برای ${day} ساعت ${faDigits(slot)}:`);
+      if(name && name.trim()){
+        const arr = schGet(day, slot);
+        arr.push(name.trim());
+        schSet(day, slot, arr);
+        renderSchedule();
+        toast('اضافه شد', 'success');
+      }
+    });
+  });
+}
+
+// پاک کردن همه (دکمه داخل تب)
+document.addEventListener('click', e => {
+  if(e.target && e.target.id === 'schClearAll'){
+    if(!Object.keys(scheduleData).length){ toast('خالی است', 'err'); return; }
+    if(!confirm('کل برنامه هفتگی پاک شود؟')) return;
+    scheduleData = {};
+    saveSchedule();
+    renderSchedule();
+    toast('پاک شد', 'success');
+  }
+});
+
+/* ============ پایان برنامه هفتگی ============ */
 /* ============ TAB SWITCH ============ */
 function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
   document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
   renderAll();
+  if(t === 'schedule') renderSchedule();
   if(t !== 'calendar') window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
@@ -2261,6 +2405,7 @@ document.addEventListener('input', e => {
 
 /* ============ RENDER ALL ============ */
 function renderAll(){
+  renderSchedule();
   renderDash();
   renderStudents();
   renderSessions();
@@ -2304,6 +2449,7 @@ function boot(){
 /* ============ START ============ */
 try {
   loadLocal();
+    loadSchedule();
   if(checkLogin()){
     showApp();
     setTimeout(() => { try { boot(); } catch(e){ console.error('boot error:', e); toast('خطا: ' + e.message, 'err'); } }, 100);
