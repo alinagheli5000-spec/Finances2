@@ -452,6 +452,26 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <div class="card"><h3 class="card-title">📈 وضعیت زبان‌آموزان</h3><div id="donut"></div></div>
     <div class="card"><h3 class="card-title">💰 مانده حساب</h3><div id="bars"></div><div class="hint" style="margin-top:8px">قرمز = بدهکار، سبز = بستانکار</div></div>
   </div>
+  <div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+    <h3 class="card-title" style="margin:0">📊 درآمد و هزینه ماهانه</h3>
+    <div style="width:150px"><select id="chartYear"></select></div>
+  </div>
+  <div style="position:relative;height:300px"><canvas id="monthlyChart"></canvas></div>
+  <p class="hint" id="yearSum" style="margin-top:12px;text-align:center"></p>
+</div>
+
+<div class="card">
+  <h3 class="card-title">📈 روند درآمد ۶ ماه اخیر</h3>
+  <div style="position:relative;height:260px"><canvas id="trendChart"></canvas></div>
+  <p class="hint" id="trendSum" style="margin-top:12px;text-align:center"></p>
+</div>
+
+<div class="card">
+  <h3 class="card-title">🥧 تفکیک هزینه‌ها (این ماه)</h3>
+  <div style="position:relative;height:280px"><canvas id="expensePieChart"></canvas></div>
+</div>
+
   <div class="card"><h3 class="card-title">💵 آخرین تراکنش‌ها</h3><div class="table-wrap" id="recent"></div></div>
 </section>
 
@@ -719,6 +739,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
@@ -1018,6 +1039,10 @@ function renderDash(){
   renderDonut(nd, nc, nz);
   renderBars(b);
   renderRecent();
+  renderMonthlyChart();
+  renderTrendChart();
+  renderExpensePie();
+  
 }
 
 function renderRecords(){
@@ -1091,6 +1116,229 @@ function renderRecent(){
   const el = $('recent'); if(!el) return;
   const rec = [...db.tx].sort((a,b) => b.date.localeCompare(a.date) || (b.ts || 0) - (a.ts || 0)).slice(0, 6);
   el.innerHTML = rec.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${rec.map(t => `<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type, t.is_session, t.absent)}</td><td>${t.type === 'expense' ? '—' : esc(stName(t.sid))}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>` : emptyState('هنوز تراکنشی نیست');
+}
+/* ============ CHARTS (نمودارهای درآمد/هزینه) ============ */
+var _charts = {};
+
+function destroyChart(id){
+  if(_charts[id]){
+    try { _charts[id].destroy(); } catch(e){}
+    delete _charts[id];
+  }
+}
+
+function renderMonthlyChart(){
+  var sel = $('chartYear');
+  if(!sel) return;
+  
+  var years = {};
+  years[todayJ()[0]] = true;
+  for(var i=0; i<db.tx.length; i++){
+    if(db.tx[i].date) years[+db.tx[i].date.slice(0,4)] = true;
+  }
+  var yearsArr = [];
+  for(var y in years) yearsArr.push(+y);
+  yearsArr.sort(function(a,b){ return b-a; });
+  
+  var cur = sel.value || todayJ()[0];
+  var yOpts = '';
+  for(var j=0; j<yearsArr.length; j++){
+    yOpts += '<option value="'+yearsArr[j]+'">'+faDigits(yearsArr[j])+'</option>';
+  }
+  sel.innerHTML = yOpts;
+  if(yearsArr.indexOf(+cur) === -1) sel.value = todayJ()[0];
+  
+  var Y = sel.value;
+  var inc = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var ex = [0,0,0,0,0,0,0,0,0,0,0,0];
+  
+  for(var k=0; k<db.tx.length; k++){
+    var t = db.tx[k];
+    if(!t.date) continue;
+    if(t.date.slice(0,4) !== String(Y)) continue;
+    var m = +t.date.slice(5,7) - 1;
+    if(m < 0 || m > 11) continue;
+    if(t.type === 'payment') inc[m] += t.amount;
+    if(t.type === 'expense') ex[m] += t.amount;
+  }
+  
+  destroyChart('monthlyChart');
+  var canvas = $('monthlyChart');
+  if(!canvas) return;
+  
+  var ctx = canvas.getContext('2d');
+  _charts['monthlyChart'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: MONTHS,
+      datasets: [
+        { label: 'درآمد', data: inc, backgroundColor: '#4ec5a0', borderRadius: 6, borderSkipped: false },
+        { label: 'هزینه', data: ex, backgroundColor: '#e89b6c', borderRadius: 6, borderSkipped: false }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 12 }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: function(ctx){ return ctx.dataset.label + ': ' + fa(ctx.raw) + ' تومان'; } } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 10 } } },
+        y: { grid: { color: 'rgba(168,163,189,.15)' }, ticks: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 10 }, callback: function(v){ return fa(v/1000) + 'K'; } } }
+      }
+    }
+  });
+  
+  var ti = 0, te = 0;
+  for(var x=0; x<12; x++){ ti += inc[x]; te += ex[x]; }
+  if($('yearSum')){
+    $('yearSum').textContent = 'سال ' + faDigits(Y) + ' — درآمد: ' + fa(ti) + ' | هزینه: ' + fa(te) + ' | سود: ' + fa(ti-te) + ' تومان';
+  }
+  
+  if(!sel._bound){
+    sel._bound = true;
+    sel.addEventListener('change', renderMonthlyChart);
+  }
+}
+
+function renderTrendChart(){
+  var canvas = $('trendChart');
+  if(!canvas) return;
+  
+  var t = todayJ();
+  var labels = [];
+  var data = [];
+  
+  for(var i = 5; i >= 0; i--){
+    var y = t[0], m = t[1] - i;
+    while(m < 1){ m += 12; y--; }
+    var key = y + '/' + pad(m);
+    var total = 0;
+    for(var j=0; j<db.tx.length; j++){
+      if(db.tx[j].type === 'payment' && db.tx[j].date.slice(0,7) === key){
+        total += db.tx[j].amount;
+      }
+    }
+    labels.push(MONTHS[m-1]);
+    data.push(total);
+  }
+  
+  var prevTotal = 0;
+  for(var k=0; k<6; k++){
+    var y2 = t[0], m2 = t[1] - 6 - k;
+    while(m2 < 1){ m2 += 12; y2--; }
+    var key2 = y2 + '/' + pad(m2);
+    for(var q=0; q<db.tx.length; q++){
+      if(db.tx[q].type === 'payment' && db.tx[q].date.slice(0,7) === key2){
+        prevTotal += db.tx[q].amount;
+      }
+    }
+  }
+  
+  destroyChart('trendChart');
+  var ctx = canvas.getContext('2d');
+  _charts['trendChart'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'درآمد ماهانه',
+        data: data,
+        borderColor: '#e0b04a',
+        backgroundColor: 'rgba(224,176,74,.15)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.35,
+        pointRadius: 6,
+        pointBackgroundColor: '#e0b04a',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx){ return fa(ctx.raw) + ' تومان'; } } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 11 } } },
+        y: { grid: { color: 'rgba(168,163,189,.15)' }, ticks: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 10 }, callback: function(v){ return fa(v/1000) + 'K'; } } }
+      }
+    }
+  });
+  
+  var current = 0, last = 0;
+  if(data.length >= 1) current = data[data.length-1];
+  if(data.length >= 2) last = data[data.length-2];
+  var change = last > 0 ? Math.round((current - last) / last * 100) : 0;
+  var changeStr = change > 0 ? '▲ ' + faDigits(change) + '٪' : change < 0 ? '▼ ' + faDigits(Math.abs(change)) + '٪' : '—';
+  
+  if($('trendSum')){
+    $('trendSum').textContent = 'ماه جاری: ' + fa(current) + ' تومان | نسبت به ماه قبل: ' + changeStr + ' | مجموع ۶ ماه قبل: ' + fa(prevTotal) + ' تومان';
+  }
+}
+
+function renderExpensePie(){
+  var canvas = $('expensePieChart');
+  if(!canvas) return;
+  
+  var t = todayJ();
+  var prefix = t[0] + '/' + pad(t[1]);
+  var byCat = {};
+  var CATS = { rent:'اجاره', books:'کتاب', salary:'حقوق', internet:'اینترنت', ads:'تبلیغات', transport:'حمل و نقل', food:'پذیرایی', other:'سایر' };
+  var COLORS = { rent:'#e07a8f', books:'#4ec5a0', salary:'#9d7cf0', internet:'#5ac8e0', ads:'#e89b6c', transport:'#e0b04a', food:'#f2c76a', other:'#6e6985' };
+  
+  for(var i=0; i<db.tx.length; i++){
+    var tx = db.tx[i];
+    if(tx.type !== 'expense') continue;
+    if(!tx.date.startsWith(prefix)) continue;
+    var c = tx.category || 'other';
+    byCat[c] = (byCat[c] || 0) + tx.amount;
+  }
+  
+  var labels = [], data = [], colors = [];
+  for(var k in byCat){
+    labels.push(CATS[k] || k);
+    data.push(byCat[k]);
+    colors.push(COLORS[k] || '#6e6985');
+  }
+  
+  destroyChart('expensePieChart');
+  
+  if(!data.length){
+    var ctxEmpty = canvas.getContext('2d');
+    ctxEmpty.clearRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+  
+  var ctx = canvas.getContext('2d');
+  _charts['expensePieChart'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{ data: data, backgroundColor: colors, borderWidth: 0, hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 12 }, boxWidth: 12, padding: 12 } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx){
+              var total = ctx.dataset.data.reduce(function(a,b){ return a+b; }, 0);
+              var pct = Math.round(ctx.raw / total * 100);
+              return ctx.label + ': ' + fa(ctx.raw) + ' تومان (' + faDigits(pct) + '٪)';
+            }
+          }
+        }
+      }
+    }
+  });
 }
 
 /* ============ RENDER STUDENTS ============ */
