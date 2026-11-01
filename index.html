@@ -366,7 +366,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .sch-cell:hover{background:var(--primary-glow)}
 .sch-cell.empty::after{content:"+";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:18px;font-weight:300;opacity:0;transition:opacity .15s}
 .sch-cell.empty:hover::after{opacity:1}
-.sch-name{background:var(--primary-glow);border:1px solid var(--primary);color:var(--ink);border-radius:8px;padding:4px 8px;font-size:11.5px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:4px;cursor:pointer;transition:var(--transition)}
+.sch-name{background:var(--primary-glow);border:1px solid var(--primary);color:var(--ink);border-radius:8px;padding:4px 8px;font-size:11.5px;font-weight:600;display:flex;align-items:flex-start;justify-content:space-between;gap:4px;cursor:pointer;transition:var(--transition)}
 .sch-name:hover{background:var(--rose-soft);border-color:var(--rose)}
 .sch-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
 .sch-name .sch-x{color:var(--ink-3);font-size:13px;font-weight:700;flex-shrink:0}
@@ -535,7 +535,8 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div class="card">
     <h3 class="card-title" id="stTitle">➕ افزودن زبان‌آموز</h3>
     <form class="form-grid" id="stForm">
-      <div class="field"><label>نام و نام خانوادگی <span class="req">*</span></label><input id="stName" required></div>
+        <div class="field"><label>نام فارسی <span class="req">*</span></label><input id="stName" required placeholder="مثلاً علی رضایی"></div>
+      <div class="field"><label>نام انگلیسی</label><input id="stNameEn" placeholder="Ali Rezaei" dir="ltr" style="text-align:left"></div>
        <div class="field"><label>سطح / دوره</label><select id="stCourse"><option value="">— انتخاب دوره —</option></select></div>
       <div class="field"><label>شهریه هر جلسه</label><input id="stFee" inputmode="numeric" class="money" placeholder="تومان"></div>
       <div class="field"><label>تلفن همراه</label><input id="stPhone" inputmode="tel" placeholder="09..."></div>
@@ -873,6 +874,15 @@ const CONFIG = {
   DEFAULT_PASSWORD: '09141892768'
 };
 /* ============ COURSE LIST ============ */
+  const COURSE_GROUPS = [
+  { label: '📘 Family and Friends', items: ['Family and Friends starter','Family and Friends 1','Family and Friends 2','Family and Friends 3','Family and Friends 4','Family and Friends 5','Family and Friends 6'] },
+  { label: '📗 Connect', items: ['connect 1','connect 2','connect 3','connect 4'] },
+  { label: '🎒 Backpack', items: ['Backpack starter','Backpack 1','Backpack 2','Backpack 3','Backpack 4','Backpack 5','Backpack 6'] },
+  { label: '📙 Touchstone', items: ['Touchstone 1','Touchstone 2','Touchstone 3','Touchstone 4'] },
+  { label: '🔭 Viewpoint', items: ['Viewpoint 1','Viewpoint 2'] },
+  { label: '📝 آزمون‌ها', items: ['KET','PET','TOEFL','IELTS','TTC'] },
+  { label: '🏫 سایر', items: ['School'] }
+];
 const COURSE_LIST = [
   'Family and Friends starter',
   'Family and Friends 1',
@@ -1497,14 +1507,14 @@ function renderStudents(){
   const table = $('stTable'); if(!table) return;
   const b = balances(), q = ($('stSearch')?.value || '').trim(), f = ($('stFilter')?.value || '');
   const rows = db.students.filter(s => {
-    if(q && !(s.name + ' ' + s.course + ' ' + s.phone).includes(q)) return false;
+        if(q && !((s.name + ' ' + (s.name_en||'') + ' ' + s.course + ' ' + s.phone).toLowerCase().includes(q.toLowerCase()))) return false;
     if(f && statusOf(b[s.id].bal) !== f) return false;
     return true;
   });
   table.innerHTML = rows.length ? `<table><thead><tr><th>نام</th><th>دوره</th><th>تلفن</th><th>جلسات</th><th>بدهی</th><th>مانده</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows.map(s => {
     const x = b[s.id];
     return `<tr>
-      <td><div style="display:flex;align-items:center;gap:10px">${avatarHTML(s.name, 32)}<b>${esc(s.name)}</b></div></td>
+            <td><div style="display:flex;align-items:center;gap:10px">${avatarHTML(s.name, 32)}<div><b>${esc(s.name)}</b>${s.name_en ? `<br><small style="color:var(--ink-3);font-size:11px;direction:ltr;display:inline-block">${esc(s.name_en)}</small>` : ''}</div></div></td>
       <td>${esc(s.course)}</td>
       <td>${faDigits(esc(s.phone || '—'))}</td>
       <td class="n">${fa(x.sessions)}</td>
@@ -1527,7 +1537,9 @@ on('stForm', 'submit', async e => {
   e.preventDefault();
   const birthday = getDate('stBirthday');
   const o = {
-    name: $('stName').value.trim(), course: $('stCourse').value.trim(), fee: moneyVal('stFee'),
+        name: $('stName').value.trim(),
+    name_en: ($('stNameEn')?.value || '').trim(),
+    course: $('stCourse').value.trim(), fee: moneyVal('stFee'),
     phone: toEn($('stPhone').value), home_phone: toEn($('stHomePhone').value),
     note: $('stNote').value.trim(), birthday,
     father_job: $('stFatherJob').value.trim(), mother_job: $('stMotherJob').value.trim(),
@@ -1552,6 +1564,7 @@ function editStudent(id){
   const s = db.students.find(x => x.id === id); if(!s) return;
   editSt = id;
   $('stName').value = s.name;
+    if($('stNameEn')) $('stNameEn').value = s.name_en || '';
     if($('stCourse') && $('stCourse').tagName === 'SELECT' && s.course && ![...$('stCourse').options].some(o => o.value === s.course)){
     const _opt = document.createElement('option');
     _opt.value = s.course;
@@ -1923,6 +1936,7 @@ function renderCalendar(){
     if(tx.is_session) day.sessions++;
   });
   db.students.forEach(s => {
+     if(s.name_en === undefined) s.name_en = '';
     if(!s.birthday) return;
     const [, bm, bd] = s.birthday.split('/').map(Number);
     if(bm === calMonth && days[bd-1]) days[bd-1].birthday = true;
@@ -2727,7 +2741,9 @@ function renderSchedule(){
       const names = schGet(day, slot);
       html += `<td><div class="sch-cell ${names.length ? '' : 'empty'}" data-day="${esc(day)}" data-slot="${esc(slot)}">`;
       names.forEach((n, i) => {
-        html += `<div class="sch-name" data-day="${esc(day)}" data-slot="${esc(slot)}" data-idx="${i}"><span>${esc(n)}</span><span class="sch-x">×</span></div>`;
+               const stuObj = db.students.find(s => s.name === n);
+        const courseTxt = stuObj && stuObj.course ? `<small style="display:block;font-size:9.5px;color:var(--ink-3);font-weight:500;margin-top:1px">${esc(stuObj.course)}</small>` : '';
+        html += `<div class="sch-name" data-day="${esc(day)}" data-slot="${esc(slot)}" data-idx="${i}"><span style="display:flex;flex-direction:column;gap:0;flex:1;text-align:right"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(n)}</span>${courseTxt}</span><span class="sch-x">×</span></div>`;
       });
       html += `</div></td>`;
     });
@@ -2855,11 +2871,16 @@ function boot(){
     // پر کردن لیست دوره‌ها
   const courseSel = $('stCourse');
   if(courseSel && courseSel.tagName === 'SELECT' && courseSel.options.length <= 1){
-    COURSE_LIST.forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c;
-      opt.textContent = c;
-      courseSel.appendChild(opt);
+       COURSE_GROUPS.forEach(g => {
+      const og = document.createElement('optgroup');
+      og.label = g.label;
+      g.items.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        og.appendChild(opt);
+      });
+      courseSel.appendChild(og);
     });
   }
   applyPalette(settings.palette || 'gold');
