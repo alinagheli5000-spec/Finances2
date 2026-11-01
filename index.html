@@ -536,7 +536,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <h3 class="card-title" id="stTitle">➕ افزودن زبان‌آموز</h3>
     <form class="form-grid" id="stForm">
       <div class="field"><label>نام و نام خانوادگی <span class="req">*</span></label><input id="stName" required></div>
-      <div class="field"><label>سطح / دوره</label><input id="stCourse" placeholder="Elementary"></div>
+       <div class="field"><label>سطح / دوره</label><select id="stCourse"><option value="">— انتخاب دوره —</option></select></div>
       <div class="field"><label>شهریه هر جلسه</label><input id="stFee" inputmode="numeric" class="money" placeholder="تومان"></div>
       <div class="field"><label>تلفن همراه</label><input id="stPhone" inputmode="tel" placeholder="09..."></div>
       <div class="field"><label>تلفن منزل</label><input id="stHomePhone" inputmode="tel"></div>
@@ -872,7 +872,39 @@ const CONFIG = {
   SESSION_KEY: 'ali_academy_v20_session',
   DEFAULT_PASSWORD: '09141892768'
 };
-
+/* ============ COURSE LIST ============ */
+const COURSE_LIST = [
+  'Family and Friends starter',
+  'Family and Friends 1',
+  'Family and Friends 2',
+  'Family and Friends 3',
+  'Family and Friends 4',
+  'Family and Friends 5',
+  'Family and Friends 6',
+  'connect 1',
+  'connect 2',
+  'connect 3',
+  'connect 4',
+  'Backpack starter',
+  'Backpack 1',
+  'Backpack 2',
+  'Backpack 3',
+  'Backpack 4',
+  'Backpack 5',
+  'Backpack 6',
+  'KET',
+  'PET',
+  'Touchstone 1',
+  'Touchstone 2',
+  'Touchstone 3',
+  'Touchstone 4',
+  'Viewpoint 1',
+  'Viewpoint 2',
+  'TOEFL',
+  'IELTS',
+  'TTC',
+  'School'
+];
 /* ============ SHORTCUTS ============ */
 function $(id){ return document.getElementById(id); }
 function on(id, ev, fn){ const el = typeof id === 'string' ? $(id) : id; if(!el) return null; el.addEventListener(ev, fn); return el; }
@@ -1520,6 +1552,12 @@ function editStudent(id){
   const s = db.students.find(x => x.id === id); if(!s) return;
   editSt = id;
   $('stName').value = s.name;
+    if($('stCourse') && $('stCourse').tagName === 'SELECT' && s.course && ![...$('stCourse').options].some(o => o.value === s.course)){
+    const _opt = document.createElement('option');
+    _opt.value = s.course;
+    _opt.textContent = s.course + ' (قبلی)';
+    $('stCourse').appendChild(_opt);
+  }
   $('stCourse').value = s.course || '';
   $('stFee').value = s.fee ? s.fee.toLocaleString('en-US') : '';
   $('stPhone').value = s.phone || '';
@@ -2814,6 +2852,16 @@ function renderAll(){
 
 /* ============ BOOT ============ */
 function boot(){
+    // پر کردن لیست دوره‌ها
+  const courseSel = $('stCourse');
+  if(courseSel && courseSel.tagName === 'SELECT' && courseSel.options.length <= 1){
+    COURSE_LIST.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      courseSel.appendChild(opt);
+    });
+  }
   applyPalette(settings.palette || 'gold');
   applyThemeMode();
   document.body.classList.toggle('compact', settings.compact);
