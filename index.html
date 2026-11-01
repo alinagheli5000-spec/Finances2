@@ -380,6 +380,23 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .sch-pick-item.on{border-color:var(--primary);background:linear-gradient(135deg,var(--card-2),var(--primary-glow));box-shadow:0 0 0 2px var(--primary-glow)}
 .sch-pick-check{width:24px;height:24px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--ink-2);flex-shrink:0;transition:var(--transition)}
 .sch-pick-item.on .sch-pick-check{background:var(--primary);border-color:var(--primary);color:#1a1720}
+  /* ===== سیستم گردشی ===== */
+.rot-next{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#1a1720;border-radius:var(--radius-lg);padding:22px 26px;margin-bottom:20px;position:relative;overflow:hidden;box-shadow:0 10px 40px var(--primary-glow)}
+.rot-next::before{content:"🔄";position:absolute;top:-20px;inset-inline-end:-10px;font-size:120px;opacity:.12;transform:rotate(15deg);pointer-events:none}
+.rot-next-label{font-size:13px;font-weight:600;opacity:.85;margin-bottom:6px;position:relative;z-index:1}
+.rot-next-name{font-size:24px;font-weight:900;margin-bottom:4px;position:relative;z-index:1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rot-next-meta{font-size:12px;opacity:.8;position:relative;z-index:1}
+.rot-next-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1}
+.rot-next-actions button{background:rgba(26,23,32,.2);color:#1a1720;border:0;padding:9px 18px;border-radius:var(--radius-pill);font-weight:700;font-size:12.5px;cursor:pointer;transition:var(--transition)}
+.rot-next-actions button:hover{background:rgba(26,23,32,.35)}
+.rot-next-actions button.ghost-light{background:rgba(255,255,255,.2)}
+.rot-queue{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.rot-queue-item{background:var(--card-2);border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px}
+.rot-queue-item.first{background:var(--primary-glow);border-color:var(--primary);color:var(--primary)}
+.rot-queue-item .rot-num{background:var(--surface);color:var(--ink-2);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;flex-shrink:0}
+.rot-queue-item.first .rot-num{background:var(--primary);color:#1a1720}
+.rot-empty{text-align:center;padding:36px 20px;color:var(--ink-2);font-size:13px}
+/* ===== پایان سیستم گردشی ===== */
 /* ===== پایان برنامه هفتگی ===== */
 @media print{
   @page{size:A4;margin:10mm}
@@ -455,6 +472,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="sms">📱 پیامک</button>
   <button class="tab-btn" data-tab="waitlist">📝 لیست انتظار</button>
   <button class="tab-btn" data-tab="schedule">🗓 برنامه هفتگی</button>
+  <button class="tab-btn" data-tab="rotation">🔄 گردشی</button>
   <button class="tab-btn" data-tab="report">📄 گزارش</button>
   <button class="tab-btn" data-tab="settings">⚙️ تنظیمات</button>
 </div></nav>
@@ -642,6 +660,39 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     </div>
     <div id="scheduleContainer"></div>
     <p class="hint" style="margin-top:12px">برای افزودن نام: روی خانه خالی کلیک کن. برای حذف: روی نام کلیک کن.</p>
+  </div>
+</section>
+  <section class="tab" id="tab-rotation">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🔄</div>کلاس گردشی</div>
+      <div class="page-sub">زبان‌آموزانی که وقت ثابت ندارن — نوبت‌بندی خودکار</div>
+    </div>
+  </div>
+
+  <div id="rotNextBox"></div>
+  <div id="rotQueueBox"></div>
+
+  <div class="card">
+    <h3 class="card-title">➕ افزودن به گردشی</h3>
+    <div class="form-grid">
+      <div class="field"><label>زبان‌آموز</label><select id="rotAddStudent"></select></div>
+      <div class="field"><label>یا اسم دستی</label><input id="rotAddName" placeholder="اسم آزاد (اختیاری)"></div>
+      <div class="btn-row" style="grid-column:1/-1">
+        <button class="btn" id="rotAddBtn">افزودن به صف</button>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px">اگه زبان‌آموز از قبل توی سیستمه، از لیست انتخاب کن. اگه نه، اسم دستی بزن.</p>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">📋 لیست اعضا</h3>
+    <div class="table-wrap" id="rotMembersTable"></div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">📜 تاریخچه آخرین کلاس‌ها</h3>
+    <div class="table-wrap" id="rotHistoryTable"></div>
   </div>
 </section>
 <section class="tab" id="tab-waitlist">
@@ -2247,6 +2298,183 @@ click('changePasswordBtn', () => {
   $('newPassword2').value = '';
   toast('رمز تغییر کرد', 'success');
 });
+  /* ============ ROTATION (سیستم گردشی) ============ */
+const ROTATION_KEY = 'ali_academy_rotation_v1';
+let rotData = { members: [], queue: [], history: [] };
+// members: [{ id, name, studentId|null, addedAt, totalSessions, lastGivenAt }]
+// queue: [memberId, ...]  // ترتیب نوبت
+// history: [{ ts, memberId, name, date }]
+
+function loadRotation(){
+  try{
+    const raw = localStorage.getItem(ROTATION_KEY);
+    if(raw){
+      const d = JSON.parse(raw) || {};
+      rotData.members = d.members || [];
+      rotData.queue = d.queue || [];
+      rotData.history = d.history || [];
+    }
+  }catch(e){ console.warn('rotation load error', e); }
+  // پاک‌سازی queue از اعضای حذف‌شده
+  const ids = new Set(rotData.members.map(m => m.id));
+  rotData.queue = rotData.queue.filter(id => ids.has(id));
+  // اعضایی که توی queue نیستن رو ته صف اضافه کن
+  rotData.members.forEach(m => { if(!rotData.queue.includes(m.id)) rotData.queue.push(m.id); });
+}
+function saveRotation(){
+  try{ localStorage.setItem(ROTATION_KEY, JSON.stringify(rotData)); }
+  catch(e){ console.warn('rotation save error', e); }
+}
+function rotMember(id){ return rotData.members.find(m => m.id === id); }
+
+function renderRotation(){
+  const nextBox = $('rotNextBox'), queueBox = $('rotQueueBox');
+  const membersTable = $('rotMembersTable'), historyTable = $('rotHistoryTable');
+  if(!nextBox) return;
+
+  // === نوبت بعدی ===
+  const nextId = rotData.queue[0];
+  const nextMember = nextId ? rotMember(nextId) : null;
+  if(nextMember){
+    const last = nextMember.lastGivenAt
+      ? new Date(nextMember.lastGivenAt).toLocaleString('fa-IR')
+      : 'هنوز کلاس نگرفته';
+    nextBox.innerHTML = `
+      <div class="rot-next">
+        <div class="rot-next-label">🔔 نوبت بعدی با:</div>
+        <div class="rot-next-name">${avatarHTML(nextMember.name, 44)} ${esc(nextMember.name)}</div>
+        <div class="rot-next-meta">آخرین کلاس: ${last} | مجموع جلسات: ${faDigits(nextMember.totalSessions || 0)}</div>
+        <div class="rot-next-actions">
+          <button onclick="rotGiveClass('${nextMember.id}')">✅ کلاس دادم (برو نفر بعد)</button>
+          <button class="ghost-light" onclick="rotSkip('${nextMember.id}')">⏭ رد کن (برو ته صف)</button>
+        </div>
+      </div>`;
+  } else {
+    nextBox.innerHTML = `<div class="rot-next" style="background:var(--card-2);color:var(--ink);box-shadow:var(--shadow-sm)"><div class="rot-next-label">🔔 نوبت بعدی با:</div><div class="rot-next-name" style="font-size:16px;color:var(--ink-2)">هنوز کسی توی صف نیست</div></div>`;
+  }
+
+  // === صف ===
+  if(queueBox){
+    if(rotData.queue.length === 0){
+      queueBox.innerHTML = '';
+    } else {
+      queueBox.innerHTML = '<div class="rot-queue">' + rotData.queue.map((id, i) => {
+        const m = rotMember(id); if(!m) return '';
+        return `<div class="rot-queue-item ${i === 0 ? 'first' : ''}"><span class="rot-num">${faDigits(i+1)}</span>${esc(m.name)}</div>`;
+      }).join('') + '</div>';
+    }
+  }
+
+  // === لیست اعضا ===
+  if(membersTable){
+    if(!rotData.members.length){
+      membersTable.innerHTML = emptyState('کسی اضافه نشده');
+    } else {
+      membersTable.innerHTML = `<table><thead><tr><th>نام</th><th>موقعیت در صف</th><th>کلاس‌ها</th><th>آخرین کلاس</th><th>عملیات</th></tr></thead><tbody>${rotData.members.map(m => {
+        const pos = rotData.queue.indexOf(m.id);
+        const last = m.lastGivenAt ? new Date(m.lastGivenAt).toLocaleDateString('fa-IR') : '—';
+        return `<tr>
+          <td><div style="display:flex;align-items:center;gap:10px">${avatarHTML(m.name, 28)}<b>${esc(m.name)}</b></div></td>
+          <td class="n">${pos >= 0 ? faDigits(pos+1) : '—'}</td>
+          <td class="n">${faDigits(m.totalSessions || 0)}</td>
+          <td>${last}</td>
+          <td><div class="btn-row tight">
+            <button class="btn xs success" onclick="rotGiveClass('${m.id}')">کلاس دادم</button>
+            <button class="btn xs ghost" onclick="rotMoveTop('${m.id}')">برو اول صف</button>
+            <button class="btn xs danger" onclick="rotRemove('${m.id}')">حذف</button>
+          </div></td>
+        </tr>`;
+      }).join('')}</tbody></table>`;
+    }
+  }
+
+  // === تاریخچه ===
+  if(historyTable){
+    if(!rotData.history.length){
+      historyTable.innerHTML = emptyState('هنوز کلاسی ثبت نشده');
+    } else {
+      historyTable.innerHTML = `<table><thead><tr><th>تاریخ</th><th>نام</th><th>زمان ثبت</th></tr></thead><tbody>${rotData.history.slice(0, 50).map(h => `<tr><td>${showDate(h.date)}</td><td><b>${esc(h.name)}</b></td><td>${new Date(h.ts).toLocaleTimeString('fa-IR')}</td></tr>`).join('')}</tbody></table>`;
+    }
+  }
+
+  // === پر کردن سلکت افزودن ===
+  const sel = $('rotAddStudent');
+  if(sel){
+    const currentVal = sel.value;
+    const available = db.students.filter(s => !rotData.members.some(m => m.studentId === s.id));
+    sel.innerHTML = '<option value="">— انتخاب زبان‌آموز —</option>' + available.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
+    if(currentVal) sel.value = currentVal;
+  }
+}
+
+function rotAdd(member){
+  rotData.members.push(member);
+  rotData.queue.push(member.id);
+  saveRotation();
+  renderRotation();
+  toast(`«${member.name}» به گردشی اضافه شد`, 'success');
+}
+
+window.rotAddFromSelect = () => {
+  const sid = $('rotAddStudent')?.value;
+  const manual = $('rotAddName')?.value.trim();
+  if(sid){
+    const s = db.students.find(x => x.id === sid); if(!s) return;
+    if(rotData.members.some(m => m.studentId === sid)){ toast('قبلاً اضافه شده', 'err'); return; }
+    rotAdd({ id: uid(), name: s.name, studentId: s.id, addedAt: Date.now(), totalSessions: 0, lastGivenAt: null });
+    if($('rotAddName')) $('rotAddName').value = '';
+  } else if(manual){
+    rotAdd({ id: uid(), name: manual, studentId: null, addedAt: Date.now(), totalSessions: 0, lastGivenAt: null });
+    if($('rotAddName')) $('rotAddName').value = '';
+  } else {
+    toast('یه اسم انتخاب یا وارد کن', 'err');
+  }
+};
+
+window.rotGiveClass = (id) => {
+  const m = rotMember(id); if(!m) return;
+  m.totalSessions = (m.totalSessions || 0) + 1;
+  m.lastGivenAt = Date.now();
+  rotData.history.unshift({ ts: Date.now(), memberId: id, name: m.name, date: dateStr(todayJ()) });
+  if(rotData.history.length > 200) rotData.history = rotData.history.slice(0, 200);
+  // برو ته صف
+  rotData.queue = rotData.queue.filter(x => x !== id);
+  rotData.queue.push(id);
+  saveRotation();
+  renderRotation();
+  const nextName = rotData.queue[0] ? (rotMember(rotData.queue[0]) || {}).name : null;
+  toast(nextName ? `✅ ثبت شد — نوبت بعدی: ${nextName}` : '✅ ثبت شد', 'success');
+};
+
+window.rotSkip = (id) => {
+  const m = rotMember(id); if(!m) return;
+  rotData.queue = rotData.queue.filter(x => x !== id);
+  rotData.queue.push(id);
+  saveRotation();
+  renderRotation();
+  toast(`«${m.name}» به ته صف رفت`, 'info');
+};
+
+window.rotMoveTop = (id) => {
+  const m = rotMember(id); if(!m) return;
+  rotData.queue = rotData.queue.filter(x => x !== id);
+  rotData.queue.unshift(id);
+  saveRotation();
+  renderRotation();
+  toast(`«${m.name}» اول صف شد`, 'success');
+};
+
+window.rotRemove = (id) => {
+  const m = rotMember(id); if(!m) return;
+  if(!confirm(`«${m.name}» از گردشی حذف شود؟`)) return;
+  rotData.members = rotData.members.filter(x => x.id !== id);
+  rotData.queue = rotData.queue.filter(x => x !== id);
+  saveRotation();
+  renderRotation();
+  toast('حذف شد', 'success');
+};
+
+/* ============ پایان سیستم گردشی ============ */
 /* ============ SCHEDULE (برنامه هفتگی) ============ */
 const SCHEDULE_KEY = 'ali_academy_schedule_v1';
 const SCHEDULE_SLOTS = [
@@ -2417,11 +2645,16 @@ document.addEventListener('click', e => {
 });
 
 /* ============ پایان برنامه هفتگی ============ */
+  /* ============ اتصال دکمه‌های گردشی ============ */
+document.addEventListener('click', e => {
+  if(e.target && e.target.id === 'rotAddBtn') window.rotAddFromSelect();
+});
 /* ============ TAB SWITCH ============ */
 function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
   document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
   renderAll();
+  if(t === 'rotation') renderRotation();
   if(t === 'schedule') renderSchedule();
   if(t !== 'calendar') window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -2475,6 +2708,7 @@ document.addEventListener('input', e => {
 /* ============ RENDER ALL ============ */
 function renderAll(){
   renderSchedule();
+  renderRotation();
   renderDash();
   renderStudents();
   renderSessions();
@@ -2519,6 +2753,7 @@ function boot(){
 try {
   loadLocal();
     loadSchedule();
+    loadRotation();
   if(checkLogin()){
     showApp();
     setTimeout(() => { try { boot(); } catch(e){ console.error('boot error:', e); toast('خطا: ' + e.message, 'err'); } }, 100);
