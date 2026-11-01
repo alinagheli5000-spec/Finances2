@@ -698,16 +698,24 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 <section class="tab" id="tab-waitlist">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon">📝</div>لیست انتظار</div></div></div>
   <div class="card">
-    <h3 class="card-title">افزودن</h3>
+    <h3 class="card-title" id="wlFormTitle">➕ افزودن</h3>
     <form class="form-grid" id="waitlistForm">
       <div class="field"><label>نام</label><input id="wlName" required></div>
       <div class="field"><label>دوره</label><input id="wlCourse"></div>
-      <div class="field"><label>تلفن</label><input id="wlPhone" inputmode="tel"></div>
+      <div class="field"><label>تلفن</label><input id="wlPhone" inputmode="tel" placeholder="09..."></div>
       <div class="field"><label>یادداشت</label><input id="wlNote"></div>
-      <div class="btn-row" style="grid-column:1/-1"><button class="btn" type="submit">افزودن</button></div>
+      <div class="btn-row" style="grid-column:1/-1">
+        <button class="btn" type="submit" id="wlSaveBtn">افزودن</button>
+        <button class="btn ghost" type="button" id="wlCancelBtn" style="display:none">انصراف</button>
+      </div>
     </form>
   </div>
-  <div class="card"><div id="waitlistContent"></div></div>
+  <div class="card">
+    <div class="filters">
+      <input id="wlSearch" placeholder="جستجو در لیست انتظار…">
+    </div>
+    <div id="waitlistContent"></div>
+  </div>
 </section>
 
 <section class="tab" id="tab-report">
@@ -2022,35 +2030,122 @@ click('waBday', () => openWhatsAppFor('birthday'));
 click('waCustom', () => openWhatsAppFor('custom'));
 
 /* ============ WAITLIST ============ */
+let editWl = null;
+
 on('waitlistForm', 'submit', e => {
   e.preventDefault();
-  const o = { id: uid(), name: $('wlName').value.trim(), course: $('wlCourse').value.trim(), phone: toEn($('wlPhone').value), note: $('wlNote').value.trim(), status: 'waiting', ts: Date.now() };
-  if(!o.name) return;
-  db.waitlist.push(o);
-  saveLocal(); renderWaitlist();
-  $('waitlistForm').reset();
-  toast('اضافه شد', 'success');
+  const name = $('wlName').value.trim();
+  if(!name){ toast('نام لازمه', 'err'); return; }
+  const o = {
+    name,
+    course: $('wlCourse').value.trim(),
+    phone: toEn($('wlPhone').value),
+    note: $('wlNote').value.trim()
+  };
+  if(editWl){
+    const w = db.waitlist.find(x => x.id === editWl);
+    if(!w){ toast('یافت نشد', 'err'); return; }
+    Object.assign(w, o);
+    toast('ویرایش شد', 'success');
+  } else {
+    db.waitlist.push({ id: uid(), ...o, status: 'waiting', ts: Date.now() });
+    toast('اضافه شد', 'success');
+  }
+  cancelWl();
+  saveLocal();
+  renderWaitlist();
 });
+
+function cancelWl(){
+  editWl = null;
+  const f = $('waitlistForm'); if(f) f.reset();
+  if($('wlFormTitle')) $('wlFormTitle').textContent = '➕ افزودن';
+  if($('wlSaveBtn')) $('wlSaveBtn').textContent = 'افزودن';
+  if($('wlCancelBtn')) $('wlCancelBtn').style.display = 'none';
+}
+click('wlCancelBtn', cancelWl);
+
+function editWaitlist(id){
+  const w = db.waitlist.find(x => x.id === id);
+  if(!w){ toast('یافت نشد', 'err'); return; }
+  editWl = id;
+  $('wlName').value = w.name || '';
+  $('wlCourse').value = w.course || '';
+  $('wlPhone').value = w.phone || '';
+  $('wlNote').value = w.note || '';
+  if($('wlFormTitle')) $('wlFormTitle').textContent = '✏️ ویرایش';
+  if($('wlSaveBtn')) $('wlSaveBtn').textContent = 'ذخیره';
+  if($('wlCancelBtn')) $('wlCancelBtn').style.display = '';
+  switchTab('waitlist');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => $('wlName')?.focus(), 100);
+}
 
 function renderWaitlist(){
   const el = $('waitlistContent'); if(!el) return;
-  const list = db.waitlist.filter(w => w.status === 'waiting').sort((a,b) => b.ts - a.ts);
-  if(!list.length){ el.innerHTML = emptyState('لیست خالی'); return; }
-  el.innerHTML = list.map(w => `<div class="waitlist-item"><div class="wl-info"><div class="wl-name">${avatarHTML(w.name, 28)} ${esc(w.name)}</div><div class="wl-meta">${esc(w.course || '—')} ${w.phone ? `— ${faDigits(w.phone)}` : ''}</div></div><div class="btn-row tight"><button class="btn xs success" onclick="convertWaitlist('${w.id}')">ثبت‌نام</button><button class="btn xs ghost" onclick="removeWaitlist('${w.id}')">حذف</button></div></div>`).join('');
+  const q = ($('wlSearch')?.value || '').trim().toLowerCase();
+  const list = db.waitlist
+    .filter(w => w.status === 'waiting')
+    .filter(w => !q || (w.name + ' ' + (w.course||'') + ' ' + (w.phone||'') + ' ' + (w.note||'')).toLowerCase().includes(q))
+    .sort((a,b) => b.ts - a.ts);
+
+  if(!list.length){
+    el.innerHTML = emptyState('لیست خالی');
+    return;
+  }
+
+  el.innerHTML = `<div class="table-wrap"><table>
+    <thead><tr>
+      <th style="width:50px">#</th>
+      <th>نام</th>
+      <th>دوره</th>
+      <th>تلفن</th>
+      <th>یادداشت</th>
+      <th>عملیات</th>
+    </tr></thead>
+    <tbody>${list.map((w, i) => `
+      <tr>
+        <td class="n">${faDigits(i+1)}</td>
+        <td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(w.name, 26)}<b>${esc(w.name)}</b></div></td>
+        <td>${esc(w.course || '—')}</td>
+        <td>${w.phone ? faDigits(esc(w.phone)) : '—'}</td>
+        <td style="max-width:220px;white-space:normal">${esc(w.note || '—')}</td>
+        <td><div class="btn-row tight">
+          <button class="btn xs success" onclick="convertWaitlist('${w.id}')">ثبت‌نام</button>
+          <button class="btn xs ghost" onclick="editWaitlist('${w.id}')">ویرایش</button>
+          <button class="btn xs danger" onclick="removeWaitlist('${w.id}')">حذف</button>
+        </div></td>
+      </tr>
+    `).join('')}</tbody></table></div>`;
 }
 
 window.convertWaitlist = (id) => {
   const w = db.waitlist.find(x => x.id === id); if(!w) return;
   if(!confirm(`«${w.name}» به زبان‌آموزان اضافه شود؟`)) return;
-  const s = { id: uid(), name: w.name, course: w.course || '', fee: 0, phone: w.phone || '', home_phone: '', birthday: null, father_job: '', mother_job: '', address: '', note: w.note || '', package_size: 0, package_used: 0 };
+  const s = {
+    id: uid(), name: w.name, course: w.course || '', fee: 0,
+    phone: w.phone || '', home_phone: '', birthday: null,
+    father_job: '', mother_job: '', address: '', note: w.note || '',
+    package_size: 0, package_used: 0, contact_log: []
+  };
   db.students.push(s);
   w.status = 'converted';
+  if(editWl === id) cancelWl();
   saveLocal(); renderAll();
   toast('ثبت‌نام شد', 'success');
 };
-window.removeWaitlist = (id) => { if(!confirm('حذف؟')) return; db.waitlist = db.waitlist.filter(x => x.id !== id); saveLocal(); renderWaitlist(); toast('حذف', 'success'); };
+window.editWaitlist = editWaitlist;
+window.removeWaitlist = (id) => {
+  if(!confirm('حذف؟')) return;
+  db.waitlist = db.waitlist.filter(x => x.id !== id);
+  if(editWl === id) cancelWl();
+  saveLocal(); renderWaitlist();
+  toast('حذف شد', 'success');
+};
 
-/* ============ REPORT ============ */
+window.editWaitlist = editWaitlist;
+
+on('wlSearch', 'input', debounce(renderWaitlist));
 function runReport(){
   const from = getDate('repFrom'), to = getDate('repTo');
   if(!from || !to) return;
