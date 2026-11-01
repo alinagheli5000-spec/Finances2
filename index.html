@@ -396,6 +396,17 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .rot-queue-item .rot-num{background:var(--surface);color:var(--ink-2);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;flex-shrink:0}
 .rot-queue-item.first .rot-num{background:var(--primary);color:#1a1720}
 .rot-empty{text-align:center;padding:36px 20px;color:var(--ink-2);font-size:13px}
+  /* ===== اولویت لیست انتظار ===== */
+.wl-pri{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--radius-pill);font-size:11px;font-weight:700;white-space:nowrap;border:1px solid transparent;cursor:pointer;transition:var(--transition)}
+.wl-pri.normal{background:var(--surface);color:var(--ink-2);border-color:var(--border)}
+.wl-pri.high{background:var(--coral-soft);color:var(--coral);border-color:var(--coral)}
+.wl-pri.urgent{background:var(--rose-soft);color:var(--rose);border-color:var(--rose)}
+.wl-pri:hover{transform:scale(1.05)}
+.wl-move{display:inline-flex;flex-direction:column;gap:1px}
+.wl-move button{background:var(--card-2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;line-height:1.1;color:var(--ink-2);cursor:pointer;transition:var(--transition)}
+.wl-move button:hover{background:var(--primary);color:#1a1720;border-color:var(--primary)}
+.wl-move button:disabled{opacity:.3;cursor:not-allowed}
+/* ===== پایان اولویت لیست انتظار ===== */
 /* ===== پایان سیستم گردشی ===== */
 /* ===== پایان برنامه هفتگی ===== */
 @media print{
@@ -704,6 +715,11 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
       <div class="field"><label>دوره</label><input id="wlCourse"></div>
       <div class="field"><label>تلفن</label><input id="wlPhone" inputmode="tel" placeholder="09..."></div>
       <div class="field"><label>یادداشت</label><input id="wlNote"></div>
+            <div class="field"><label>اولویت</label><select id="wlPriority">
+        <option value="normal">عادی</option>
+        <option value="high">مهم</option>
+        <option value="urgent">فوری</option>
+      </select></div>
       <div class="btn-row" style="grid-column:1/-1">
         <button class="btn" type="submit" id="wlSaveBtn">افزودن</button>
         <button class="btn ghost" type="button" id="wlCancelBtn" style="display:none">انصراف</button>
@@ -2036,11 +2052,13 @@ on('waitlistForm', 'submit', e => {
   e.preventDefault();
   const name = $('wlName').value.trim();
   if(!name){ toast('نام لازمه', 'err'); return; }
+  const priorityVal = ($('wlPriority') && $('wlPriority').value) ? $('wlPriority').value : 'normal';
   const o = {
     name,
     course: $('wlCourse').value.trim(),
     phone: toEn($('wlPhone').value),
-    note: $('wlNote').value.trim()
+    note: $('wlNote').value.trim(),
+    priority: priorityVal
   };
   if(editWl){
     const w = db.waitlist.find(x => x.id === editWl);
@@ -2048,7 +2066,7 @@ on('waitlistForm', 'submit', e => {
     Object.assign(w, o);
     toast('ویرایش شد', 'success');
   } else {
-    db.waitlist.push({ id: uid(), ...o, status: 'waiting', ts: Date.now() });
+    db.waitlist.push({ id: uid(), ...o, order: Date.now(), status: 'waiting', ts: Date.now() });
     toast('اضافه شد', 'success');
   }
   cancelWl();
@@ -2059,6 +2077,7 @@ on('waitlistForm', 'submit', e => {
 function cancelWl(){
   editWl = null;
   const f = $('waitlistForm'); if(f) f.reset();
+  if($('wlPriority')) $('wlPriority').value = 'normal';
   if($('wlFormTitle')) $('wlFormTitle').textContent = '➕ افزودن';
   if($('wlSaveBtn')) $('wlSaveBtn').textContent = 'افزودن';
   if($('wlCancelBtn')) $('wlCancelBtn').style.display = 'none';
@@ -2073,6 +2092,8 @@ function editWaitlist(id){
   $('wlCourse').value = w.course || '';
   $('wlPhone').value = w.phone || '';
   $('wlNote').value = w.note || '';
+  if($('wlPriority')) $('wlPriority').value = w.priority || 'normal';
+  if($('wlPriority')) $('wlPriority').value = w.priority || 'normal';
   if($('wlFormTitle')) $('wlFormTitle').textContent = '✏️ ویرایش';
   if($('wlSaveBtn')) $('wlSaveBtn').textContent = 'ذخیره';
   if($('wlCancelBtn')) $('wlCancelBtn').style.display = '';
@@ -2084,10 +2105,27 @@ function editWaitlist(id){
 function renderWaitlist(){
   const el = $('waitlistContent'); if(!el) return;
   const q = ($('wlSearch')?.value || '').trim().toLowerCase();
+
+  const PRIO_ORDER = { urgent: 0, high: 1, normal: 2 };
+  const PRIO_LABEL = { urgent: '🔥 فوری', high: '⚡ مهم', normal: 'عادی' };
+
+  // اطمینان از وجود order
+  let changed = false;
+  db.waitlist.forEach((w, i) => {
+    if(w.status === 'waiting' && typeof w.order !== 'number'){ w.order = (typeof w.ts === 'number' ? w.ts : i); changed = true; }
+    if(!w.priority){ w.priority = 'normal'; changed = true; }
+  });
+  if(changed) saveLocal();
+
   const list = db.waitlist
     .filter(w => w.status === 'waiting')
     .filter(w => !q || (w.name + ' ' + (w.course||'') + ' ' + (w.phone||'') + ' ' + (w.note||'')).toLowerCase().includes(q))
-    .sort((a,b) => b.ts - a.ts);
+    .sort((a,b) => {
+      const pa = PRIO_ORDER[a.priority] ?? 2;
+      const pb = PRIO_ORDER[b.priority] ?? 2;
+      if(pa !== pb) return pa - pb;
+      return (a.order || 0) - (b.order || 0);
+    });
 
   if(!list.length){
     el.innerHTML = emptyState('لیست خالی');
@@ -2100,108 +2138,67 @@ function renderWaitlist(){
       <th>نام</th>
       <th>دوره</th>
       <th>تلفن</th>
+      <th>اولویت</th>
       <th>یادداشت</th>
+      <th>جابجایی</th>
       <th>عملیات</th>
     </tr></thead>
-    <tbody>${list.map((w, i) => `
+    <tbody>${list.map((w, i) => {
+      const canUp = i > 0;
+      const canDown = i < list.length - 1;
+      return `
       <tr>
         <td class="n">${faDigits(i+1)}</td>
         <td><div style="display:flex;align-items:center;gap:8px">${avatarHTML(w.name, 26)}<b>${esc(w.name)}</b></div></td>
         <td>${esc(w.course || '—')}</td>
         <td>${w.phone ? faDigits(esc(w.phone)) : '—'}</td>
-        <td style="max-width:220px;white-space:normal">${esc(w.note || '—')}</td>
+        <td><span class="wl-pri ${w.priority}" onclick="cycleWaitlistPriority('${w.id}')" title="کلیک = تغییر اولویت">${PRIO_LABEL[w.priority] || 'عادی'}</span></td>
+        <td style="max-width:200px;white-space:normal">${esc(w.note || '—')}</td>
+        <td>
+          <div class="wl-move">
+            <button ${canUp ? '' : 'disabled'} onclick="moveWaitlist('${w.id}', -1)" title="بالا">▲</button>
+            <button ${canDown ? '' : 'disabled'} onclick="moveWaitlist('${w.id}', 1)" title="پایین">▼</button>
+          </div>
+        </td>
         <td><div class="btn-row tight">
           <button class="btn xs success" onclick="convertWaitlist('${w.id}')">ثبت‌نام</button>
           <button class="btn xs ghost" onclick="editWaitlist('${w.id}')">ویرایش</button>
           <button class="btn xs danger" onclick="removeWaitlist('${w.id}')">حذف</button>
         </div></td>
-      </tr>
-    `).join('')}</tbody></table></div>`;
+      </tr>`;
+    }).join('')}</tbody></table></div>`;
 }
 
-window.convertWaitlist = (id) => {
+/* چرخش اولویت: عادی → مهم → فوری → عادی */
+window.cycleWaitlistPriority = (id) => {
   const w = db.waitlist.find(x => x.id === id); if(!w) return;
-  if(!confirm(`«${w.name}» به زبان‌آموزان اضافه شود؟`)) return;
-  const s = {
-    id: uid(), name: w.name, course: w.course || '', fee: 0,
-    phone: w.phone || '', home_phone: '', birthday: null,
-    father_job: '', mother_job: '', address: '', note: w.note || '',
-    package_size: 0, package_used: 0, contact_log: []
-  };
-  db.students.push(s);
-  w.status = 'converted';
-  if(editWl === id) cancelWl();
-  saveLocal(); renderAll();
-  toast('ثبت‌نام شد', 'success');
-};
-window.editWaitlist = editWaitlist;
-window.removeWaitlist = (id) => {
-  if(!confirm('حذف؟')) return;
-  db.waitlist = db.waitlist.filter(x => x.id !== id);
-  if(editWl === id) cancelWl();
-  saveLocal(); renderWaitlist();
-  toast('حذف شد', 'success');
+  const cycle = { normal: 'high', high: 'urgent', urgent: 'normal' };
+  w.priority = cycle[w.priority || 'normal'] || 'normal';
+  saveLocal();
+  renderWaitlist();
+  const label = { normal: 'عادی', high: 'مهم', urgent: 'فوری' }[w.priority];
+  toast(`اولویت «${w.name}»: ${label}`, 'success');
 };
 
-window.editWaitlist = editWaitlist;
-
-on('wlSearch', 'input', debounce(renderWaitlist));
-function runReport(){
-  const from = getDate('repFrom'), to = getDate('repTo');
-  if(!from || !to) return;
-  if(from > to){ toast('تاریخ اشتباه', 'err'); return; }
-  const rows = db.tx.filter(t => {
-    const d = t.is_session && t.session_date ? t.session_date : t.date;
-    return d >= from && d <= to;
-  });
-  const income = rows.filter(t => t.type === 'payment').reduce((a,t) => a + t.amount, 0);
-  const charge = rows.filter(t => t.type === 'charge').reduce((a,t) => a + t.amount, 0);
-  const expense = rows.filter(t => t.type === 'expense').reduce((a,t) => a + t.amount, 0);
-  const sessions = rows.filter(t => t.is_session).length;
-  const absentCount = rows.filter(t => t.is_session && t.absent).length;
-  const net = income - expense;
-  if($('repCards')) $('repCards').innerHTML = `
-    <div class="rep-card green"><small>درآمد</small><b>${fa(income)}<small>تومان</small></b></div>
-    <div class="rep-card red"><small>بدهی</small><b>${fa(charge)}<small>تومان</small></b></div>
-    <div class="rep-card purple"><small>جلسات (${faDigits(absentCount)} غایب)</small><b>${fa(sessions)}<small>جلسه</small></b></div>
-    <div class="rep-card orange"><small>هزینه</small><b>${fa(expense)}<small>تومان</small></b></div>
-    <div class="rep-card green"><small>سود</small><b>${fa(net)}<small>تومان</small></b></div>`;
-  if($('repSummaryTxt')) $('repSummaryTxt').textContent = `${faDigits(rows.length)} تراکنش`;
-  const byStudent = {};
-  db.students.forEach(s => byStudent[s.id] = { name: s.name, sessions: 0, absent: 0, charge: 0, payment: 0 });
-  rows.forEach(t => {
-    if(!byStudent[t.sid]) return;
-    const o = byStudent[t.sid];
-    if(t.type === 'charge'){ o.charge += t.amount; if(t.is_session){ o.sessions++; if(t.absent) o.absent++; } }
-    if(t.type === 'payment') o.payment += t.amount;
-  });
-  const list = Object.values(byStudent).filter(x => x.charge || x.payment || x.sessions).sort((a,b) => (b.charge + b.payment) - (a.charge + a.payment));
-  if($('repStudents')) $('repStudents').innerHTML = list.length ? `<table><thead><tr><th>زبان‌آموز</th><th>جلسات</th><th>غایب</th><th>بدهی</th><th>دریافتی</th><th>خالص</th></tr></thead><tbody>${list.map(x => `<tr><td><b>${esc(x.name)}</b></td><td class="n">${fa(x.sessions)}</td><td class="n">${x.absent ? fa(x.absent) : '—'}</td><td class="n neg">${fa(x.charge)}</td><td class="n pos">${fa(x.payment)}</td><td class="n ${x.charge - x.payment > 0 ? 'neg' : 'pos'}">${fa(Math.abs(x.charge - x.payment))}</td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
-  const sortedRows = [...rows].sort((a,b) => {
-    const da = a.is_session && a.session_date ? a.session_date : a.date;
-    const db_ = b.is_session && b.session_date ? b.session_date : b.date;
-    return db_.localeCompare(da) || (b.ts || 0) - (a.ts || 0);
-  });
-  if($('repTx')) $('repTx').innerHTML = sortedRows.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>زبان‌آموز</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${sortedRows.slice(0, 200).map(t => { const d = t.is_session && t.session_date ? t.session_date : t.date; return `<tr><td>${showDate(d)}</td><td>${typeTag(t.type, t.is_session, t.absent)}</td><td>${t.type === 'expense' ? '—' : esc(stName(t.sid))}</td><td class="n"><b>${fa(t.amount)}</b></td><td>${esc(t.desc)}</td></tr>`; }).join('')}</tbody></table>` : emptyState('تراکنشی نیست');
-}
-
-click('repRun', runReport);
-click('repPrint', () => { runReport(); setTimeout(() => window.print(), 100); });
-document.querySelectorAll('[data-range]').forEach(b => {
-  b.addEventListener('click', () => {
-    const t = todayJ();
-    const r = b.dataset.range;
-    let from, to = t;
-    if(r === 'month') from = [t[0], t[1], 1];
-    else if(r === 'lastMonth'){ let y = t[0], m = t[1] - 1; if(m < 1){ m = 12; y--; } from = [y, m, 1]; to = [y, m, jMonthDays(y, m)]; }
-    else if(r === '30') from = jAddDays(t[0], t[1], t[2], -29);
-    else if(r === '7') from = jAddDays(t[0], t[1], t[2], -6);
-    else if(r === 'year'){ from = [t[0], 1, 1]; to = [t[0], 12, jMonthDays(t[0], 12)]; }
-    setDate('repFrom', from);
-    setDate('repTo', to);
-    runReport();
-  });
-});
+/* جابجایی دستی داخل همون اولویت */
+window.moveWaitlist = (id, dir) => {
+  const w = db.waitlist.find(x => x.id === id); if(!w) return;
+  const PRIO_ORDER = { urgent: 0, high: 1, normal: 2 };
+  const samePrio = db.waitlist
+    .filter(x => x.status === 'waiting' && (x.priority || 'normal') === (w.priority || 'normal'))
+    .sort((a,b) => (a.order || 0) - (b.order || 0));
+  const idx = samePrio.findIndex(x => x.id === id);
+  if(idx < 0) return;
+  const swapIdx = idx + dir;
+  if(swapIdx < 0 || swapIdx >= samePrio.length) return;
+  // جا به جا کردن order
+  const a = samePrio[idx], b = samePrio[swapIdx];
+  const tmp = a.order;
+  a.order = b.order;
+  b.order = tmp;
+  saveLocal();
+  renderWaitlist();
+};
 
 /* ============ WALLET ============ */
 function renderWallet(){
