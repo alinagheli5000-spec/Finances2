@@ -1323,7 +1323,7 @@ window.showIdCard = (id) => {
         </div>
         <div class="foot">
           <div><b>شهریه هر جلسه:</b> ${fa(s.fee || 0)} تومان<br><b>تاریخ صدور:</b> ${longDate(dateStr(todayJ()))}</div>
-         <div class="qr" id="idCardQR"></div>
+         <div class="qr" id="idCardQR" style="font-size:7px;line-height:1.3;word-break:break-all;direction:ltr;text-align:center;padding:4px">${(window.location.href.split('?')[0].split('#')[0] + '?p=' + (s.publicToken || '')).slice(-20)}</div>
         </div>
       </div>
       <script>
