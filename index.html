@@ -1323,7 +1323,7 @@ window.showIdCard = (id) => {
         </div>
         <div class="foot">
           <div><b>شهریه هر جلسه:</b> ${fa(s.fee || 0)} تومان<br><b>تاریخ صدور:</b> ${longDate(dateStr(todayJ()))}</div>
-          <div class="qr">QR</div>
+         <div class="qr" id="idCardQR"></div>
         </div>
       </div>
       <script>
@@ -1331,6 +1331,25 @@ window.showIdCard = (id) => {
       <\/script>
     </body></html>`);
   w.document.close();
+    // تولید QR روی کارت
+  setTimeout(() => {
+    try {
+      const qrDiv = w.document.getElementById('idCardQR');
+      if(qrDiv && w.QRCode){
+        const url = window.location.href.split('?')[0].split('#')[0] + '?p=' + (s.publicToken || '');
+        const canvas = w.document.createElement('canvas');
+        canvas.width = 60;
+        canvas.height = 60;
+        canvas.style.cssText = 'width:60px;height:60px;display:block';
+        w.QRCode.toCanvas(canvas, url, { width: 60, margin: 0 }, (err) => {
+          if(!err){
+            qrDiv.innerHTML = '';
+            qrDiv.appendChild(canvas);
+          }
+        });
+      }
+    } catch(e){ console.warn('QR error', e); }
+  }, 200);
 };
 /* ============ پایان کارت شناسایی ============ */
 function renderDash(){
