@@ -874,6 +874,26 @@ const CONFIG = {
   DEFAULT_PASSWORD: '09141892768'
 };
 /* ============ COURSE LIST ============ */
+  /* رنگ هر دسته دوره */
+const COURSE_COLORS = {
+  'Family and Friends': '#4a90e2',
+  'Connect': '#4ec5a0',
+  'Backpack': '#e89b6c',
+  'Touchstone': '#9d7cf0',
+  'Viewpoint': '#c9526a',
+  'آزمون‌ها': '#e0b04a',
+  'سایر': '#6e6985'
+};
+
+/* پیدا کردن رنگ بر اساس نام دوره */
+function getCourseColor(courseName){
+  if(!courseName) return '#e0b04a';
+  for(const g of COURSE_GROUPS){
+    if(g.items.includes(courseName)) return COURSE_COLORS[g.label.replace(/^[^\s]+\s/, '')] || COURSE_COLORS['آزمون‌ها'];
+  }
+  return '#e0b04a'; // پیش‌فرض
+}
+
   const COURSE_GROUPS = [
   { label: '📘 Family and Friends', items: ['Family and Friends starter','Family and Friends 1','Family and Friends 2','Family and Friends 3','Family and Friends 4','Family and Friends 5','Family and Friends 6'] },
   { label: '📗 Connect', items: ['connect 1','connect 2','connect 3','connect 4'] },
@@ -1161,6 +1181,67 @@ function doLogin(){
 }
 
 /* ============ RENDER DASHBOARD ============ */
+  /* ============ کارت شناسایی ============ */
+window.showIdCard = (id) => {
+  const s = db.students.find(x => x.id === id);
+  if(!s){ toast('یافت نشد', 'err'); return; }
+  const color = getCourseColor(s.course);
+  const w = window.open('', '_blank');
+  if(!w){ toast('پاپ‌آپ مسدود شده', 'err'); return; }
+  w.document.write(`
+    <html dir="rtl"><head><title>کارت شناسایی — ${s.name}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Vazirmatn,Tahoma,sans-serif;padding:30px;background:#f0ece2;display:flex;justify-content:center;align-items:center;min-height:100vh}
+      .card{width:420px;background:linear-gradient(135deg,#fff,#faf7f0);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);border:1px solid #e8e2d4}
+      .head{background:linear-gradient(135deg,${color},${color}cc);color:#fff;padding:20px 22px;position:relative;overflow:hidden}
+      .head::before{content:"";position:absolute;top:-30px;left:-30px;width:120px;height:120px;background:rgba(255,255,255,.15);border-radius:50%}
+      .head::after{content:"";position:absolute;bottom:-40px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.1);border-radius:50%}
+      .logo{position:relative;z-index:1;display:flex;align-items:center;gap:10px}
+      .logo-mark{width:44px;height:44px;background:rgba(255,255,255,.9);color:${color};border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+      .logo-txt b{display:block;font-size:14px;font-weight:800}
+      .logo-txt small{display:block;font-size:10px;opacity:.9}
+      .body{padding:20px 22px;display:flex;gap:16px;align-items:flex-start}
+      .avatar{width:70px;height:70px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;flex-shrink:0;box-shadow:0 6px 20px ${color}55;border:3px solid #fff}
+      .info{flex:1;min-width:0}
+      .name-fa{font-size:18px;font-weight:900;color:#1a1720;margin-bottom:2px}
+      .name-en{font-size:13px;color:#6b6578;direction:ltr;text-align:right;font-weight:600;margin-bottom:10px}
+      .row{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #e0dccd;font-size:11.5px}
+      .row:last-child{border-bottom:0}
+      .row span{color:#9a95a8;font-weight:600}
+      .row b{color:#1a1720;font-weight:700}
+      .foot{background:#f5f1e6;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:10px;color:#6b6578;border-top:3px solid ${color}}
+      .foot b{color:#1a1720;font-weight:800;font-size:11px}
+      .qr{width:60px;height:60px;background:#fff;border:1px solid #e0dccd;border-radius:8px;padding:4px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#9a95a8;text-align:center;line-height:1.3}
+      @media print{body{background:#fff;padding:0}.card{box-shadow:none;border:2px solid #333}}
+    </style></head><body>
+      <div class="card">
+        <div class="head">
+          <div class="logo"><div class="logo-mark">ع</div><div class="logo-txt"><b>آموزشگاه زبان علی ناقلی</b><small>STUDENT ID CARD</small></div></div>
+        </div>
+        <div class="body">
+          <div class="avatar">${s.name.charAt(0)}</div>
+          <div class="info">
+            <div class="name-fa">${s.name}</div>
+            ${s.name_en ? `<div class="name-en">${s.name_en}</div>` : ''}
+            <div class="row"><span>دوره</span><b style="color:${color}">${s.course || '—'}</b></div>
+            ${s.phone ? `<div class="row"><span>تلفن</span><b>${faDigits(s.phone)}</b></div>` : ''}
+            ${s.birthday ? `<div class="row"><span>تولد</span><b>${showDate(s.birthday)}</b></div>` : ''}
+          </div>
+        </div>
+        <div class="foot">
+          <div><b>شهریه هر جلسه:</b> ${fa(s.fee || 0)} تومان<br><b>تاریخ صدور:</b> ${longDate(dateStr(todayJ()))}</div>
+          <div class="qr">QR</div>
+        </div>
+      </div>
+      <script>
+        setTimeout(() => { window.print(); }, 500);
+      <\/script>
+    </body></html>`);
+  w.document.close();
+};
+/* ============ پایان کارت شناسایی ============ */
 function renderDash(){
   const hour = new Date().getHours();
   const greet = hour < 12 ? 'صبح بخیر ☀️' : hour < 17 ? 'ظهر بخیر 🌤' : 'عصر بخیر 🌙';
@@ -1524,6 +1605,7 @@ function renderStudents(){
       <td><div class="btn-row tight">
         <button class="btn xs success" onclick="quickTx('${s.id}','payment')" title="دریافت شهریه">💰 دریافت شهریه</button>
         <button class="btn xs ghost" onclick="openProfile('${s.id}')">پروفایل</button>
+        <button class="btn xs ghost" onclick="showIdCard('${s.id}')" title="کارت شناسایی">🪪</button>
         <button class="btn xs ghost" onclick="openStatement('${s.id}')">صورت‌حساب</button>
         <button class="btn xs ghost" onclick="quickSession('${s.id}')">جلسه</button>
         <button class="btn xs ghost" onclick="editStudent('${s.id}')">ویرایش</button>
@@ -2789,7 +2871,67 @@ document.addEventListener('click', e => {
     toast('پاک شد', 'success');
   }
 });
-
+/* ============ کارت شناسایی (نسخه جدید با رنگ سطح) ============ */
+window.showIdCard = (id) => {
+  const s = db.students.find(x => x.id === id);
+  if(!s){ toast('یافت نشد', 'err'); return; }
+  const color = getCourseColor(s.course);
+  const w = window.open('', '_blank');
+  if(!w){ toast('پاپ‌آپ مسدود شده', 'err'); return; }
+  w.document.write(`
+    <html dir="rtl"><head><title>کارت شناسایی — ${s.name}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:Vazirmatn,Tahoma,sans-serif;padding:30px;background:#f0ece2;display:flex;justify-content:center;align-items:center;min-height:100vh}
+      .card{width:420px;background:linear-gradient(135deg,#fff,#faf7f0);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);border:1px solid #e8e2d4}
+      .head{background:linear-gradient(135deg,${color},${color}cc);color:#fff;padding:20px 22px;position:relative;overflow:hidden}
+      .head::before{content:"";position:absolute;top:-30px;left:-30px;width:120px;height:120px;background:rgba(255,255,255,.15);border-radius:50%}
+      .head::after{content:"";position:absolute;bottom:-40px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.1);border-radius:50%}
+      .logo{position:relative;z-index:1;display:flex;align-items:center;gap:10px}
+      .logo-mark{width:44px;height:44px;background:rgba(255,255,255,.9);color:${color};border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+      .logo-txt b{display:block;font-size:14px;font-weight:800}
+      .logo-txt small{display:block;font-size:10px;opacity:.9}
+      .body{padding:20px 22px;display:flex;gap:16px;align-items:flex-start}
+      .avatar{width:70px;height:70px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;flex-shrink:0;box-shadow:0 6px 20px ${color}55;border:3px solid #fff}
+      .info{flex:1;min-width:0}
+      .name-fa{font-size:18px;font-weight:900;color:#1a1720;margin-bottom:2px}
+      .name-en{font-size:13px;color:#6b6578;direction:ltr;text-align:right;font-weight:600;margin-bottom:10px}
+      .row{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #e0dccd;font-size:11.5px}
+      .row:last-child{border-bottom:0}
+      .row span{color:#9a95a8;font-weight:600}
+      .row b{color:#1a1720;font-weight:700}
+      .foot{background:#f5f1e6;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:10px;color:#6b6578;border-top:3px solid ${color}}
+      .foot b{color:#1a1720;font-weight:800;font-size:11px}
+      .qr{width:60px;height:60px;background:#fff;border:1px solid #e0dccd;border-radius:8px;padding:4px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#9a95a8;text-align:center;line-height:1.3}
+      @media print{body{background:#fff;padding:0}.card{box-shadow:none;border:2px solid #333}}
+    </style></head><body>
+      <div class="card">
+        <div class="head">
+          <div class="logo"><div class="logo-mark">ع</div><div class="logo-txt"><b>آموزشگاه زبان علی ناقلی</b><small>STUDENT ID CARD</small></div></div>
+        </div>
+        <div class="body">
+          <div class="avatar">${s.name.charAt(0)}</div>
+          <div class="info">
+            <div class="name-fa">${s.name}</div>
+            ${s.name_en ? `<div class="name-en">${s.name_en}</div>` : ''}
+            <div class="row"><span>دوره</span><b style="color:${color}">${s.course || '—'}</b></div>
+            ${s.phone ? `<div class="row"><span>تلفن</span><b>${faDigits(s.phone)}</b></div>` : ''}
+            ${s.birthday ? `<div class="row"><span>تولد</span><b>${showDate(s.birthday)}</b></div>` : ''}
+          </div>
+        </div>
+        <div class="foot">
+          <div><b>شهریه هر جلسه:</b> ${fa(s.fee || 0)} تومان<br><b>تاریخ صدور:</b> ${longDate(dateStr(todayJ()))}</div>
+          <div class="qr">QR</div>
+        </div>
+      </div>
+      <script>
+        setTimeout(() => { window.print(); }, 500);
+      <\/script>
+    </body></html>`);
+  w.document.close();
+};
+/* ============ پایان کارت شناسایی ============ */
 /* ============ پایان برنامه هفتگی ============ */
   /* ============ اتصال دکمه‌های گردشی ============ */
 document.addEventListener('click', e => {
