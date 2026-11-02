@@ -480,6 +480,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="tx">💰 مالی</button>
   <button class="tab-btn" data-tab="calendar">🗓 تقویم</button>
   <button class="tab-btn" data-tab="birthdays">🎂 تولدها</button>
+  <button class="tab-btn" data-tab="graduates">🎓 فارغ‌التحصیلان</button>
   <button class="tab-btn" data-tab="sms">📱 پیامک</button>
   <button class="tab-btn" data-tab="waitlist">📝 لیست انتظار</button>
   <button class="tab-btn" data-tab="schedule">🗓 برنامه هفتگی</button>
@@ -624,7 +625,17 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   </div>
   <div class="card" id="calDayDetail" style="display:none"><h3 class="card-title" id="calDayTitle">—</h3><div class="table-wrap" id="calDayTable"></div></div>
 </section>
-
+<section class="tab" id="tab-graduates">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🎓</div>فارغ‌التحصیلان</div>
+      <div class="page-sub">زبان‌آموزانی که دوره را تمام کرده‌اند</div>
+    </div>
+  </div>
+  <div class="card">
+    <div id="graduatesContent"></div>
+  </div>
+</section>
 <section class="tab" id="tab-birthdays">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon">🎂</div>تولدها</div></div></div>
   <div id="bdayContent"></div>
@@ -1697,6 +1708,7 @@ let editSt = null;
 function renderStudents(){
   const table = $('stTable'); if(!table) return;
   const b = balances(), q = ($('stSearch')?.value || '').trim(), f = ($('stFilter')?.value || '');
+    const sortedStudents = [...db.students].filter(s => !s.graduated).sort((a, b) => a.name.localeCompare(b.name, 'fa'));
   const rows = db.students.filter(s => {
         if(q && !((s.name + ' ' + (s.name_en||'') + ' ' + s.course + ' ' + s.phone).toLowerCase().includes(q.toLowerCase()))) return false;
     if(f && statusOf(b[s.id].bal) !== f) return false;
@@ -1716,6 +1728,7 @@ function renderStudents(){
         <button class="btn xs success" onclick="quickTx('${s.id}','payment')" title="دریافت شهریه">💰 دریافت شهریه</button>
         <button class="btn xs ghost" onclick="openProfile('${s.id}')">پروفایل</button>
         <button class="btn xs ghost" onclick="showIdCard('${s.id}')" title="کارت شناسایی">🪪</button>
+        <button class="btn xs ghost" onclick="graduateStudent('${s.id}')" title="فارغ‌التحصیل">🎓</button>
         <button class="btn xs ghost" onclick="openStatement('${s.id}')">صورت‌حساب</button>
         <button class="btn xs ghost" onclick="quickSession('${s.id}')">جلسه</button>
         <button class="btn xs ghost" onclick="editStudent('${s.id}')">ویرایش</button>
@@ -2130,6 +2143,7 @@ function renderCalendar(){
   db.students.forEach(s => {
      if(s.name_en === undefined) s.name_en = '';
       if(s.publicToken === undefined) s.publicToken = uid().replace(/-/g, '').slice(0, 12);
+        if(s.graduated === undefined) s.graduated = false;
     if(!s.birthday) return;
     const [, bm, bd] = s.birthday.split('/').map(Number);
     if(bm === calMonth && days[bd-1]) days[bd-1].birthday = true;
@@ -2346,6 +2360,64 @@ function editWaitlist(id){
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(() => $('wlName')?.focus(), 100);
 }
+/* ============ فارغ‌التحصیلان ============ */
+function renderGraduates(){
+  const el = $('graduatesContent'); if(!el) return;
+  const list = db.students.filter(s => s.graduated).sort((a,b) => a.name.localeCompare(b.name, 'fa'));
+
+  if(!list.length){
+    el.innerHTML = `<div class="empty">
+      <div style="font-size:42px;margin-bottom:8px">🎓</div>
+      <b style="font-size:14px;color:var(--ink)">هنوز فارغ‌التحصیلی نداری</b>
+      <p style="font-size:12px;color:var(--ink-2);margin-top:8px;line-height:1.8">
+        از تب «زبان‌آموزان» روی دکمه 🎓 هر زبان‌آموز بزن تا به این بخش منتقل شود.
+      </p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>نام</th>
+      <th>نام انگلیسی</th>
+      <th>دوره</th>
+      <th>تلفن</th>
+      <th>تاریخ فارغ‌التحصیلی</th>
+      <th>عملیات</th>
+    </tr></thead>
+    <tbody>${list.map(s => `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">${avatarHTML(s.name, 32)}<b>${esc(s.name)}</b></div></td>
+      <td style="direction:ltr;text-align:right;font-size:12px;color:var(--ink-2)">${esc(s.name_en || '—')}</td>
+      <td>${esc(s.course || '—')}</td>
+      <td>${s.phone ? faDigits(esc(s.phone)) : '—'}</td>
+      <td>${s.graduatedAt ? new Date(s.graduatedAt).toLocaleDateString('fa-IR') : '—'}</td>
+      <td><div class="btn-row tight">
+        <button class="btn xs success" onclick="unGraduateStudent('${s.id}')">↩ بازگردانی</button>
+        <button class="btn xs ghost" onclick="showIdCard('${s.id}')">🪪</button>
+      </div></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+window.graduateStudent = (id) => {
+  const s = db.students.find(x => x.id === id); if(!s) return;
+  if(!confirm(`«${s.name}» به فارغ‌التحصیلان منتقل شود؟`)) return;
+  s.graduated = true;
+  s.graduatedAt = Date.now();
+  saveLocal();
+  renderAll();
+  toast(`🎓 ${s.name} فارغ‌التحصیل شد`, 'success');
+};
+
+window.unGraduateStudent = (id) => {
+  const s = db.students.find(x => x.id === id); if(!s) return;
+  s.graduated = false;
+  delete s.graduatedAt;
+  saveLocal();
+  renderAll();
+  toast('بازگردانی شد', 'success');
+};
+/* ============ پایان فارغ‌التحصیلان ============ */
 
 function renderWaitlist(){
   const el = $('waitlistContent'); if(!el) return;
@@ -3054,6 +3126,7 @@ function switchTab(t){
   document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
   renderAll();
   if(t === 'rotation') renderRotation();
+  if(t === 'graduates') renderGraduates();
   if(t === 'schedule') renderSchedule();
   if(t !== 'calendar') window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -3108,6 +3181,7 @@ document.addEventListener('input', e => {
 function renderAll(){
   renderSchedule();
   renderRotation();
+  if(typeof renderGraduates === 'function') renderGraduates();
   renderDash();
   renderStudents();
   renderSessions();
