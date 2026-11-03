@@ -578,6 +578,17 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
       </div>
     </div>
   </div>
+    <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,var(--primary-glow),var(--card-2));border-color:var(--primary)">
+    <h3 class="card-title" style="margin-bottom:12px">🏫 ثبت سریع برای کلاس</h3>
+    <div class="form-grid">
+      <div class="field"><label>کلاس</label><select id="seClassSelect"><option value="">— انتخاب کلاس —</option></select></div>
+      <div class="btn-row" style="align-items:end">
+        <button class="btn" type="button" id="seClassLoadBtn">📥 بارگذاری اعضا</button>
+      </div>
+    </div>
+    <p class="hint" id="seClassHint" style="margin-top:8px">یه کلاس انتخاب کن تا اعضاش با سهم مساوی انتخاب بشن.</p>
+  </div>
+
   <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="seSearch" placeholder="جستجو…"></div>
   <div class="chips" id="seCourseChips"></div>
   <div class="students-grid" id="seGrid"></div>
@@ -1851,6 +1862,7 @@ function renderCourseChips(){
 }
 
 function renderSessionGrid(){
+    fillClassSelect();
   const grid = $('seGrid'); if(!grid) return;
   const q = seSearchQuery.trim().toLowerCase();
   const bAll = balances();
@@ -1899,6 +1911,44 @@ on('seGrid', 'input', e => {
   updateSelBar();
 });
 on('seSearch', 'input', debounce(e => { seSearchQuery = e.target.value; renderSessionGrid(); }));
+  /* پر کردن سلکت کلاس‌ها */
+function fillClassSelect(){
+  const sel = $('seClassSelect'); if(!sel) return;
+  if(!db.classes) db.classes = [];
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— انتخاب کلاس —</option>' + db.classes.map(c => {
+    const n = (c.memberIds || []).length;
+    return `<option value="${c.id}">${esc(c.name)} (${faDigits(n)} نفر — ${fa(c.totalPrice || 0)} تومان)</option>`;
+  }).join('');
+  if(cur) sel.value = cur;
+}
+
+/* بارگذاری اعضای کلاس در گرید ثبت جلسه */
+click('seClassLoadBtn', () => {
+  const cid = $('seClassSelect')?.value;
+  if(!cid){ toast('اول یه کلاس انتخاب کن', 'err'); return; }
+  if(!db.classes) db.classes = [];
+  const c = db.classes.find(x => x.id === cid);
+  if(!c){ toast('کلاس پیدا نشد', 'err'); return; }
+  const members = (c.memberIds || []).map(id => db.students.find(s => s.id === id)).filter(Boolean);
+  if(!members.length){ toast('این کلاس عضوی نداره', 'err'); return; }
+
+  const per = Math.floor((c.totalPrice || 0) / members.length);
+  seSelected = {};
+  members.forEach(m => { seSelected[m.id] = per; });
+  seSearchQuery = '';
+  if($('seSearch')) $('seSearch').value = '';
+  seCourseFilter = c.course || '';
+
+  renderCourseChips();
+  renderSessionGrid();
+  const hint = $('seClassHint');
+  if(hint){
+    hint.innerHTML = `✅ <b>${faDigits(members.length)}</b> نفر از «${esc(c.name)}» انتخاب شدن — سهم هر نفر: <b style="color:var(--primary)">${fa(per)}</b> تومان`;
+  }
+  toast(`اعضای «${c.name}» بارگذاری شد`, 'success');
+});
+
 document.querySelectorAll('.quick-btns button').forEach(b => { b.addEventListener('click', () => { const off = +b.dataset.off; const t = todayJ(); const target = off === 0 ? t : jAddDays(t[0], t[1], t[2], off); setDate('seDate', target); }); });
 click('seClear', () => { seSelected = {}; renderSessionGrid(); });
 
