@@ -482,7 +482,6 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="birthdays">🎂 تولدها</button>
   <button class="tab-btn" data-tab="graduates">🎓 فارغ‌التحصیلان</button>
   <button class="tab-btn" data-tab="classes">🏫 کلاس‌ها</button>
-  <button class="tab-btn" data-tab="sms">📱 پیامک</button>
   <button class="tab-btn" data-tab="waitlist">📝 لیست انتظار</button>
   <button class="tab-btn" data-tab="schedule">🗓 برنامه هفتگی</button>
   <button class="tab-btn" data-tab="rotation">🔄 گردشی</button>
@@ -2551,7 +2550,8 @@ window.openClassMembers = (id) => {
       <button class="btn ghost sm" onclick="closeModal()">بستن</button>
     </div>
     <p class="hint" style="margin-bottom:10px">قیمت کل: <b>${fa(c.totalPrice || 0)}</b> تومان — روی هر نفر کلیک کن تا اضافه/حذف شود.</p>
-    <div class="sch-pick-list">${list}</div>
+        <input id="clsMemberSearch" type="text" placeholder="🔍 جستجوی نام…" autocomplete="off" style="margin-bottom:10px;width:100%">
+    <div class="sch-pick-list" id="clsMemberList">${list}</div>
   `;
 
   modalBox.querySelectorAll('.sch-pick-item').forEach(el => {
@@ -2564,6 +2564,17 @@ window.openClassMembers = (id) => {
       renderClasses();
     });
   });
+  const srch = $('clsMemberSearch');
+  if(srch){
+    srch.addEventListener('input', () => {
+      const q = srch.value.trim().toLowerCase();
+      modalBox.querySelectorAll('.sch-pick-item').forEach(item => {
+        const name = (item.dataset.id ? (db.students.find(s => s.id === item.dataset.id) || {}).name || '' : '').toLowerCase();
+        item.style.display = name.includes(q) ? '' : 'none';
+      });
+    });
+    setTimeout(() => srch.focus(), 100);
+  }
 
   $('modal').classList.add('on');
 };
