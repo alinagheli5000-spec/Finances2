@@ -481,6 +481,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="calendar">🗓 تقویم</button>
   <button class="tab-btn" data-tab="birthdays">🎂 تولدها</button>
   <button class="tab-btn" data-tab="graduates">🎓 فارغ‌التحصیلان</button>
+  <button class="tab-btn" data-tab="classes">🏫 کلاس‌ها</button>
   <button class="tab-btn" data-tab="sms">📱 پیامک</button>
   <button class="tab-btn" data-tab="waitlist">📝 لیست انتظار</button>
   <button class="tab-btn" data-tab="schedule">🗓 برنامه هفتگی</button>
@@ -624,6 +625,32 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <div class="cal-grid" id="calGrid"></div>
   </div>
   <div class="card" id="calDayDetail" style="display:none"><h3 class="card-title" id="calDayTitle">—</h3><div class="table-wrap" id="calDayTable"></div></div>
+</section>
+  <section class="tab" id="tab-classes">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🏫</div>کلاس‌ها</div>
+      <div class="page-sub">گروه‌بندی زبان‌آموزان با قیمت اشتراکی</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title" id="clsFormTitle">➕ ساخت کلاس جدید</h3>
+    <form class="form-grid" id="clsForm">
+      <div class="field"><label>نام کلاس <span class="req">*</span></label><input id="clsName" required placeholder="مثلاً Connect 2 - شنبه‌ها"></div>
+      <div class="field"><label>دوره</label><select id="clsCourse"><option value="">— انتخاب —</option></select></div>
+      <div class="field"><label>قیمت کل جلسه (تومان)</label><input id="clsTotalPrice" inputmode="numeric" class="money" placeholder="مثلاً ۹۰۰,۰۰۰"></div>
+      <div class="btn-row" style="grid-column:1/-1">
+        <button class="btn" type="submit" id="clsSaveBtn">ساخت کلاس</button>
+        <button class="btn ghost" type="button" id="clsCancelBtn" style="display:none">انصراف</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">📋 لیست کلاس‌ها</h3>
+    <div id="classesContent"></div>
+  </div>
 </section>
 <section class="tab" id="tab-graduates">
   <div class="page-head">
@@ -2360,6 +2387,188 @@ function editWaitlist(id){
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(() => $('wlName')?.focus(), 100);
 }
+  /* ============ کلاس‌ها ============ */
+let editCls = null;
+
+function loadClasses(){
+  if(!db.classes) db.classes = [];
+}
+function saveClasses(){
+  saveLocal();
+}
+
+function getClassMembers(clsId){
+  if(!db.classes) return [];
+  const c = db.classes.find(x => x.id === clsId);
+  if(!c) return [];
+  return (c.memberIds || []).map(id => db.students.find(s => s.id === id)).filter(Boolean);
+}
+function getClassPerPerson(cls){
+  const members = getClassMembers(cls.id);
+  const n = members.length;
+  if(!n || !cls.totalPrice) return 0;
+  return Math.floor((cls.totalPrice || 0) / n);
+}
+
+function renderClasses(){
+  const el = $('classesContent'); if(!el) return;
+  loadClasses();
+
+  // پر کردن سلکت دوره
+  const cs = $('clsCourse');
+  if(cs && cs.tagName === 'SELECT' && cs.options.length <= 1 && typeof COURSE_GROUPS !== 'undefined'){
+    COURSE_GROUPS.forEach(g => {
+      const og = document.createElement('optgroup');
+      og.label = g.label;
+      g.items.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c;
+        og.appendChild(opt);
+      });
+      cs.appendChild(og);
+    });
+  }
+
+  if(!db.classes.length){
+    el.innerHTML = `<div class="empty">
+      <div style="font-size:42px;margin-bottom:8px">🏫</div>
+      <b style="font-size:14px;color:var(--ink)">هنوز کلاسی نساختی</b>
+      <p style="font-size:12px;color:var(--ink-2);margin-top:8px">از فرم بالا یه کلاس بساز و زبان‌آموز اضافه کن.</p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = db.classes.map(c => {
+    const members = getClassMembers(c.id);
+    const per = getClassPerPerson(c);
+    const color = (typeof getCourseColor === 'function') ? getCourseColor(c.course) : '#e0b04a';
+    const memberChips = members.length
+      ? members.map(m => `<span class="tag session" style="cursor:default">${esc(m.name)}</span>`).join('')
+      : `<span class="hint">هنوز عضوی اضافه نشده</span>`;
+    return `<div style="background:var(--card-2);border:1.5px solid var(--border);border-inline-start:4px solid ${color};border-radius:var(--radius);padding:16px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+        <div>
+          <b style="font-size:15px;color:var(--ink)">${esc(c.name)}</b>
+          ${c.course ? `<div style="font-size:12px;color:${color};font-weight:700;margin-top:2px">📚 ${esc(c.course)}</div>` : ''}
+        </div>
+        <div class="btn-row tight">
+          <button class="btn xs success" onclick="openClassMembers('${c.id}')">👥 اعضا</button>
+          <button class="btn xs ghost" onclick="editClass('${c.id}')">ویرایش</button>
+          <button class="btn xs danger" onclick="delClass('${c.id}')">حذف</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:10px">
+        <div style="background:var(--surface);padding:8px 12px;border-radius:8px;text-align:center">
+          <div style="font-size:10.5px;color:var(--ink-2)">قیمت کل جلسه</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink)">${fa(c.totalPrice || 0)}</div>
+        </div>
+        <div style="background:var(--surface);padding:8px 12px;border-radius:8px;text-align:center">
+          <div style="font-size:10.5px;color:var(--ink-2)">تعداد اعضا</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink)">${faDigits(members.length)}</div>
+        </div>
+        <div style="background:var(--primary-glow);padding:8px 12px;border-radius:8px;text-align:center;border:1px solid var(--primary)">
+          <div style="font-size:10.5px;color:var(--primary);font-weight:700">سهم هر نفر</div>
+          <div style="font-size:15px;font-weight:800;color:var(--primary)">${fa(per)}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${memberChips}</div>
+    </div>`;
+  }).join('');
+}
+
+on('clsForm', 'submit', e => {
+  e.preventDefault();
+  const name = $('clsName').value.trim();
+  if(!name){ toast('نام کلاس لازمه', 'err'); return; }
+  const o = {
+    name,
+    course: $('clsCourse').value || '',
+    totalPrice: moneyVal('clsTotalPrice')
+  };
+  loadClasses();
+  if(editCls){
+    const c = db.classes.find(x => x.id === editCls);
+    if(c) Object.assign(c, o);
+    toast('ذخیره شد', 'success');
+  } else {
+    db.classes.push({ id: uid(), ...o, memberIds: [], createdAt: Date.now() });
+    toast('کلاس ساخته شد', 'success');
+  }
+  cancelCls();
+  saveClasses();
+  renderClasses();
+});
+
+function cancelCls(){
+  editCls = null;
+  const f = $('clsForm'); if(f) f.reset();
+  if($('clsFormTitle')) $('clsFormTitle').textContent = '➕ ساخت کلاس جدید';
+  if($('clsSaveBtn')) $('clsSaveBtn').textContent = 'ساخت کلاس';
+  if($('clsCancelBtn')) $('clsCancelBtn').style.display = 'none';
+}
+click('clsCancelBtn', cancelCls);
+
+window.editClass = (id) => {
+  loadClasses();
+  const c = db.classes.find(x => x.id === id); if(!c) return;
+  editCls = id;
+  $('clsName').value = c.name || '';
+  $('clsCourse').value = c.course || '';
+  $('clsTotalPrice').value = c.totalPrice ? c.totalPrice.toLocaleString('en-US') : '';
+  if($('clsFormTitle')) $('clsFormTitle').textContent = '✏️ ویرایش کلاس';
+  if($('clsSaveBtn')) $('clsSaveBtn').textContent = 'ذخیره';
+  if($('clsCancelBtn')) $('clsCancelBtn').style.display = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.delClass = (id) => {
+  if(!confirm('این کلاس حذف شود؟')) return;
+  db.classes = db.classes.filter(x => x.id !== id);
+  saveClasses(); renderClasses();
+  toast('حذف شد', 'success');
+};
+
+window.openClassMembers = (id) => {
+  loadClasses();
+  const c = db.classes.find(x => x.id === id); if(!c) return;
+  if(!c.memberIds) c.memberIds = [];
+  const modalBox = $('modalBox'); if(!modalBox) return;
+
+  const all = [...db.students].filter(s => !s.graduated).sort((a,b) => a.name.localeCompare(b.name, 'fa'));
+  const list = all.map(s => {
+    const checked = c.memberIds.includes(s.id);
+    return `<div class="sch-pick-item ${checked ? 'on' : ''}" data-id="${s.id}">
+      <div style="display:flex;align-items:center;gap:10px">${avatarHTML(s.name, 28)}
+        <div><b style="font-size:13px;color:var(--ink)">${esc(s.name)}</b><br><small style="font-size:11px;color:var(--ink-2)">${esc(s.course || '—')}</small></div>
+      </div>
+      <span class="sch-pick-check">${checked ? '✓' : '+'}</span>
+    </div>`;
+  }).join('') || '<div class="empty">زبان‌آموزی نیست</div>';
+
+  modalBox.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+      <h3 style="margin:0;font-size:15px;color:var(--ink)">👥 اعضای «${esc(c.name)}»</h3>
+      <button class="btn ghost sm" onclick="closeModal()">بستن</button>
+    </div>
+    <p class="hint" style="margin-bottom:10px">قیمت کل: <b>${fa(c.totalPrice || 0)}</b> تومان — روی هر نفر کلیک کن تا اضافه/حذف شود.</p>
+    <div class="sch-pick-list">${list}</div>
+  `;
+
+  modalBox.querySelectorAll('.sch-pick-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const sid = el.dataset.id;
+      const i = c.memberIds.indexOf(sid);
+      if(i >= 0){ c.memberIds.splice(i, 1); el.classList.remove('on'); el.querySelector('.sch-pick-check').textContent = '+'; }
+      else { c.memberIds.push(sid); el.classList.add('on'); el.querySelector('.sch-pick-check').textContent = '✓'; }
+      saveClasses();
+      renderClasses();
+    });
+  });
+
+  $('modal').classList.add('on');
+};
+
+/* ============ پایان کلاس‌ها ============ */
 /* ============ فارغ‌التحصیلان ============ */
 function renderGraduates(){
   const el = $('graduatesContent'); if(!el) return;
@@ -3127,6 +3336,7 @@ function switchTab(t){
   renderAll();
   if(t === 'rotation') renderRotation();
   if(t === 'graduates') renderGraduates();
+  if(t === 'classes') renderClasses();
   if(t === 'schedule') renderSchedule();
   if(t !== 'calendar') window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -3182,6 +3392,7 @@ function renderAll(){
   renderSchedule();
   renderRotation();
   if(typeof renderGraduates === 'function') renderGraduates();
+  if(typeof renderClasses === 'function') renderClasses();
   renderDash();
   renderStudents();
   renderSessions();
