@@ -541,7 +541,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div id="bdayTodayCard"></div>
   <div class="stats-grid" id="stats"></div>
   <div class="card"><h3 class="card-title">🏆 رکوردها</h3><div class="records-grid" id="recordsGrid"></div></div>
-  <div class="card" id="overdueCard" style="display:none"><h3 class="card-title">⚠️ بدهکاران معوق <span id="overdueCount" style="color:var(--rose);font-size:13px"></span></h3><div id="overdueList"></div></div>
+  <div class="card" id="todayClassesCard"><h3 class="card-title">📅 کلاس‌های امروز <span id="todayClassesCount" style="color:var(--primary);font-size:13px"></span></h3><div id="todayClassesList"></div></div>
   <div class="grid-2">
     <div class="card"><h3 class="card-title">📈 وضعیت زبان‌آموزان</h3><div id="donut"></div></div>
     <div class="card"><h3 class="card-title">💰 مانده حساب</h3><div id="bars"></div><div class="hint" style="margin-top:8px">قرمز = بدهکار، سبز = بستانکار</div></div>
@@ -1504,7 +1504,7 @@ function renderDash(){
   
   renderRecords();
   renderBirthdayCard();
-  renderOverdue();
+  renderTodayClasses();
   renderDonut(nd, nc, nz);
   renderBars(b);
   renderRecent();
@@ -1537,7 +1537,69 @@ function renderBirthdayCard(){
   if(!today.length){ el.innerHTML = ''; return; }
   el.innerHTML = `<div class="bday-card"><h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3>${today.map(s => `<div class="bday-item"><b>${avatarHTML(s.name, 24)} ${esc(s.name)}</b><span>${esc(s.course || '')}</span><button onclick="sendBirthdayTo('${s.id}')">پیام تبریک</button></div>`).join('')}</div>`;
 }
+function renderTodayClasses(){
+  const countEl = $('todayClassesCount');
+  const listEl = $('todayClassesList');
+  if(!listEl) return;
 
+  // محاسبه‌ی امروز بر اساس تقویم میلادی (بدون واسطه)
+  const now = new Date();
+  const dow = now.getDay(); // 0=یکشنبه ... 6=شنبه
+  // تبدیل به شنبه=0 ... جمعه=6
+  const persianDayIdx = (dow + 1) % 7;
+  const todayName = SCHEDULE_DAYS[persianDayIdx];
+
+  const todayItems = [];
+  SCHEDULE_SLOTS.forEach(slot => {
+    const names = schGet(todayName, slot);
+    names.forEach(n => todayItems.push({ slot, name: n }));
+  });
+
+  if(countEl) countEl.textContent = `(${faDigits(todayItems.length)} مورد — ${todayName})`;
+
+  if(!todayItems.length){
+    listEl.innerHTML = `<div class="empty" style="padding:24px">
+      <div style="font-size:36px;margin-bottom:6px">☕</div>
+      <b style="font-size:13px;color:var(--ink)">امروز (${todayName}) کلاسی نداری</b>
+    </div>`;
+    return;
+  }
+
+  const bySlot = {};
+  todayItems.forEach(it => { if(!bySlot[it.slot]) bySlot[it.slot] = []; bySlot[it.slot].push(it.name); });
+
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+
+  listEl.innerHTML = Object.keys(bySlot).sort().map(slot => {
+    const [hh, mm] = slot.split(':').map(Number);
+    const slotMin = hh * 60 + mm;
+    const slotEnd = slotMin + 75;
+    const isNow = nowMin >= slotMin && nowMin < slotEnd;
+    const isPast = nowMin >= slotEnd;
+    const isUpcoming = nowMin < slotMin;
+
+    let badge = '';
+    if(isNow) badge = '<span class="tag" style="background:var(--emerald-soft);color:var(--emerald);border:1px solid var(--emerald);font-size:10px">🔴 الان</span>';
+    else if(isPast) badge = '<span class="tag zero" style="font-size:10px">گذشت</span>';
+    else if(isUpcoming) badge = '<span class="tag" style="background:var(--primary-glow);color:var(--primary);font-size:10px">بعداً</span>';
+
+    return `<div class="overdue-item" style="${isPast ? 'opacity:.55' : ''}">
+      <div class="oi-info" style="flex:1">
+        <div class="oi-name" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-variant-numeric:tabular-nums;background:var(--surface);padding:2px 10px;border-radius:999px;font-size:12px;color:var(--primary);font-weight:800">${faDigits(slot)}</span>
+          ${badge}
+        </div>
+        <div class="oi-meta" style="margin-top:4px;display:flex;flex-direction:column;gap:2px">
+          ${bySlot[slot].map(n => {
+            const st = db.students.find(s => s.name === n);
+            const course = st && st.course ? ` — ${esc(st.course)}` : '';
+            return `<span style="font-weight:600;color:var(--ink)">${esc(n)}<small style="color:var(--ink-3);font-size:10.5px">${course}</small></span>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 function renderOverdue(){
   const b = balances();
   const now = todayJ();
