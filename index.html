@@ -1539,6 +1539,13 @@ function renderBirthdayCard(){
   el.innerHTML = `<div class="bday-card"><h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3>${today.map(s => `<div class="bday-item"><b>${avatarHTML(s.name, 24)} ${esc(s.name)}</b><span>${esc(s.course || '')}</span><button onclick="sendBirthdayTo('${s.id}')">پیام تبریک</button></div>`).join('')}</div>`;
 }
 function renderTodayClasses(){
+    // DEBUG موقت
+  const _t = todayJ();
+  const _idx = dayOfWeek(_t[0], _t[1], _t[2]);
+  const _realDay = new Date().toLocaleDateString('fa-IR', { weekday: 'long' });
+  const _debugBox = $('todayClassesCount');
+  if(_debugBox) _debugBox.textContent = `[تست] سیستم: ${SCHEDULE_DAYS[_idx]} | واقعی: ${_realDay}`;
+  return;
     // DEBUG
   const _t = todayJ();
   const _idx = dayOfWeek(_t[0], _t[1], _t[2]);
