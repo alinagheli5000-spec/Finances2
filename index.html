@@ -541,7 +541,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div id="bdayTodayCard"></div>
   <div class="stats-grid" id="stats"></div>
   <div class="card"><h3 class="card-title">🏆 رکوردها</h3><div class="records-grid" id="recordsGrid"></div></div>
-  <div class="card" id="todayClassesCard"><h3 class="card-title">📅 کلاس‌های امروز <span id="todayClassesCount" style="color:var(--primary);font-size:13px"></span></h3><div id="todayClassesList"></div></div>
+  <div class="card" id="overdueCard" style="display:none"><h3 class="card-title">⚠️ بدهکاران معوق <span id="overdueCount" style="color:var(--rose);font-size:13px"></span></h3><div id="overdueList"></div></div>
   <div class="grid-2">
     <div class="card"><h3 class="card-title">📈 وضعیت زبان‌آموزان</h3><div id="donut"></div></div>
     <div class="card"><h3 class="card-title">💰 مانده حساب</h3><div id="bars"></div><div class="hint" style="margin-top:8px">قرمز = بدهکار، سبز = بستانکار</div></div>
@@ -788,7 +788,6 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
         <button class="btn ghost sm" id="schClearAll">🗑 پاک کردن همه</button>
       </div>
     </div>
-        <div id="schEmptySummary" style="margin-bottom:14px"></div>
     <div id="scheduleContainer"></div>
     <p class="hint" style="margin-top:12px">برای افزودن نام: روی خانه خالی کلیک کن. برای حذف: روی نام کلیک کن.</p>
   </div>
@@ -1505,7 +1504,7 @@ function renderDash(){
   
   renderRecords();
   renderBirthdayCard();
-  renderTodayClasses();
+  renderOverdue();
   renderDonut(nd, nc, nz);
   renderBars(b);
   renderRecent();
@@ -1538,93 +1537,7 @@ function renderBirthdayCard(){
   if(!today.length){ el.innerHTML = ''; return; }
   el.innerHTML = `<div class="bday-card"><h3>🎂 امروز تولد ${today.length === 1 ? today[0].name : `${faDigits(today.length)} نفر`} است!</h3>${today.map(s => `<div class="bday-item"><b>${avatarHTML(s.name, 24)} ${esc(s.name)}</b><span>${esc(s.course || '')}</span><button onclick="sendBirthdayTo('${s.id}')">پیام تبریک</button></div>`).join('')}</div>`;
 }
-function renderTodayClasses(){
-    // DEBUG موقت
-  const _t = todayJ();
-  const _idx = dayOfWeek(_t[0], _t[1], _t[2]);
-  const _realDay = new Date().toLocaleDateString('fa-IR', { weekday: 'long' });
-  const _debugBox = $('todayClassesCount');
-  if(_debugBox) _debugBox.textContent = `[تست] سیستم: ${SCHEDULE_DAYS[_idx]} | واقعی: ${_realDay}`;
-  return;
-    // DEBUG
-  const _t = todayJ();
-  const _idx = dayOfWeek(_t[0], _t[1], _t[2]);
-  console.log('DEBUG todayJ:', _t, 'idx:', _idx, 'name:', SCHEDULE_DAYS[_idx]);
-  const _realDay = new Date().toLocaleDateString('fa-IR', { weekday: 'long' });
-  console.log('DEBUG real day:', _realDay);
-  const card = $('todayClassesCard');
-  const countEl = $('todayClassesCount');
-  const listEl = $('todayClassesList');
-  if(!card || !listEl) return;
 
-  const todayName = schTodayName();
-  if(!todayName){
-    card.style.display = 'none';
-    return;
-  }
-  card.style.display = '';
-
-  // جمع‌آوری کلاس‌های امروز از برنامه هفتگی
-  const todayItems = [];
-  SCHEDULE_SLOTS.forEach(slot => {
-    const names = schGet(todayName, slot);
-    names.forEach(n => {
-      todayItems.push({ slot, name: n });
-    });
-  });
-
-  if(countEl) countEl.textContent = `(${faDigits(todayItems.length)} مورد — ${todayName})`;
-
-  if(!todayItems.length){
-    listEl.innerHTML = `<div class="empty" style="padding:24px">
-      <div style="font-size:36px;margin-bottom:6px">☕</div>
-      <b style="font-size:13px;color:var(--ink)">امروز کلاسی نداری</b>
-      <p style="font-size:11.5px;color:var(--ink-2);margin-top:4px">یه روز آروم داشته باش!</p>
-    </div>`;
-    return;
-  }
-
-  // گروه‌بندی بر اساس ساعت
-  const bySlot = {};
-  todayItems.forEach(it => { if(!bySlot[it.slot]) bySlot[it.slot] = []; bySlot[it.slot].push(it.name); });
-
-  // پیدا کردن ساعت فعلی
-  const now = new Date();
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-
-  listEl.innerHTML = Object.keys(bySlot).sort().map(slot => {
-    const [hh, mm] = slot.split(':').map(Number);
-    const slotMinutes = hh * 60 + mm;
-    const slotEnd = slotMinutes + 75; // هر کلاس ۱:۱۵
-    const isNow = nowMinutes >= slotMinutes && nowMinutes < slotEnd;
-    const isPast = nowMinutes >= slotEnd;
-    const isUpcoming = nowMinutes < slotMinutes;
-
-    const stu = db.students.find(s => s.name === bySlot[slot][0]);
-    const color = (stu && typeof getCourseColor === 'function') ? getCourseColor(stu.course) : '#e0b04a';
-
-    let statusBadge = '';
-    if(isNow) statusBadge = '<span class="tag" style="background:var(--emerald-soft);color:var(--emerald);border:1px solid var(--emerald);font-size:10px">🔴 الان</span>';
-    else if(isPast) statusBadge = '<span class="tag zero" style="font-size:10px">گذشت</span>';
-    else if(isUpcoming) statusBadge = '<span class="tag" style="background:var(--primary-glow);color:var(--primary);font-size:10px">بعداً</span>';
-
-    return `<div class="overdue-item" style="border-inline-start:4px solid ${color};${isPast ? 'opacity:.6' : ''}">
-      <div class="oi-info" style="flex:1">
-        <div class="oi-name" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <span style="font-variant-numeric:tabular-nums;background:var(--surface);padding:2px 10px;border-radius:999px;font-size:12px;color:var(--primary);font-weight:800">${faDigits(slot)}</span>
-          ${statusBadge}
-        </div>
-        <div class="oi-meta" style="margin-top:4px;display:flex;flex-direction:column;gap:2px">
-          ${bySlot[slot].map(n => {
-            const st = db.students.find(s => s.name === n);
-            const course = st && st.course ? `<small style="color:var(--ink-3);font-size:10.5px"> — ${esc(st.course)}</small>` : '';
-            return `<span style="font-weight:600;color:var(--ink)">${esc(n)}${course}</span>`;
-          }).join('')}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
 function renderOverdue(){
   const b = balances();
   const now = todayJ();
@@ -3521,10 +3434,6 @@ function openSchedulePicker(day, slot){
       <button class="btn ghost sm" onclick="closeModal()">بستن</button>
     </div>
     <p class="hint" style="margin-bottom:12px">روی نام کلیک کن تا اضافه/حذف بشه.</p>
-        <div style="display:flex;gap:6px;margin-bottom:12px">
-      <input id="schFreeInput" type="text" placeholder="✏️ اسم آزاد (مثلاً ورزش، استراحت…)" autocomplete="off" style="flex:1">
-      <button class="btn sm" id="schFreeAddBtn" type="button">افزودن</button>
-    </div>
     <input id="schPickSearch" type="text" placeholder="🔍 جستجوی نام…" autocomplete="off" style="margin-bottom:12px;width:100%">
     <div class="sch-pick-list" id="schPickList">${listHtml}</div>
   `;
@@ -3539,25 +3448,6 @@ function openSchedulePicker(day, slot){
       });
     });
     setTimeout(() => searchEl.focus(), 100);
-  }
-  // دکمه افزودن اسم آزاد
-  const freeInput = $('schFreeInput');
-  const freeBtn = $('schFreeAddBtn');
-  if(freeBtn && freeInput){
-    freeBtn.addEventListener('click', () => {
-      const name = freeInput.value.trim();
-      if(!name){ freeInput.focus(); return; }
-      const arr = schGet(day, slot);
-      if(arr.includes(name)){ toast('این اسم قبلاً اضافه شده', 'err'); return; }
-      arr.push(name);
-      schSet(day, slot, arr);
-      freeInput.value = '';
-      renderSchedule();
-      toast(`«${name}» اضافه شد`, 'success');
-    });
-    freeInput.addEventListener('keydown', e => {
-      if(e.key === 'Enter'){ e.preventDefault(); freeBtn.click(); }
-    });
   }
 
   box.querySelectorAll('.sch-pick-item').forEach(el => {
@@ -3581,81 +3471,8 @@ function openSchedulePicker(day, slot){
 
   modal.classList.add('on');
 }
-function renderEmptySummary(){
-  const box = $('schEmptySummary');
-  if(!box) return;
 
-  // پیدا کردن خونه‌های خالی: هر جفت (روز، ساعت) که هیچ اسمی نداره
-  const emptySlots = [];
-  SCHEDULE_DAYS.forEach(day => {
-    SCHEDULE_SLOTS.forEach(slot => {
-      const names = schGet(day, slot);
-      if(!names.length) emptySlots.push({ day, slot });
-    });
-  });
-
-  const total = SCHEDULE_DAYS.length * SCHEDULE_SLOTS.length;
-  const filled = total - emptySlots.length;
-  const percent = total ? Math.round(filled / total * 100) : 0;
-
-  // گروه‌بندی خالی‌ها بر اساس روز
-  const byDay = {};
-  emptySlots.forEach(e => { if(!byDay[e.day]) byDay[e.day] = []; byDay[e.day].push(e.slot); });
-
-  const todayName = schTodayName();
-  const todayEmpty = byDay[todayName] || [];
-
-  let html = `<div class="card" style="margin-bottom:0;background:linear-gradient(135deg,var(--card-2),var(--surface));border-color:var(--border-strong)">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px">
-      <h3 style="margin:0;font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px">📊 وضعیت ساعت‌ها</h3>
-      <div style="font-size:12px;color:var(--ink-2)">
-        <b style="color:var(--primary);font-size:15px">${faDigits(filled)}</b> پر / 
-        <b style="color:var(--rose);font-size:15px">${faDigits(emptySlots.length)}</b> خالی
-        <span style="color:var(--ink-3);margin-inline-start:6px">(${faDigits(percent)}٪ پر)</span>
-      </div>
-    </div>
-    <div style="height:8px;background:var(--surface);border-radius:4px;overflow:hidden;margin-bottom:12px">
-      <div style="height:100%;width:${percent}%;background:linear-gradient(90deg,var(--primary),var(--primary-2));border-radius:4px;transition:width .5s"></div>
-    </div>`;
-
-  // امروز
-  if(todayName){
-    if(todayEmpty.length){
-      html += `<div style="margin-bottom:10px">
-        <div style="font-size:12px;color:var(--ink-2);margin-bottom:6px;font-weight:700">🟡 امروز (${todayName}) — این ساعت‌ها خالیه:</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${todayEmpty.map(s => `<span class="tag" style="background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose);font-variant-numeric:tabular-nums">${faDigits(s)}</span>`).join('')}
-        </div>
-      </div>`;
-    } else {
-      html += `<div style="margin-bottom:10px;padding:8px 12px;background:var(--emerald-soft);border:1px solid var(--emerald);border-radius:8px;font-size:12px;color:var(--emerald);font-weight:700">✅ امروز (${todayName}) همه ساعت‌ها پره!</div>`;
-    }
-  }
-
-  // بقیه روزها (خلاصه)
-  const otherDays = SCHEDULE_DAYS.filter(d => d !== todayName && byDay[d] && byDay[d].length);
-  if(otherDays.length){
-    html += `<details style="margin-top:6px">
-      <summary style="cursor:pointer;font-size:12px;color:var(--ink-2);font-weight:700;padding:4px 0">📅 بقیه روزها (${faDigits(emptySlots.length - todayEmpty.length)} ساعت خالی)</summary>
-      <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
-        ${otherDays.map(d => `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;background:var(--card-2);border-radius:8px;border:1px solid var(--border)">
-          <b style="font-size:11.5px;color:var(--ink);min-width:70px">${d}:</b>
-          ${byDay[d].map(s => `<span style="font-size:10.5px;padding:2px 8px;background:var(--surface);border-radius:999px;color:var(--ink-2);font-variant-numeric:tabular-nums;border:1px solid var(--border)">${faDigits(s)}</span>`).join('')}
-        </div>`).join('')}
-      </div>
-    </details>`;
-  }
-
-  // اگه همه پر بود
-  if(!emptySlots.length){
-    html += `<div style="text-align:center;padding:8px;color:var(--emerald);font-weight:800;font-size:13px">🎉 همه ساعت‌های هفته پره!</div>`;
-  }
-
-  html += `</div>`;
-  box.innerHTML = html;
-}
 function renderSchedule(){
-    renderEmptySummary();
   const box = $('scheduleContainer');
   if(!box) return;
   const todayName = schTodayName();
