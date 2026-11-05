@@ -2620,7 +2620,28 @@ click('enrPrintBtn', () => {
       body{background:#fff!important;color:#000!important;padding:12mm;font-family:Vazirmatn,sans-serif}
       .no-print{display:none!important}
       .enr-paper{max-width:100%!important;box-shadow:none!important;border:0!important;padding:0!important}
-      @page{size:A4;margin:10mm}
+            @page{size:A4;margin:6mm}
+      .enr-paper{padding:10px 14px!important;line-height:1.55!important;font-size:10.5pt!important}
+      .enr-header{padding-bottom:8px!important;margin-bottom:10px!important}
+      .enr-logo{width:44px!important;height:44px!important;font-size:20px!important}
+      .enr-title h2{font-size:15px!important}
+      .enr-title p{font-size:10px!important}
+      .enr-intro{font-size:10.5px!important;line-height:1.75!important;padding:8px 12px!important;margin-bottom:10px!important}
+      .enr-fields{gap:5px!important;margin-bottom:10px!important}
+      .enr-row{font-size:10.5px!important;gap:6px!important}
+      .enr-row span:first-child{min-width:170px!important}
+      .enr-line{min-height:16px!important;font-size:10.5px!important}
+      .enr-sec-title{font-size:11.5px!important;margin:10px 0 6px!important;padding-bottom:3px!important}
+      .enr-terms{font-size:9.8px!important;line-height:1.6!important;padding-inline-start:18px!important}
+      .enr-terms li{margin-bottom:1.5px!important}
+      .enr-pay-intro{font-size:10px!important;margin:4px 0 6px!important}
+      .enr-checkboxes{gap:4px!important}
+      .enr-check{font-size:10px!important;padding:3px 8px!important;gap:6px!important}
+      .enr-box{width:14px!important;height:14px!important}
+      .enr-signs{margin-top:14px!important;padding-top:8px!important;gap:12px!important}
+      .enr-sign-line{height:32px!important;margin-bottom:3px!important}
+      .enr-sign span{font-size:9.5px!important}
+      .enr-foot{margin-top:8px!important;padding-top:5px!important;font-size:8.5px!important}
     </style></head><body>${paper.innerHTML}</body></html>`);
   w.document.close();
   setTimeout(() => w.print(), 500);
