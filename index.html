@@ -2997,6 +2997,7 @@ function renderGraduates(){
       <td><div class="btn-row tight">
         <button class="btn xs success" onclick="unGraduateStudent('${s.id}')">↩ بازگردانی</button>
         <button class="btn xs ghost" onclick="showIdCard('${s.id}')">🪪</button>
+        <button class="btn xs ghost" onclick="showCertificate('${s.id}')" title="گواهی پایان دوره">🎓</button>
       </div></td>
     </tr>`).join('')}</tbody>
   </table></div>`;
@@ -3658,6 +3659,95 @@ document.addEventListener('click', e => {
   }
 });
 /* ============ کارت شناسایی (نسخه جدید با رنگ سطح) ============ */
+  /* ============ گواهی پایان دوره ============ */
+window.showCertificate = (id) => {
+  const s = db.students.find(x => x.id === id);
+  if(!s){ toast('یافت نشد', 'err'); return; }
+  if(!s.graduated){ toast('این زبان‌آموز هنوز فارغ‌التحصیل نشده', 'err'); return; }
+  const color = (typeof getCourseColor === 'function') ? getCourseColor(s.course) : '#e0b04a';
+  const gradDate = s.graduatedAt ? new Date(s.graduatedAt).toLocaleDateString('fa-IR') : '—';
+  const w = window.open('', '_blank');
+  if(!w){ toast('پاپ‌آپ مسدود شده', 'err'); return; }
+  w.document.write(`
+    <html dir="rtl"><head><title>گواهی پایان دوره — ${s.name}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      @page{size:A4 landscape;margin:8mm}
+      body{font-family:Vazirmatn,Tahoma,sans-serif;background:#f0ece2;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+      .cert{width:1000px;max-width:100%;background:#fffdf7;border-radius:6px;padding:50px 70px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.15);color:#1a1720}
+      .cert::before{content:"";position:absolute;inset:18px;border:3px double ${color};border-radius:4px;pointer-events:none}
+      .cert::after{content:"";position:absolute;inset:24px;border:1px solid ${color}88;border-radius:2px;pointer-events:none}
+      .corner{position:absolute;width:60px;height:60px;border:3px solid ${color};pointer-events:none}
+      .corner.tl{top:26px;right:26px;border-left:0;border-bottom:0}
+      .corner.tr{top:26px;left:26px;border-right:0;border-bottom:0}
+      .corner.bl{bottom:26px;right:26px;border-left:0;border-top:0}
+      .corner.br{bottom:26px;left:26px;border-right:0;border-top:0}
+      .cert-inner{position:relative;z-index:2;text-align:center}
+      .cert-logo{width:80px;height:80px;background:linear-gradient(135deg,${color},${color}cc);border-radius:20px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:36px;color:#fff;margin:0 auto 12px;box-shadow:0 8px 24px ${color}55}
+      .cert-academy{font-size:16px;font-weight:800;color:#1a1720;margin-bottom:4px}
+      .cert-academy small{font-size:11px;font-weight:600;color:#6b6578;display:block;letter-spacing:1px;margin-top:2px}
+      .cert-title{font-size:38px;font-weight:900;color:${color};margin:18px 0 4px;letter-spacing:.5px}
+      .cert-subtitle{font-size:13px;color:#6b6578;font-weight:600;margin-bottom:24px;letter-spacing:2px}
+      .cert-msg{font-size:16px;line-height:2;color:#1a1720;margin-bottom:18px;max-width:700px;margin-inline:auto}
+      .cert-name{font-size:34px;font-weight:900;color:${color};margin:14px 0 6px;padding:8px 20px;display:inline-block;border-bottom:2px solid ${color};border-top:2px solid ${color}}
+      .cert-name-en{font-size:16px;color:#6b6578;font-weight:700;direction:ltr;margin-bottom:18px;letter-spacing:.5px}
+      .cert-course{font-size:20px;font-weight:800;color:#1a1720;margin:8px 0;padding:10px 24px;background:${color}15;border-radius:10px;display:inline-block;border:1px solid ${color}55}
+      .cert-desc{font-size:14px;line-height:2;color:#4a4558;max-width:750px;margin:16px auto 0}
+      .cert-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:40px;padding-top:20px}
+      .cert-sign{text-align:center;flex:1}
+      .cert-sign-line{border-bottom:1.5px solid #1a1720;height:50px;margin-bottom:6px;position:relative}
+      .cert-sign-stamp{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:60px;height:60px;border:2px dashed ${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:${color};font-weight:800;background:${color}10}
+      .cert-sign span{font-size:12px;color:#1a1720;font-weight:700}
+      .cert-sign small{font-size:10px;color:#6b6578;display:block;margin-top:2px}
+      .cert-date{font-size:12px;color:#6b6578;font-weight:600;margin-top:8px;text-align:center}
+      .cert-ornament{font-size:24px;color:${color};margin:8px 0;letter-spacing:8px}
+      @media print{body{background:#fff;padding:0}.cert{box-shadow:none;width:100%;padding:40px 60px}}
+    </style></head><body>
+      <div class="cert">
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <div class="cert-inner">
+          <div class="cert-logo">ع</div>
+          <div class="cert-academy">آموزشگاه زبان علی ناقلی<small>ALI NAGHELI LANGUAGE ACADEMY</small></div>
+          <div class="cert-title">گواهی پایان دوره</div>
+          <div class="cert-subtitle">CERTIFICATE OF COMPLETION</div>
+
+          <div class="cert-msg">بدینوسیله گواهی می‌شود</div>
+          <div class="cert-name">${s.name}</div>
+          ${s.name_en ? `<div class="cert-name-en">${s.name_en}</div>` : ''}
+          <div class="cert-msg">دوره آموزشی زیر را با موفقیت به پایان رسانده است:</div>
+          <div class="cert-course">📚 ${s.course || '—'}</div>
+          <div class="cert-desc">
+            این گواهی به پاس تلاش، پشتکار و پیشرفت چشمگیر در یادگیری زبان انگلیسی اعطا می‌گردد.
+            برای این زبان‌آموز عزیز آرزوی موفقیت‌های روزافزون داریم.
+          </div>
+          <div class="cert-ornament">❦ ❦ ❦</div>
+          <div class="cert-foot">
+            <div class="cert-sign">
+              <div class="cert-sign-line"></div>
+              <span>امضای استاد</span>
+              <small>علی ناقلی</small>
+            </div>
+            <div class="cert-sign" style="max-width:180px">
+              <div class="cert-sign-stamp">مهر<br>آموزشگاه</div>
+            </div>
+            <div class="cert-sign">
+              <div class="cert-sign-line"></div>
+              <span>تاریخ صدور</span>
+              <small>${gradDate}</small>
+            </div>
+          </div>
+          <div class="cert-date">این گواهی در تاریخ ${gradDate} صادر شده است</div>
+        </div>
+      </div>
+      <script>
+        setTimeout(() => { window.print(); }, 600);
+      <\/script>
+    </body></html>`);
+  w.document.close();
+};
+/* ============ پایان گواهی ============ */
 window.showIdCard = (id) => {
   const s = db.students.find(x => x.id === id);
   if(!s){ toast('یافت نشد', 'err'); return; }
