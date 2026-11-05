@@ -75,11 +75,12 @@ button{cursor:pointer;position:relative;overflow:hidden}
 .search-top{position:relative;width:220px}
 .search-top input{width:100%;padding:8px 36px 8px 12px;height:38px;font-size:12.5px;border-radius:10px;background:var(--card);border:1px solid var(--border)}
 .search-top svg{position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--ink-3);pointer-events:none}
-.tabbar{background:var(--bg-2);border-bottom:1px solid var(--border);position:sticky;top:71px;z-index:29;backdrop-filter:blur(12px)}
-.tabbar-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabbar{background:var(--bg-2);border-bottom:1px solid var(--border);position:sticky;top:71px;z-index:29;backdrop-filter:blur(12px);padding:6px 0}
+.tabbar-inner{max-width:1280px;margin:0 auto;padding:0 16px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .tabbar-inner::-webkit-scrollbar{display:none}
-.tab-btn{background:transparent;border:0;padding:14px 18px;font-size:13px;font-weight:500;color:var(--ink-2);white-space:nowrap;display:flex;align-items:center;gap:7px;border-bottom:2px solid transparent;transition:var(--transition);margin-bottom:-1px}
-.tab-btn:hover{color:var(--ink)}
+.tab-btn{background:var(--card);border:1.5px solid var(--border);padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2);white-space:nowrap;display:flex;align-items:center;gap:6px;border-radius:var(--radius-pill);transition:var(--transition);position:relative}
+.tab-btn:hover{color:var(--ink);border-color:var(--primary);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.tab-btn.on{color:#fff;border-color:transparent;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.25);transform:translateY(-1px)}
 .tab-btn.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
 .container{max-width:1280px;margin:0 auto;padding:24px 24px 100px;position:relative;z-index:1}
 section.tab{display:none;animation:tabSlideIn .35s ease}
@@ -408,6 +409,64 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .wl-move button:disabled{opacity:.3;cursor:not-allowed}
 /* ===== پایان اولویت لیست انتظار ===== */
 /* ===== پایان سیستم گردشی ===== */
+  /* ===== رنگ‌های اختصاصی تب‌ها ===== */
+.tab-btn[data-tab="dash"].on{background:linear-gradient(135deg,#e0b04a,#f2c76a)}
+.tab-btn[data-tab="dash"]:hover{border-color:#e0b04a;color:#e0b04a}
+.tab-btn[data-tab="dash"].on:hover{color:#1a1720}
+
+.tab-btn[data-tab="students"].on{background:linear-gradient(135deg,#4a90e2,#6ba7f0)}
+.tab-btn[data-tab="students"]:hover{border-color:#4a90e2;color:#4a90e2}
+.tab-btn[data-tab="students"].on:hover{color:#fff}
+
+.tab-btn[data-tab="session"].on{background:linear-gradient(135deg,#4ec5a0,#6eddb5)}
+.tab-btn[data-tab="session"]:hover{border-color:#4ec5a0;color:#4ec5a0}
+.tab-btn[data-tab="session"].on:hover{color:#fff}
+
+.tab-btn[data-tab="tx"].on{background:linear-gradient(135deg,#e89b6c,#f2b088)}
+.tab-btn[data-tab="tx"]:hover{border-color:#e89b6c;color:#e89b6c}
+.tab-btn[data-tab="tx"].on:hover{color:#1a1720}
+
+.tab-btn[data-tab="calendar"].on{background:linear-gradient(135deg,#9d7cf0,#b69bff)}
+.tab-btn[data-tab="calendar"]:hover{border-color:#9d7cf0;color:#9d7cf0}
+.tab-btn[data-tab="calendar"].on:hover{color:#fff}
+
+.tab-btn[data-tab="birthdays"].on{background:linear-gradient(135deg,#e07a8f,#f099ab)}
+.tab-btn[data-tab="birthdays"]:hover{border-color:#e07a8f;color:#e07a8f}
+.tab-btn[data-tab="birthdays"].on:hover{color:#fff}
+
+.tab-btn[data-tab="graduates"].on{background:linear-gradient(135deg,#c9526a,#e07a8f)}
+.tab-btn[data-tab="graduates"]:hover{border-color:#c9526a;color:#c9526a}
+.tab-btn[data-tab="graduates"].on:hover{color:#fff}
+
+.tab-btn[data-tab="classes"].on{background:linear-gradient(135deg,#5ac8e0,#7ed8ee)}
+.tab-btn[data-tab="classes"]:hover{border-color:#5ac8e0;color:#5ac8e0}
+.tab-btn[data-tab="classes"].on:hover{color:#1a1720}
+
+.tab-btn[data-tab="enroll"].on{background:linear-gradient(135deg,#4a90e2,#9d7cf0)}
+.tab-btn[data-tab="enroll"]:hover{border-color:#9d7cf0;color:#9d7cf0}
+.tab-btn[data-tab="enroll"].on:hover{color:#fff}
+
+.tab-btn[data-tab="schedule"].on{background:linear-gradient(135deg,#e0b04a,#e89b6c)}
+.tab-btn[data-tab="schedule"]:hover{border-color:#e0b04a;color:#e0b04a}
+.tab-btn[data-tab="schedule"].on:hover{color:#1a1720}
+
+.tab-btn[data-tab="rotation"].on{background:linear-gradient(135deg,#4ec5a0,#5ac8e0)}
+.tab-btn[data-tab="rotation"]:hover{border-color:#4ec5a0;color:#4ec5a0}
+.tab-btn[data-tab="rotation"].on:hover{color:#fff}
+
+.tab-btn[data-tab="waitlist"].on{background:linear-gradient(135deg,#9d7cf0,#e07a8f)}
+.tab-btn[data-tab="waitlist"]:hover{border-color:#9d7cf0;color:#9d7cf0}
+.tab-btn[data-tab="waitlist"].on:hover{color:#fff}
+
+.tab-btn[data-tab="report"].on{background:linear-gradient(135deg,#6e6985,#a8a3bd)}
+.tab-btn[data-tab="report"]:hover{border-color:#a8a3bd;color:#a8a3bd}
+.tab-btn[data-tab="report"].on:hover{color:#fff}
+
+.tab-btn[data-tab="settings"].on{background:linear-gradient(135deg,#6b6578,#9a95a8)}
+.tab-btn[data-tab="settings"]:hover{border-color:#9a95a8;color:#9a95a8}
+.tab-btn[data-tab="settings"].on:hover{color:#fff}
+
+/* ===== پایان رنگ‌های تب‌ها ===== */
   /* ===== فرم ثبت‌نام ===== */
 .enr-paper{background:#fff;color:#1a1720;padding:24px 28px;border-radius:12px;font-family:Vazirmatn,sans-serif;line-height:1.9;box-shadow:0 4px 20px rgba(0,0,0,.08);border:1px solid #e8e2d4}
 .enr-header{display:flex;align-items:center;gap:14px;border-bottom:3px double #b8862b;padding-bottom:14px;margin-bottom:18px}
