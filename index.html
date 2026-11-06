@@ -969,6 +969,19 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   
   <div class="settings-section">
      <div class="settings-section">
+        <div class="settings-section">
+    <h3>🔔 نوتیفیکیشن</h3>
+    <div class="settings-rows">
+      <div class="settings-row">
+        <div class="sr-info"><b>اعلان مرورگر</b><small>کلاس نزدیک، تولد امروز، بدهی معوق</small></div>
+        <button class="toggle-switch" id="notifySwitch"></button>
+      </div>
+      <div class="settings-row">
+        <div class="sr-info"><b>تست اعلان</b><small>برای تست، یه اعلان بفرست</small></div>
+        <button class="btn sm" id="testNotifyBtn">🔔 تست</button>
+      </div>
+    </div>
+  </div>
     <h3>💾 بکاپ خودکار</h3>
     <div class="settings-rows">
       <div class="settings-row">
@@ -1204,6 +1217,8 @@ let settings = {
   palette:'gold', compact:false, themeMode:'dark',
    autoBackup: true,
   lastBackupAt: 0,
+   notifyEnabled: false,
+  notifyLastCheck: 0,
   password: CONFIG.DEFAULT_PASSWORD,
   walletNum:'', walletOwner:'علی ناقلی',
   smsAcademy:'آموزشگاه زبان علی ناقلی'
@@ -3953,6 +3968,138 @@ function checkAutoBackup(){
   } catch(e){ console.warn('auto backup error', e); }
 }
 /* ============ پایان بکاپ خودکار ============ */
+ /* ============ نوتیفیکیشن مرورگر ============ */
+async function requestNotificationPermission(){
+  if(!('Notification' in window)){
+    toast('مرورگرت نوتیفیکیشن رو پشتیبانی نمی‌کنه', 'err');
+    return false;
+  }
+  if(Notification.permission === 'granted') return true;
+  if(Notification.permission === 'denied'){
+    toast('دسترسی نوتیفیکیشن مسدود شده — از تنظیمات مرورگر اجازه بده', 'err');
+    return false;
+  }
+  const result = await Notification.requestPermission();
+  return result === 'granted';
+}
+
+function sendNotification(title, body, icon){
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    new Notification(title, {
+      body: body,
+      icon: icon || undefined,
+      badge: icon || undefined,
+      dir: 'rtl',
+      lang: 'fa',
+      tag: 'academy-notify'
+    });
+  } catch(e){ console.warn('notify error', e); }
+}
+
+function checkNotifications(){
+  if(!settings.notifyEnabled) return;
+  if(Notification.permission !== 'granted') return;
+
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const todayName = schTodayName();
+
+  // ۱. چک کلاس بعدی (اگه تا ۱۵ دقیقه دیگه کلاسی شروع می‌شه)
+  if(todayName){
+    SCHEDULE_SLOTS.forEach(slot => {
+      const [hh, mm] = slot.split(':').map(Number);
+      const slotMin = hh * 60 + mm;
+      const diff = slotMin - nowMin;
+      if(diff > 0 && diff <= 15){
+        const names = schGet(todayName, slot);
+        if(names.length){
+          const key = 'notify-class-' + todayName + '-' + slot + '-' + dateStr(todayJ());
+          if(!sessionStorage.getItem(key)){
+            sessionStorage.setItem(key, '1');
+            sendNotification(
+              '⏰ کلاس نزدیکه!',
+              `ساعت ${faDigits(slot)} — ${names.length} زبان‌آموز: ${names.slice(0, 3).join('، ')}${names.length > 3 ? '...' : ''}`,
+              undefined
+            );
+          }
+        }
+      }
+    });
+  }
+
+  // ۲. چک تولد امروز
+  const bdayStudents = db.students.filter(isBirthdayToday);
+  if(bdayStudents.length){
+    const key = 'notify-bday-' + dateStr(todayJ());
+    if(!sessionStorage.getItem(key)){
+      sessionStorage.setItem(key, '1');
+      sendNotification(
+        '🎂 امروز تولد!',
+        `${bdayStudents.map(s => s.name).join('، ')} — یادت نره تبریک بگی 🎉`,
+        undefined
+      );
+    }
+  }
+
+  // ۳. چک بدهی معوق (روزی یک بار)
+  const todayKey = 'notify-debt-' + dateStr(todayJ());
+  if(!sessionStorage.getItem(todayKey)){
+    const b = balances();
+    const overdue = db.students.filter(s => {
+      if(b[s.id].bal <= 0) return false;
+      const lastPay = db.tx.filter(t => t.sid === s.id && t.type === 'payment').sort((a,b2) => b2.date.localeCompare(a.date))[0];
+      if(!lastPay) return true;
+      const [py,pm,pd] = lastPay.date.split('/').map(Number);
+      return daysBetween([py,pm,pd], todayJ()) >= 30;
+    });
+    if(overdue.length){
+      sessionStorage.setItem(todayKey, '1');
+      sendNotification(
+        '⚠️ بدهی معوق',
+        `${faDigits(overdue.length)} زبان‌آموز بیش از ۳۰ روزه پرداخت نکردن`,
+        undefined
+      );
+    }
+  }
+}
+
+// شروع بررسی هر ۵ دقیقه
+function startNotificationLoop(){
+  if(!settings.notifyEnabled) return;
+  checkNotifications(); // بار اول
+  setInterval(checkNotifications, 5 * 60 * 1000); // هر ۵ دقیقه
+}
+/* ============ پایان نوتیفیکیشن ============ */
+ /* اتصال سوئیچ نوتیفیکیشن */
+function updateNotifyUI(){
+  const sw = $('notifySwitch');
+  if(sw) sw.classList.toggle('on', !!settings.notifyEnabled);
+}
+document.addEventListener('click', async e => {
+  if(e.target && e.target.id === 'notifySwitch'){
+    if(!settings.notifyEnabled){
+      const granted = await requestNotificationPermission();
+      if(!granted){ toast('اجازه نوتیفیکیشن داده نشد', 'err'); return; }
+      settings.notifyEnabled = true;
+      saveSettings();
+      updateNotifyUI();
+      startNotificationLoop();
+      toast('🔔 اعلان‌ها فعال شد', 'success');
+    } else {
+      settings.notifyEnabled = false;
+      saveSettings();
+      updateNotifyUI();
+      toast('اعلان‌ها غیرفعال شد', 'info');
+    }
+  }
+  if(e.target && e.target.id === 'testNotifyBtn'){
+    const granted = await requestNotificationPermission();
+    if(!granted){ toast('اجازه نوتیفیکیشن داده نشد', 'err'); return; }
+    sendNotification('🔔 تست اعلان', 'این یه اعلان تستی از آموزشگاه زبان علی ناقلیه.', undefined);
+    toast('اعلان تست ارسال شد', 'success');
+  }
+});
  /* اتصال سوئیچ بکاپ */
 function updateAutoBackupUI(){
   const sw = $('autoBackupSwitch');
@@ -4023,6 +4170,8 @@ function boot(){
   if($('walletNum')) $('walletNum').value = settings.walletNum || '';
   if($('walletOwner')) $('walletOwner').value = settings.walletOwner || '';
    if(typeof updateAutoBackupUI === 'function') updateAutoBackupUI();
+   if(typeof updateNotifyUI === 'function') updateNotifyUI();
+  if(settings.notifyEnabled && typeof startNotificationLoop === 'function') startNotificationLoop();
   
   const t = todayJ();
   if($('todayTxt')) $('todayTxt').textContent = longDate(dateStr(t));
