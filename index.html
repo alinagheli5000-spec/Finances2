@@ -3942,6 +3942,7 @@ function boot(){
   if($('compactSwitch')) $('compactSwitch').classList.toggle('on', settings.compact);
   if($('walletNum')) $('walletNum').value = settings.walletNum || '';
   if($('walletOwner')) $('walletOwner').value = settings.walletOwner || '';
+   if(typeof updateAutoBackupUI === 'function') updateAutoBackupUI();
   
   const t = todayJ();
   if($('todayTxt')) $('todayTxt').textContent = longDate(dateStr(t));
