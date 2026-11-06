@@ -3963,13 +3963,7 @@ function boot(){
   renderAll();
   renderQRRegister();
   
-  if(sb){
-    setSync('syncing', 'اتصال…');
-    pullFromCloud().then(ok => { if(ok) renderAll(); });
-  } else {
-    setSync('offline', 'آفلاین');
-  }
-}
+  setSync('offline', 'آفلاین');
 
 /* ============ START ============ */
   // تست موقت: بعد از لود، ببین graduated هست یا نه
