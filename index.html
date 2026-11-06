@@ -1150,6 +1150,12 @@ function loadLocal(){
     if(s.mother_job === undefined) s.mother_job = '';
     if(s.address === undefined) s.address = '';
     if(s.home_phone === undefined) s.home_phone = '';
+        if(s.graduated === undefined) s.graduated = false;
+    if(s.graduatedAt === undefined) s.graduatedAt = null;
+    if(s.publicToken === undefined) s.publicToken = uid().replace(/-/g, '').slice(0, 12);
+        if(s.graduated === undefined) s.graduated = false;
+    if(s.graduatedAt === undefined) s.graduatedAt = null;
+    if(s.publicToken === undefined) s.publicToken = uid().replace(/-/g, '').slice(0, 12);
     if(s.contact_log === undefined) s.contact_log = [];
   });
   db.tx.forEach(t => { if(t.absent === undefined) t.absent = false; if(t.tag === undefined) t.tag = null; });
@@ -3778,10 +3784,7 @@ function boot(){
   renderQRRegister();
   
   if(sb){
-    setSync('syncing', 'اتصال…');
-    pullFromCloud().then(ok => { if(ok) renderAll(); });
-  } else {
-    setSync('offline', 'آفلاین');
+     setSync('offline', 'آفلاین');
   }
 }
 
