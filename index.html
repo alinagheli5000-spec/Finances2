@@ -75,12 +75,11 @@ button{cursor:pointer;position:relative;overflow:hidden}
 .search-top{position:relative;width:220px}
 .search-top input{width:100%;padding:8px 36px 8px 12px;height:38px;font-size:12.5px;border-radius:10px;background:var(--card);border:1px solid var(--border)}
 .search-top svg{position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--ink-3);pointer-events:none}
-.tabbar{background:var(--bg-2);border-bottom:1px solid var(--border);position:sticky;top:71px;z-index:29;backdrop-filter:blur(12px);padding:6px 0}
-.tabbar-inner{max-width:1280px;margin:0 auto;padding:0 16px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.tabbar{background:var(--bg-2);border-bottom:1px solid var(--border);position:sticky;top:71px;z-index:29;backdrop-filter:blur(12px)}
+.tabbar-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
 .tabbar-inner::-webkit-scrollbar{display:none}
-.tab-btn{background:var(--card);border:1.5px solid var(--border);padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2);white-space:nowrap;display:flex;align-items:center;gap:6px;border-radius:var(--radius-pill);transition:var(--transition);position:relative}
-.tab-btn:hover{color:var(--ink);border-color:var(--primary);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.15)}
-.tab-btn.on{color:#fff;border-color:transparent;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.25);transform:translateY(-1px)}
+.tab-btn{background:transparent;border:0;padding:14px 18px;font-size:13px;font-weight:500;color:var(--ink-2);white-space:nowrap;display:flex;align-items:center;gap:7px;border-bottom:2px solid transparent;transition:var(--transition);margin-bottom:-1px}
+.tab-btn:hover{color:var(--ink)}
 .tab-btn.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
 .container{max-width:1280px;margin:0 auto;padding:24px 24px 100px;position:relative;z-index:1}
 section.tab{display:none;animation:tabSlideIn .35s ease}
@@ -409,64 +408,6 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .wl-move button:disabled{opacity:.3;cursor:not-allowed}
 /* ===== پایان اولویت لیست انتظار ===== */
 /* ===== پایان سیستم گردشی ===== */
-  /* ===== رنگ‌های اختصاصی تب‌ها ===== */
-.tab-btn[data-tab="dash"].on{background:linear-gradient(135deg,#e0b04a,#f2c76a)}
-.tab-btn[data-tab="dash"]:hover{border-color:#e0b04a;color:#e0b04a}
-.tab-btn[data-tab="dash"].on:hover{color:#1a1720}
-
-.tab-btn[data-tab="students"].on{background:linear-gradient(135deg,#4a90e2,#6ba7f0)}
-.tab-btn[data-tab="students"]:hover{border-color:#4a90e2;color:#4a90e2}
-.tab-btn[data-tab="students"].on:hover{color:#fff}
-
-.tab-btn[data-tab="session"].on{background:linear-gradient(135deg,#4ec5a0,#6eddb5)}
-.tab-btn[data-tab="session"]:hover{border-color:#4ec5a0;color:#4ec5a0}
-.tab-btn[data-tab="session"].on:hover{color:#fff}
-
-.tab-btn[data-tab="tx"].on{background:linear-gradient(135deg,#e89b6c,#f2b088)}
-.tab-btn[data-tab="tx"]:hover{border-color:#e89b6c;color:#e89b6c}
-.tab-btn[data-tab="tx"].on:hover{color:#1a1720}
-
-.tab-btn[data-tab="calendar"].on{background:linear-gradient(135deg,#9d7cf0,#b69bff)}
-.tab-btn[data-tab="calendar"]:hover{border-color:#9d7cf0;color:#9d7cf0}
-.tab-btn[data-tab="calendar"].on:hover{color:#fff}
-
-.tab-btn[data-tab="birthdays"].on{background:linear-gradient(135deg,#e07a8f,#f099ab)}
-.tab-btn[data-tab="birthdays"]:hover{border-color:#e07a8f;color:#e07a8f}
-.tab-btn[data-tab="birthdays"].on:hover{color:#fff}
-
-.tab-btn[data-tab="graduates"].on{background:linear-gradient(135deg,#c9526a,#e07a8f)}
-.tab-btn[data-tab="graduates"]:hover{border-color:#c9526a;color:#c9526a}
-.tab-btn[data-tab="graduates"].on:hover{color:#fff}
-
-.tab-btn[data-tab="classes"].on{background:linear-gradient(135deg,#5ac8e0,#7ed8ee)}
-.tab-btn[data-tab="classes"]:hover{border-color:#5ac8e0;color:#5ac8e0}
-.tab-btn[data-tab="classes"].on:hover{color:#1a1720}
-
-.tab-btn[data-tab="enroll"].on{background:linear-gradient(135deg,#4a90e2,#9d7cf0)}
-.tab-btn[data-tab="enroll"]:hover{border-color:#9d7cf0;color:#9d7cf0}
-.tab-btn[data-tab="enroll"].on:hover{color:#fff}
-
-.tab-btn[data-tab="schedule"].on{background:linear-gradient(135deg,#e0b04a,#e89b6c)}
-.tab-btn[data-tab="schedule"]:hover{border-color:#e0b04a;color:#e0b04a}
-.tab-btn[data-tab="schedule"].on:hover{color:#1a1720}
-
-.tab-btn[data-tab="rotation"].on{background:linear-gradient(135deg,#4ec5a0,#5ac8e0)}
-.tab-btn[data-tab="rotation"]:hover{border-color:#4ec5a0;color:#4ec5a0}
-.tab-btn[data-tab="rotation"].on:hover{color:#fff}
-
-.tab-btn[data-tab="waitlist"].on{background:linear-gradient(135deg,#9d7cf0,#e07a8f)}
-.tab-btn[data-tab="waitlist"]:hover{border-color:#9d7cf0;color:#9d7cf0}
-.tab-btn[data-tab="waitlist"].on:hover{color:#fff}
-
-.tab-btn[data-tab="report"].on{background:linear-gradient(135deg,#6e6985,#a8a3bd)}
-.tab-btn[data-tab="report"]:hover{border-color:#a8a3bd;color:#a8a3bd}
-.tab-btn[data-tab="report"].on:hover{color:#fff}
-
-.tab-btn[data-tab="settings"].on{background:linear-gradient(135deg,#6b6578,#9a95a8)}
-.tab-btn[data-tab="settings"]:hover{border-color:#9a95a8;color:#9a95a8}
-.tab-btn[data-tab="settings"].on:hover{color:#fff}
-
-/* ===== پایان رنگ‌های تب‌ها ===== */
   /* ===== فرم ثبت‌نام ===== */
 .enr-paper{background:#fff;color:#1a1720;padding:24px 28px;border-radius:12px;font-family:Vazirmatn,sans-serif;line-height:1.9;box-shadow:0 4px 20px rgba(0,0,0,.08);border:1px solid #e8e2d4}
 .enr-header{display:flex;align-items:center;gap:14px;border-bottom:3px double #b8862b;padding-bottom:14px;margin-bottom:18px}
@@ -1209,25 +1150,13 @@ function loadLocal(){
     if(s.mother_job === undefined) s.mother_job = '';
     if(s.address === undefined) s.address = '';
     if(s.home_phone === undefined) s.home_phone = '';
-        if(s.graduated === undefined) s.graduated = false;
-    if(s.graduatedAt === undefined) s.graduatedAt = null;
-        if(s.graduated === undefined) s.graduated = false;
-    if(s.graduatedAt === undefined) s.graduatedAt = null;
     if(s.contact_log === undefined) s.contact_log = [];
   });
   db.tx.forEach(t => { if(t.absent === undefined) t.absent = false; if(t.tag === undefined) t.tag = null; });
 }
 
 function saveLocal(){
-  try{
-    localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db));
-    const test = localStorage.getItem(CONFIG.LOCAL_KEY);
-    if(test && test.includes('"graduated":true')){
-      console.log('✅ graduated ذخیره شد');
-    } else {
-      console.log('❌ graduated ذخیره نشد');
-    }
-  }catch(e){ console.error('save error', e); }
+  try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }catch(e){ console.error('save error', e); }
 }
 function saveSettings(){
   try{ localStorage.setItem(CONFIG.SETTINGS_KEY, JSON.stringify(settings)); }catch(e){}
@@ -3009,31 +2938,19 @@ function renderGraduates(){
       <td><div class="btn-row tight">
         <button class="btn xs success" onclick="unGraduateStudent('${s.id}')">↩ بازگردانی</button>
         <button class="btn xs ghost" onclick="showIdCard('${s.id}')">🪪</button>
-        <button class="btn xs ghost" onclick="showCertificate('${s.id}')" title="گواهی پایان دوره">🎓</button>
       </div></td>
     </tr>`).join('')}</tbody>
   </table></div>`;
 }
 
 window.graduateStudent = (id) => {
-  const s = db.students.find(x => x.id === id); if(!s){ toast('یافت نشد', 'err'); return; }
+  const s = db.students.find(x => x.id === id); if(!s) return;
+  if(!confirm(`«${s.name}» به فارغ‌التحصیلان منتقل شود؟`)) return;
   s.graduated = true;
   s.graduatedAt = Date.now();
   saveLocal();
   renderAll();
-  // تست: از localStorage دوباره بخون
-  try {
-    const raw = localStorage.getItem(CONFIG.LOCAL_KEY);
-    const parsed = JSON.parse(raw);
-    const found = parsed.students.find(x => x.id === id);
-    if(found && found.graduated){
-      toast(`✅ ${s.name} فارغ‌التحصیل شد و ذخیره شد`, 'success');
-    } else {
-      toast(`❌ ذخیره نشد! مشکل در saveLocal`, 'err');
-    }
-  } catch(e){
-    toast('خطا: ' + e.message, 'err');
-  }
+  toast(`🎓 ${s.name} فارغ‌التحصیل شد`, 'success');
 };
 
 window.unGraduateStudent = (id) => {
@@ -3682,95 +3599,6 @@ document.addEventListener('click', e => {
   }
 });
 /* ============ کارت شناسایی (نسخه جدید با رنگ سطح) ============ */
-  /* ============ گواهی پایان دوره ============ */
-window.showCertificate = (id) => {
-  const s = db.students.find(x => x.id === id);
-  if(!s){ toast('یافت نشد', 'err'); return; }
-  if(!s.graduated){ toast('این زبان‌آموز هنوز فارغ‌التحصیل نشده', 'err'); return; }
-  const color = (typeof getCourseColor === 'function') ? getCourseColor(s.course) : '#e0b04a';
-  const gradDate = s.graduatedAt ? new Date(s.graduatedAt).toLocaleDateString('fa-IR') : '—';
-  const w = window.open('', '_blank');
-  if(!w){ toast('پاپ‌آپ مسدود شده', 'err'); return; }
-  w.document.write(`
-    <html dir="rtl"><head><title>گواهی پایان دوره — ${s.name}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-      *{box-sizing:border-box;margin:0;padding:0}
-      @page{size:A4 landscape;margin:8mm}
-      body{font-family:Vazirmatn,Tahoma,sans-serif;background:#f0ece2;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
-      .cert{width:1000px;max-width:100%;background:#fffdf7;border-radius:6px;padding:50px 70px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.15);color:#1a1720}
-      .cert::before{content:"";position:absolute;inset:18px;border:3px double ${color};border-radius:4px;pointer-events:none}
-      .cert::after{content:"";position:absolute;inset:24px;border:1px solid ${color}88;border-radius:2px;pointer-events:none}
-      .corner{position:absolute;width:60px;height:60px;border:3px solid ${color};pointer-events:none}
-      .corner.tl{top:26px;right:26px;border-left:0;border-bottom:0}
-      .corner.tr{top:26px;left:26px;border-right:0;border-bottom:0}
-      .corner.bl{bottom:26px;right:26px;border-left:0;border-top:0}
-      .corner.br{bottom:26px;left:26px;border-right:0;border-top:0}
-      .cert-inner{position:relative;z-index:2;text-align:center}
-      .cert-logo{width:80px;height:80px;background:linear-gradient(135deg,${color},${color}cc);border-radius:20px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:36px;color:#fff;margin:0 auto 12px;box-shadow:0 8px 24px ${color}55}
-      .cert-academy{font-size:16px;font-weight:800;color:#1a1720;margin-bottom:4px}
-      .cert-academy small{font-size:11px;font-weight:600;color:#6b6578;display:block;letter-spacing:1px;margin-top:2px}
-      .cert-title{font-size:38px;font-weight:900;color:${color};margin:18px 0 4px;letter-spacing:.5px}
-      .cert-subtitle{font-size:13px;color:#6b6578;font-weight:600;margin-bottom:24px;letter-spacing:2px}
-      .cert-msg{font-size:16px;line-height:2;color:#1a1720;margin-bottom:18px;max-width:700px;margin-inline:auto}
-      .cert-name{font-size:34px;font-weight:900;color:${color};margin:14px 0 6px;padding:8px 20px;display:inline-block;border-bottom:2px solid ${color};border-top:2px solid ${color}}
-      .cert-name-en{font-size:16px;color:#6b6578;font-weight:700;direction:ltr;margin-bottom:18px;letter-spacing:.5px}
-      .cert-course{font-size:20px;font-weight:800;color:#1a1720;margin:8px 0;padding:10px 24px;background:${color}15;border-radius:10px;display:inline-block;border:1px solid ${color}55}
-      .cert-desc{font-size:14px;line-height:2;color:#4a4558;max-width:750px;margin:16px auto 0}
-      .cert-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:40px;padding-top:20px}
-      .cert-sign{text-align:center;flex:1}
-      .cert-sign-line{border-bottom:1.5px solid #1a1720;height:50px;margin-bottom:6px;position:relative}
-      .cert-sign-stamp{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:60px;height:60px;border:2px dashed ${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:${color};font-weight:800;background:${color}10}
-      .cert-sign span{font-size:12px;color:#1a1720;font-weight:700}
-      .cert-sign small{font-size:10px;color:#6b6578;display:block;margin-top:2px}
-      .cert-date{font-size:12px;color:#6b6578;font-weight:600;margin-top:8px;text-align:center}
-      .cert-ornament{font-size:24px;color:${color};margin:8px 0;letter-spacing:8px}
-      @media print{body{background:#fff;padding:0}.cert{box-shadow:none;width:100%;padding:40px 60px}}
-    </style></head><body>
-      <div class="cert">
-        <div class="corner tl"></div><div class="corner tr"></div>
-        <div class="corner bl"></div><div class="corner br"></div>
-        <div class="cert-inner">
-          <div class="cert-logo">ع</div>
-          <div class="cert-academy">آموزشگاه زبان علی ناقلی<small>ALI NAGHELI LANGUAGE ACADEMY</small></div>
-          <div class="cert-title">گواهی پایان دوره</div>
-          <div class="cert-subtitle">CERTIFICATE OF COMPLETION</div>
-
-          <div class="cert-msg">بدینوسیله گواهی می‌شود</div>
-          <div class="cert-name">${s.name}</div>
-          ${s.name_en ? `<div class="cert-name-en">${s.name_en}</div>` : ''}
-          <div class="cert-msg">دوره آموزشی زیر را با موفقیت به پایان رسانده است:</div>
-          <div class="cert-course">📚 ${s.course || '—'}</div>
-          <div class="cert-desc">
-            این گواهی به پاس تلاش، پشتکار و پیشرفت چشمگیر در یادگیری زبان انگلیسی اعطا می‌گردد.
-            برای این زبان‌آموز عزیز آرزوی موفقیت‌های روزافزون داریم.
-          </div>
-          <div class="cert-ornament">❦ ❦ ❦</div>
-          <div class="cert-foot">
-            <div class="cert-sign">
-              <div class="cert-sign-line"></div>
-              <span>امضای استاد</span>
-              <small>علی ناقلی</small>
-            </div>
-            <div class="cert-sign" style="max-width:180px">
-              <div class="cert-sign-stamp">مهر<br>آموزشگاه</div>
-            </div>
-            <div class="cert-sign">
-              <div class="cert-sign-line"></div>
-              <span>تاریخ صدور</span>
-              <small>${gradDate}</small>
-            </div>
-          </div>
-          <div class="cert-date">این گواهی در تاریخ ${gradDate} صادر شده است</div>
-        </div>
-      </div>
-      <script>
-        setTimeout(() => { window.print(); }, 600);
-      <\/script>
-    </body></html>`);
-  w.document.close();
-};
-/* ============ پایان گواهی ============ */
 window.showIdCard = (id) => {
   const s = db.students.find(x => x.id === id);
   if(!s){ toast('یافت نشد', 'err'); return; }
@@ -3898,15 +3726,6 @@ document.addEventListener('input', e => {
 /* ============ RENDER ALL ============ */
 function renderAll(){
   renderSchedule();
-    // تست: db قبل از رندر
-  if(!window._dbCheckDone){
-    window._dbCheckDone = true;
-    setTimeout(() => {
-      const grads = db.students.filter(s => s.graduated);
-      if(grads.length) toast(`🔍 db: ${grads.length} فارغ‌التحصیل`, 'success');
-      else toast('🔍 db: هیچ فارغ‌التحصیلی نیست', 'err');
-    }, 2000);
-  }
   renderRotation();
   if(typeof renderGraduates === 'function') renderGraduates();
   if(typeof renderClasses === 'function') renderClasses();
@@ -3924,11 +3743,6 @@ function renderAll(){
 
 /* ============ BOOT ============ */
 function boot(){
-    // تست فارغ‌التحصیل
-  setTimeout(() => {
-    const grads = db.students.filter(s => s.graduated);
-    toast(`📊 بعد از boot: ${grads.length} فارغ‌التحصیل`, grads.length ? 'success' : 'err');
-  }, 1000);
     // پر کردن لیست دوره‌ها
   const courseSel = $('stCourse');
   if(courseSel && courseSel.tagName === 'SELECT' && courseSel.options.length <= 1){
@@ -3963,23 +3777,15 @@ function boot(){
   renderAll();
   renderQRRegister();
   
-  setSync('offline', 'آفلاین');
+  if(sb){
+    setSync('syncing', 'اتصال…');
+    pullFromCloud().then(ok => { if(ok) renderAll(); });
+  } else {
+    setSync('offline', 'آفلاین');
+  }
+}
 
 /* ============ START ============ */
-  // تست موقت: بعد از لود، ببین graduated هست یا نه
-setTimeout(() => {
-  try {
-    const raw = localStorage.getItem(CONFIG.LOCAL_KEY);
-    const parsed = JSON.parse(raw);
-    const grads = parsed.students.filter(s => s.graduated);
-    if(grads.length){
-      const names = grads.map(s => s.name).join('، ');
-      setTimeout(() => toast(`📦 در حافظه: ${grads.length} فارغ‌التحصیل (${names})`, 'success'), 1500);
-    } else {
-      setTimeout(() => toast('📦 در حافظه: هیچ فارغ‌التحصیلی نیست', 'err'), 1500);
-    }
-  } catch(e){}
-}, 3000);
 const _urlParams = new URLSearchParams(window.location.search);
 const _publicToken = _urlParams.get('p');
 
