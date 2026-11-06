@@ -3958,6 +3958,20 @@ function boot(){
 }
 
 /* ============ START ============ */
+  // تست موقت: بعد از لود، ببین graduated هست یا نه
+setTimeout(() => {
+  try {
+    const raw = localStorage.getItem(CONFIG.LOCAL_KEY);
+    const parsed = JSON.parse(raw);
+    const grads = parsed.students.filter(s => s.graduated);
+    if(grads.length){
+      const names = grads.map(s => s.name).join('، ');
+      setTimeout(() => toast(`📦 در حافظه: ${grads.length} فارغ‌التحصیل (${names})`, 'success'), 1500);
+    } else {
+      setTimeout(() => toast('📦 در حافظه: هیچ فارغ‌التحصیلی نیست', 'err'), 1500);
+    }
+  } catch(e){}
+}, 3000);
 const _urlParams = new URLSearchParams(window.location.search);
 const _publicToken = _urlParams.get('p');
 
