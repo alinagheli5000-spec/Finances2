@@ -3924,6 +3924,11 @@ function renderAll(){
 
 /* ============ BOOT ============ */
 function boot(){
+    // تست فارغ‌التحصیل
+  setTimeout(() => {
+    const grads = db.students.filter(s => s.graduated);
+    toast(`📊 بعد از boot: ${grads.length} فارغ‌التحصیل`, grads.length ? 'success' : 'err');
+  }, 1000);
     // پر کردن لیست دوره‌ها
   const courseSel = $('stCourse');
   if(courseSel && courseSel.tagName === 'SELECT' && courseSel.options.length <= 1){
