@@ -1947,7 +1947,7 @@ function renderStudents(){
   const table = $('stTable'); if(!table) return;
   const b = balances(), q = ($('stSearch')?.value || '').trim(), f = ($('stFilter')?.value || '');
     const sortedStudents = [...db.students].filter(s => !s.graduated).sort((a, b) => a.name.localeCompare(b.name, 'fa'));
-  const rows = db.students.filter(s => {
+  const rows = sortedStudents.filter(s => {
         if(q && !((s.name + ' ' + (s.name_en||'') + ' ' + s.course + ' ' + s.phone).toLowerCase().includes(q.toLowerCase()))) return false;
     if(f && statusOf(b[s.id].bal) !== f) return false;
     return true;
