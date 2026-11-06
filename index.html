@@ -2335,6 +2335,109 @@ function quickSession(sid){
 }
 
 /* ============ PROFILE با دریافت شهریه ============ */
+ /* ============ نمودار پیشرفت (ایمن) ============ */
+window.addProfileChart = function(sid){
+  setTimeout(() => {
+    try {
+      const modalBox = $('modalBox');
+      if(!modalBox) return;
+      const s = db.students.find(x => x.id === sid);
+      if(!s) return;
+      if(!window.Chart) return;
+
+      // اگه قبلاً اضافه شده، پاک کن
+      const oldWrap = modalBox.querySelector('#profileChartWrap');
+      if(oldWrap) oldWrap.remove();
+
+      // ظرف نمودار رو بساز
+      const wrap = document.createElement('div');
+      wrap.id = 'profileChartWrap';
+      wrap.style.cssText = 'margin-top:16px';
+      wrap.innerHTML = `
+        <h3 style="font-size:14px;margin-bottom:8px;color:var(--ink)">📈 نمودار پیشرفت (۶ ماه اخیر)</h3>
+        <div style="position:relative;height:220px;background:var(--card-2);border:1px solid var(--border);border-radius:12px;padding:8px">
+          <canvas id="profileChart"></canvas>
+        </div>
+      `;
+
+      // قبل از بخش «آخرین تراکنش‌ها» درج کن
+      const headings = modalBox.querySelectorAll('h3');
+      let target = null;
+      headings.forEach(h => {
+        if(h.textContent.includes('آخرین تراکنش‌ها')) target = h;
+      });
+      if(target){
+        target.parentNode.insertBefore(wrap, target);
+      } else {
+        // اگه پیدا نشد، به انتهای modal اضافه کن
+        modalBox.appendChild(wrap);
+      }
+
+      // داده‌ها
+      const t = todayJ();
+      const months = [];
+      const sessionData = [];
+      const absentData = [];
+      const payData = [];
+      const MONTH_NAMES = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+
+      for(let i = 5; i >= 0; i--){
+        let y = t[0], m = t[1] - i;
+        while(m < 1){ m += 12; y--; }
+        const key = y + '/' + String(m).padStart(2, '0');
+        months.push(MONTH_NAMES[m-1]);
+        let sCount = 0, aCount = 0, pSum = 0;
+        db.tx.forEach(tx => {
+          if(tx.sid !== sid) return;
+          const d = tx.is_session && tx.session_date ? tx.session_date : tx.date;
+          if(!d || !d.startsWith(key)) return;
+          if(tx.is_session){ if(tx.absent) aCount++; else sCount++; }
+          if(tx.type === 'payment') pSum += tx.amount;
+        });
+        sessionData.push(sCount);
+        absentData.push(aCount);
+        payData.push(pSum);
+      }
+
+      const canvas = document.getElementById('profileChart');
+      if(!canvas) return;
+
+      new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [
+            { label: 'جلسات', data: sessionData, backgroundColor: '#4ec5a0', borderRadius: 5, borderSkipped: false },
+            { label: 'غیبت', data: absentData, backgroundColor: '#e89b6c', borderRadius: 5, borderSkipped: false },
+            { label: 'پرداخت', data: payData, backgroundColor: '#4a90e2', borderRadius: 5, borderSkipped: false, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 10 }, boxWidth: 10, padding: 8 } },
+            tooltip: {
+              callbacks: {
+                label: function(c){
+                  return c.dataset.label + ': ' + (c.dataset.label === 'پرداخت' ? fa(c.raw) + ' تومان' : faDigits(c.raw));
+                }
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 9 } } },
+            y: { position: 'right', grid: { color: 'rgba(168,163,189,.1)' }, ticks: { color: '#4ec5a0', font: { family: 'Vazirmatn', size: 9 }, precision: 0 }, beginAtZero: true },
+            y1: { position: 'left', grid: { display: false }, ticks: { color: '#4a90e2', font: { family: 'Vazirmatn', size: 9 }, callback: function(v){ return fa(v/1000) + 'K'; } }, beginAtZero: true }
+          }
+        }
+      });
+    } catch(e){
+      console.warn('chart error', e);
+    }
+  }, 250);
+};
+/* ============ پایان نمودار ============ */
 function openProfile(id){
   const s = db.students.find(x => x.id === id); if(!s) return;
   const b = balances()[id] || {};
@@ -2375,6 +2478,11 @@ function openProfile(id){
     </div>`;
   $('modal').classList.add('on');
 }
+ window._openProfileOrig = openProfile;
+openProfile = function(id){
+  window._openProfileOrig(id);
+  window.addProfileChart(id);
+};
 
 async function profileReceivePayment(sid){
   const amt = Number(toEn($('profilePayAmount')?.value)) || 0;
