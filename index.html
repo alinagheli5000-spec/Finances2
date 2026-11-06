@@ -2360,7 +2360,8 @@ function openProfile(id){
         <button class="btn success" onclick="profileReceivePayment('${s.id}')">💳 ثبت دریافت</button>
       </div>
     </div>
-    
+        <h3 style="font-size:14px;margin-top:16px;color:var(--ink)">📈 نمودار پیشرفت (۶ ماه اخیر)</h3>
+    <div style="position:relative;height:220px;margin-bottom:8px"><canvas id="profileChart"></canvas></div>
     <h3 style="font-size:14px;margin-top:16px;color:var(--ink)">آخرین تراکنش‌ها</h3>
     <div class="table-wrap">${txs.length ? `<table><thead><tr><th>تاریخ</th><th>نوع</th><th>مبلغ</th><th>شرح</th></tr></thead><tbody>${txs.map(t => `<tr><td>${showDate(t.date)}</td><td>${typeTag(t.type, t.is_session, t.absent)}</td><td class="n">${fa(t.amount)}</td><td>${esc(t.desc)}</td></tr>`).join('')}</tbody></table>` : emptyState('تراکنشی نیست')}</div>
     
@@ -2373,6 +2374,61 @@ function openProfile(id){
       <button class="btn ghost" onclick="closeModal();openStatement('${s.id}')">صورت‌حساب</button>
       <button class="btn" onclick="closeModal();quickSession('${s.id}')">ثبت جلسه</button>
     </div>`;
+     <script>
+      setTimeout(() => {
+        try {
+          const canvas = document.getElementById('profileChart');
+          if(!canvas || !window.Chart) return;
+          const t = todayJ();
+          const months = [];
+          const sessionData = [];
+          const absentData = [];
+          const payData = [];
+          for(let i = 5; i >= 0; i--){
+            let y = t[0], m = t[1] - i;
+            while(m < 1){ m += 12; y--; }
+            const key = y + '/' + String(m).padStart(2, '0');
+            const monthLabel = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][m-1];
+            months.push(monthLabel);
+            let sCount = 0, aCount = 0, pSum = 0;
+            db.tx.forEach(tx => {
+              if(tx.sid !== '${s.id}') return;
+              const d = tx.is_session && tx.session_date ? tx.session_date : tx.date;
+              if(!d || !d.startsWith(key)) return;
+              if(tx.is_session){ if(tx.absent) aCount++; else sCount++; }
+              if(tx.type === 'payment') pSum += tx.amount;
+            });
+            sessionData.push(sCount);
+            absentData.push(aCount);
+            payData.push(pSum);
+          }
+          new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels: months,
+              datasets: [
+                { label: 'جلسات', data: sessionData, backgroundColor: '#4ec5a0', borderRadius: 5, borderSkipped: false },
+                { label: 'غیبت', data: absentData, backgroundColor: '#e89b6c', borderRadius: 5, borderSkipped: false },
+                { label: 'پرداخت', data: payData, backgroundColor: '#4a90e2', borderRadius: 5, borderSkipped: false, yAxisID: 'y1' }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { labels: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 10 }, boxWidth: 10, padding: 8 } },
+                tooltip: { callbacks: { label: c => c.dataset.label + ': ' + (c.dataset.label === 'پرداخت' ? fa(c.raw) + ' تومان' : faDigits(c.raw)) } }
+              },
+              scales: {
+                x: { grid: { display: false }, ticks: { color: '#a8a3bd', font: { family: 'Vazirmatn', size: 9 } } },
+                y: { position: 'right', grid: { color: 'rgba(168,163,189,.1)' }, ticks: { color: '#4ec5a0', font: { family: 'Vazirmatn', size: 9 }, precision: 0 }, beginAtZero: true },
+                y1: { position: 'left', grid: { display: false }, ticks: { color: '#4a90e2', font: { family: 'Vazirmatn', size: 9 }, callback: v => fa(v/1000) + 'K' }, beginAtZero: true }
+              }
+            }
+          });
+        } catch(e){ console.warn('chart error', e); }
+      }, 200);
+    <\/script>
   $('modal').classList.add('on');
 }
 
