@@ -3006,8 +3006,7 @@ function renderGraduates(){
 }
 
 window.graduateStudent = (id) => {
-  const s = db.students.find(x => x.id === id); if(!s) return;
-  if(!confirm(`«${s.name}» به فارغ‌التحصیلان منتقل شود؟`)) return;
+  const s = db.students.find(x => x.id === id); if(!s){ toast('یافت نشد', 'err'); return; }
   s.graduated = true;
   s.graduatedAt = Date.now();
   saveLocal();
