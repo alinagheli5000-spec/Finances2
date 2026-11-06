@@ -967,6 +967,20 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   </div>
   
   <div class="settings-section">
+     <div class="settings-section">
+    <h3>💾 بکاپ خودکار</h3>
+    <div class="settings-rows">
+      <div class="settings-row">
+        <div class="sr-info"><b>بکاپ خودکار روزانه</b><small>اگه بیشتر از ۲۴ ساعت از آخرین بکاپ گذشته باشه، خودکار ذخیره می‌شه</small></div>
+        <button class="toggle-switch" id="autoBackupSwitch"></button>
+      </div>
+      <div class="settings-row">
+        <div class="sr-info"><b>آخرین بکاپ</b><small id="lastBackupInfo">—</small></div>
+        <button class="btn sm" id="manualBackupBtn">💾 بکاپ فوری</button>
+      </div>
+    </div>
+  </div>
+
     <h3>💳 کیف پول</h3>
     <div class="form-grid">
       <div class="field"><label>شماره کارت</label><input id="walletNum" placeholder="6037-XXXX-XXXX-XXXX" maxlength="25"></div>
@@ -1187,6 +1201,8 @@ const sb = (window.supabase && CONFIG.SUPABASE_URL) ? window.supabase.createClie
 let db = { students: [], tx: [], waitlist: [], packages: [] };
 let settings = {
   palette:'gold', compact:false, themeMode:'dark',
+   autoBackup: true,
+  lastBackupAt: 0,
   password: CONFIG.DEFAULT_PASSWORD,
   walletNum:'', walletOwner:'علی ناقلی',
   smsAcademy:'آموزشگاه زبان علی ناقلی'
@@ -3822,7 +3838,86 @@ function renderAll(){
   renderWaitlist();
   renderPkgs();
 }
+/* ============ بکاپ خودکار ============ */
+function checkAutoBackup(){
+  if(!settings.autoBackup) return;
+  const now = Date.now();
+  const last = settings.lastBackupAt || 0;
+  const oneDay = 24 * 60 * 60 * 1000;
+  if(now - last < oneDay) return; // کمتر از ۲۴ ساعت گذشته
 
+  // بکاپ بگیر
+  try {
+    const all = {
+      students: db.students,
+      tx: db.tx,
+      waitlist: db.waitlist,
+      settings,
+      schedule: (typeof scheduleData !== 'undefined') ? scheduleData : {},
+      rotation: (typeof rotData !== 'undefined') ? rotData : { members: [], queue: [], history: [] }
+    };
+    const datePart = dateStr(todayJ()).replace(/\//g, '-');
+    const filename = 'backup-auto-' + datePart + '.json';
+    const blob = new Blob([JSON.stringify(all)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 200);
+
+    settings.lastBackupAt = now;
+    saveSettings();
+    setTimeout(() => toast('💾 بکاپ خودکار ذخیره شد', 'success'), 1500);
+  } catch(e){ console.warn('auto backup error', e); }
+}
+/* ============ پایان بکاپ خودکار ============ */
+ /* اتصال سوئیچ بکاپ */
+function updateAutoBackupUI(){
+  const sw = $('autoBackupSwitch');
+  if(sw) sw.classList.toggle('on', !!settings.autoBackup);
+  const info = $('lastBackupInfo');
+  if(info){
+    if(settings.lastBackupAt){
+      info.textContent = new Date(settings.lastBackupAt).toLocaleString('fa-IR');
+    } else {
+      info.textContent = 'هنوز بکاپی نگرفته';
+    }
+  }
+}
+document.addEventListener('click', e => {
+  if(e.target && e.target.id === 'autoBackupSwitch'){
+    settings.autoBackup = !settings.autoBackup;
+    saveSettings();
+    updateAutoBackupUI();
+    toast(settings.autoBackup ? 'بکاپ خودکار فعال شد' : 'بکاپ خودکار غیرفعال شد', settings.autoBackup ? 'success' : 'info');
+  }
+  if(e.target && e.target.id === 'manualBackupBtn'){
+    const all = {
+      students: db.students,
+      tx: db.tx,
+      waitlist: db.waitlist,
+      settings,
+      schedule: (typeof scheduleData !== 'undefined') ? scheduleData : {},
+      rotation: (typeof rotData !== 'undefined') ? rotData : { members: [], queue: [], history: [] }
+    };
+    const datePart = dateStr(todayJ()).replace(/\//g, '-');
+    const filename = 'backup-' + datePart + '.json';
+    const blob = new Blob([JSON.stringify(all)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 200);
+    settings.lastBackupAt = Date.now();
+    saveSettings();
+    updateAutoBackupUI();
+    toast('💾 بکاپ ذخیره شد', 'success');
+  }
+});
 /* ============ BOOT ============ */
 function boot(){
     // پر کردن لیست دوره‌ها
@@ -3858,6 +3953,7 @@ function boot(){
   initCalendar();
   renderAll();
   renderQRRegister();
+   setTimeout(() => checkAutoBackup(), 3000);
   
   if(sb){
      setSync('offline', 'آفلاین');
