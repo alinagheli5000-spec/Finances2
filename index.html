@@ -1219,7 +1219,15 @@ function loadLocal(){
 }
 
 function saveLocal(){
-  try{ localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db)); }catch(e){ console.error('save error', e); }
+  try{
+    localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(db));
+    const test = localStorage.getItem(CONFIG.LOCAL_KEY);
+    if(test && test.includes('"graduated":true')){
+      console.log('✅ graduated ذخیره شد');
+    } else {
+      console.log('❌ graduated ذخیره نشد');
+    }
+  }catch(e){ console.error('save error', e); }
 }
 function saveSettings(){
   try{ localStorage.setItem(CONFIG.SETTINGS_KEY, JSON.stringify(settings)); }catch(e){}
