@@ -849,6 +849,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
         <button class="btn ghost sm" id="schClearAll">🗑 پاک کردن همه</button>
       </div>
     </div>
+       <div id="schStatsBox" style="margin-bottom:14px"></div>
     <div id="scheduleContainer"></div>
     <p class="hint" style="margin-top:12px">برای افزودن نام: روی خانه خالی کلیک کن. برای حذف: روی نام کلیک کن.</p>
   </div>
@@ -3637,8 +3638,87 @@ function openSchedulePicker(day, slot){
 
   modal.classList.add('on');
 }
+function renderScheduleStats(){
+  const box = $('schStatsBox');
+  if(!box) return;
 
+  // محاسبه تعداد کلاس در هر ساعت و هر روز
+  const bySlot = {};
+  const byDay = {};
+  SCHEDULE_SLOTS.forEach(s => bySlot[s] = 0);
+  SCHEDULE_DAYS.forEach(d => byDay[d] = 0);
+
+  let totalEntries = 0;
+  SCHEDULE_DAYS.forEach(day => {
+    SCHEDULE_SLOTS.forEach(slot => {
+      const names = schGet(day, slot);
+      if(names.length){
+        bySlot[slot] += names.length;
+        byDay[day] += names.length;
+        totalEntries += names.length;
+      }
+    });
+  });
+
+  if(totalEntries === 0){
+    box.innerHTML = '';
+    return;
+  }
+
+  // پیدا کردن پرترین و خالی‌ترین
+  const slotMax = Math.max(...Object.values(bySlot));
+  const slotMin = Math.min(...Object.values(bySlot));
+  const dayMax = Math.max(...Object.values(byDay));
+  const dayMin = Math.min(...Object.values(byDay));
+
+  const maxSlots = SCHEDULE_SLOTS.filter(s => bySlot[s] === slotMax && slotMax > 0);
+  const minSlots = SCHEDULE_SLOTS.filter(s => bySlot[s] === slotMin);
+  const maxDays = SCHEDULE_DAYS.filter(d => byDay[d] === dayMax && dayMax > 0);
+  const minDays = SCHEDULE_DAYS.filter(d => byDay[d] === dayMin);
+
+  const todayName = schTodayName();
+  const maxDayCount = Math.max(1, dayMax);
+
+  box.innerHTML = `<div class="card" style="margin-bottom:0;background:linear-gradient(135deg,var(--card-2),var(--surface));border-color:var(--border-strong)">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <h3 style="margin:0;font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px">📊 آمار برنامه هفتگی</h3>
+      <div style="font-size:12px;color:var(--ink-2)">کل: <b style="color:var(--primary);font-size:15px">${faDigits(totalEntries)}</b> جلسه</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div style="background:var(--emerald-soft);border:1px solid var(--emerald);border-radius:10px;padding:10px 12px">
+        <div style="font-size:10.5px;color:var(--emerald);font-weight:700;margin-bottom:4px">🔥 پرترین ساعت</div>
+        <div style="font-size:14px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums">${maxSlots.map(s => faDigits(s)).join('، ')}</div>
+        <div style="font-size:11px;color:var(--ink-2);margin-top:2px">${faDigits(slotMax)} جلسه</div>
+      </div>
+      <div style="background:var(--rose-soft);border:1px solid var(--rose);border-radius:10px;padding:10px 12px">
+        <div style="font-size:10.5px;color:var(--rose);font-weight:700;margin-bottom:4px">💤 خالی‌ترین ساعت</div>
+        <div style="font-size:14px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums">${minSlots.map(s => faDigits(s)).join('، ')}</div>
+        <div style="font-size:11px;color:var(--ink-2);margin-top:2px">${faDigits(slotMin)} جلسه</div>
+      </div>
+    </div>
+
+    <div style="font-size:11.5px;color:var(--ink-2);margin-bottom:8px;font-weight:700">📅 توزیع روزها:</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      ${SCHEDULE_DAYS.map(d => {
+        const c = byDay[d];
+        const pct = c > 0 ? Math.round(c / maxDayCount * 100) : 0;
+        const isToday = d === todayName;
+        return `<div style="display:grid;grid-template-columns:70px 1fr 50px;gap:8px;align-items:center;font-size:11.5px">
+          <span style="font-weight:${isToday ? '800' : '600'};color:${isToday ? 'var(--primary)' : 'var(--ink)'}">${d}</span>
+          <div style="background:var(--surface);height:14px;border-radius:5px;overflow:hidden;position:relative">
+            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--primary),var(--primary-2));border-radius:5px;transition:width .6s;${c === 0 ? 'background:var(--border)' : ''}"></div>
+          </div>
+          <span style="text-align:left;font-weight:${c === dayMax && c > 0 ? '800' : '600'};color:${c === 0 ? 'var(--ink-3)' : 'var(--ink)'};font-variant-numeric:tabular-nums">${faDigits(c)}</span>
+        </div>`;
+      }).join('')}
+    </div>
+
+    ${maxDays.length ? `<div style="margin-top:10px;padding:8px 12px;background:var(--primary-glow);border:1px solid var(--primary);border-radius:8px;font-size:11.5px;color:var(--ink)"><b style="color:var(--primary)">💡 شلوغ‌ترین روز:</b> ${maxDays.join('، ')} (${faDigits(dayMax)} جلسه) — اگه می‌خوای کلاس جدید باز کنی، این روزها ظرفیت محدودتری دارن.</div>` : ''}
+  </div>`;
+}
 function renderSchedule(){
+   renderScheduleStats();
   const box = $('scheduleContainer');
   if(!box) return;
   const todayName = schTodayName();
