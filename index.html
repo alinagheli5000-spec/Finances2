@@ -3802,13 +3802,9 @@ click('logoutBtn', () => {
   showLogin();
   toast('خارج شدید', 'info');
 });
-click('syncBtn', async () => {
-  if(!sb){ toast('Supabase در دسترس نیست', 'err'); return; }
-  setSync('syncing', 'همگام‌سازی…');
-  const ok = await pullFromCloud();
-  if(ok){ renderAll(); toast('همگام شد', 'success'); } else toast('اتصال نشد', 'err');
+click('syncBtn', () => {
+  toast('همگام‌سازی غیرفعال است — داده‌ها محلی ذخیره می‌شوند', 'info');
 });
-
 /* ============ MONEY INPUT ============ */
 document.addEventListener('input', e => {
   if(e.target.classList.contains('money')){
