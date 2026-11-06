@@ -3898,6 +3898,15 @@ document.addEventListener('input', e => {
 /* ============ RENDER ALL ============ */
 function renderAll(){
   renderSchedule();
+    // تست: db قبل از رندر
+  if(!window._dbCheckDone){
+    window._dbCheckDone = true;
+    setTimeout(() => {
+      const grads = db.students.filter(s => s.graduated);
+      if(grads.length) toast(`🔍 db: ${grads.length} فارغ‌التحصیل`, 'success');
+      else toast('🔍 db: هیچ فارغ‌التحصیلی نیست', 'err');
+    }, 2000);
+  }
   renderRotation();
   if(typeof renderGraduates === 'function') renderGraduates();
   if(typeof renderClasses === 'function') renderClasses();
