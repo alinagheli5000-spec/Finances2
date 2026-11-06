@@ -3021,7 +3021,19 @@ window.graduateStudent = (id) => {
   s.graduatedAt = Date.now();
   saveLocal();
   renderAll();
-  toast(`🎓 ${s.name} فارغ‌التحصیل شد`, 'success');
+  // تست: از localStorage دوباره بخون
+  try {
+    const raw = localStorage.getItem(CONFIG.LOCAL_KEY);
+    const parsed = JSON.parse(raw);
+    const found = parsed.students.find(x => x.id === id);
+    if(found && found.graduated){
+      toast(`✅ ${s.name} فارغ‌التحصیل شد و ذخیره شد`, 'success');
+    } else {
+      toast(`❌ ذخیره نشد! مشکل در saveLocal`, 'err');
+    }
+  } catch(e){
+    toast('خطا: ' + e.message, 'err');
+  }
 };
 
 window.unGraduateStudent = (id) => {
