@@ -3018,6 +3018,19 @@ window.graduateStudent = (id) => {
   s.graduated = true;
   s.graduatedAt = Date.now();
   saveLocal();
+  // 🔥 ذخیره مستقیم در localStorage — بدون واسطه
+  try {
+    const raw = localStorage.getItem(CONFIG.LOCAL_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      const idx = parsed.students.findIndex(x => x.id === id);
+      if(idx >= 0){
+        parsed.students[idx].graduated = true;
+        parsed.students[idx].graduatedAt = Date.now();
+        localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(parsed));
+      }
+    }
+  } catch(e){ console.warn('direct save error', e); }
   renderAll();
   toast(`🎓 ${s.name} فارغ‌التحصیل شد`, 'success');
 };
@@ -3027,6 +3040,18 @@ window.unGraduateStudent = (id) => {
   s.graduated = false;
   delete s.graduatedAt;
   saveLocal();
+  try {
+    const raw = localStorage.getItem(CONFIG.LOCAL_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      const idx = parsed.students.findIndex(x => x.id === id);
+      if(idx >= 0){
+        parsed.students[idx].graduated = false;
+        delete parsed.students[idx].graduatedAt;
+        localStorage.setItem(CONFIG.LOCAL_KEY, JSON.stringify(parsed));
+      }
+    }
+  } catch(e){ console.warn('direct save error', e); }
   renderAll();
   toast('بازگردانی شد', 'success');
 };
