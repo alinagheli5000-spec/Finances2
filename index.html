@@ -1940,32 +1940,30 @@ function initExpTab(){
   } else { bind(); }
   new MutationObserver(debounce(bind, 300)).observe(document.body, { childList: true, subtree: true });
 })();
-  /* ============ نمایش کلاس در حال برگزاری با سبز ============ */
+ /* ============ نمایش کلاس در حال برگزاری با سبز (نسخه اصلاح‌شده) ============ */
 (function liveClassHighlight(){
-  function pad2(n){ return String(n).padStart(2, '0'); }
-
   function nowMinutes(){
     var d = new Date();
     return d.getHours() * 60 + d.getMinutes();
   }
 
-  function parseTime(str){
-    // فرمت‌های ممکن: "16:00" / "16:00-17:30" / "۱۶:۰۰"
-    if(!str) return null;
-    var en = String(str).replace(/[۰-۹]/g, function(d){
+  function toEnNum(str){
+    return String(str || '').replace(/[۰-۹]/g, function(d){
       return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d);
     });
+  }
+
+  function parseTime(str){
+    if(!str) return null;
+    var en = toEnNum(str);
     var m = en.match(/(\d{1,2})\s*[:٫]\s*(\d{1,2})/);
     if(!m) return null;
     return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
   }
 
   function parseRange(str){
-    // اگه بازه بود، [start, end] برگردون
     if(!str) return null;
-    var en = String(str).replace(/[۰-۹]/g, function(d){
-      return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d);
-    });
+    var en = toEnNum(str);
     var parts = en.split(/[-–—تا]/);
     if(parts.length >= 2){
       var s = parseTime(parts[0]);
@@ -1973,14 +1971,27 @@ function initExpTab(){
       if(s !== null && e !== null) return [s, e];
     }
     var single = parseTime(en);
-    if(single !== null) return [single, single + 90]; // پیش‌فرض ۹۰ دقیقه
+    if(single !== null) return [single, single + 90];
     return null;
   }
 
-  function todayJWeekday(){
-    // روز هفته امروز به شمسی: شنبه=0 ... جمعه=6
-    var t = todayJ();
-    return dayOfWeek(t[0], t[1], t[2]);
+  // ==== روز هفته امروز: شنبه=0 ... جمعه=6 ====
+  function todayDow(){
+    var t = todayJ(); // [jy, jm, jd]
+    var g = jToG(t[0], t[1], t[2]); // [gy, gm, gd]
+    // getUTCDay: 0=یکشنبه, 1=دوشنبه, 2=سه‌شنبه, 3=چهارشنبه, 4=پنجشنبه, 5=جمعه, 6=شنبه
+    // تبدیل: شنبه(6)→0, یکشنبه(0)→1, دوشنبه(1)→2, سه‌شنبه(2)→3, چهارشنبه(3)→4, پنجشنبه(4)→5, جمعه(5)→6
+    var gd = new Date(Date.UTC(g[0], g[1] - 1, g[2])).getUTCDay();
+    return (gd + 1) % 7;
+  }
+
+  // ==== پیدا کردن ایندکس روز از اسم ستون ====
+  function dayIndexFromHeader(txt){
+    if(!txt) return -1;
+    for(var i = 0; i < WEEKDAYS.length; i++){
+      if(txt.indexOf(WEEKDAYS[i]) >= 0) return i;
+    }
+    return -1;
   }
 
   function applyLive(){
@@ -1988,12 +1999,16 @@ function initExpTab(){
     if(!names.length) return;
 
     var now = nowMinutes();
-    var todayDow = todayJWeekday();
+    var todayD = todayDow();
+
+    // دیباگ: توی عنوان صفحه نشون بده (موقت)
+    // console.log('todayD:', todayD, 'WEEKDAYS[todayD]:', WEEKDAYS[todayD], 'now:', now);
+
+    var tableCache = new Map();
 
     names.forEach(function(el){
       el.classList.remove('sch-live');
 
-      // پیدا کردن ستون روز و ردیف ساعت
       var cell = el.closest('td');
       if(!cell) return;
       var row = cell.closest('tr');
@@ -2001,18 +2016,25 @@ function initExpTab(){
       var table = cell.closest('table');
       if(!table) return;
 
-      // ستون روز
+      if(!tableCache.has(table)){
+        var ths = table.querySelectorAll('thead th');
+        var headerDays = [];
+        for(var i = 0; i < ths.length; i++){
+          headerDays.push(dayIndexFromHeader(ths[i].textContent.trim()));
+        }
+        tableCache.set(table, headerDays);
+      }
+      var headerDays = tableCache.get(table);
+
       var cells = Array.from(row.children);
-      var colIndex = cells.indexOf(cell); // 0 = ستون ساعت
+      var colIndex = cells.indexOf(cell);
       if(colIndex <= 0) return;
 
-      // روز این ستون از هدر
-      var headerCells = table.querySelectorAll('thead th');
-      // headerCells[0] = ستون ساعت، headerCells[1..7] = روزها
-      var dayIndex = colIndex - 1; // 0=شنبه ... 6=جمعه
-      if(dayIndex !== todayDow) return;
+      var dayIdx = headerDays[colIndex];
+      if(dayIdx === undefined || dayIdx < 0) return;
 
-      // ساعت این ردیف از ستون اول
+      if(dayIdx !== todayD) return;
+
       var timeCell = row.children[0];
       if(!timeCell) return;
       var range = parseRange(timeCell.textContent.trim());
@@ -2025,10 +2047,8 @@ function initExpTab(){
     });
   }
 
-  // اتصال: هر ۳۰ ثانیه چک کن
-  var interval = setInterval(applyLive, 30000);
+  setInterval(applyLive, 30000);
 
-  // هر بار جدول بازسازی شد، دوباره اعمال کن
   var mo = new MutationObserver(function(){
     clearTimeout(window.__liveT);
     window.__liveT = setTimeout(applyLive, 200);
@@ -2046,7 +2066,6 @@ function initExpTab(){
     init();
   }
 
-  // وقتی تب برنامه هفتگی باز شد، فوراً اعمال کن
   document.addEventListener('click', function(e){
     var btn = e.target.closest('.tab-btn[data-tab="schedule"]');
     if(btn) setTimeout(applyLive, 100);
