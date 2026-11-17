@@ -510,6 +510,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="schedule"><span class="tb-icon">🗓</span>برنامه هفتگی</button>
   <button class="tab-btn" data-tab="rotation"><span class="tb-icon">🔄</span>گردشی</button>
   <button class="tab-btn" data-tab="report"><span class="tb-icon">📄</span>گزارش</button>
+    <button class="tab-btn" data-tab="myboard"><span class="tb-icon">🧠</span>داشبورد من</button>
   <button class="tab-btn" data-tab="settings"><span class="tb-icon">⚙️</span>تنظیمات</button>
 </div></nav>
 
@@ -924,7 +925,35 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div class="card"><h3 class="card-title">تفکیک زبان‌آموز</h3><div class="table-wrap" id="repStudents"></div></div>
   <div class="card"><h3 class="card-title">جزئیات</h3><div class="table-wrap" id="repTx"></div></div>
 </section>
-
+<section class="tab" id="tab-myboard">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🧠</div>داشبورد من</div>
+      <div class="page-sub">شاخص‌های شخصی مدیر</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost sm" id="mbEditBtn">⚙️ شخصی‌سازی</button>
+    </div>
+  </div>
+  <div id="mbView">
+    <div class="stats-grid" id="mbCards"></div>
+    <div class="grid-2">
+      <div class="card"><h3 class="card-title">📈 روند ۶ ماه اخیر</h3><div id="mbTrend"></div></div>
+      <div class="card"><h3 class="card-title">📊 این ماه vs ماه قبل</h3><div id="mbCompare"></div></div>
+    </div>
+    <div class="card"><h3 class="card-title">✅ کارهای عقب‌افتاده</h3><div id="mbTasks"></div></div>
+  </div>
+  <div id="mbEdit" style="display:none">
+    <div class="card">
+      <h3 class="card-title">🎛 انتخاب کارت‌ها</h3>
+      <div id="mbToggles" class="settings-rows"></div>
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn success" id="mbSaveBtn">💾 ذخیره</button>
+        <button class="btn ghost" id="mbCancelBtn">انصراف</button>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="tab" id="tab-settings">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon">⚙️</div>تنظیمات</div></div></div>
   <div class="settings-section">
@@ -1923,6 +1952,276 @@ function initExpTab(){
     document.addEventListener('DOMContentLoaded', bind);
   } else { bind(); }
   new MutationObserver(debounce(bind, 300)).observe(document.body, { childList: true, subtree: true });
+})();
+  /* ============ داشبورد شخصی مدیر ============ */
+var MB_CARDS = {
+  netIncome:      { label: '💰 درآمد خالص این ماه', icon: '💰' },
+  newStudents:    { label: '👥 زبان‌آموز جدید این ماه', icon: '👥' },
+  lostStudents:   { label: '📉 فارغ‌التحصیل این ماه', icon: '📉' },
+  totalDebt:      { label: '🔴 مجموع بدهی‌ها', icon: '🔴' },
+  collectionRate: { label: '📥 درصد وصول بدهی', icon: '📥' },
+  bankBalance:    { label: '🏦 موجودی کل بانک‌ها', icon: '🏦' },
+  todaySessions:  { label: '📅 جلسات امروز', icon: '📅' },
+  absentToday:    { label: '🚫 غایبین امروز', icon: '🚫' }
+};
+
+var MB_DEFAULT = ['netIncome', 'newStudents', 'totalDebt', 'collectionRate', 'todaySessions', 'bankBalance'];
+var mbPrefs = { cards: MB_DEFAULT.slice() };
+
+function loadMbPrefs(){
+  try{
+    var raw = localStorage.getItem('ali_academy_mb_v1');
+    if(raw){
+      var d = JSON.parse(raw);
+      if(Array.isArray(d.cards) && d.cards.length) mbPrefs.cards = d.cards;
+    }
+  }catch(e){}
+}
+function saveMbPrefs(){
+  try{ localStorage.setItem('ali_academy_mb_v1', JSON.stringify(mbPrefs)); }catch(e){}
+}
+
+function mbComputeStats(){
+  var t = todayJ();
+  var mk = monthKey(t[0], t[1]);
+  var py = t[0], pm = t[1] - 1;
+  if(pm < 1){ pm = 12; py--; }
+  var lastMk = py + '/' + pad(pm);
+
+  var bals = balances();
+  var totalDebt = 0;
+  Object.keys(bals).forEach(function(k){
+    if(bals[k].bal > 0) totalDebt += bals[k].bal;
+  });
+
+  var thisMonthInc = db.tx.filter(function(x){ return x.type === 'payment' && x.date && x.date.startsWith(mk); })
+    .reduce(function(a, x){ return a + x.amount; }, 0);
+  var thisMonthExp = acc.transactions.filter(function(x){ return x.type === 'expense' && x.month === mk; })
+    .reduce(function(a, x){ return a + x.amount; }, 0);
+  var netIncome = thisMonthInc - thisMonthExp;
+
+  var lastMonthInc = db.tx.filter(function(x){ return x.type === 'payment' && x.date && x.date.startsWith(lastMk); })
+    .reduce(function(a, x){ return a + x.amount; }, 0);
+  var lastMonthExp = acc.transactions.filter(function(x){ return x.type === 'expense' && x.month === lastMk; })
+    .reduce(function(a, x){ return a + x.amount; }, 0);
+  var lastNet = lastMonthInc - lastMonthExp;
+
+  var newThisMonth = db.students.filter(function(s){
+    if(!s.createdAt) return false;
+    var d = new Date(s.createdAt);
+    var j = gToJ(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    return monthKey(j[0], j[1]) === mk;
+  }).length;
+
+  var graduatedThisMonth = db.students.filter(function(s){
+    return s.graduatedAt && s.graduatedAt.startsWith(mk);
+  }).length;
+
+  var todayStr = dateStr(t);
+  var todaySessions = db.tx.filter(function(x){ return x.is_session && x.date === todayStr; }).length;
+  var todayAbsent = db.tx.filter(function(x){ return x.is_session && x.date === todayStr && x.absent; }).length;
+
+  var collectionRate = (thisMonthInc + totalDebt) > 0
+    ? Math.round(thisMonthInc / (thisMonthInc + totalDebt) * 100) : 0;
+
+  var bankBal = 0;
+  try { bankBal = totalBankBalance(); } catch(e){}
+
+  var overdueNoSession = db.students.filter(function(s){
+    var last = db.tx.filter(function(x){ return x.sid === s.id && x.is_session && x.date; })
+      .sort(function(a, b){ return b.date.localeCompare(a.date); })[0];
+    if(!last) return false;
+    var p = last.date.split('/').map(Number);
+    return daysBetween([p[0], p[1], p[2]], t) > 30 && !s.graduated;
+  });
+
+  var highDebtors = db.students.filter(function(s){
+    return (bals[s.id] && bals[s.id].bal || 0) > 10000000;
+  });
+
+  var noPay60 = db.students.filter(function(s){
+    var last = db.tx.filter(function(x){ return x.sid === s.id && x.type === 'payment' && x.date; })
+      .sort(function(a, b){ return b.date.localeCompare(a.date); })[0];
+    if(!last) return false;
+    var p = last.date.split('/').map(Number);
+    return daysBetween([p[0], p[1], p[2]], t) > 60 && !s.graduated;
+  });
+
+  return {
+    netIncome: netIncome, lastNet: lastNet,
+    thisMonthInc: thisMonthInc, thisMonthExp: thisMonthExp,
+    newThisMonth: newThisMonth, graduatedThisMonth: graduatedThisMonth,
+    totalDebt: totalDebt, collectionRate: collectionRate,
+    todaySessions: todaySessions, todayAbsent: todayAbsent, bankBal: bankBal,
+    overdueNoSession: overdueNoSession, highDebtors: highDebtors, noPay60: noPay60,
+    mk: mk, lastMk: lastMk, t: t
+  };
+}
+
+function mbCardHTML(key, s){
+  if(key === 'netIncome'){
+    var diff = s.lastNet ? Math.round((s.netIncome - s.lastNet) / Math.abs(s.lastNet) * 100) : 0;
+    var dc = diff > 0 ? 'var(--emerald)' : diff < 0 ? 'var(--rose)' : 'var(--ink-2)';
+    var dt = diff > 0 ? '▲ ' + fa(diff) + '٪' : diff < 0 ? '▼ ' + fa(Math.abs(diff)) + '٪' : '—';
+    return '<div class="stat stat-credit-card"><div class="stat-icon green">💰</div><div class="stat-label">درآمد خالص این ماه</div><div class="stat-value">' + fa(s.netIncome) + ' <small>تومان</small></div><div style="font-size:11.5px;color:' + dc + ';margin-top:4px">' + dt + ' از ماه قبل</div></div>';
+  }
+  if(key === 'newStudents') return '<div class="stat"><div class="stat-icon blue">👥</div><div class="stat-label">زبان‌آموز جدید این ماه</div><div class="stat-value">' + faDigits(s.newThisMonth) + ' <small>نفر</small></div></div>';
+  if(key === 'lostStudents') return '<div class="stat"><div class="stat-icon red">📉</div><div class="stat-label">فارغ‌التحصیل این ماه</div><div class="stat-value">' + faDigits(s.graduatedThisMonth) + ' <small>نفر</small></div></div>';
+  if(key === 'totalDebt') return '<div class="stat stat-debt-card"><div class="stat-icon red">🔴</div><div class="stat-label">مجموع بدهی‌ها</div><div class="stat-value">' + fa(s.totalDebt) + ' <small>تومان</small></div></div>';
+  if(key === 'collectionRate'){
+    var c = s.collectionRate;
+    var col = c >= 80 ? 'var(--emerald)' : c >= 50 ? 'var(--coral)' : 'var(--rose)';
+    return '<div class="stat"><div class="stat-icon orange">📥</div><div class="stat-label">درصد وصول بدهی</div><div class="stat-value" style="color:' + col + '">' + faDigits(c) + '٪</div></div>';
+  }
+  if(key === 'bankBalance') return '<div class="stat stat-balance-card"><div class="stat-icon blue">🏦</div><div class="stat-label">موجودی کل بانک‌ها</div><div class="stat-value">' + fa(s.bankBal) + ' <small>تومان</small></div></div>';
+  if(key === 'todaySessions') return '<div class="stat"><div class="stat-icon purple">📅</div><div class="stat-label">جلسات امروز</div><div class="stat-value">' + faDigits(s.todaySessions) + ' <small>جلسه</small></div></div>';
+  if(key === 'absentToday') return '<div class="stat"><div class="stat-icon red">🚫</div><div class="stat-label">غایبین امروز</div><div class="stat-value">' + faDigits(s.todayAbsent) + ' <small>نفر</small></div></div>';
+  return '';
+}
+
+function renderMyBoard(){
+  var cardsEl = document.getElementById('mbCards');
+  if(!cardsEl) return;
+
+  var s = mbComputeStats();
+
+  if(mbPrefs.cards.length === 0){
+    cardsEl.innerHTML = '<div class="empty">هیچ کارتی انتخاب نشده. روی ⚙️ شخصی‌سازی بزن.</div>';
+  } else {
+    var html = '';
+    for(var i = 0; i < mbPrefs.cards.length; i++){
+      html += mbCardHTML(mbPrefs.cards[i], s);
+    }
+    cardsEl.innerHTML = html;
+  }
+
+  var trendEl = document.getElementById('mbTrend');
+  if(trendEl){
+    var labels = [], inc = [], exp = [];
+    for(var j = 5; j >= 0; j--){
+      var yy = s.t[0], mm = s.t[1] - j;
+      while(mm < 1){ mm += 12; yy--; }
+      var key = yy + '/' + pad(mm);
+      labels.push(MONTHS[mm - 1]);
+      inc.push(db.tx.filter(function(x){ return x.type === 'payment' && x.date && x.date.startsWith(key); }).reduce(function(a, x){ return a + x.amount; }, 0));
+      exp.push(acc.transactions.filter(function(x){ return x.type === 'expense' && x.month === key; }).reduce(function(a, x){ return a + x.amount; }, 0));
+    }
+    var max = Math.max(1, Math.max.apply(null, inc), Math.max.apply(null, exp));
+    var bars = '';
+    for(var k = 0; k < labels.length; k++){
+      bars += '<div class="chart-bar"><div style="display:flex;align-items:flex-end;gap:2px;height:100%;width:100%;justify-content:center">'
+        + '<div class="chart-bar-fill" style="height:' + Math.max(2, inc[k] / max * 150) + 'px;background:#2a9d6e;width:45%" title="درآمد: ' + fa(inc[k]) + '"></div>'
+        + '<div class="chart-bar-fill" style="height:' + Math.max(2, exp[k] / max * 150) + 'px;background:#d17544;width:45%" title="هزینه: ' + fa(exp[k]) + '"></div>'
+        + '</div><div class="chart-bar-label">' + labels[k].slice(0, 3) + '</div></div>';
+    }
+    trendEl.innerHTML = '<div class="chart-box" style="height:200px;padding:16px 8px 30px">' + bars + '</div>';
+  }
+
+  var cmpEl = document.getElementById('mbCompare');
+  if(cmpEl){
+    var lastInc = db.tx.filter(function(x){ return x.type === 'payment' && x.date && x.date.startsWith(s.lastMk); }).reduce(function(a, x){ return a + x.amount; }, 0);
+    var lastExp = acc.transactions.filter(function(x){ return x.type === 'expense' && x.month === s.lastMk; }).reduce(function(a, x){ return a + x.amount; }, 0);
+    var rows = [['درآمد', s.thisMonthInc, lastInc], ['هزینه', s.thisMonthExp, lastExp]];
+    var cmpHtml = '';
+    for(var r = 0; r < rows.length; r++){
+      var label = rows[r][0], cur = rows[r][1], prev = rows[r][2];
+      var d = prev ? Math.round((cur - prev) / prev * 100) : 0;
+      var good = label === 'درآمد' ? d > 0 : d < 0;
+      var cl = d === 0 ? 'var(--ink-2)' : good ? 'var(--emerald)' : 'var(--rose)';
+      var ar = d > 0 ? '▲' : d < 0 ? '▼' : '—';
+      cmpHtml += '<div class="income-source-card"><div class="income-source-info"><div class="income-source-name">' + label + '</div><div class="income-source-meta">ماه قبل: ' + fa(prev) + ' تومان</div></div><div style="text-align:left"><div class="income-source-amount">' + fa(cur) + '</div><div style="font-size:11.5px;color:' + cl + ';font-weight:700">' + ar + ' ' + faDigits(Math.abs(d)) + '٪</div></div></div>';
+    }
+    cmpEl.innerHTML = cmpHtml;
+  }
+
+  var tasksEl = document.getElementById('mbTasks');
+  if(tasksEl){
+    var items = [];
+    if(s.highDebtors.length) items.push({ icon: '🔴', label: faDigits(s.highDebtors.length) + ' نفر بدهی بالای ۱۰ میلیون', tab: 'students' });
+    if(s.overdueNoSession.length) items.push({ icon: '⏰', label: faDigits(s.overdueNoSession.length) + ' نفر بیش از ۳۰ روز بدون جلسه', tab: 'students' });
+    if(s.noPay60.length) items.push({ icon: '💸', label: faDigits(s.noPay60.length) + ' نفر بیش از ۶۰ روز بدون پرداخت', tab: 'students' });
+    var bday = db.students.filter(isBirthdayToday);
+    if(bday.length) items.push({ icon: '🎂', label: faDigits(bday.length) + ' نفر امروز تولدشونه', tab: 'birthdays' });
+    if(items.length === 0) items.push({ icon: '✅', label: 'همه‌چیز مرتبه! کاری عقب نیفتاده', tab: null });
+    var thtml = '';
+    for(var ii = 0; ii < items.length; ii++){
+      thtml += '<div class="overdue-item"><div class="oi-info"><div class="oi-name">' + items[ii].icon + ' ' + items[ii].label + '</div></div>';
+      if(items[ii].tab) thtml += '<button class="btn xs ghost" onclick="document.querySelector(\'.tab-btn[data-tab=&quot;' + items[ii].tab + '&quot;]\').click()">بررسی</button>';
+      thtml += '</div>';
+    }
+    tasksEl.innerHTML = thtml;
+  }
+}
+
+function renderMbToggles(){
+  var el = document.getElementById('mbToggles');
+  if(!el) return;
+  var keys = Object.keys(MB_CARDS);
+  var html = '';
+  for(var i = 0; i < keys.length; i++){
+    var k = keys[i];
+    var v = MB_CARDS[k];
+    var on = mbPrefs.cards.indexOf(k) >= 0 ? ' on' : '';
+    html += '<div class="settings-row"><div class="sr-info"><b>' + v.icon + ' ' + v.label + '</b></div><button class="toggle-switch' + on + '" data-mb="' + k + '"></button></div>';
+  }
+  el.innerHTML = html;
+  var btns = el.querySelectorAll('[data-mb]');
+  for(var b = 0; b < btns.length; b++){
+    btns[b].addEventListener('click', function(){
+      var kk = this.getAttribute('data-mb');
+      var idx = mbPrefs.cards.indexOf(kk);
+      if(idx >= 0) mbPrefs.cards.splice(idx, 1);
+      else mbPrefs.cards.push(kk);
+      this.classList.toggle('on');
+    });
+  }
+}
+
+/* اتصال خودکار */
+(function(){
+  function mbBind(){
+    var editBtn = document.getElementById('mbEditBtn');
+    if(editBtn && !editBtn._b){
+      editBtn._b = true;
+      editBtn.addEventListener('click', function(){
+        document.getElementById('mbView').style.display = 'none';
+        document.getElementById('mbEdit').style.display = 'block';
+        renderMbToggles();
+      });
+    }
+    var saveBtn = document.getElementById('mbSaveBtn');
+    if(saveBtn && !saveBtn._b){
+      saveBtn._b = true;
+      saveBtn.addEventListener('click', function(){
+        saveMbPrefs();
+        document.getElementById('mbEdit').style.display = 'none';
+        document.getElementById('mbView').style.display = 'block';
+        renderMyBoard();
+        toast('✅ ذخیره شد', 'success');
+      });
+    }
+    var cancelBtn = document.getElementById('mbCancelBtn');
+    if(cancelBtn && !cancelBtn._b){
+      cancelBtn._b = true;
+      cancelBtn.addEventListener('click', function(){
+        loadMbPrefs();
+        document.getElementById('mbEdit').style.display = 'none';
+        document.getElementById('mbView').style.display = 'block';
+        renderMyBoard();
+      });
+    }
+    var tab = document.querySelector('.tab-btn[data-tab="myboard"]');
+    if(tab && !tab._b){
+      tab._b = true;
+      tab.addEventListener('click', function(){
+        setTimeout(function(){ try { renderMyBoard(); } catch(e){} }, 50);
+      });
+    }
+    loadMbPrefs();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mbBind);
+  else mbBind();
+  new MutationObserver(function(){ setTimeout(mbBind, 200); }).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 <script>
