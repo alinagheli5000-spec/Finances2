@@ -375,6 +375,18 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 .sch-cell.empty:hover::after{opacity:1}
 .sch-name{background:var(--primary-glow);border:1px solid var(--primary);color:var(--ink);border-radius:8px;padding:4px 8px;font-size:11.5px;font-weight:600;display:flex;align-items:flex-start;justify-content:space-between;gap:4px;cursor:pointer;transition:var(--transition)}
 .sch-name:hover{background:var(--rose-soft);border-color:var(--rose)}
+  .sch-name.sch-debt-high{
+  background:linear-gradient(135deg,#c9526a,#a0445a)!important;
+  border-color:#8b2f45!important;
+  color:#fff!important;
+  font-weight:800!important;
+  box-shadow:0 2px 8px rgba(201,82,106,.4);
+  animation:pulse 2s ease-in-out infinite;
+}
+.sch-name.sch-debt-high .sch-x{
+  color:#fff!important;
+  opacity:.8;
+}
 .sch-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
 .sch-name .sch-x{color:var(--ink-3);font-size:13px;font-weight:700;flex-shrink:0}
 .sch-today{background:var(--primary-glow)!important}
@@ -4148,6 +4160,14 @@ function renderAll(){
 }
 
 /* ============ BOOT ============ */
+  /* تشخیص بدهکار بالای ۱۰ میلیون */
+function isHighDebtor(studentName){
+  if(!studentName) return false;
+  const st = db.students.find(s => s.name === studentName);
+  if(!st) return false;
+  const bals = balances();
+  return !!(bals[st.id] && bals[st.id].bal > 10000000);
+}
 function boot(){
   const courseSel = $('stCourse');
   if(courseSel && courseSel.tagName === 'SELECT' && courseSel.options.length <= 1){
@@ -4196,6 +4216,28 @@ try {
   console.error('startup error:', err);
   document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif"><h2>خطای راه‌اندازی</h2><p>' + err.message + '</p></div>';
 }
+  /* رنگ‌آمیزی خودکار بدهکاران بالای ۱۰ میلیون در برنامه هفتگی */
+(function autoRedHighDebtors(){
+  function colorize(){
+    const cells = document.querySelectorAll('.sch-name');
+    cells.forEach(cell => {
+      const nameSpan = cell.querySelector('span:first-child');
+      if(!nameSpan) return;
+      const name = nameSpan.textContent.trim();
+      if(isHighDebtor(name)){
+        cell.classList.add('sch-debt-high');
+        cell.title = '⚠️ بدهی بالای ۱۰ میلیون تومان';
+      } else {
+        cell.classList.remove('sch-debt-high');
+      }
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', colorize);
+  } else { colorize(); }
+  // هر بار جدول تغییر کرد دوباره چک کن
+  new MutationObserver(debounce(colorize, 200)).observe(document.body, { childList: true, subtree: true });
+})();
 </script>
 </body>
 </html>
