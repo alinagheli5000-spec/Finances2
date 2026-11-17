@@ -538,9 +538,11 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <button class="sub-tab on" data-acc="overview">📊 نمای کلی</button>
     <button class="sub-tab" data-acc="banks">🏦 بانک‌ها</button>
     <button class="sub-tab" data-acc="sources">💵 منابع درآمد</button>
+    <button class="sub-tab" data-acc="expenses">💸 هزینه‌ها</button>
     <button class="sub-tab" data-acc="goals">🎯 اهداف</button>
     <button class="sub-tab" data-acc="transactions">📋 تراکنش‌ها</button>
   </div>
+  
 
   <div class="sub-panel on" id="acc-overview">
     <div id="accGoalBig"></div>
@@ -610,7 +612,71 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
       <div id="sourcesSummary"></div>
     </div>
   </div>
+<div class="sub-panel" id="acc-expenses">
 
+  <!-- فرم ثبت هزینه -->
+  <div class="card">
+    <h3 class="card-title">➕ ثبت هزینه جدید</h3>
+    <form class="form-grid" id="expenseForm">
+      <div class="field">
+        <label>شرح هزینه <span class="req">*</span></label>
+        <input id="expName" required placeholder="مثلاً اجاره، قبض برق، خرید لوازم">
+      </div>
+      <div class="field">
+        <label>دسته‌بندی</label>
+        <select id="expCategory">
+          <option value="rent">🏠 اجاره</option>
+          <option value="utilities">💡 قبوض (برق، آب، گاز)</option>
+          <option value="salary">👨‍🏫 حقوق پرسنل</option>
+          <option value="supplies">📚 لوازم و کتاب</option>
+          <option value="maintenance">🔧 تعمیرات</option>
+          <option value="marketing">📢 تبلیغات</option>
+          <option value="other">📦 سایر</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>مبلغ (تومان) <span class="req">*</span></label>
+        <input id="expAmount" inputmode="numeric" class="money" required placeholder="۰">
+      </div>
+      <div class="field">
+        <label>تاریخ</label>
+        <div class="date-row" id="expDate"></div>
+      </div>
+      <div class="field">
+        <label>بانک پرداخت‌کننده</label>
+        <select id="expBank"></select>
+      </div>
+      <div class="btn-row" style="align-items:end">
+        <button class="btn danger" type="submit">💸 ثبت هزینه</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- خلاصه هزینه‌های ماه -->
+  <div class="stats-grid" id="expStats"></div>
+
+  <!-- لیست هزینه‌ها -->
+  <div class="card">
+    <h3 class="card-title">📋 هزینه‌های ثبت‌شده</h3>
+    <div class="filters">
+      <select id="expFilterCat">
+        <option value="">همه دسته‌ها</option>
+        <option value="rent">اجاره</option>
+        <option value="utilities">قبوض</option>
+        <option value="salary">حقوق</option>
+        <option value="supplies">لوازم</option>
+        <option value="maintenance">تعمیرات</option>
+        <option value="marketing">تبلیغات</option>
+        <option value="other">سایر</option>
+      </select>
+      <select id="expFilterMonth"></select>
+      <input id="expSearch" placeholder="جستجو در شرح…">
+    </div>
+    <div class="table-wrap" id="expTable"></div>
+  </div>
+
+</div>
+  
   <div class="sub-panel" id="acc-goals">
     <div id="goalsBigSection"></div>
     <div class="card">
@@ -1125,6 +1191,186 @@ function monthPrivateClassIncome(monthKeyStr){
 }
 
 /* ============ DATA ============ */
+  /* ============ EXPENSES ============ */
+const EXP_CATEGORIES = {
+  rent: { label: 'اجاره', icon: '🏠' },
+  utilities: { label: 'قبوض', icon: '💡' },
+  salary: { label: 'حقوق', icon: '👨‍🏫' },
+  supplies: { label: 'لوازم', icon: '📚' },
+  maintenance: { label: 'تعمیرات', icon: '🔧' },
+  marketing: { label: 'تبلیغات', icon: '📢' },
+  other: { label: 'سایر', icon: '📦' }
+};
+
+function fillExpenseBanks(){
+  const sel = $('expBank'); if(!sel) return;
+  sel.innerHTML = '<option value="">— بدون بانک —</option>' +
+    acc.banks.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join('');
+}
+
+function fillExpenseMonthFilter(){
+  const sel = $('expFilterMonth'); if(!sel) return;
+  const months = [...new Set(
+    acc.transactions.filter(t => t.type === 'expense' && t.month).map(t => t.month)
+  )].sort().reverse();
+  sel.innerHTML = '<option value="">همه ماه‌ها</option>' +
+    months.map(m => {
+      const [y, mo] = m.split('/');
+      return `<option value="${m}">${MONTHS[+mo - 1]} ${faDigits(y)}</option>`;
+    }).join('');
+}
+
+function topExpenseCategory(list){
+  if(!list.length) return null;
+  const byCat = {};
+  list.forEach(t => {
+    const c = t.category || 'other';
+    byCat[c] = (byCat[c] || 0) + t.amount;
+  });
+  const top = Object.entries(byCat).sort((a, b) => b[1] - a[1])[0];
+  return top ? (EXP_CATEGORIES[top[0]]?.label || 'سایر') : null;
+}
+
+function renderExpenseStats(){
+  const el = $('expStats'); if(!el) return;
+  const mk = currentMonthKey();
+  const thisMonth = acc.transactions.filter(t => t.type === 'expense' && t.month === mk);
+  const total = thisMonth.reduce((a, t) => a + t.amount, 0);
+
+  // هزینه ماه قبل
+  const t = todayJ();
+  let py = t[0], pm = t[1] - 1;
+  if(pm < 1){ pm = 12; py--; }
+  const lastMk = py + '/' + pad(pm);
+  const lastMonth = acc.transactions
+    .filter(x => x.type === 'expense' && x.month === lastMk)
+    .reduce((a, x) => a + x.amount, 0);
+
+  const diff = lastMonth ? Math.round((total - lastMonth) / lastMonth * 100) : 0;
+  const diffColor = diff > 0 ? 'var(--rose)' : diff < 0 ? 'var(--emerald)' : 'var(--ink-2)';
+  const diffText = diff > 0 ? `▲ ${fa(diff)}٪ بیشتر` : diff < 0 ? `▼ ${fa(Math.abs(diff))}٪ کمتر` : 'بدون تغییر';
+
+  el.innerHTML = `
+    <div class="stat stat-debt-card">
+      <div class="stat-icon red">💸</div>
+      <div class="stat-label">هزینه این ماه</div>
+      <div class="stat-value">${fa(total)} <small>تومان</small></div>
+      <div style="font-size:11.5px;color:${diffColor};margin-top:4px">${diffText} از ماه قبل</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon orange">📊</div>
+      <div class="stat-label">تعداد تراکنش هزینه</div>
+      <div class="stat-value">${faDigits(thisMonth.length)}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon purple">🏷</div>
+      <div class="stat-label">بیشترین دسته</div>
+      <div class="stat-value" style="font-size:15px">${topExpenseCategory(thisMonth) || '—'}</div>
+    </div>
+  `;
+}
+
+function renderExpenseTable(){
+  const el = $('expTable'); if(!el) return;
+  const catF = $('expFilterCat')?.value || '';
+  const monthF = $('expFilterMonth')?.value || '';
+  const q = ($('expSearch')?.value || '').trim().toLowerCase();
+
+  let list = acc.transactions.filter(t => t.type === 'expense');
+  if(catF) list = list.filter(t => (t.category || 'other') === catF);
+  if(monthF) list = list.filter(t => t.month === monthF);
+  if(q) list = list.filter(t => (t.desc || '').toLowerCase().includes(q));
+  list.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  if(!list.length){
+    el.innerHTML = emptyState('هزینه‌ای ثبت نشده است');
+    return;
+  }
+
+  const total = list.reduce((a, t) => a + t.amount, 0);
+
+  el.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>تاریخ</th><th>شرح</th><th>دسته</th><th>بانک</th><th>مبلغ</th><th>عملیات</th>
+      </tr></thead>
+      <tbody>${list.map(t => {
+        const cat = EXP_CATEGORIES[t.category || 'other'] || EXP_CATEGORIES.other;
+        const bank = acc.banks.find(b => b.id === t.bankId);
+        return `<tr>
+          <td>${showDate(t.date)}</td>
+          <td>${esc(t.desc || '—')}</td>
+          <td><span class="tag exp">${cat.icon} ${cat.label}</span></td>
+          <td>${bank ? esc(bank.name) : '—'}</td>
+          <td class="n neg">${fa(t.amount)}</td>
+          <td><button class="btn xs danger" onclick="deleteExpense('${t.id}')">🗑</button></td>
+        </tr>`;
+      }).join('')}</tbody>
+      <tfoot><tr style="background:var(--surface);font-weight:800">
+        <td colspan="4" style="text-align:left">جمع کل:</td>
+        <td class="n neg">${fa(total)}</td><td></td>
+      </tr></tfoot>
+    </table>
+  `;
+}
+
+function deleteExpense(id){
+  if(!confirm('این هزینه حذف شود؟')) return;
+  acc.transactions = acc.transactions.filter(t => t.id !== id);
+  saveAccounting();
+  renderExpenseStats();
+  fillExpenseMonthFilter();
+  renderExpenseTable();
+  toast('🗑 هزینه حذف شد', 'success');
+}
+
+function submitExpense(e){
+  e.preventDefault();
+  const name = $('expName').value.trim();
+  const amount = moneyVal('expAmount');
+  const category = $('expCategory').value;
+  const bankId = $('expBank').value || null;
+  const date = getDate('expDate') || dateStr(todayJ());
+
+  if(!name){ toast('شرح هزینه را وارد کنید', 'err'); return; }
+  if(amount <= 0){ toast('مبلغ باید بزرگ‌تر از صفر باشد', 'err'); return; }
+
+  if(bankId){
+    const bal = bankBalance(bankId);
+    if(bal < amount && !confirm(`موجودی بانک (${fa(bal)}) کمتر از مبلغ هزینه است. ادامه می‌دهید؟`)) return;
+  }
+
+  acc.transactions.push({
+    id: uid(),
+    type: 'expense',
+    desc: name,
+    amount,
+    category,
+    bankId,
+    date,
+    month: date.slice(0, 7),
+    createdAt: Date.now()
+  });
+  saveAccounting();
+
+  $('expName').value = '';
+  $('expAmount').value = '';
+  $('expCategory').value = 'rent';
+
+  toast('💸 هزینه ثبت شد', 'success');
+  renderExpenseStats();
+  fillExpenseMonthFilter();
+  renderExpenseTable();
+  refreshAccountingUI();
+}
+
+function initExpensesTab(){
+  fillExpenseBanks();
+  fillExpenseMonthFilter();
+  buildDate('expDate');
+  renderExpenseStats();
+  renderExpenseTable();
+}
 let db = { students: [], tx: [], waitlist: [], packages: [], classes: [] };
 let settings = {
   palette:'gold', compact:false, themeMode:'light',
@@ -1535,6 +1781,137 @@ document.addEventListener('click', e => {
     switchTab('accounting');
   }
 });
+  /* ============ هزینه‌ها ============ */
+const EXP_CAT = {
+  rent: { l: 'اجاره', i: '🏠' },
+  utilities: { l: 'قبوض', i: '💡' },
+  salary: { l: 'حقوق', i: '👨‍🏫' },
+  supplies: { l: 'لوازم', i: '📚' },
+  maintenance: { l: 'تعمیرات', i: '🔧' },
+  marketing: { l: 'تبلیغات', i: '📢' },
+  other: { l: 'سایر', i: '📦' }
+};
+
+function fillExpBanks(){
+  const s = document.getElementById('expBank'); if(!s) return;
+  s.innerHTML = '<option value="">— بدون بانک —</option>' +
+    acc.banks.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join('');
+}
+
+function renderExpStats(){
+  const el = document.getElementById('expStats'); if(!el) return;
+  const mk = currentMonthKey();
+  const list = acc.transactions.filter(t => t.type === 'expense' && t.month === mk);
+  const total = list.reduce((a, t) => a + t.amount, 0);
+  const t = todayJ();
+  let py = t[0], pm = t[1] - 1;
+  if(pm < 1){ pm = 12; py--; }
+  const lastM = acc.transactions
+    .filter(x => x.type === 'expense' && x.month === py + '/' + pad(pm))
+    .reduce((a, x) => a + x.amount, 0);
+  const diff = lastM ? Math.round((total - lastM) / lastM * 100) : 0;
+  const dc = diff > 0 ? 'var(--rose)' : diff < 0 ? 'var(--emerald)' : 'var(--ink-2)';
+  const dt = diff > 0 ? `▲ ${fa(diff)}٪` : diff < 0 ? `▼ ${fa(Math.abs(diff))}٪` : 'بدون تغییر';
+  el.innerHTML = `
+    <div class="stat stat-debt-card">
+      <div class="stat-icon red">💸</div>
+      <div class="stat-label">هزینه این ماه</div>
+      <div class="stat-value">${fa(total)} <small>تومان</small></div>
+      <div style="font-size:11.5px;color:${dc};margin-top:4px">${dt} از ماه قبل</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon orange">📊</div>
+      <div class="stat-label">تعداد هزینه</div>
+      <div class="stat-value">${faDigits(list.length)}</div>
+    </div>`;
+}
+
+function renderExpTable(){
+  const el = document.getElementById('expTable'); if(!el) return;
+  const catF = document.getElementById('expFilterCat')?.value || '';
+  const q = (document.getElementById('expSearch')?.value || '').trim().toLowerCase();
+  let list = acc.transactions.filter(t => t.type === 'expense');
+  if(catF) list = list.filter(t => (t.category || 'other') === catF);
+  if(q) list = list.filter(t => (t.desc || '').toLowerCase().includes(q));
+  list.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  if(!list.length){ el.innerHTML = '<div class="empty">هزینه‌ای ثبت نشده</div>'; return; }
+  const total = list.reduce((a, t) => a + t.amount, 0);
+  el.innerHTML = `<table>
+    <thead><tr><th>تاریخ</th><th>شرح</th><th>دسته</th><th>بانک</th><th>مبلغ</th><th></th></tr></thead>
+    <tbody>${list.map(t => {
+      const c = EXP_CAT[t.category || 'other'] || EXP_CAT.other;
+      const b = acc.banks.find(x => x.id === t.bankId);
+      return `<tr>
+        <td>${showDate(t.date)}</td>
+        <td>${esc(t.desc || '—')}</td>
+        <td><span class="tag exp">${c.i} ${c.l}</span></td>
+        <td>${b ? esc(b.name) : '—'}</td>
+        <td class="n neg">${fa(t.amount)}</td>
+        <td><button class="btn xs danger" onclick="delExp('${t.id}')">🗑</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+    <tfoot><tr style="background:var(--surface);font-weight:800">
+      <td colspan="4" style="text-align:left">جمع:</td>
+      <td class="n neg">${fa(total)}</td><td></td>
+    </tr></tfoot></table>`;
+}
+
+function delExp(id){
+  if(!confirm('حذف شود؟')) return;
+  acc.transactions = acc.transactions.filter(t => t.id !== id);
+  saveAccounting();
+  renderExpStats(); renderExpTable();
+  toast('حذف شد', 'success');
+}
+
+function submitExp(e){
+  e.preventDefault();
+  const name = document.getElementById('expName').value.trim();
+  const amount = moneyVal('expAmount');
+  const category = document.getElementById('expCategory').value;
+  const bankId = document.getElementById('expBank').value || null;
+  const date = getDate('expDate') || dateStr(todayJ());
+  if(!name){ toast('شرح لازمه', 'err'); return; }
+  if(amount <= 0){ toast('مبلغ لازمه', 'err'); return; }
+  acc.transactions.push({
+    id: uid(), type: 'expense', desc: name, amount,
+    category, bankId, date, month: date.slice(0, 7), createdAt: Date.now()
+  });
+  saveAccounting();
+  document.getElementById('expName').value = '';
+  document.getElementById('expAmount').value = '';
+  toast('💸 ثبت شد', 'success');
+  renderExpStats(); renderExpTable();
+  if(typeof refreshAccountingUI === 'function') refreshAccountingUI();
+}
+
+function initExpTab(){
+  fillExpBanks();
+  buildDate('expDate');
+  renderExpStats();
+  renderExpTable();
+}
+
+/* اتصال خودکار (به کد اصلی دست نمی‌زنه) */
+(function(){
+  function bind(){
+    const f = document.getElementById('expenseForm');
+    if(f && !f._b){ f._b = true; f.addEventListener('submit', submitExp); }
+    const c = document.getElementById('expFilterCat');
+    if(c && !c._b){ c._b = true; c.addEventListener('change', renderExpTable); }
+    const s = document.getElementById('expSearch');
+    if(s && !s._b){ s._b = true; s.addEventListener('input', debounce(renderExpTable, 250)); }
+    const tab = document.querySelector('.sub-tab[data-acc="expenses"]');
+    if(tab && !tab._b){
+      tab._b = true;
+      tab.addEventListener('click', () => setTimeout(() => { try { initExpTab(); } catch(e){} }, 50));
+    }
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bind);
+  } else { bind(); }
+  new MutationObserver(debounce(bind, 300)).observe(document.body, { childList: true, subtree: true });
+})();
 </script>
 <script>
 'use strict';
@@ -1742,7 +2119,10 @@ on('bankForm', 'submit', e => {
   updateGoalBanner();
   toast('🏦 بانک اضافه شد', 'success');
 });
-
+on('expenseForm', 'submit', submitExpense);
+on('expFilterCat', 'change', renderExpenseTable);
+on('expFilterMonth', 'change', renderExpenseTable);
+on('expSearch', 'input', debounce(renderExpenseTable, 250));
 function openBankIncome(bankId){
   const modalBox = $('modalBox'), modal = $('modal');
   if(!modalBox || !modal) return;
