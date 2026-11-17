@@ -498,6 +498,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 
 <nav class="tabbar"><div class="tabbar-inner">
   <button class="tab-btn on" data-tab="dash"><span class="tb-icon">📊</span>داشبورد</button>
+  <button class="tab-btn" data-tab="myboard"><span class="tb-icon">🧠</span>داشبورد من</button>
   <button class="tab-btn" data-tab="accounting"><span class="tb-icon">💰</span>حسابداری</button>
   <button class="tab-btn" data-tab="students"><span class="tb-icon">👥</span>زبان‌آموزان</button>
   <button class="tab-btn" data-tab="session"><span class="tb-icon">📅</span>ثبت جلسه</button>
@@ -539,6 +540,49 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
 </section>
 
 <section class="tab" id="tab-accounting">
+  <section class="tab" id="tab-myboard">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🧠</div>داشبورد من</div>
+      <div class="page-sub">شاخص‌های شخصی مدیر — فقط خودت می‌بینی</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost sm" id="mbEditBtn">⚙️ شخصی‌سازی</button>
+    </div>
+  </div>
+
+  <!-- حالت نمایش -->
+  <div id="mbView">
+    <div class="stats-grid" id="mbCards"></div>
+    <div class="grid-2">
+      <div class="card" id="mbTrendCard">
+        <h3 class="card-title">📈 روند ۶ ماه اخیر</h3>
+        <div id="mbTrend"></div>
+      </div>
+      <div class="card" id="mbCompareCard">
+        <h3 class="card-title">📊 این ماه vs ماه قبل</h3>
+        <div id="mbCompare"></div>
+      </div>
+    </div>
+    <div class="card" id="mbTasksCard">
+      <h3 class="card-title">✅ کارهای عقب‌افتاده</h3>
+      <div id="mbTasks"></div>
+    </div>
+  </div>
+
+  <!-- حالت شخصی‌سازی -->
+  <div id="mbEdit" style="display:none">
+    <div class="card">
+      <h3 class="card-title">🎛 انتخاب کارت‌ها</h3>
+      <p class="hint" style="margin-bottom:14px">تیک بزن روی کارت‌هایی که می‌خوای توی داشبوردت ببینی:</p>
+      <div id="mbToggles" class="settings-rows"></div>
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn success" id="mbSaveBtn">💾 ذخیره</button>
+        <button class="btn ghost" id="mbCancelBtn">انصراف</button>
+      </div>
+    </div>
+  </div>
+</section>
   <div class="page-head">
     <div>
       <div class="page-title"><div class="page-title-icon">💰</div>حسابداری</div>
@@ -1922,6 +1966,306 @@ function initExpTab(){
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', bind);
   } else { bind(); }
+  new MutationObserver(debounce(bind, 300)).observe(document.body, { childList: true, subtree: true });
+})();
+  /* ============ داشبورد شخصی مدیر ============ */
+const MB_CARDS = {
+  netIncome:      { label: '💰 درآمد خالص این ماه', icon: '💰' },
+  newStudents:    { label: '👥 زبان‌آموز جدید این ماه', icon: '👥' },
+  lostStudents:   { label: '📉 ریزش این ماه', icon: '📉' },
+  totalDebt:      { label: '🔴 مجموع بدهی‌ها', icon: '🔴' },
+  collectionRate: { label: '📥 درصد وصول بدهی', icon: '📥' },
+  bankBalance:    { label: '🏦 موجودی کل بانک‌ها', icon: '🏦' },
+  todaySessions:  { label: '📅 جلسات امروز', icon: '📅' },
+  absentToday:    { label: '🚫 غایبین امروز', icon: '🚫' }
+};
+
+const MB_DEFAULT = ['netIncome', 'newStudents', 'totalDebt', 'collectionRate', 'todaySessions', 'bankBalance'];
+let mbPrefs = { cards: MB_DEFAULT.slice() };
+
+function loadMbPrefs(){
+  try{
+    const raw = localStorage.getItem('ali_academy_mb_v1');
+    if(raw){
+      const d = JSON.parse(raw);
+      if(Array.isArray(d.cards) && d.cards.length) mbPrefs.cards = d.cards;
+    }
+  }catch(e){}
+}
+function saveMbPrefs(){
+  try{ localStorage.setItem('ali_academy_mb_v1', JSON.stringify(mbPrefs)); }catch(e){}
+}
+
+function mbComputeStats(){
+  const t = todayJ();
+  const mk = monthKey(t[0], t[1]);
+  let py = t[0], pm = t[1] - 1;
+  if(pm < 1){ pm = 12; py--; }
+  const lastMk = py + '/' + pad(pm);
+
+  const bals = balances();
+  const totalDebt = Object.values(bals).reduce((a, b) => a + (b.bal > 0 ? b.bal : 0), 0);
+  const totalCredit = Object.values(bals).reduce((a, b) => a + (b.bal < 0 ? -b.bal : 0), 0);
+
+  const thisMonthInc = db.tx.filter(x => x.type === 'payment' && x.date && x.date.startsWith(mk))
+    .reduce((a, x) => a + x.amount, 0);
+  const thisMonthExp = acc.transactions.filter(x => x.type === 'expense' && x.month === mk)
+    .reduce((a, x) => a + x.amount, 0);
+  const netIncome = thisMonthInc - thisMonthExp;
+
+  const lastMonthInc = db.tx.filter(x => x.type === 'payment' && x.date && x.date.startsWith(lastMk))
+    .reduce((a, x) => a + x.amount, 0);
+  const lastMonthExp = acc.transactions.filter(x => x.type === 'expense' && x.month === lastMk)
+    .reduce((a, x) => a + x.amount, 0);
+  const lastNet = lastMonthInc - lastMonthExp;
+
+  const newThisMonth = db.students.filter(s => {
+    if(!s.createdAt) return false;
+    const d = new Date(s.createdAt);
+    const g = [d.getFullYear(), d.getMonth()+1, d.getDate()];
+    const j = gToJ(g[0], g[1], g[2]);
+    return monthKey(j[0], j[1]) === mk;
+  }).length;
+
+  const graduatedThisMonth = db.students.filter(s => {
+    if(!s.graduatedAt) return false;
+    return s.graduatedAt.startsWith(mk);
+  }).length;
+
+  const todayStr = dateStr(t);
+  const todaySessions = db.tx.filter(x => x.is_session && x.date === todayStr).length;
+  const todayAbsent = db.tx.filter(x => x.is_session && x.date === todayStr && x.absent).length;
+
+  const collectionRate = (thisMonthInc + totalDebt) > 0
+    ? Math.round(thisMonthInc / (thisMonthInc + totalDebt) * 100)
+    : 0;
+
+  const bankBal = typeof totalBankBalance === 'function' ? totalBankBalance() : 0;
+
+  // کارهای عقب‌افتاده
+  const overdueNoSession = db.students.filter(s => {
+    const last = db.tx.filter(x => x.sid === s.id && x.is_session && x.date)
+      .sort((a, b) => b.date.localeCompare(a.date))[0];
+    if(!last) return false;
+    const [y, m, d] = last.date.split('/').map(Number);
+    const diff = daysBetween([y, m, d], t);
+    return diff > 30 && !s.graduated;
+  });
+
+  const highDebtors = db.students.filter(s => (bals[s.id]?.bal || 0) > 10000000);
+
+  const noPay60 = db.students.filter(s => {
+    const last = db.tx.filter(x => x.sid === s.id && x.type === 'payment' && x.date)
+      .sort((a, b) => b.date.localeCompare(a.date))[0];
+    if(!last) return false;
+    const [y, m, d] = last.date.split('/').map(Number);
+    return daysBetween([y, m, d], t) > 60 && !s.graduated;
+  });
+
+  return {
+    netIncome, lastNet, thisMonthInc, thisMonthExp,
+    newThisMonth, graduatedThisMonth,
+    totalDebt, totalCredit, collectionRate,
+    todaySessions, todayAbsent, bankBal,
+    overdueNoSession, highDebtors, noPay60,
+    mk, lastMk, t
+  };
+}
+
+function mbCardHTML(key, s){
+  const map = {
+    netIncome: () => {
+      const diff = s.lastNet ? Math.round((s.netIncome - s.lastNet) / Math.abs(s.lastNet) * 100) : 0;
+      const dc = diff > 0 ? 'var(--emerald)' : diff < 0 ? 'var(--rose)' : 'var(--ink-2)';
+      const dt = diff > 0 ? `▲ ${fa(diff)}٪` : diff < 0 ? `▼ ${fa(Math.abs(diff))}٪` : '—';
+      return `<div class="stat stat-credit-card">
+        <div class="stat-icon green">💰</div>
+        <div class="stat-label">درآمد خالص این ماه</div>
+        <div class="stat-value">${fa(s.netIncome)} <small>تومان</small></div>
+        <div style="font-size:11.5px;color:${dc};margin-top:4px">${dt} از ماه قبل</div>
+      </div>`;
+    },
+    newStudents: () => `<div class="stat">
+      <div class="stat-icon blue">👥</div>
+      <div class="stat-label">زبان‌آموز جدید این ماه</div>
+      <div class="stat-value">${faDigits(s.newThisMonth)} <small>نفر</small></div>
+    </div>`,
+    lostStudents: () => `<div class="stat">
+      <div class="stat-icon red">📉</div>
+      <div class="stat-label">فارغ‌التحصیل این ماه</div>
+      <div class="stat-value">${faDigits(s.graduatedThisMonth)} <small>نفر</small></div>
+    </div>`,
+    totalDebt: () => `<div class="stat stat-debt-card">
+      <div class="stat-icon red">🔴</div>
+      <div class="stat-label">مجموع بدهی‌ها</div>
+      <div class="stat-value">${fa(s.totalDebt)} <small>تومان</small></div>
+    </div>`,
+    collectionRate: () => {
+      const c = s.collectionRate;
+      const col = c >= 80 ? 'var(--emerald)' : c >= 50 ? 'var(--coral)' : 'var(--rose)';
+      return `<div class="stat">
+        <div class="stat-icon orange">📥</div>
+        <div class="stat-label">درصد وصول بدهی</div>
+        <div class="stat-value" style="color:${col}">${faDigits(c)}٪</div>
+      </div>`;
+    },
+    bankBalance: () => `<div class="stat stat-balance-card">
+      <div class="stat-icon blue">🏦</div>
+      <div class="stat-label">موجودی کل بانک‌ها</div>
+      <div class="stat-value">${fa(s.bankBal)} <small>تومان</small></div>
+    </div>`,
+    todaySessions: () => `<div class="stat">
+      <div class="stat-icon purple">📅</div>
+      <div class="stat-label">جلسات امروز</div>
+      <div class="stat-value">${faDigits(s.todaySessions)} <small>جلسه</small></div>
+    </div>`,
+    absentToday: () => `<div class="stat">
+      <div class="stat-icon red">🚫</div>
+      <div class="stat-label">غایبین امروز</div>
+      <div class="stat-value">${faDigits(s.todayAbsent)} <small>نفر</small></div>
+    </div>`
+  };
+  return map[key] ? map[key]() : '';
+}
+
+function renderMyBoard(){
+  const cardsEl = document.getElementById('mbCards');
+  if(!cardsEl) return;
+  const s = mbComputeStats();
+
+  cardsEl.innerHTML = mbPrefs.cards.map(k => mbCardHTML(k, s)).join('');
+
+  // روند ۶ ماه
+  const trendEl = document.getElementById('mbTrend');
+  if(trendEl){
+    const labels = [], inc = [], exp = [];
+    for(let i = 5; i >= 0; i--){
+      let y = s.t[0], m = s.t[1] - i;
+      while(m < 1){ m += 12; y--; }
+      const key = y + '/' + pad(m);
+      labels.push(MONTHS[m-1]);
+      inc.push(db.tx.filter(x => x.type === 'payment' && x.date && x.date.startsWith(key))
+        .reduce((a, x) => a + x.amount, 0));
+      exp.push(acc.transactions.filter(x => x.type === 'expense' && x.month === key)
+        .reduce((a, x) => a + x.amount, 0));
+    }
+    const max = Math.max(1, ...inc, ...exp);
+    trendEl.innerHTML = `<div class="chart-box" style="height:200px;padding:16px 8px 30px">
+      ${labels.map((l, i) => `<div class="chart-bar">
+        <div style="display:flex;align-items:flex-end;gap:2px;height:100%;width:100%;justify-content:center">
+          <div class="chart-bar-fill" style="height:${Math.max(2, inc[i]/max*150)}px;background:#2a9d6e;width:45%" title="درآمد: ${fa(inc[i])}"></div>
+          <div class="chart-bar-fill" style="height:${Math.max(2, exp[i]/max*150)}px;background:#d17544;width:45%" title="هزینه: ${fa(exp[i])}"></div>
+        </div>
+        <div class="chart-bar-label">${l.slice(0,3)}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  // مقایسه
+  const cmpEl = document.getElementById('mbCompare');
+  if(cmpEl){
+    const rows = [
+      ['درآمد', s.thisMonthInc, db.tx.filter(x => x.type === 'payment' && x.date && x.date.startsWith(s.lastMk)).reduce((a, x) => a + x.amount, 0)],
+      ['هزینه', s.thisMonthExp, acc.transactions.filter(x => x.type === 'expense' && x.month === s.lastMk).reduce((a, x) => a + x.amount, 0)]
+    ];
+    cmpEl.innerHTML = rows.map(([label, cur, prev]) => {
+      const diff = prev ? Math.round((cur - prev) / prev * 100) : 0;
+      const col = (label === 'درآمد' ? diff > 0 : diff < 0) ? 'var(--emerald)' : diff === 0 ? 'var(--ink-2)' : 'var(--rose)';
+      const arrow = diff > 0 ? '▲' : diff < 0 ? '▼' : '—';
+      return `<div class="income-source-card">
+        <div class="income-source-info">
+          <div class="income-source-name">${label}</div>
+          <div class="income-source-meta">ماه قبل: ${fa(prev)} تومان</div>
+        </div>
+        <div style="text-align:left">
+          <div class="income-source-amount">${fa(cur)}</div>
+          <div style="font-size:11.5px;color:${col};font-weight:700">${arrow} ${faDigits(Math.abs(diff))}٪</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // کارهای عقب‌افتاده
+  const tasksEl = document.getElementById('mbTasks');
+  if(tasksEl){
+    const items = [];
+    if(s.highDebtors.length) items.push({ icon: '🔴', label: `${faDigits(s.highDebtors.length)} نفر بدهی بالای ۱۰ میلیون`, tab: 'students' });
+    if(s.overdueNoSession.length) items.push({ icon: '⏰', label: `${faDigits(s.overdueNoSession.length)} نفر بیش از ۳۰ روز بدون جلسه`, tab: 'students' });
+    if(s.noPay60.length) items.push({ icon: '💸', label: `${faDigits(s.noPay60.length)} نفر بیش از ۶۰ روز بدون پرداخت`, tab: 'students' });
+    const bday = db.students.filter(isBirthdayToday);
+    if(bday.length) items.push({ icon: '🎂', label: `${faDigits(bday.length)} نفر امروز تولدشونه`, tab: 'birthdays' });
+    if(!items.length) items.push({ icon: '✅', label: 'همه‌چیز مرتبه! کاری عقب نیفتاده', tab: null });
+    tasksEl.innerHTML = items.map(it => `<div class="overdue-item">
+      <div class="oi-info"><div class="oi-name">${it.icon} ${it.label}</div></div>
+      ${it.tab ? `<button class="btn xs ghost" onclick="document.querySelector('.tab-btn[data-tab=\\'${it.tab}\\']')?.click()">بررسی</button>` : ''}
+    </div>`).join('');
+  }
+}
+
+function renderMbToggles(){
+  const el = document.getElementById('mbToggles');
+  if(!el) return;
+  el.innerHTML = Object.entries(MB_CARDS).map(([k, v]) => `
+    <div class="settings-row">
+      <div class="sr-info"><b>${v.icon} ${v.label}</b></div>
+      <button class="toggle-switch ${mbPrefs.cards.includes(k) ? 'on' : ''}" data-mb="${k}"></button>
+    </div>
+  `).join('');
+  el.querySelectorAll('[data-mb]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const k = btn.dataset.mb;
+      if(mbPrefs.cards.includes(k)) mbPrefs.cards = mbPrefs.cards.filter(x => x !== k);
+      else mbPrefs.cards.push(k);
+      btn.classList.toggle('on');
+    });
+  });
+}
+
+/* اتصال خودکار */
+(function(){
+  function bind(){
+    const editBtn = document.getElementById('mbEditBtn');
+    if(editBtn && !editBtn._b){
+      editBtn._b = true;
+      editBtn.addEventListener('click', () => {
+        document.getElementById('mbView').style.display = 'none';
+        document.getElementById('mbEdit').style.display = 'block';
+        renderMbToggles();
+      });
+    }
+    const saveBtn = document.getElementById('mbSaveBtn');
+    if(saveBtn && !saveBtn._b){
+      saveBtn._b = true;
+      saveBtn.addEventListener('click', () => {
+        saveMbPrefs();
+        document.getElementById('mbEdit').style.display = 'none';
+        document.getElementById('mbView').style.display = 'block';
+        renderMyBoard();
+        toast('✅ ذخیره شد', 'success');
+      });
+    }
+    const cancelBtn = document.getElementById('mbCancelBtn');
+    if(cancelBtn && !cancelBtn._b){
+      cancelBtn._b = true;
+      cancelBtn.addEventListener('click', () => {
+        loadMbPrefs();
+        document.getElementById('mbEdit').style.display = 'none';
+        document.getElementById('mbView').style.display = 'block';
+        renderMyBoard();
+      });
+    }
+    const tab = document.querySelector('.tab-btn[data-tab="myboard"]');
+    if(tab && !tab._b){
+      tab._b = true;
+      tab.addEventListener('click', () => setTimeout(() => {
+        try { renderMyBoard(); } catch(e){ console.warn(e); }
+      }, 50));
+    }
+    loadMbPrefs();
+    if(document.getElementById('mbCards')) renderMyBoard();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+  else bind();
   new MutationObserver(debounce(bind, 300)).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
