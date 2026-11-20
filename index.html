@@ -924,7 +924,50 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div class="card"><h3 class="card-title">تفکیک زبان‌آموز</h3><div class="table-wrap" id="repStudents"></div></div>
   <div class="card"><h3 class="card-title">جزئیات</h3><div class="table-wrap" id="repTx"></div></div>
 </section>
+<section class="tab" id="tab-mirror">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🪞</div>آینه مدیر</div>
+      <div class="page-sub">تحلیل رفتار مدیریتی — فقط خودت می‌بینی</div>
+    </div>
+  </div>
 
+  <!-- نامه ماهانه -->
+  <div class="card" style="background:linear-gradient(135deg,var(--violet-soft),var(--card));border-color:var(--violet)">
+    <h3 class="card-title">💌 نامه از خودت</h3>
+    <div id="mirrorLetter" style="font-size:14px;line-height:2;color:var(--ink)"></div>
+  </div>
+
+  <!-- نقاط قوت و ضعف -->
+  <div class="grid-2">
+    <div class="card">
+      <h3 class="card-title">💪 نقاط قوت</h3>
+      <div id="mirrorStrengths"></div>
+    </div>
+    <div class="card">
+      <h3 class="card-title">⚠️ نقاط قابل بهبود</h3>
+      <div id="mirrorWeaknesses"></div>
+    </div>
+  </div>
+
+  <!-- الگوهای کاری -->
+  <div class="card">
+    <h3 class="card-title">⏰ الگوهای کاری</h3>
+    <div id="mirrorPatterns"></div>
+  </div>
+
+  <!-- عادت‌های مالی -->
+  <div class="card">
+    <h3 class="card-title">💰 عادت‌های مالی</h3>
+    <div id="mirrorFinance"></div>
+  </div>
+
+  <!-- نمودار فعالیت -->
+  <div class="card">
+    <h3 class="card-title">📊 فعالیت ۳۰ روز اخیر</h3>
+    <div id="mirrorActivity"></div>
+  </div>
+</section>
 <section class="tab" id="tab-settings">
   <div class="page-head"><div><div class="page-title"><div class="page-title-icon">⚙️</div>تنظیمات</div></div></div>
   <div class="settings-section">
@@ -993,7 +1036,13 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div class="danger-box">
     <h2>⚠️ حذف کامل</h2>
     <p>همه داده‌ها پاک می‌شوند.</p>
-    <div class="btn-row"><button class="btn danger" id="btnReset">حذف همه</button></div>
+    <div class="btn-row"><div class="settings-section">
+  <h3>🪞 آینه مدیر</h3>
+  <p class="hint" style="margin-bottom:12px">تحلیل رفتار مدیریتی خودت — فقط خودت می‌بینی</p>
+  <div class="btn-row">
+    <button class="btn violet" id="btnMirror">🪞 باز کردن آینه مدیر</button>
+  </div>
+</div><button class="btn danger" id="btnReset">حذف همه</button></div>
   </div>
 </section>
 
@@ -1923,6 +1972,230 @@ function initExpTab(){
     document.addEventListener('DOMContentLoaded', bind);
   } else { bind(); }
   new MutationObserver(debounce(bind, 300)).observe(document.body, { childList: true, subtree: true });
+})();
+  /* ============ آینه مدیر ============ */
+function mirrorAnalyze(){
+  var t = todayJ();
+  var mk = monthKey(t[0], t[1]);
+  var bals = balances();
+
+  // === آمار ===
+  var totalSessions = db.tx.filter(function(x){ return x.is_session; }).length;
+  var totalPayments = db.tx.filter(function(x){ return x.type === 'payment'; }).length;
+  var totalExpenses = acc.transactions.filter(function(x){ return x.type === 'expense'; }).length;
+  var totalStudents = db.students.length;
+
+  // === تحلیل ساعتی (بر اساس createdAt تراکنش‌ها) ===
+  var hourBuckets = {};
+  var dayBuckets = {};
+  db.tx.forEach(function(x){
+    if(!x.createdAt) return;
+    var d = new Date(x.createdAt);
+    var h = d.getHours();
+    var gd = d.getDay();
+    var jd = (gd + 1) % 7;
+    hourBuckets[h] = (hourBuckets[h] || 0) + 1;
+    dayBuckets[jd] = (dayBuckets[jd] || 0) + 1;
+  });
+  var topHour = Object.keys(hourBuckets).sort(function(a, b){ return hourBuckets[b] - hourBuckets[a]; })[0];
+  var topDay = Object.keys(dayBuckets).sort(function(a, b){ return dayBuckets[b] - dayBuckets[a]; })[0];
+
+  // === عادت مالی: چند درصد هزینه‌ها همون روز ثبت شدن؟ ===
+  var expWithDate = acc.transactions.filter(function(x){ return x.type === 'expense' && x.date && x.createdAt; });
+  var sameDayCount = 0;
+  expWithDate.forEach(function(x){
+    var d = new Date(x.createdAt);
+    var j = gToJ(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    var createdJ = dateStr(j);
+    if(createdJ === x.date) sameDayCount++;
+  });
+  var sameDayPct = expWithDate.length ? Math.round(sameDayCount / expWithDate.length * 100) : 0;
+
+  // === تأخیر ثبت جلسات ===
+  var sessWithDate = db.tx.filter(function(x){ return x.is_session && x.date && x.createdAt; });
+  var lateSessCount = 0;
+  sessWithDate.forEach(function(x){
+    var d = new Date(x.createdAt);
+    var j = gToJ(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    var createdJ = dateStr(j);
+    if(createdJ !== x.date) lateSessCount++;
+  });
+  var latePct = sessWithDate.length ? Math.round(lateSessCount / sessWithDate.length * 100) : 0;
+
+  // === فعالیت ۳۰ روز اخیر ===
+  var activity = [];
+  for(var i = 29; i >= 0; i--){
+    var g = jToG(t[0], t[1], t[2]);
+    var d = new Date(Date.UTC(g[0], g[1] - 1, g[2]));
+    d.setUTCDate(d.getUTCDate() - i);
+    var jj = gToJ(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+    var ds = dateStr(jj);
+    var count = db.tx.filter(function(x){ return x.date === ds; }).length
+      + acc.transactions.filter(function(x){ return x.date === ds; }).length;
+    activity.push({ date: ds, count: count });
+  }
+
+  // === اهداف ===
+  var goalsTotal = acc.goals.length;
+  var goalsProgress = 0;
+  acc.goals.forEach(function(g){
+    if(g.price > 0) goalsProgress += Math.min(100, (g.saved || 0) / g.price * 100);
+  });
+  var avgGoalProgress = goalsTotal ? Math.round(goalsProgress / goalsTotal) : 0;
+
+  // === بدهی ===
+  var totalDebt = 0, debtorCount = 0;
+  Object.keys(bals).forEach(function(k){
+    if(bals[k].bal > 0){ totalDebt += bals[k].bal; debtorCount++; }
+  });
+
+  return {
+    totalSessions: totalSessions,
+    totalPayments: totalPayments,
+    totalExpenses: totalExpenses,
+    totalStudents: totalStudents,
+    topHour: topHour !== undefined ? parseInt(topHour) : null,
+    topDay: topDay !== undefined ? parseInt(topDay) : null,
+    sameDayPct: sameDayPct,
+    latePct: latePct,
+    activity: activity,
+    avgGoalProgress: avgGoalProgress,
+    totalDebt: totalDebt,
+    debtorCount: debtorCount,
+    mk: mk
+  };
+}
+
+function renderMirror(){
+  var letterEl = document.getElementById('mirrorLetter');
+  if(!letterEl) return;
+
+  var a = mirrorAnalyze();
+
+  // === نامه ===
+  var hourStr = a.topHour !== null ? a.topHour + ':00' : '—';
+  var dayStr = a.topDay !== null ? WEEKDAYS[a.topDay] : '—';
+  var letterParts = [];
+  letterParts.push('سلام،');
+  letterParts.push('این ماه <b>' + faDigits(a.totalSessions) + ' جلسه</b> ثبت کردی، <b>' + faDigits(a.totalStudents) + ' زبان‌آموز</b> داری و <b>' + faDigits(a.totalPayments) + ' پرداخت</b> دریافت کردی.');
+  if(a.latePct > 20){
+    letterParts.push('ولی <b style="color:var(--rose)">' + faDigits(a.latePct) + '٪</b> جلسات رو با تأخیر ثبت کردی. سعی کن همون روز ثبت کنی.');
+  } else {
+    letterParts.push('<b style="color:var(--emerald)">' + faDigits(100 - a.latePct) + '٪</b> جلسات رو به‌موقع ثبت کردی. عالیه!');
+  }
+  if(a.sameDayPct < 50 && a.totalExpenses > 0){
+    letterParts.push('فقط <b style="color:var(--coral)">' + faDigits(a.sameDayPct) + '٪</b> هزینه‌ها رو همون روز ثبت کردی. یادت نره!');
+  } else if(a.totalExpenses > 0){
+    letterParts.push('<b style="color:var(--emerald)">' + faDigits(a.sameDayPct) + '٪</b> هزینه‌ها رو همون روز ثبت کردی. آفرین!');
+  }
+  if(a.totalDebt > 0){
+    letterParts.push('مجموع بدهی‌ها: <b style="color:var(--rose)">' + fa(a.totalDebt) + ' تومان</b> از <b>' + faDigits(a.debtorCount) + ' نفر</b>.');
+  }
+  if(a.avgGoalProgress > 0){
+    letterParts.push('میانگین پیشرفت اهدافت: <b style="color:var(--violet)">' + faDigits(a.avgGoalProgress) + '٪</b>.');
+  }
+  letterParts.push('پرکارترین ساعتت: <b>' + hourStr + '</b> — پرکارترین روزت: <b>' + dayStr + '</b>.');
+  letterParts.push('به خودت افتخار کن. 💪');
+  letterEl.innerHTML = letterParts.join('<br>');
+
+  // === نقاط قوت ===
+  var strengths = [];
+  if(a.latePct <= 20 && a.totalSessions > 0) strengths.push('✅ ثبت به‌موقع جلسات (' + faDigits(100 - a.latePct) + '٪)');
+  if(a.sameDayPct >= 50 && a.totalExpenses > 0) strengths.push('✅ ثبت منظم هزینه‌ها (' + faDigits(a.sameDayPct) + '٪)');
+  if(a.totalPayments > a.totalExpenses) strengths.push('✅ درآمد بیشتر از هزینه');
+  if(a.avgGoalProgress >= 30) strengths.push('✅ پیشرفت خوب در اهداف (' + faDigits(a.avgGoalProgress) + '٪)');
+  if(a.totalStudents > 0) strengths.push('✅ مدیریت ' + faDigits(a.totalStudents) + ' زبان‌آموز');
+  if(strengths.length === 0) strengths.push('🌱 هنوز داده کافی برای تحلیل نیست. بیشتر کار کن!');
+
+  // === نقاط ضعف ===
+  var weaknesses = [];
+  if(a.latePct > 20 && a.totalSessions > 0) weaknesses.push('⚠️ ' + faDigits(a.latePct) + '٪ جلسات با تأخیر ثبت می‌شن');
+  if(a.sameDayPct < 50 && a.totalExpenses > 0) weaknesses.push('⚠️ ' + faDigits(100 - a.sameDayPct) + '٪ هزینه‌ها با تأخیر ثبت می‌شن');
+  if(a.totalDebt > 5000000) weaknesses.push('⚠️ مجموع بدهی‌ها بالاست (' + fa(a.totalDebt) + ')');
+  if(a.avgGoalProgress < 20 && acc.goals.length > 0) weaknesses.push('⚠️ پیشرفت اهداف کمه (' + faDigits(a.avgGoalProgress) + '٪)');
+  if(weaknesses.length === 0) weaknesses.push('🎉 نقطه ضعف خاصی پیدا نشد!');
+
+  // === رندر ===
+  function renderList(elId, items, type){
+    var el = document.getElementById(elId);
+    if(!el) return;
+    el.innerHTML = items.map(function(s){
+      var bg = type === 'good' ? 'var(--emerald-soft)' : type === 'bad' ? 'var(--rose-soft)' : 'var(--card-2)';
+      var border = type === 'good' ? 'var(--emerald)' : type === 'bad' ? 'var(--rose)' : 'var(--border)';
+      return '<div style="background:' + bg + ';border:1px solid ' + border + ';border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13px">' + s + '</div>';
+    }).join('');
+  }
+  renderList('mirrorStrengths', strengths, 'good');
+  renderList('mirrorWeaknesses', weaknesses, 'bad');
+
+  // === الگوها ===
+  var patEl = document.getElementById('mirrorPatterns');
+  if(patEl){
+    var hourBar = '';
+    for(var h = 6; h <= 23; h++){
+      var c = 0;
+      db.tx.forEach(function(x){
+        if(!x.createdAt) return;
+        if(new Date(x.createdAt).getHours() === h) c++;
+      });
+      var maxC = 1;
+      db.tx.forEach(function(x){
+        if(!x.createdAt) return;
+        var hh = new Date(x.createdAt).getHours();
+        if(hh >= 6 && hh <= 23 && (hourBuckets[hh] || 0) > maxC) maxC = hourBuckets[hh] || 0;
+      });
+      var pct = Math.round(c / maxC * 100);
+      hourBar += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="width:50px;font-size:11px;color:var(--ink-2)">' + faDigits(h) + ':00</span><div style="flex:1;height:14px;background:var(--surface);border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--violet),var(--primary));border-radius:4px"></div></div><span style="font-size:11px;color:var(--ink-2);width:30px">' + faDigits(c) + '</span></div>';
+    }
+    patEl.innerHTML = '<p style="font-size:12px;color:var(--ink-2);margin-bottom:10px">بر اساس ساعت ثبت تراکنش‌ها:</p>' + hourBar;
+  }
+
+  // === مالی ===
+  var finEl = document.getElementById('mirrorFinance');
+  if(finEl){
+    var items = [
+      { label: 'ثبت هزینه همون روز', value: a.sameDayPct, good: a.sameDayPct >= 50 },
+      { label: 'ثبت جلسه همون روز', value: 100 - a.latePct, good: a.latePct <= 20 },
+      { label: 'پیشرفت اهداف', value: a.avgGoalProgress, good: a.avgGoalProgress >= 30 }
+    ];
+    finEl.innerHTML = items.map(function(it){
+      var col = it.good ? 'var(--emerald)' : 'var(--coral)';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--card-2);border-radius:10px;margin-bottom:8px"><span style="font-size:13px">' + it.label + '</span><b style="color:' + col + ';font-size:16px">' + faDigits(it.value) + '٪</b></div>';
+    }).join('');
+  }
+
+  // === فعالیت ===
+  var actEl = document.getElementById('mirrorActivity');
+  if(actEl){
+    var maxA = Math.max(1, Math.max.apply(null, a.activity.map(function(x){ return x.count; })));
+    var bars = a.activity.map(function(x){
+      var h = Math.round(x.count / maxA * 80);
+      var col = x.count === 0 ? 'var(--surface)' : 'var(--violet)';
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="height:' + Math.max(3, h) + 'px;width:100%;background:' + col + ';border-radius:3px 3px 0 0"></div><span style="font-size:8px;color:var(--ink-3);transform:rotate(-90deg);white-space:nowrap">' + x.date.slice(5) + '</span></div>';
+    }).join('');
+    actEl.innerHTML = '<div style="display:flex;align-items:flex-end;gap:2px;height:110px;padding:4px">' + bars + '</div><p class="hint" style="margin-top:6px;text-align:center">' + faDigits(a.activity.reduce(function(s, x){ return s + x.count; }, 0)) + ' فعالیت در ۳۰ روز اخیر</p>';
+  }
+}
+
+/* اتصال خودکار */
+(function(){
+  function mirrorBind(){
+    var btn = document.getElementById('btnMirror');
+    if(btn && !btn._b){
+      btn._b = true;
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.tab').forEach(function(s){ s.classList.remove('on'); });
+        document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('on'); });
+        var tab = document.getElementById('tab-mirror');
+        if(tab) tab.classList.add('on');
+        renderMirror();
+        window.scrollTo(0, 0);
+      });
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mirrorBind);
+  else mirrorBind();
+  new MutationObserver(function(){ setTimeout(mirrorBind, 200); }).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 <script>
