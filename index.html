@@ -1021,6 +1021,21 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <div class="card">
       <h3 class="card-title">💾 بازیابی</h3>
       <div class="btn-row"><button class="btn ghost" id="btnRestore">📂 بازیابی از فایل JSON</button><input type="file" id="fileRestore" accept=".json,application/json,application/octet-stream,text/plain" style="display:none"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+  <h3 class="card-title" style="font-size:13px;margin-bottom:10px">💾 بک‌آپ خودکار</h3>
+  <div class="settings-row" style="background:transparent;border:0;padding:0">
+    <div class="sr-info">
+      <b>فعال باشد</b>
+      <small>هنگام خروج از برنامه، خودکار بک‌آپ ذخیره می‌شه</small>
+    </div>
+    <button class="toggle-switch" id="autoBackupSwitch"></button>
+  </div>
+  <div id="autoBackupInfo" style="margin-top:10px;font-size:11.5px;color:var(--ink-2)"></div>
+  <div class="btn-row" style="margin-top:10px">
+    <button class="btn ghost sm" id="btnAutoBackupNow">💾 بک‌آپ فوری</button>
+    <button class="btn ghost sm" id="btnDownloadAutoBackup">📥 دانلود آخرین بک‌آپ</button>
+  </div>
+</div>
       <p class="hint" style="margin-top:10px">فایل بک‌آپ رو انتخاب کن تا داده‌ها جایگزین بشن.</p>
     </div>
   </div>
@@ -2196,6 +2211,145 @@ function renderMirror(){
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mirrorBind);
   else mirrorBind();
   new MutationObserver(function(){ setTimeout(mirrorBind, 200); }).observe(document.body, { childList: true, subtree: true });
+})();
+  /* ============ بک‌آپ خودکار ============ */
+var AUTO_BACKUP_KEY = 'ali_academy_autobackup_v1';
+var AUTO_BACKUP_ENABLED = 'ali_academy_autobackup_enabled';
+var AUTO_BACKUP_MAX = 5; // حداکثر ۵ نسخه نگه‌داری می‌شه
+
+function isAutoBackupEnabled(){
+  try{ return localStorage.getItem(AUTO_BACKUP_ENABLED) === '1'; }catch(e){ return false; }
+}
+
+function setAutoBackupEnabled(on){
+  try{ localStorage.setItem(AUTO_BACKUP_ENABLED, on ? '1' : '0'); }catch(e){}
+  var sw = document.getElementById('autoBackupSwitch');
+  if(sw) sw.classList.toggle('on', on);
+  renderAutoBackupInfo();
+}
+
+function getAutoBackups(){
+  try{
+    var raw = localStorage.getItem(AUTO_BACKUP_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+
+function saveAutoBackup(){
+  if(!isAutoBackupEnabled()) return;
+  try{
+    var snapshot = {
+      time: Date.now(),
+      data: JSON.parse(JSON.stringify(db)),
+      settings: JSON.parse(JSON.stringify(settings)),
+      acc: JSON.parse(JSON.stringify(acc)),
+      schedule: localStorage.getItem(CONFIG.SCHEDULE_KEY) || null,
+      rotation: localStorage.getItem(CONFIG.ROTATION_KEY) || null
+    };
+    var list = getAutoBackups();
+    list.unshift(snapshot);
+    if(list.length > AUTO_BACKUP_MAX) list = list.slice(0, AUTO_BACKUP_MAX);
+    localStorage.setItem(AUTO_BACKUP_KEY, JSON.stringify(list));
+    renderAutoBackupInfo();
+  }catch(e){
+    console.warn('auto backup failed:', e);
+  }
+}
+
+function renderAutoBackupInfo(){
+  var el = document.getElementById('autoBackupInfo');
+  if(!el) return;
+  var list = getAutoBackups();
+  if(!list.length){
+    el.innerHTML = 'هنوز بک‌آپ خودکاری ذخیره نشده.';
+    return;
+  }
+  var last = list[0];
+  var d = new Date(last.time);
+  var j = gToJ(d.getFullYear(), d.getMonth()+1, d.getDate());
+  var timeStr = dateStr(j) + ' — ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+  el.innerHTML = 'آخرین بک‌آپ خودکار: <b>' + showDate(timeStr.split(' — ')[0]) + '</b> ساعت ' + faDigits(timeStr.split(' — ')[1]) +
+    ' — <span style="color:var(--emerald)">' + faDigits(list.length) + ' نسخه ذخیره شده</span>';
+}
+
+function pad2(n){ return String(n).padStart(2, '0'); }
+
+function downloadAutoBackup(){
+  var list = getAutoBackups();
+  if(!list.length){ toast('بک‌آپ خودکاری وجود نداره', 'err'); return; }
+  var last = list[0];
+  var payload = {
+    exportedAt: new Date().toISOString(),
+    version: 'v20-autobackup',
+    db: last.data,
+    settings: last.settings,
+    accounting: last.acc,
+    schedule: last.schedule ? JSON.parse(last.schedule) : null,
+    rotation: last.rotation ? JSON.parse(last.rotation) : null
+  };
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'backup-auto-' + dateStr(todayJ()).replace(/\//g, '-') + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('📥 دانلود شد', 'success');
+}
+
+/* اتصال خودکار */
+(function(){
+  function bindAutoBackup(){
+    var sw = document.getElementById('autoBackupSwitch');
+    if(sw && !sw._b){
+      sw._b = true;
+      sw.classList.toggle('on', isAutoBackupEnabled());
+      sw.addEventListener('click', function(){
+        setAutoBackupEnabled(!isAutoBackupEnabled());
+        toast(isAutoBackupEnabled() ? '✅ بک‌آپ خودکار فعال شد' : '⏸ بک‌آپ خودکار غیرفعال شد', 'success');
+      });
+    }
+    var btnNow = document.getElementById('btnAutoBackupNow');
+    if(btnNow && !btnNow._b){
+      btnNow._b = true;
+      btnNow.addEventListener('click', function(){
+        var wasEnabled = isAutoBackupEnabled();
+        if(!wasEnabled){ try{ localStorage.setItem(AUTO_BACKUP_ENABLED, '1'); }catch(e){} }
+        saveAutoBackup();
+        if(!wasEnabled){ try{ localStorage.setItem(AUTO_BACKUP_ENABLED, '0'); }catch(e){} }
+        toast('💾 بک‌آپ ذخیره شد', 'success');
+      });
+    }
+    var btnDl = document.getElementById('btnDownloadAutoBackup');
+    if(btnDl && !btnDl._b){
+      btnDl._b = true;
+      btnDl.addEventListener('click', downloadAutoBackup);
+    }
+    renderAutoBackupInfo();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindAutoBackup);
+  else bindAutoBackup();
+  new MutationObserver(function(){ setTimeout(bindAutoBackup, 200); }).observe(document.body, { childList: true, subtree: true });
+})();
+
+/* ==== ذخیره خودکار هنگام خروج ==== */
+(function(){
+  // قبل از بسته شدن صفحه/تب
+  window.addEventListener('beforeunload', function(){
+    saveAutoBackup();
+  });
+  // وقتی صفحه مخفی می‌شه (کاربر اپ رو می‌بنده یا می‌ره به اپ دیگه)
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden'){
+      saveAutoBackup();
+    }
+  });
+  // هر ۵ دقیقه هم یه نسخه پشتیبان بگیر (برای اطمینان)
+  setInterval(function(){
+    if(isAutoBackupEnabled()) saveAutoBackup();
+  }, 5 * 60 * 1000);
 })();
 </script>
 <script>
