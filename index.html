@@ -504,7 +504,6 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="tx"><span class="tb-icon">💵</span>مالی</button>
   <button class="tab-btn" data-tab="calendar"><span class="tb-icon">🗓</span>تقویم</button>
   <button class="tab-btn" data-tab="birthdays"><span class="tb-icon">🎂</span>تولدها</button>
-    <button class="tab-btn" data-tab="absentees"><span class="tb-icon">📋</span>غایبین هفته</button>
   <button class="tab-btn" data-tab="graduates"><span class="tb-icon">🎓</span>فارغ‌التحصیلان</button>
   <button class="tab-btn" data-tab="classes"><span class="tb-icon">🏫</span>کلاس‌ها</button>
   <button class="tab-btn" data-tab="waitlist"><span class="tb-icon">📋</span>لیست انتظار</button>
@@ -528,11 +527,6 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div id="bdayTodayCard"></div>
   <div class="stats-grid" id="stats"></div>
   <div class="card"><h3 class="card-title">🏆 رکوردها</h3><div class="records-grid" id="recordsGrid"></div></div>
-  <div class="card" id="healthCard">
-  <h3 class="card-title">🏥 سلامت آموزشگاه</h3>
-  <div id="healthGrid" class="stats-grid" style="margin-bottom:0"></div>
-  <div id="healthSummary" style="margin-top:14px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:600;text-align:center"></div>
-</div>
   <div class="card"><h3 class="card-title">📅 کلاس‌های امروز <span id="todayClassesCount" style="color:var(--primary);font-size:13px"></span></h3><div id="todayClassesList"></div></div>
   <div class="grid-2">
     <div class="card"><h3 class="card-title">📈 وضعیت زبان‌آموزان</h3><div id="donut"></div></div>
@@ -972,19 +966,6 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div class="card">
     <h3 class="card-title">📊 فعالیت ۳۰ روز اخیر</h3>
     <div id="mirrorActivity"></div>
-  </div>
-</section>
-  <section class="tab" id="tab-absentees">
-  <div class="page-head">
-    <div>
-      <div class="page-title"><div class="page-title-icon">📋</div>غایبین هفته</div>
-      <div class="page-sub">زبان‌آموزانی که در ۷ روز اخیر غیبت داشته‌اند</div>
-    </div>
-  </div>
-  <div class="stats-grid" id="absentStats"></div>
-  <div class="card">
-    <h3 class="card-title">📋 لیست غایبین</h3>
-    <div id="absentList"></div>
   </div>
 </section>
 <section class="tab" id="tab-settings">
@@ -2369,99 +2350,6 @@ function downloadAutoBackup(){
   setInterval(function(){
     if(isAutoBackupEnabled()) saveAutoBackup();
   }, 5 * 60 * 1000);
-})();
-  /* ============ کارت سلامت آموزشگاه ============ */
-function renderHealthCard(){
-  var grid = document.getElementById('healthGrid');
-  var summary = document.getElementById('healthSummary');
-  if(!grid) return;
-
-  var t = todayJ();
-  var mk = monthKey(t[0], t[1]);
-  var bals = balances();
-
-  // ۱) درآمد vs هدف
-  var thisMonthInc = db.tx.filter(function(x){ return x.type === 'payment' && x.date && x.date.startsWith(mk); })
-    .reduce(function(a, x){ return a + x.amount; }, 0);
-  var incomeGoal = 0;
-  if(acc.primaryGoalId){
-    var pg = acc.goals.find(function(g){ return g.id === acc.primaryGoalId; });
-    if(pg) incomeGoal = pg.price || 0;
-  }
-  if(!incomeGoal && acc.goals.length) incomeGoal = acc.goals[0].price || 0;
-  var incomePct = incomeGoal ? Math.min(100, Math.round(thisMonthInc / incomeGoal * 100)) : 0;
-
-  // ۲) نرخ ریزش (نسبت فارغ‌التحصیل‌ها به کل)
-  var totalStudents = db.students.length;
-  var graduated = db.students.filter(function(s){ return s.graduated; }).length;
-  var churnRate = totalStudents ? Math.round(graduated / totalStudents * 100) : 0;
-
-  // ۳) درصد وصول بدهی
-  var totalDebt = 0;
-  Object.keys(bals).forEach(function(k){ if(bals[k].bal > 0) totalDebt += bals[k].bal; });
-  var collectionRate = (thisMonthInc + totalDebt) > 0
-    ? Math.round(thisMonthInc / (thisMonthInc + totalDebt) * 100) : 0;
-
-  // ۴) میانگین حضور (نسبت جلسات غیرغایب به کل جلسات)
-  var totalSessions = db.tx.filter(function(x){ return x.is_session; }).length;
-  var absentSessions = db.tx.filter(function(x){ return x.is_session && x.absent; }).length;
-  var attendanceRate = totalSessions ? Math.round((totalSessions - absentSessions) / totalSessions * 100) : 0;
-
-  // ۵) زبان‌آموز جدید این ماه
-  var newThisMonth = db.students.filter(function(s){
-    if(!s.createdAt) return false;
-    var d = new Date(s.createdAt);
-    var j = gToJ(d.getFullYear(), d.getMonth() + 1, d.getDate());
-    return monthKey(j[0], j[1]) === mk;
-  }).length;
-
-  // تعیین رنگ
-  function colorOf(pct, good, ok){ return pct >= good ? 'var(--emerald)' : pct >= ok ? 'var(--coral)' : 'var(--rose)'; }
-  function badgeOf(pct, good, ok){ return pct >= good ? '🟢 عالی' : pct >= ok ? '🟡 متوسط' : '🔴 ضعیف'; }
-
-  var items = [
-    { icon: '💰', label: 'درآمد vs هدف', value: faDigits(incomePct) + '٪', color: colorOf(incomePct, 80, 50), badge: badgeOf(incomePct, 80, 50) },
-    { icon: '📉', label: 'نرخ ریزش', value: faDigits(churnRate) + '٪', color: churnRate <= 10 ? 'var(--emerald)' : churnRate <= 25 ? 'var(--coral)' : 'var(--rose)', badge: churnRate <= 10 ? '🟢 کم' : churnRate <= 25 ? '🟡 متوسط' : '🔴 زیاد' },
-    { icon: '📥', label: 'وصول بدهی', value: faDigits(collectionRate) + '٪', color: colorOf(collectionRate, 80, 50), badge: badgeOf(collectionRate, 80, 50) },
-    { icon: '✅', label: 'میانگین حضور', value: faDigits(attendanceRate) + '٪', color: colorOf(attendanceRate, 85, 70), badge: badgeOf(attendanceRate, 85, 70) },
-    { icon: '👥', label: 'زبان‌آموز جدید', value: faDigits(newThisMonth) + ' نفر', color: newThisMonth >= 5 ? 'var(--emerald)' : newThisMonth >= 2 ? 'var(--coral)' : 'var(--rose)', badge: newThisMonth >= 5 ? '🟢 خوب' : newThisMonth >= 2 ? '🟡 متوسط' : '🔴 کم' }
-  ];
-
-  grid.innerHTML = items.map(function(it){
-    return '<div class="stat" style="border-color:' + it.color + '">' +
-      '<div class="stat-icon" style="background:' + it.color + '22;color:' + it.color + '">' + it.icon + '</div>' +
-      '<div class="stat-label">' + it.label + '</div>' +
-      '<div class="stat-value" style="color:' + it.color + ';font-size:20px">' + it.value + '</div>' +
-      '<div style="font-size:11px;margin-top:4px">' + it.badge + '</div>' +
-      '</div>';
-  }).join('');
-
-  // جمع‌بندی کلی
-  var score = Math.round((incomePct + (100 - churnRate) + collectionRate + attendanceRate + Math.min(100, newThisMonth * 20)) / 5);
-  var overallColor = score >= 80 ? 'var(--emerald)' : score >= 60 ? 'var(--coral)' : 'var(--rose)';
-  var overallText = score >= 80 ? '🎉 آموزشگاه در وضعیت عالی است' : score >= 60 ? '👍 وضعیت قابل قبول، جای بهبود دارد' : '⚠️ نیاز به توجه و اقدام دارد';
-  if(summary){
-    summary.style.background = overallColor + '22';
-    summary.style.color = overallColor;
-    summary.style.border = '1px solid ' + overallColor;
-    summary.innerHTML = 'امتیاز کلی سلامت: <b style="font-size:18px">' + faDigits(score) + ' از ۱۰۰</b> — ' + overallText;
-  }
-}
-
-/* اتصال خودکار */
-(function(){
-  function bindHealth(){
-    if(document.getElementById('healthGrid')){
-      try { renderHealthCard(); } catch(e){ console.warn('health error:', e); }
-    }
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindHealth);
-  else bindHealth();
-  new MutationObserver(function(){ setTimeout(bindHealth, 300); }).observe(document.body, { childList: true, subtree: true });
-  document.addEventListener('click', function(e){
-    var btn = e.target.closest('.tab-btn[data-tab="dash"]');
-    if(btn) setTimeout(bindHealth, 100);
-  });
 })();
 </script>
 <script>
