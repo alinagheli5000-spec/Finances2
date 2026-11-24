@@ -4132,6 +4132,125 @@ function openClassMembers(id){
   });
   $('modal').classList.add('on');
 }
+  /* ============ دکمه انتقال به ترک تحصیل (خودکار) ============ */
+(function autoAddDropoutButton(){
+  function addButtons(){
+    // پیدا کردن جدول زبان‌آموزان
+    var stTable = document.getElementById('stTable');
+    if(!stTable) return;
+
+    var table = stTable.querySelector('table');
+    if(!table) return;
+
+    var rows = table.querySelectorAll('tbody tr');
+    if(!rows.length) return;
+
+    // پیدا کردن ایندکس ستون عملیات (آخرین ستون)
+    var headerCells = table.querySelectorAll('thead th');
+    var lastColIndex = headerCells.length - 1;
+
+    rows.forEach(function(row){
+      // اگه قبلاً دکمه اضافه شده، رد کن
+      if(row.querySelector('.btn-dropout')) return;
+
+      var cells = row.children;
+      if(cells.length < 2) return;
+
+      // پیدا کردن id زبان‌آموز از دکمه‌های موجود (مثلاً دکمه حذف)
+      var studentId = null;
+      var allButtons = row.querySelectorAll('button');
+      allButtons.forEach(function(btn){
+        var onclick = btn.getAttribute('onclick') || '';
+        var match = onclick.match(/['"]([a-f0-9-]{8,})['"]/);
+        if(match) studentId = match[1];
+      });
+
+      if(!studentId) return;
+
+      // اضافه کردن دکمه به آخرین سلول
+      var lastCell = cells[cells.length - 1];
+      var btn = document.createElement('button');
+      btn.className = 'btn xs ghost btn-dropout';
+      btn.innerHTML = '🚪';
+      btn.title = 'انتقال به ترک تحصیل';
+      btn.style.cssText = 'border-color:var(--coral);color:var(--coral);margin-inline-start:4px';
+      btn.onclick = function(){ moveToDropout(studentId); };
+      lastCell.appendChild(btn);
+    });
+  }
+
+  // تابع انتقال
+  window.moveToDropout = function(studentId){
+    var st = db.students.find(function(s){ return s.id === studentId; });
+    if(!st){ toast('زبان‌آموز پیدا نشد', 'err'); return; }
+
+    if(!db.dropouts) db.dropouts = [];
+    if(db.dropouts.some(function(d){ return d.sid === studentId; })){
+      toast('این زبان‌آموز قبلاً در لیست ترک تحصیل ثبت شده', 'err');
+      return;
+    }
+
+    var reasonText = prompt(
+      'دلیل ترک تحصیل «' + st.name + '» را انتخاب کنید:\n\n' +
+      '1 = مشکلات مالی\n' +
+      '2 = کمبود وقت\n' +
+      '3 = جابجایی / مهاجرت\n' +
+      '4 = نارضایتی\n' +
+      '5 = مشکلات سلامتی\n' +
+      '6 = مشکلات خانوادگی\n' +
+      '7 = عدم تناسب سطح\n' +
+      '8 = سایر\n\n' +
+      'شماره را وارد کنید (یا Cancel برای انصراف):'
+    );
+
+    if(reasonText === null) return;
+
+    var reasonMap = {
+      '1': 'financial', '2': 'time', '3': 'relocation', '4': 'dissatisfied',
+      '5': 'health', '6': 'family', '7': 'level', '8': 'other'
+    };
+    var reasonKey = reasonMap[reasonText.trim()] || 'other';
+
+    var note = prompt('توضیحات (اختیاری):', '') || '';
+
+    db.dropouts.push({
+      id: uid(),
+      sid: studentId,
+      name: st.name,
+      course: st.course || '',
+      reason: reasonKey,
+      date: dateStr(todayJ()),
+      note: note,
+      createdAt: Date.now()
+    });
+
+    saveLocal();
+    toast('🚪 «' + st.name + '» به لیست ترک تحصیل منتقل شد', 'success');
+
+    // رفرش
+    setTimeout(function(){
+      if(typeof renderDropouts === 'function') renderDropouts();
+      if(typeof fillDropoutStudentSelect === 'function') fillDropoutStudentSelect();
+      addButtons();
+    }, 100);
+  };
+
+  // اجرا
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', addButtons);
+  } else {
+    addButtons();
+  }
+
+  // هر بار جدول تغییر کرد، دکمه‌ها رو دوباره اضافه کن
+  new MutationObserver(debounce(addButtons, 300)).observe(document.body, { childList: true, subtree: true });
+
+  // وقتی تب زبان‌آموزان باز شد
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.tab-btn[data-tab="students"]');
+    if(btn) setTimeout(addButtons, 150);
+  });
+})();
 </script>
 <script>
 'use strict';
