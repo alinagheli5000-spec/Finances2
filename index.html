@@ -505,6 +505,7 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <button class="tab-btn" data-tab="calendar"><span class="tb-icon">🗓</span>تقویم</button>
   <button class="tab-btn" data-tab="birthdays"><span class="tb-icon">🎂</span>تولدها</button>
   <button class="tab-btn" data-tab="graduates"><span class="tb-icon">🎓</span>فارغ‌التحصیلان</button>
+    <button class="tab-btn" data-tab="dropouts"><span class="tb-icon">🚪</span>ترک تحصیل</button>
   <button class="tab-btn" data-tab="classes"><span class="tb-icon">🏫</span>کلاس‌ها</button>
   <button class="tab-btn" data-tab="waitlist"><span class="tb-icon">📋</span>لیست انتظار</button>
   <button class="tab-btn" data-tab="schedule"><span class="tb-icon">🗓</span>برنامه هفتگی</button>
@@ -966,6 +967,69 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
   <div class="card">
     <h3 class="card-title">📊 فعالیت ۳۰ روز اخیر</h3>
     <div id="mirrorActivity"></div>
+  </div>
+</section>
+  <section class="tab" id="tab-dropouts">
+  <div class="page-head">
+    <div>
+      <div class="page-title"><div class="page-title-icon">🚪</div>ترک تحصیل‌کرده‌ها</div>
+      <div class="page-sub">زبان‌آموزانی که کلاس را نیمه‌کاره رها کرده‌اند</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">➕ ثبت ترک تحصیل جدید</h3>
+    <form class="form-grid" id="dropoutForm">
+      <div class="field">
+        <label>زبان‌آموز <span class="req">*</span></label>
+        <select id="dropoutStudent" required></select>
+      </div>
+      <div class="field">
+        <label>دلیل ترک</label>
+        <select id="dropoutReason">
+          <option value="financial">💰 مشکلات مالی</option>
+          <option value="time">⏰ کمبود وقت</option>
+          <option value="relocation">📍 جابجایی / مهاجرت</option>
+          <option value="dissatisfied">😕 نارضایتی</option>
+          <option value="health">🏥 مشکلات سلامتی</option>
+          <option value="family">👨‍👩‍👧 مشکلات خانوادگی</option>
+          <option value="level">📚 عدم تناسب سطح</option>
+          <option value="other">📦 سایر</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>تاریخ ترک</label>
+        <div class="date-row" id="dropoutDate"></div>
+      </div>
+      <div class="field">
+        <label>توضیحات</label>
+        <input id="dropoutNote" placeholder="مثلاً: به شهرستان منتقل شدند">
+      </div>
+      <div class="btn-row" style="align-items:end;grid-column:1/-1">
+        <button class="btn danger" type="submit">🚪 ثبت ترک تحصیل</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="stats-grid" id="dropoutStats"></div>
+
+  <div class="card">
+    <h3 class="card-title">📋 لیست ترک تحصیل‌کرده‌ها</h3>
+    <div class="filters">
+      <input id="dropoutSearch" placeholder="جستجو در نام یا توضیحات…">
+      <select id="dropoutFilterReason">
+        <option value="">همه دلایل</option>
+        <option value="financial">💰 مشکلات مالی</option>
+        <option value="time">⏰ کمبود وقت</option>
+        <option value="relocation">📍 جابجایی / مهاجرت</option>
+        <option value="dissatisfied">😕 نارضایتی</option>
+        <option value="health">🏥 مشکلات سلامتی</option>
+        <option value="family">👨‍👩‍👧 مشکلات خانوادگی</option>
+        <option value="level">📚 عدم تناسب سطح</option>
+        <option value="other">📦 سایر</option>
+      </select>
+    </div>
+    <div id="dropoutList"></div>
   </div>
 </section>
 <section class="tab" id="tab-settings">
@@ -2350,6 +2414,173 @@ function downloadAutoBackup(){
   setInterval(function(){
     if(isAutoBackupEnabled()) saveAutoBackup();
   }, 5 * 60 * 1000);
+})();
+  /* ============ ترک تحصیل‌کرده‌ها ============ */
+var DROPOUT_REASONS = {
+  financial: { label: 'مشکلات مالی', icon: '💰' },
+  time: { label: 'کمبود وقت', icon: '⏰' },
+  relocation: { label: 'جابجایی / مهاجرت', icon: '📍' },
+  dissatisfied: { label: 'نارضایتی', icon: '😕' },
+  health: { label: 'مشکلات سلامتی', icon: '🏥' },
+  family: { label: 'مشکلات خانوادگی', icon: '👨‍👩‍👧' },
+  level: { label: 'عدم تناسب سطح', icon: '📚' },
+  other: { label: 'سایر', icon: '📦' }
+};
+
+if(!db.dropouts) db.dropouts = [];
+
+function fillDropoutStudentSelect(){
+  var sel = document.getElementById('dropoutStudent');
+  if(!sel) return;
+  var existing = (db.dropouts || []).map(function(d){ return d.sid; });
+  var active = db.students.filter(function(s){
+    return !s.graduated && existing.indexOf(s.id) === -1;
+  });
+  sel.innerHTML = '<option value="">— انتخاب زبان‌آموز —</option>' +
+    active.map(function(s){
+      return '<option value="' + s.id + '">' + esc(s.name) + (s.course ? ' — ' + esc(s.course) : '') + '</option>';
+    }).join('');
+}
+
+function submitDropout(e){
+  e.preventDefault();
+  var sid = document.getElementById('dropoutStudent').value;
+  var reason = document.getElementById('dropoutReason').value;
+  var date = getDate('dropoutDate') || dateStr(todayJ());
+  var note = document.getElementById('dropoutNote').value.trim();
+
+  if(!sid){ toast('زبان‌آموز را انتخاب کنید', 'err'); return; }
+  var st = db.students.find(function(s){ return s.id === sid; });
+  if(!st){ toast('زبان‌آموز پیدا نشد', 'err'); return; }
+
+  if(!db.dropouts) db.dropouts = [];
+  db.dropouts.push({
+    id: uid(),
+    sid: sid,
+    name: st.name,
+    course: st.course || '',
+    reason: reason,
+    date: date,
+    note: note,
+    createdAt: Date.now()
+  });
+
+  saveLocal();
+  document.getElementById('dropoutStudent').value = '';
+  document.getElementById('dropoutNote').value = '';
+
+  toast('🚪 ترک تحصیل ثبت شد', 'success');
+  fillDropoutStudentSelect();
+  renderDropouts();
+}
+
+function deleteDropout(id){
+  if(!confirm('این مورد حذف شود؟')) return;
+  db.dropouts = (db.dropouts || []).filter(function(d){ return d.id !== id; });
+  saveLocal();
+  fillDropoutStudentSelect();
+  renderDropouts();
+  toast('🗑 حذف شد', 'success');
+}
+
+function renderDropouts(){
+  var statsEl = document.getElementById('dropoutStats');
+  var listEl = document.getElementById('dropoutList');
+  if(!listEl) return;
+
+  var all = db.dropouts || [];
+  var q = (document.getElementById('dropoutSearch')?.value || '').trim().toLowerCase();
+  var reasonF = document.getElementById('dropoutFilterReason')?.value || '';
+
+  var filtered = all.slice();
+  if(q) filtered = filtered.filter(function(d){
+    return (d.name || '').toLowerCase().indexOf(q) >= 0 || (d.note || '').toLowerCase().indexOf(q) >= 0;
+  });
+  if(reasonF) filtered = filtered.filter(function(d){ return d.reason === reasonF; });
+  filtered.sort(function(a, b){ return (b.date || '').localeCompare(a.date || ''); });
+
+  if(statsEl){
+    var thisMonth = all.filter(function(d){ return d.date && d.date.indexOf(currentMonthKey()) === 0; }).length;
+    var byReason = {};
+    all.forEach(function(d){ byReason[d.reason] = (byReason[d.reason] || 0) + 1; });
+    var topReason = Object.keys(byReason).sort(function(a, b){ return byReason[b] - byReason[a]; })[0];
+
+    statsEl.innerHTML =
+      '<div class="stat stat-debt-card">' +
+        '<div class="stat-icon red">🚪</div>' +
+        '<div class="stat-label">کل ترک تحصیل‌ها</div>' +
+        '<div class="stat-value">' + faDigits(all.length) + ' <small>نفر</small></div>' +
+      '</div>' +
+      '<div class="stat">' +
+        '<div class="stat-icon orange">📅</div>' +
+        '<div class="stat-label">این ماه</div>' +
+        '<div class="stat-value">' + faDigits(thisMonth) + ' <small>نفر</small></div>' +
+      '</div>' +
+      '<div class="stat">' +
+        '<div class="stat-icon purple">🏷</div>' +
+        '<div class="stat-label">بیشترین دلیل</div>' +
+        '<div class="stat-value" style="font-size:14px">' +
+          (topReason && DROPOUT_REASONS[topReason] ? DROPOUT_REASONS[topReason].icon + ' ' + DROPOUT_REASONS[topReason].label : '—') +
+        '</div>' +
+      '</div>';
+  }
+
+  if(!filtered.length){
+    listEl.innerHTML = '<div class="empty">🎉 هیچ ترک تحصیلی ثبت نشده!</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(function(d){
+    var r = DROPOUT_REASONS[d.reason] || DROPOUT_REASONS.other;
+    var st = db.students.find(function(s){ return s.id === d.sid; });
+    var phone = st ? (st.phone || st.home_phone || '') : '';
+    var wa = phone ? '<a href="https://wa.me/98' + phone.replace(/^0/, '') + '" target="_blank" class="btn xs ghost" style="text-decoration:none">💬 واتساپ</a>' : '';
+    return '<div class="overdue-item" style="flex-direction:column;align-items:stretch;gap:10px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">' +
+        '<div class="oi-info">' +
+          '<div class="oi-name">' + avatarHTML(d.name, 28) + ' ' + esc(d.name) +
+            (d.course ? ' <span class="tag session" style="font-size:10px">' + esc(d.course) + '</span>' : '') +
+          '</div>' +
+          '<div class="oi-meta">📅 تاریخ: ' + showDate(d.date) + ' — دلیل: <span class="tag exp">' + r.icon + ' ' + r.label + '</span></div>' +
+          (d.note ? '<div class="oi-meta" style="margin-top:4px">📝 ' + esc(d.note) + '</div>' : '') +
+        '</div>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">' + wa +
+          '<button class="btn xs danger" onclick="deleteDropout(\'' + d.id + '\')">🗑 حذف</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* اتصال خودکار */
+(function(){
+  function bindDropout(){
+    var tab = document.querySelector('.tab-btn[data-tab="dropouts"]');
+    if(tab && !tab._b){
+      tab._b = true;
+      tab.addEventListener('click', function(){
+        setTimeout(function(){
+          try {
+            fillDropoutStudentSelect();
+            buildDate('dropoutDate');
+            renderDropouts();
+          } catch(e){}
+        }, 50);
+      });
+    }
+    var form = document.getElementById('dropoutForm');
+    if(form && !form._b){ form._b = true; form.addEventListener('submit', submitDropout); }
+
+    var srch = document.getElementById('dropoutSearch');
+    if(srch && !srch._b){ srch._b = true; srch.addEventListener('input', debounce(renderDropouts, 250)); }
+
+    var rf = document.getElementById('dropoutFilterReason');
+    if(rf && !rf._b){ rf._b = true; rf.addEventListener('change', renderDropouts); }
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindDropout);
+  else bindDropout();
+  new MutationObserver(function(){ setTimeout(bindDropout, 300); }).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 <script>
