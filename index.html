@@ -982,7 +982,12 @@ td.n{font-variant-numeric:tabular-nums;font-weight:600}
     <form class="form-grid" id="dropoutForm">
       <div class="field">
         <label>زبان‌آموز <span class="req">*</span></label>
-        <select id="dropoutStudent" required></select>
+       <div class="field" style="grid-column:1/-1">
+  <label>زبان‌آموز <span class="req">*</span></label>
+  <input id="dropoutSearchStudent" placeholder="🔍 جستجوی نام زبان‌آموز…" autocomplete="off" style="margin-bottom:8px">
+  <select id="dropoutStudent" required size="1"></select>
+  <div id="dropoutSearchResults" style="display:none;max-height:200px;overflow-y:auto;border:1.5px solid var(--border);border-radius:8px;background:var(--card);margin-top:4px"></div>
+</div>
       </div>
       <div class="field">
         <label>دلیل ترک</label>
@@ -2436,7 +2441,7 @@ function fillDropoutStudentSelect(){
   var active = db.students.filter(function(s){
     return !s.graduated && existing.indexOf(s.id) === -1;
   });
-  sel.innerHTML = '<option value="">— انتخاب زبان‌آموز —</option>' +
+  sel.innerHTML = '<option value="">— انتخاب زبان‌آموز (' + faDigits(active.length) + ' نفر) —</option>' +
     active.map(function(s){
       return '<option value="' + s.id + '">' + esc(s.name) + (s.course ? ' — ' + esc(s.course) : '') + '</option>';
     }).join('');
@@ -2581,6 +2586,94 @@ function renderDropouts(){
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindDropout);
   else bindDropout();
   new MutationObserver(function(){ setTimeout(bindDropout, 300); }).observe(document.body, { childList: true, subtree: true });
+})();
+  /* ============ جستجوی زنده زبان‌آموز در ترک تحصیل ============ */
+(function dropoutStudentSearch(){
+  function bind(){
+    var input = document.getElementById('dropoutSearchStudent');
+    var results = document.getElementById('dropoutSearchResults');
+    var select = document.getElementById('dropoutStudent');
+    if(!input || !results || !select) return;
+    if(input._b) return;
+    input._b = true;
+
+    function renderResults(q){
+      q = (q || '').trim().toLowerCase();
+      if(!q){
+        results.style.display = 'none';
+        results.innerHTML = '';
+        return;
+      }
+
+      var existing = (db.dropouts || []).map(function(d){ return d.sid; });
+      var active = db.students.filter(function(s){
+        return !s.graduated && existing.indexOf(s.id) === -1;
+      });
+
+      var matches = active.filter(function(s){
+        var name = (s.name || '').toLowerCase();
+        var nameEn = (s.name_en || '').toLowerCase();
+        var phone = (s.phone || s.home_phone || '').toLowerCase();
+        var course = (s.course || '').toLowerCase();
+        return name.indexOf(q) >= 0 || nameEn.indexOf(q) >= 0 || phone.indexOf(q) >= 0 || course.indexOf(q) >= 0;
+      }).slice(0, 15);
+
+      if(!matches.length){
+        results.innerHTML = '<div style="padding:12px;text-align:center;color:var(--ink-3);font-size:12.5px">نتیجه‌ای پیدا نشد</div>';
+        results.style.display = 'block';
+        return;
+      }
+
+      results.innerHTML = matches.map(function(s){
+        return '<div class="sch-pick-item" data-id="' + s.id + '" style="cursor:pointer;margin:4px">' +
+          '<div style="display:flex;align-items:center;gap:10px;flex:1">' +
+            avatarHTML(s.name, 28) +
+            '<div style="flex:1;min-width:0">' +
+              '<div style="font-weight:700;font-size:13px">' + esc(s.name) + '</div>' +
+              '<div style="font-size:11px;color:var(--ink-2)">' +
+                (s.course ? esc(s.course) : 'بدون دوره') +
+                (s.phone ? ' — ' + faDigits(s.phone) : '') +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+      results.style.display = 'block';
+
+      // کلیک روی نتیجه → انتخاب
+      results.querySelectorAll('[data-id]').forEach(function(item){
+        item.addEventListener('click', function(){
+          var id = item.getAttribute('data-id');
+          select.value = id;
+          input.value = '';
+          results.style.display = 'none';
+          results.innerHTML = '';
+          // اسکرول به سلکت
+          select.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          toast('✅ زبان‌آموز انتخاب شد', 'success');
+        });
+      });
+    }
+
+    input.addEventListener('input', debounce(function(){
+      renderResults(input.value);
+    }, 200));
+
+    input.addEventListener('focus', function(){
+      if(input.value.trim()) renderResults(input.value);
+    });
+
+    // بستن نتایج با کلیک بیرون
+    document.addEventListener('click', function(e){
+      if(!e.target.closest('#dropoutSearchStudent') && !e.target.closest('#dropoutSearchResults')){
+        results.style.display = 'none';
+      }
+    });
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+  else bind();
+  new MutationObserver(function(){ setTimeout(bind, 300); }).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 <script>
